@@ -117,6 +117,13 @@ jobs:
           "$GODOT_BIN" --headless --path . --export-release \
             "Linux Desktop" "$linux_dir/captain-tsubasa-2-remake.x86_64"
           chmod +x "$linux_dir/captain-tsubasa-2-remake.x86_64"
+          linux_smoke_log="$RUNNER_TEMP/linux-export-smoke.log"
+          "$linux_dir/captain-tsubasa-2-remake.x86_64" --headless --quit-after 2 >"$linux_smoke_log" 2>&1
+          cat "$linux_smoke_log"
+          if rg -n 'SCRIPT ERROR:|ERROR:' "$linux_smoke_log" | rg -v 'resources still in use at exit'; then
+            echo "The exported Linux release reported a runtime error." >&2
+            exit 1
+          fi
           tar --sort=name --mtime='@0' --owner=0 --group=0 --numeric-owner \
             -C "$linux_dir" -cf - captain-tsubasa-2-remake.x86_64 \
             | gzip --no-name > "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz"

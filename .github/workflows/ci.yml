@@ -50,5 +50,19 @@ jobs:
       - name: Import project resources
         run: '"$GODOT_BIN" --headless --editor --path . --import'
 
+      - name: Export and launch the runtime pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          pack="$RUNNER_TEMP/captain-tsubasa-runtime-smoke.pck"
+          log="$RUNNER_TEMP/captain-tsubasa-runtime-smoke.log"
+          "$GODOT_BIN" --headless --path . --export-pack "Linux Desktop" "$pack"
+          "$GODOT_BIN" --headless --main-pack "$pack" --quit-after 2 >"$log" 2>&1
+          cat "$log"
+          if rg -n 'SCRIPT ERROR:|ERROR:' "$log" | rg -v 'resources still in use at exit'; then
+            echo "The exported runtime pack reported an error." >&2
+            exit 1
+          fi
+
       - name: Launch main scene briefly
         run: '"$GODOT_BIN" --headless --path . --quit-after 2'

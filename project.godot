@@ -38,3 +38,7 @@ textures/vram_compression/import_etc2_astc=true
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 environment/defaults/default_clear_color=Color(0.02, 0.04, 0.06, 1)
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/runtime_source_export/plugin.cfg")
