@@ -436,10 +436,13 @@ the script bytes `F8 00 DF FE 20 A0` at script offset `$027B`.
 The ordered trace records the service returning through `$98DC->$A541` in
 source frame 3967, the tail returning through `$895C->$A557` and `$A559->$880A`
 in frame 3968, then the wrapper's `$8811->$8879` return and `$84E7/$8508` script
-dispatch before `$8514` calls `$9FA8`. Godot now reads the event's frame 3968
-dispatch milestone rather than computing `source_frame + 1`; the runtime does
-not consume the event's modeled cycle numbers. The ROM script bytes after `$DF`
-still lead to `$FE $20 $A0`, the loop target `$A020`.
+dispatch before `$8514` calls `$9FA8`. The event's 3967/3968 labels describe
+this first script pass. Because the following `$FE $20 $A0` returns to `$A020`,
+Godot maps those labels through the loop phase established at each `$FE`, then
+schedules the next absolute source frame. A deterministic replay through source
+frame 8300 reached the second helper return at frame 8166 and script dispatch at
+8167 without stopping. The runtime does not consume the event's modeled cycle
+numbers or claim physical subframe timing.
 
 The source event order/frame is derived from ROM stepping, with the recorded
 input timeline attached for provenance; captured frame intervals, pixels, and
