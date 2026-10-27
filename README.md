@@ -83,7 +83,7 @@ The active soundtrack is generated from ROM-derived CPU/APU/DMC events and the p
 
 ## CI and releases
 
-Every branch push and pull request targeting **main** runs a clean Godot import and a short headless main-scene launch. Version tags use the release workflow, which reruns those checks and publishes source ZIP/TAR.GZ archives with a SHA-256 manifest and a verified Sigstore signature bundle. If the RELEASE_GPG_PRIVATE_KEY Actions secret is configured, the manifest also receives a detached GPG signature; RELEASE_GPG_PASSPHRASE is optional for an unencrypted key. Desktop game exports will be added after export presets are defined and verified.
+Every branch push and pull request targeting **main** runs a clean Godot import and a short headless main-scene launch. Version tags use the release workflow, which checks the project, exports Linux x86_64, Windows x86_64, and macOS Universal desktop packages, and publishes those with source ZIP/TAR.GZ archives, a SHA-256 manifest, and a verified Sigstore signature bundle. Desktop packages are currently unsigned; macOS may require allowing the app in system security settings. If the RELEASE_GPG_PRIVATE_KEY Actions secret is configured, the manifest also receives a detached GPG signature; RELEASE_GPG_PASSPHRASE is optional for an unencrypted key.
 
 Sonar badges and quality gates are intentionally absent: Sonar's documented supported-language list does not include GDScript, so it would not analyze the game's main code.
 

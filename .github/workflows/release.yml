@@ -1,4 +1,4 @@
-name: Source Release
+name: Release
 
 on:
   push:
@@ -14,14 +14,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: source-release-${{ github.ref }}
+  group: release-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   source-release:
-    name: Verify and publish source release
+    name: Verify, export, and publish release
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 45
     permissions:
       contents: write
       id-token: write
@@ -66,11 +66,77 @@ jobs:
           echo "GODOT_BIN=$godot_dir/Godot_v4.7.2-stable_linux.x86_64" >> "$GITHUB_ENV"
           chmod +x "$godot_dir/Godot_v4.7.2-stable_linux.x86_64"
 
+      - name: Install and verify desktop export templates
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/Godot_v4.7.2-stable_export_templates.tpz"
+          curl --fail --silent --show-error --location \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz" \
+            --output "$archive"
+          echo "f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011  $archive" | sha256sum --check -
+          template_dir="$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          mkdir -p "$template_dir"
+          unzip -q -j "$archive" \
+            templates/linux_release.x86_64 \
+            templates/windows_release_x86_64.exe \
+            templates/macos.zip \
+            templates/version.txt \
+            -d "$template_dir"
+
       - name: Import project resources
         run: '"$GODOT_BIN" --headless --editor --path . --import'
 
       - name: Launch main scene briefly
         run: '"$GODOT_BIN" --headless --path . --quit-after 2'
+
+      - name: Export Linux, Windows, and macOS desktop builds
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+          asset_dir="$RUNNER_TEMP/release-assets"
+          version="${RELEASE_TAG#v}"
+          linux_dir="$RUNNER_TEMP/linux-package"
+          mkdir -p "$asset_dir"
+          mkdir -p "$linux_dir"
+
+          python3 - "$version" <<'PY'
+          from pathlib import Path
+          import sys
+
+          version = sys.argv[1]
+          path = Path("export_presets.cfg")
+          config = path.read_text(encoding="utf-8")
+          config = config.replace('application/short_version="0.1.0"', f'application/short_version="{version}"')
+          config = config.replace('application/version="0.1.0"', f'application/version="{version}"')
+          path.write_text(config, encoding="utf-8")
+          PY
+
+          "$GODOT_BIN" --headless --path . --export-release \
+            "Linux Desktop" "$linux_dir/captain-tsubasa-2-remake.x86_64"
+          chmod +x "$linux_dir/captain-tsubasa-2-remake.x86_64"
+          tar --sort=name --mtime='@0' --owner=0 --group=0 --numeric-owner \
+            -C "$linux_dir" -cf - captain-tsubasa-2-remake.x86_64 \
+            | gzip --no-name > "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz"
+
+          "$GODOT_BIN" --headless --path . --export-release \
+            "Windows Desktop" "$asset_dir/captain-tsubasa-2-remake.exe"
+          (cd "$asset_dir" && zip -X -q "captain-tsubasa-2-remake-${RELEASE_TAG}-windows-x86_64.zip" \
+            captain-tsubasa-2-remake.exe)
+
+          "$GODOT_BIN" --headless --path . --export-release \
+            "macOS Universal" "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-macos-universal.zip"
+
+          test -s "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz"
+          test -s "$asset_dir/captain-tsubasa-2-remake.exe"
+          test -s "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-windows-x86_64.zip"
+          test -s "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-macos-universal.zip"
+          tar -tzf "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz" >/dev/null
+          unzip -tq "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-windows-x86_64.zip"
+          unzip -tq "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-macos-universal.zip"
+          rm "$asset_dir/captain-tsubasa-2-remake.exe"
 
       - name: Create source archives and SHA-256 manifest
         shell: bash
@@ -154,7 +220,7 @@ jobs:
           fi
           echo "- GPG detached signature: created." >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Publish or update source release
+      - name: Recreate the tagged release with source and desktop assets
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
@@ -166,11 +232,10 @@ jobs:
           assets=("$asset_dir"/*)
           test "${#assets[@]}" -gt 0
           if gh release view "$RELEASE_TAG" --repo "$GH_REPO" >/dev/null 2>&1; then
-            gh release upload "$RELEASE_TAG" "${assets[@]}" --clobber --repo "$GH_REPO"
-          else
-            gh release create "$RELEASE_TAG" "${assets[@]}" \
-              --verify-tag \
-              --title "$RELEASE_TAG" \
-              --generate-notes \
-              --repo "$GH_REPO"
+            gh release delete "$RELEASE_TAG" --yes --repo "$GH_REPO"
           fi
+          gh release create "$RELEASE_TAG" "${assets[@]}" \
+            --verify-tag \
+            --title "$RELEASE_TAG" \
+            --generate-notes \
+            --repo "$GH_REPO"
