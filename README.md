@@ -1,12 +1,15 @@
-<p align="center">
+<p align="left">
   <a href="assets/readme/captain-tsubasa-2-poster.jpg">
-    <img src="assets/readme/captain-tsubasa-2-poster.jpg" alt="Captain Tsubasa II: Super Striker original promotional poster" width="480">
+    <img src="assets/readme/captain-tsubasa-2-poster.jpg" alt="Captain Tsubasa II: Super Striker original promotional poster" width="640">
   </a>
 </p>
 
-<p align="center">
+<p align="left">
   <a href="https://github.com/susimsek/captain-tsubasa-2-remake/actions/workflows/ci.yml"><img src="https://github.com/susimsek/captain-tsubasa-2-remake/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI status"></a>
-  <img src="https://img.shields.io/badge/Godot-4.7.2-478cbf?logo=godotengine&logoColor=white" alt="Godot 4.7.2">
+  <img src="https://img.shields.io/badge/Engine-Godot%204.7.2-478cbf?logo=godotengine&logoColor=white" alt="Engine: Godot 4.7.2">
+  <img src="https://img.shields.io/badge/Language-GDScript-478cbf?logo=godotengine&logoColor=white" alt="Language: GDScript">
+  <img src="https://img.shields.io/badge/Runtime-Standalone-2ea44f" alt="Standalone runtime">
+  <img src="https://img.shields.io/badge/Milestone-Opening%20to%20Title-f0ad4e" alt="Milestone: opening to title">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-blue.svg" alt="Apache-2.0"></a>
 </p>
 

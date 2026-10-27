@@ -2593,10 +2593,16 @@ runtime zamanlamasına bağlamak doğru değil. Doğrulayıcı ve ayrıntılı h
 `tools/diagnostics/verify_source_only_title_virtual_raster.gd` ve
 `reference/diagnostics/source_only_title_virtual_raster_20261027.md`.
 
-Güncellenmiş ROM-only kaynak olay tablosunun 330 başlık olayı, sırası, çevrim
+Güncellenmiş ROM-only kaynak olay tablosunun 330 başlık olayı, sırası/çevrim
 offsetleri ve `$8048` başlangıç ankrajı önceki tabloyla aynı. Düzeltilmiş
 adımlayıcıdan yeniden üretildikten sonra sanal raster doğrulayıcısı Godot 4.7.2'de
-tekrar PASS verdi. `godot --headless --audio-driver Dummy --path . --script
-tools/diagnostics/verify_main_opening_title_handoff.gd` da geçti: `KICK OFF`
-görünüyor, geçiş çalışmıyor, seçenek onaylanmıyor. Fiziksel konsol ölçüm
-protokolü ve donanım yokluğu `reference/diagnostics/physical_console_timing_capture_protocol_20261027.md` içinde.
+tekrar PASS verdi. Ana sahne title handoff denetimi de geçti: `KICK OFF`
+görünüyor, geçiş çalışmıyor ve seçenek onaylanmıyor. Fiziksel konsol ölçüm
+protokolü ve donanım yokluğu
+`reference/diagnostics/physical_console_timing_capture_protocol_20261027.md` içinde.
+
+Ana sahne doğrulama komutu:
+
+```sh
+godot --headless --audio-driver Dummy --path . --script tools/diagnostics/verify_main_opening_title_handoff.gd
+```
