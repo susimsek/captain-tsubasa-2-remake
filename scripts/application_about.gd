@@ -1,6 +1,6 @@
 extends CanvasLayer
 class_name ApplicationAbout
-## Handles the macOS About notification and the desktop shortcut.
+## Provides consistent desktop Help commands and About/update dialogs.
 
 const APPLICATION_NAME := "Captain Tsubasa 2 Remake"
 const UI_SURFACE_COLOR := "202122"
@@ -16,10 +16,15 @@ const UI_FONT_BODY := 14
 const UI_FONT_METADATA := 12
 const UI_BUTTON_HEIGHT := 40
 const UI_BUTTON_RADIUS := 8
+const DESKTOP_MENU_HEIGHT := 7.0
+const DESKTOP_MENU_VIEWPORT_SIZE := Vector2i(256, 231)
+const DESKTOP_MENU_LOGICAL_SCALE := Vector2(0.25, 0.25)
+const DESKTOP_MENU_ITEM_ABOUT := 1
+const DESKTOP_MENU_ITEM_UPDATES := 2
 const APPLICATION_ICON := preload("res://assets/branding/captain-tsubasa-2-icon.png")
 const ABOUT_INPUT_ACTION := "application_about"
 const UPDATE_INPUT_ACTION := "application_check_for_updates"
-const ABOUT_WINDOW_SIZE := Vector2i(380, 310)
+const ABOUT_WINDOW_SIZE := Vector2i(380, 230)
 const UPDATE_WINDOW_SIZE := Vector2i(520, 250)
 const UPDATE_RELEASE_API_URL := "https://api.github.com/repos/susimsek/captain-tsubasa-2-remake/releases/latest"
 const UPDATE_ASSET_URL_PREFIX := "https://github.com/susimsek/captain-tsubasa-2-remake/releases/download/"
@@ -31,7 +36,6 @@ const RELEASE_MONTHS := ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
 var _about_dialog: Window
 var _version_label: Label
 var _release_date_label: Label
-var _about_update_button: Button
 var _update_dialog: Window
 var _update_status_label: Label
 var _update_message_label: Label
@@ -50,18 +54,106 @@ var _update_download_path := ""
 var _last_download_percent := -1
 var _update_state := "idle"
 var _checking_for_updates := false
+var _desktop_help_menu: MenuBar
 
 
 func _ready() -> void:
 	# Keep About independent of the game's 256x224 pixel-art viewport. An
 	# embedded child window inherits the game's stretch scale and becomes huge.
 	get_viewport().gui_embed_subwindows = false
+	if _uses_inline_desktop_help_menu():
+		if DisplayServer.get_name() != "headless":
+			_configure_inline_desktop_window()
+		_create_inline_desktop_help_menu()
 	_create_about_dialog()
 	_create_update_dialog()
 	_install_about_input_action()
 	_install_update_input_action()
 	_install_update_menu_item.call_deferred()
 	_show_pending_update_result()
+
+
+func _uses_inline_desktop_help_menu() -> bool:
+	return OS.get_name() in ["Windows", "Linux"]
+
+
+func _configure_inline_desktop_window() -> void:
+	var main_window := get_tree().root
+	var scale_factor := maxf(float(main_window.size.x) / float(DESKTOP_MENU_VIEWPORT_SIZE.x), 3.0)
+	main_window.content_scale_size = DESKTOP_MENU_VIEWPORT_SIZE
+	main_window.size = Vector2i(
+		int(round(float(DESKTOP_MENU_VIEWPORT_SIZE.x) * scale_factor)),
+		int(round(float(DESKTOP_MENU_VIEWPORT_SIZE.y) * scale_factor))
+	)
+
+
+func _create_inline_desktop_help_menu() -> void:
+	layer = 10
+	var menu_background := ColorRect.new()
+	menu_background.name = "DesktopMenuBackground"
+	menu_background.position = Vector2.ZERO
+	menu_background.size = Vector2(1024, 28)
+	menu_background.scale = DESKTOP_MENU_LOGICAL_SCALE
+	menu_background.color = Color(UI_SURFACE_COLOR)
+	menu_background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(menu_background)
+
+	var menu_divider := ColorRect.new()
+	menu_divider.name = "DesktopMenuDivider"
+	menu_divider.position = Vector2(0, 27)
+	menu_divider.size = Vector2(1024, 1)
+	menu_divider.scale = DESKTOP_MENU_LOGICAL_SCALE
+	menu_divider.color = Color("44474b")
+	menu_divider.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(menu_divider)
+
+	_desktop_help_menu = MenuBar.new()
+	_desktop_help_menu.name = "DesktopMenuBar"
+	_desktop_help_menu.position = Vector2.ZERO
+	_desktop_help_menu.size = Vector2(1024, 28)
+	_desktop_help_menu.scale = DESKTOP_MENU_LOGICAL_SCALE
+	_desktop_help_menu.prefer_global_menu = false
+	_desktop_help_menu.add_theme_font_size_override("font_size", 14)
+	_desktop_help_menu.add_theme_color_override("font_color", Color(UI_TEXT_SECONDARY))
+	_desktop_help_menu.add_theme_color_override("font_hover_color", Color(UI_TEXT_PRIMARY))
+	_desktop_help_menu.add_theme_color_override("font_pressed_color", Color.WHITE)
+	_desktop_help_menu.add_theme_stylebox_override("normal", _create_menu_item_style(Color("00000000")))
+	_desktop_help_menu.add_theme_stylebox_override("hover", _create_menu_item_style(Color("303236")))
+	_desktop_help_menu.add_theme_stylebox_override("pressed", _create_menu_item_style(Color("3a3d42")))
+	_desktop_help_menu.add_theme_stylebox_override("focus", _create_menu_item_style(Color("303236")))
+
+	var help_popup := PopupMenu.new()
+	help_popup.name = "Help"
+	help_popup.add_theme_font_size_override("font_size", 14)
+	help_popup.add_theme_color_override("font_color", Color(UI_TEXT_SECONDARY))
+	help_popup.add_theme_color_override("font_hover_color", Color(UI_TEXT_PRIMARY))
+	help_popup.add_theme_stylebox_override("panel", _create_menu_item_style(Color(UI_SURFACE_COLOR)))
+	help_popup.add_theme_stylebox_override("hover", _create_menu_item_style(Color("303236")))
+	help_popup.add_item("About " + APPLICATION_NAME + "…", DESKTOP_MENU_ITEM_ABOUT)
+	help_popup.add_item(UPDATE_MENU_LABEL, DESKTOP_MENU_ITEM_UPDATES)
+	help_popup.id_pressed.connect(_on_inline_desktop_help_menu_selected)
+	_desktop_help_menu.add_child(help_popup)
+	_desktop_help_menu.set_menu_title(0, "Help")
+	add_child(_desktop_help_menu)
+
+
+func _create_menu_item_style(color: Color) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = color
+	style.set_corner_radius_all(4)
+	style.content_margin_left = 8
+	style.content_margin_right = 8
+	style.content_margin_top = 2
+	style.content_margin_bottom = 2
+	return style
+
+
+func _on_inline_desktop_help_menu_selected(item_id: int) -> void:
+	match item_id:
+		DESKTOP_MENU_ITEM_ABOUT:
+			show_about_dialog()
+		DESKTOP_MENU_ITEM_UPDATES:
+			check_for_updates()
 
 
 func _notification(what: int) -> void:
@@ -170,21 +262,6 @@ func _create_about_dialog() -> void:
 	_release_date_label.add_theme_font_size_override("font_size", UI_FONT_BODY)
 	_release_date_label.add_theme_color_override("font_color", Color(UI_TEXT_MUTED))
 	content.add_child(_release_date_label)
-
-	_about_update_button = Button.new()
-	_about_update_button.name = "CheckForUpdates"
-	_about_update_button.text = UPDATE_MENU_LABEL
-	_about_update_button.custom_minimum_size = Vector2(196, UI_BUTTON_HEIGHT)
-	_about_update_button.add_theme_font_size_override("font_size", UI_FONT_BODY)
-	_about_update_button.add_theme_color_override("font_color", Color.WHITE)
-	_about_update_button.add_theme_color_override("font_hover_color", Color.WHITE)
-	_about_update_button.add_theme_color_override("font_pressed_color", Color.WHITE)
-	_about_update_button.add_theme_stylebox_override("normal", _create_update_button_style(Color(UI_ACCENT_COLOR)))
-	_about_update_button.add_theme_stylebox_override("hover", _create_update_button_style(Color("2790ff")))
-	_about_update_button.add_theme_stylebox_override("pressed", _create_update_button_style(Color("0874e5")))
-	_about_update_button.add_theme_stylebox_override("focus", _create_update_focus_style())
-	_about_update_button.pressed.connect(_on_about_update_button_pressed)
-	content.add_child(_about_update_button)
 
 	add_child(_about_dialog)
 
@@ -502,11 +579,6 @@ func _on_update_action_button_pressed() -> void:
 
 func _on_update_later_button_pressed() -> void:
 	_update_dialog.hide()
-
-
-func _on_about_update_button_pressed() -> void:
-	_about_dialog.hide()
-	check_for_updates()
 
 
 func _find_platform_download_asset(release: Dictionary, latest_tag: String) -> Dictionary:

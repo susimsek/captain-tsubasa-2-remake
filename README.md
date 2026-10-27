@@ -45,7 +45,7 @@ The poster above is the original promotional image supplied by the project owner
 - Original CHR, palette, background, sprite, and audio-derived project resources.
 - ROM-derived opening music with an offline Godot audio resource.
 - Title handoff to the initial **KICK OFF** / **CONTINUE** menu.
-- **Check for Updates…** is available from the About screen on desktop platforms; macOS also provides it in the native application menu. F1 opens About, and F2 remains a shortcut for checking directly.
+- Windows/Linux provide separate **Help → About…** and **Help → Check for Updates…** commands. macOS keeps both commands in its native application menu. About contains version and original-release information only; update checks open their own dialog. F1 opens About, and F2 checks for updates directly.
 - Desktop update checks select the matching macOS, Windows, or Linux release package. The game downloads it in the background, verifies its SHA-256 digest, then offers **Install and Relaunch**.
 - The updater verifies the release asset digest reported by GitHub over HTTPS. Releases also publish a separately Sigstore-signed `SHA256SUMS` manifest for manual package verification.
 - Automatic installation requires the game folder to be writable. macOS builds are not notarized, so Gatekeeper may still ask for approval after an update.

@@ -5,9 +5,12 @@ Kullanıcının sağladığı NES ROM'unu davranış ve içerik kaynağı kabul 
 ## Masaüstü dağıtım hedefi
 
 Windows, Linux ve macOS sürümlerinde güncelleme kontrolü aynı güvenli indirme,
-SHA-256 doğrulama, kurulum ve yeniden başlatma akışını kullanır. Güncelleme
-denetimi F2'yi bilmeden About ekranından başlatılabilmelidir; macOS'ta aynı
-komut yerel uygulama menüsünde de bulunur. Godot 4.7.2 ile CI, Linux x86_64,
+SHA-256 doğrulama, kurulum ve yeniden başlatma akışını kullanır. Windows/Linux'ta
+Help menüsü, birbirinden ayrı `About…` ve `Check for Updates…` komutları sunar;
+macOS'ta iki komut yerel uygulama menüsünde kalır. About yalnızca sürüm ve
+orijinal çıkış tarihi bilgisini gösterir; güncelleme kontrolü kendi penceresini
+açar. Windows/Linux menü çubuğu 256×224 oyun görüntüsünün dışında ayrılmıştır.
+Godot 4.7.2 ile CI, Linux x86_64,
 Windows x86_64 ve macOS universal paketlerini üretip açılışlarını doğrular.
 Release; üçüncü taraf bildirimlerini ve imzalı SHA-256 manifestini içerir.
 Kurulum/geri alma hataları anlaşılır ürün diliyle gösterilmeli, oyun
