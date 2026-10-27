@@ -11,7 +11,7 @@ on:
         required: true
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: source-release-${{ github.ref }}
@@ -22,6 +22,9 @@ jobs:
     name: Verify and publish source release
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -69,8 +72,105 @@ jobs:
       - name: Launch main scene briefly
         run: '"$GODOT_BIN" --headless --path . --quit-after 2'
 
-      - name: Publish source release
+      - name: Create source archives and SHA-256 manifest
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+          asset_dir="$RUNNER_TEMP/release-assets"
+          mkdir -p "$asset_dir"
+          archive_prefix="captain-tsubasa-2-remake-${RELEASE_TAG}"
+          git archive --format=zip --prefix="${archive_prefix}/" "$RELEASE_TAG" \
+            > "$asset_dir/${archive_prefix}-source.zip"
+          git archive --format=tar --prefix="${archive_prefix}/" "$RELEASE_TAG" \
+            | gzip --no-name \
+            > "$asset_dir/${archive_prefix}-source.tar.gz"
+          (
+            cd "$asset_dir"
+            sha256sum -- * > SHA256SUMS
+          )
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
+        with:
+          cosign-release: v2.6.1
+
+      - name: Sign and verify checksum manifest with Sigstore
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+          asset_dir="$RUNNER_TEMP/release-assets"
+          cosign sign-blob "$asset_dir/SHA256SUMS" \
+            --bundle "$asset_dir/SHA256SUMS.sigstore.json" \
+            --yes
+          cosign verify-blob "$asset_dir/SHA256SUMS" \
+            --bundle "$asset_dir/SHA256SUMS.sigstore.json" \
+            --certificate-identity-regexp="^https://github.com/${GITHUB_REPOSITORY}/.github/workflows/release.yml@refs/(heads/.+|tags/v.+)$" \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
+          {
+            echo "### Release signatures"
+            echo "- Sigstore: verified for ${RELEASE_TAG}."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Optionally sign checksum manifest with GPG
+        shell: bash
+        env:
+          RELEASE_GPG_PRIVATE_KEY: ${{ secrets.RELEASE_GPG_PRIVATE_KEY || '' }}
+          RELEASE_GPG_PASSPHRASE: ${{ secrets.RELEASE_GPG_PASSPHRASE || '' }}
+        run: |
+          set -euo pipefail
+          asset_dir="$RUNNER_TEMP/release-assets"
+          if [[ -z "$RELEASE_GPG_PRIVATE_KEY" ]]; then
+            echo "No RELEASE_GPG_PRIVATE_KEY configured; skipping the optional GPG signature."
+            echo "- GPG detached signature: not configured." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          key_file="$RUNNER_TEMP/release-signing-key.asc"
+          import_log="$RUNNER_TEMP/release-signing-import.log"
+          passphrase_file="$RUNNER_TEMP/release-signing-passphrase"
+          trap 'rm -f "$key_file" "$import_log" "$passphrase_file"' EXIT
+          umask 077
+          printf '%s' "$RELEASE_GPG_PRIVATE_KEY" > "$key_file"
+          if ! gpg --batch --import "$key_file" > "$import_log" 2>&1; then
+            echo "Release GPG signing key import failed." >&2
+            exit 1
+          fi
+          rm -f "$key_file" "$import_log"
+
+          gpg_args=(--batch --yes --armor --detach-sign)
+          if [[ -n "$RELEASE_GPG_PASSPHRASE" ]]; then
+            printf '%s' "$RELEASE_GPG_PASSPHRASE" > "$passphrase_file"
+            gpg_args+=(--pinentry-mode loopback --passphrase-file "$passphrase_file")
+          fi
+          if ! gpg "${gpg_args[@]}" \
+            --output "$asset_dir/SHA256SUMS.asc" \
+            "$asset_dir/SHA256SUMS" > "$import_log" 2>&1; then
+            echo "Release checksum GPG signing failed." >&2
+            exit 1
+          fi
+          echo "- GPG detached signature: created." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish or update source release
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
-        run: gh release create "$RELEASE_TAG" --verify-tag --title "$RELEASE_TAG" --generate-notes
+        run: |
+          set -euo pipefail
+          asset_dir="$RUNNER_TEMP/release-assets"
+          shopt -s nullglob
+          assets=("$asset_dir"/*)
+          test "${#assets[@]}" -gt 0
+          if gh release view "$RELEASE_TAG" --repo "$GH_REPO" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" "${assets[@]}" --clobber --repo "$GH_REPO"
+          else
+            gh release create "$RELEASE_TAG" "${assets[@]}" \
+              --verify-tag \
+              --title "$RELEASE_TAG" \
+              --generate-notes \
+              --repo "$GH_REPO"
+          fi
