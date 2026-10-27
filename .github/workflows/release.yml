@@ -64,10 +64,10 @@ jobs:
           chmod +x "$godot_dir/Godot_v4.7.2-stable_linux.x86_64"
 
       - name: Import project resources
-        run: "$GODOT_BIN" --headless --editor --path . --import
+        run: '"$GODOT_BIN" --headless --editor --path . --import'
 
       - name: Launch main scene briefly
-        run: "$GODOT_BIN" --headless --path . --quit-after 2
+        run: '"$GODOT_BIN" --headless --path . --quit-after 2'
 
       - name: Publish source release
         env:

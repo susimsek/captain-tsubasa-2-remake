@@ -1,11 +1,11 @@
 name: CI
 
 on:
-  push:
+  push: {}
   pull_request:
     branches:
       - main
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 permissions:
   contents: read
@@ -48,7 +48,7 @@ jobs:
           fi
 
       - name: Import project resources
-        run: "$GODOT_BIN" --headless --editor --path . --import
+        run: '"$GODOT_BIN" --headless --editor --path . --import'
 
       - name: Launch main scene briefly
-        run: "$GODOT_BIN" --headless --path . --quit-after 2
+        run: '"$GODOT_BIN" --headless --path . --quit-after 2'
