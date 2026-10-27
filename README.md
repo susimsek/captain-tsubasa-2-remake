@@ -5,11 +5,16 @@
 </p>
 
 <p align="left">
+  <a href="https://github.com/susimsek/captain-tsubasa-2-remake/releases/latest"><img src="https://img.shields.io/github/v/release/susimsek/captain-tsubasa-2-remake?display_name=tag&amp;label=Version" alt="Latest release version"></a>
   <a href="https://github.com/susimsek/captain-tsubasa-2-remake/actions/workflows/ci.yml"><img src="https://github.com/susimsek/captain-tsubasa-2-remake/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI status"></a>
   <img src="https://img.shields.io/badge/Engine-Godot%204.7.2-478cbf" alt="Engine: Godot 4.7.2">
-  <img src="https://img.shields.io/badge/Language-GDScript-478cbf" alt="Language: GDScript">
-  <img src="https://img.shields.io/badge/Runtime-Standalone-2ea44f" alt="Standalone runtime">
-  <img src="https://img.shields.io/badge/Milestone-Opening%20to%20Title-f0ad4e" alt="Milestone: opening to title">
+  <img src="https://img.shields.io/badge/Language-GDScript-355570?logo=godotengine&amp;logoColor=white" alt="Language: GDScript">
+  <img src="https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows&amp;logoColor=white" alt="Platform: Windows">
+  <img src="https://img.shields.io/badge/Platform-Linux-FCC624?logo=linux&amp;logoColor=black" alt="Platform: Linux">
+  <img src="https://img.shields.io/badge/Platform-macOS-303030?logo=apple&amp;logoColor=white" alt="Platform: macOS">
+  <a href="https://en.wikipedia.org/wiki/Role-playing_video_game"><img src="https://img.shields.io/badge/Genre-RPG-7B61A8" alt="Genre: RPG"></a>
+  <a href="https://en.wikipedia.org/wiki/Sports_game"><img src="https://img.shields.io/badge/Genre-Sports-2E8B57" alt="Genre: Sports"></a>
+  <img src="https://img.shields.io/badge/Original%20release-1990--07--20-6c757d" alt="Original game release date: 1990-07-20">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-blue.svg" alt="Apache-2.0"></a>
 </p>
 
@@ -40,7 +45,10 @@ The poster above is the original promotional image supplied by the project owner
 - Original CHR, palette, background, sprite, and audio-derived project resources.
 - ROM-derived opening music with an offline Godot audio resource.
 - Title handoff to the initial **KICK OFF** / **CONTINUE** menu.
-- Native macOS **About** menu command with project and release information; F1 opens the same dialog on other desktop platforms.
+- **Check for Updates…** is available from the About screen on desktop platforms; macOS also provides it in the native application menu. F1 opens About, and F2 remains a shortcut for checking directly.
+- Desktop update checks select the matching macOS, Windows, or Linux release package. The game downloads it in the background, verifies its SHA-256 digest, then offers **Install and Relaunch**.
+- The updater verifies the release asset digest reported by GitHub over HTTPS. Releases also publish a separately Sigstore-signed `SHA256SUMS` manifest for manual package verification.
+- Automatic installation requires the game folder to be writable. macOS builds are not notarized, so Gatekeeper may still ask for approval after an update.
 - No ROM file or emulator dependency at runtime.
 
 ## Current milestone

@@ -21,6 +21,7 @@ This is a Godot 4 reconstruction of the Turkish NES release of Captain Tsubasa 2
 15. [Completion Criteria](#completion-criteria)
 16. [Current Verification Update](#current-verification-update)
 17. [Latest Performance and Animation Findings](#latest-performance-and-animation-findings)
+18. [Application UI and Update Flow Design](#application-ui-and-update-flow-design)
 
 ## Agent MCP Usage Guidelines
 
@@ -518,3 +519,16 @@ For a gameplay feature, consider it complete when:
   complete texture, so this remains a virtual validation event and does not
   control host scanout or claim physical 2C02 timing. See
   `reference/diagnostics/source_only_title_virtual_raster_20261027.md`.
+
+## Application UI and Update Flow Design
+
+Treat the About page and every desktop update dialog as one shipped product surface, not as unrelated utility windows.
+
+- Keep shared colors, typography levels, spacing, button states, progress-bar styles, and dialog-surface construction centralized in reusable constants and helpers. Do not introduce one-off visual styles or copy-pasted variants for individual update states.
+- Use the native window frame as the only outer frame. The content surface must be flat and borderless; do not put a second rounded card or outline inside the rounded native window. Keep the title bar and content aligned as one dialog.
+- Maintain a compact, consistent hierarchy: application icon, clear state heading, one concise explanatory line, subdued version/date metadata, progress when relevant, and an aligned action row. Let text wrap without clipping or leaving large empty regions.
+- Use one solid accent-filled primary action and a quiet secondary action. Do not draw a permanent border around the primary button. Show a clear focus ring only while keyboard focus is active; preserve keyboard navigation and never initially focus an install/relaunch action. Pressing Return must not unexpectedly install an update.
+- Keep About/update utility copy and menu command labels in concise, idiomatic English, matching the existing product language. Do not translate them without an explicit request. Use short, accurate state messages for checking, up-to-date, update available, downloading, ready to install, installing, unavailable, and failure. Convert helper-script failures into clear English player-facing messages; do not expose raw platform errors or implementation details.
+- Make update discovery visible: retain the macOS native `Check for Updates…` command and provide the same action in the About screen on Windows and Linux. F1/F2 are keyboard shortcuts only; never make a function key the sole route to About or update checking. The About action should close its window and open the shared update flow without affecting gameplay.
+- In About and update result screens, show the current application version and the configured original game release date using the same project setting and the label `Original release`. Do not present a GitHub package publication timestamp as the game's release date. Opening About or Update must never activate gameplay or change the game flow.
+- Before calling these screens finished, inspect every state at native desktop scale, including long text, progress, focus, close/later actions, and the transition between download and install. Report which states were actually exercised; a successful startup alone is not a visual review.
