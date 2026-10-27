@@ -1,0 +1,2674 @@
+{
+  "schema": "ct2-title-handoff-rom-stepper-events-v1",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "event_builder": "tools/diagnostics/export_title_handoff_source_events.py",
+  "event_builder_sha256": "a4f6cda84a7c84a126aa477cb7291ef8a2e729d177d75c3f17444a178fa6d7af",
+  "source_cpu_stepper": "tools/diagnostics/step_rom_source_cpu_ppu_dmc.py",
+  "source_cpu_stepper_sha256": "f20ca13ee59e1080ad0bef03b70001f53b2cd94c0af6e1d21a241e18288ecfe8",
+  "stepper_report": "reference/diagnostics/start_poll_rom_source_timing_20261027/irq_mask_corrected_title_source_trace/source_stepper_report.json",
+  "stepper_report_sha256": "b7f74878b5b780f2cc4beefad79192a11da43dd5dc171eaffe0cc9d83e74bf85",
+  "stepper_instruction_trace": "reference/diagnostics/start_poll_rom_source_timing_20261027/irq_mask_corrected_title_source_trace/title_cpu_instructions.csv",
+  "stepper_instruction_trace_sha256": "8ae2de35f229847230221f1afd971064bfdc581b0c967eb6086c161ed729dfd7",
+  "input_timeline_path": "reference/opening_reference_capture/input_timeline.csv",
+  "input_timeline_sha256": "195743d71b36da01b5148e46e14733988d3e5d21cf308ab09eaa735daf83d2d3",
+  "captured_frame_intervals_used": false,
+  "captured_pixels_or_audio_used": false,
+  "runtime_requires_rom_emulator_or_stepper_trace": false,
+  "start_anchor": {
+    "pc": "$8048",
+    "cycle": 138781457,
+    "source_frame": 4661
+  },
+  "event_counts": {
+    "nmi_accept": 31,
+    "queue_capacity_resume": 27,
+    "queue_capacity_wait": 27,
+    "queue_consumer_packet": 242,
+    "start_stop": 1,
+    "title_background_loader_enter": 1,
+    "title_palette_cursor_setup": 1
+  },
+  "events": [
+    {
+      "kind": "start_stop",
+      "cycle_offset": 0,
+      "source_frame": 4661,
+      "pc": "$8048",
+      "prg_bank_8k": 0,
+      "immediate": "$01"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 25462,
+      "source_frame": 4662,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 55242,
+      "source_frame": 4663,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 85028,
+      "source_frame": 4664,
+      "pc": "$90EB",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "title_background_loader_enter",
+      "cycle_offset": 87549,
+      "source_frame": 4664,
+      "pc": "$8AF7",
+      "prg_bank_8k": 0,
+      "background_id": "$17"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 112713,
+      "source_frame": 4664,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 114804,
+      "source_frame": 4665,
+      "pc": "$A8E5",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 115421,
+      "source_frame": 4665,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 0
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 115479,
+      "source_frame": 4665,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 1
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 115582,
+      "source_frame": 4665,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 2
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 115685,
+      "source_frame": 4665,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 3
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 115791,
+      "source_frame": 4665,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 4
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 115902,
+      "source_frame": 4665,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 5
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 115965,
+      "source_frame": 4665,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 6
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 116076,
+      "source_frame": 4665,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 7
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 116187,
+      "source_frame": 4665,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 8
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 120915,
+      "source_frame": 4665,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 123750,
+      "source_frame": 4665,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 144585,
+      "source_frame": 4666,
+      "pc": "$9F04",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 145202,
+      "source_frame": 4666,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 9
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 145305,
+      "source_frame": 4666,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 10
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 145363,
+      "source_frame": 4666,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 11
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 145466,
+      "source_frame": 4666,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 12
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 145572,
+      "source_frame": 4666,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 13
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 145683,
+      "source_frame": 4666,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 14
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 145794,
+      "source_frame": 4666,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 15
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 145857,
+      "source_frame": 4666,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 16
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 145968,
+      "source_frame": 4666,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 17
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 147927,
+      "source_frame": 4666,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 150550,
+      "source_frame": 4666,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 174366,
+      "source_frame": 4667,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 174983,
+      "source_frame": 4667,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 18
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 175086,
+      "source_frame": 4667,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 19
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 175189,
+      "source_frame": 4667,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 20
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 175247,
+      "source_frame": 4667,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 21
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 175353,
+      "source_frame": 4667,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 22
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 175464,
+      "source_frame": 4667,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 23
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 175575,
+      "source_frame": 4667,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 24
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 175686,
+      "source_frame": 4667,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 25
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 175749,
+      "source_frame": 4667,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 26
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 177711,
+      "source_frame": 4667,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 180334,
+      "source_frame": 4667,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 204147,
+      "source_frame": 4668,
+      "pc": "$9F04",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 204764,
+      "source_frame": 4668,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 27
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 204867,
+      "source_frame": 4668,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 28
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 204970,
+      "source_frame": 4668,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 29
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 205073,
+      "source_frame": 4668,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 30
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 205134,
+      "source_frame": 4668,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 31
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 205245,
+      "source_frame": 4668,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 32
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 205356,
+      "source_frame": 4668,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 33
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 205467,
+      "source_frame": 4668,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 34
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 205578,
+      "source_frame": 4668,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 35
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 207711,
+      "source_frame": 4668,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 210581,
+      "source_frame": 4668,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 233926,
+      "source_frame": 4669,
+      "pc": "$9F04",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 234543,
+      "source_frame": 4669,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 36
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 234646,
+      "source_frame": 4669,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 37
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 234749,
+      "source_frame": 4669,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 38
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 234852,
+      "source_frame": 4669,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 39
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 234961,
+      "source_frame": 4669,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 40
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 235024,
+      "source_frame": 4669,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 41
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 235135,
+      "source_frame": 4669,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 42
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 235246,
+      "source_frame": 4669,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 43
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 235357,
+      "source_frame": 4669,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 44
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 237316,
+      "source_frame": 4669,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 239657,
+      "source_frame": 4669,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 263707,
+      "source_frame": 4670,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 264324,
+      "source_frame": 4670,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 45
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 264382,
+      "source_frame": 4670,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 46
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 264485,
+      "source_frame": 4670,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 47
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 264588,
+      "source_frame": 4670,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 48
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 264694,
+      "source_frame": 4670,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 49
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 264805,
+      "source_frame": 4670,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 50
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 264868,
+      "source_frame": 4670,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 51
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 264979,
+      "source_frame": 4670,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 52
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 265090,
+      "source_frame": 4670,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 53
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 267052,
+      "source_frame": 4670,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 269675,
+      "source_frame": 4670,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 293488,
+      "source_frame": 4671,
+      "pc": "$9F04",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 294105,
+      "source_frame": 4671,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 54
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 294208,
+      "source_frame": 4671,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 55
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 294266,
+      "source_frame": 4671,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 56
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 294369,
+      "source_frame": 4671,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 57
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 294475,
+      "source_frame": 4671,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 58
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 294586,
+      "source_frame": 4671,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 59
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 294697,
+      "source_frame": 4671,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 60
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 294760,
+      "source_frame": 4671,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 61
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 294871,
+      "source_frame": 4671,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 62
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 296830,
+      "source_frame": 4671,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 299457,
+      "source_frame": 4671,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 323267,
+      "source_frame": 4672,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 323884,
+      "source_frame": 4672,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 63
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 323987,
+      "source_frame": 4672,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 64
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 324090,
+      "source_frame": 4672,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 65
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 324148,
+      "source_frame": 4672,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 66
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 324254,
+      "source_frame": 4672,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 67
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 324365,
+      "source_frame": 4672,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 68
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 324476,
+      "source_frame": 4672,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 69
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 324587,
+      "source_frame": 4672,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 70
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 324650,
+      "source_frame": 4672,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 71
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 326612,
+      "source_frame": 4672,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 329373,
+      "source_frame": 4672,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 353048,
+      "source_frame": 4673,
+      "pc": "$9F04",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 353665,
+      "source_frame": 4673,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 72
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 353768,
+      "source_frame": 4673,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 73
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 353871,
+      "source_frame": 4673,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 74
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 353974,
+      "source_frame": 4673,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 75
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 354035,
+      "source_frame": 4673,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 76
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 354146,
+      "source_frame": 4673,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 77
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 354257,
+      "source_frame": 4673,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 78
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 354368,
+      "source_frame": 4673,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 79
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 354479,
+      "source_frame": 4673,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 80
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 356390,
+      "source_frame": 4673,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 359111,
+      "source_frame": 4673,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 382828,
+      "source_frame": 4674,
+      "pc": "$9F04",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 383445,
+      "source_frame": 4674,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 81
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 383548,
+      "source_frame": 4674,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 82
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 383651,
+      "source_frame": 4674,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 83
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 383754,
+      "source_frame": 4674,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 84
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 383863,
+      "source_frame": 4674,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 85
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 383926,
+      "source_frame": 4674,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 86
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 384037,
+      "source_frame": 4674,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 87
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 384148,
+      "source_frame": 4674,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 88
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 384259,
+      "source_frame": 4674,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 89
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 386218,
+      "source_frame": 4674,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 388559,
+      "source_frame": 4674,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 412609,
+      "source_frame": 4675,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 413226,
+      "source_frame": 4675,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 90
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 413284,
+      "source_frame": 4675,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 91
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 413387,
+      "source_frame": 4675,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 92
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 413490,
+      "source_frame": 4675,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 93
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 413596,
+      "source_frame": 4675,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 94
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 413707,
+      "source_frame": 4675,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 95
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 413770,
+      "source_frame": 4675,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 96
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 413881,
+      "source_frame": 4675,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 97
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 413992,
+      "source_frame": 4675,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 98
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 415954,
+      "source_frame": 4675,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 418577,
+      "source_frame": 4675,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 442390,
+      "source_frame": 4676,
+      "pc": "$9F04",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 443007,
+      "source_frame": 4676,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 99
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 443110,
+      "source_frame": 4676,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 100
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 443168,
+      "source_frame": 4676,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 101
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 443271,
+      "source_frame": 4676,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 102
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 443377,
+      "source_frame": 4676,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 103
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 443488,
+      "source_frame": 4676,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 104
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 443599,
+      "source_frame": 4676,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 105
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 443662,
+      "source_frame": 4676,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 106
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 443773,
+      "source_frame": 4676,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 107
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 445732,
+      "source_frame": 4676,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 448355,
+      "source_frame": 4676,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 472171,
+      "source_frame": 4677,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 472788,
+      "source_frame": 4677,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 108
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 472891,
+      "source_frame": 4677,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 109
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 472994,
+      "source_frame": 4677,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 110
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 473052,
+      "source_frame": 4677,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 111
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 473158,
+      "source_frame": 4677,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 112
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 473269,
+      "source_frame": 4677,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 113
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 473380,
+      "source_frame": 4677,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 114
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 473491,
+      "source_frame": 4677,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 115
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 473554,
+      "source_frame": 4677,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 116
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 475516,
+      "source_frame": 4677,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 478288,
+      "source_frame": 4677,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 501951,
+      "source_frame": 4678,
+      "pc": "$9F04",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 502568,
+      "source_frame": 4678,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 117
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 502671,
+      "source_frame": 4678,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 118
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 502774,
+      "source_frame": 4678,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 119
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 502877,
+      "source_frame": 4678,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 120
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 502938,
+      "source_frame": 4678,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 121
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 503049,
+      "source_frame": 4678,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 122
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 503160,
+      "source_frame": 4678,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 123
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 503271,
+      "source_frame": 4678,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 124
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 503382,
+      "source_frame": 4678,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 125
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 505293,
+      "source_frame": 4678,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 508014,
+      "source_frame": 4678,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 531731,
+      "source_frame": 4679,
+      "pc": "$9F04",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 532348,
+      "source_frame": 4679,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 126
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 532451,
+      "source_frame": 4679,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 127
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 532554,
+      "source_frame": 4679,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 128
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 532657,
+      "source_frame": 4679,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 129
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 532766,
+      "source_frame": 4679,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 130
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 532829,
+      "source_frame": 4679,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 131
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 532940,
+      "source_frame": 4679,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 132
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 533051,
+      "source_frame": 4679,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 133
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 533162,
+      "source_frame": 4679,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 134
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 535121,
+      "source_frame": 4679,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 537462,
+      "source_frame": 4679,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 561512,
+      "source_frame": 4680,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 562129,
+      "source_frame": 4680,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 135
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 562187,
+      "source_frame": 4680,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 136
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 562290,
+      "source_frame": 4680,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 137
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 562393,
+      "source_frame": 4680,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 138
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 562499,
+      "source_frame": 4680,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 139
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 562610,
+      "source_frame": 4680,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 140
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 562673,
+      "source_frame": 4680,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 141
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 562784,
+      "source_frame": 4680,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 142
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 562895,
+      "source_frame": 4680,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 143
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 564857,
+      "source_frame": 4680,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 567480,
+      "source_frame": 4680,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 591293,
+      "source_frame": 4681,
+      "pc": "$9F04",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 591910,
+      "source_frame": 4681,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 144
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 592013,
+      "source_frame": 4681,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 145
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 592071,
+      "source_frame": 4681,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 146
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 592174,
+      "source_frame": 4681,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 147
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 592280,
+      "source_frame": 4681,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 148
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 592391,
+      "source_frame": 4681,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 149
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 592502,
+      "source_frame": 4681,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 150
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 592565,
+      "source_frame": 4681,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 151
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 592676,
+      "source_frame": 4681,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 152
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 594635,
+      "source_frame": 4681,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 597396,
+      "source_frame": 4681,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 621074,
+      "source_frame": 4682,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 621691,
+      "source_frame": 4682,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 153
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 621794,
+      "source_frame": 4682,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 154
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 621897,
+      "source_frame": 4682,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 155
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 621955,
+      "source_frame": 4682,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 156
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 622061,
+      "source_frame": 4682,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 157
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 622172,
+      "source_frame": 4682,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 158
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 622283,
+      "source_frame": 4682,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 159
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 622394,
+      "source_frame": 4682,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 160
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 622457,
+      "source_frame": 4682,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 161
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 624419,
+      "source_frame": 4682,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 627042,
+      "source_frame": 4682,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 650852,
+      "source_frame": 4683,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 651469,
+      "source_frame": 4683,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 162
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 651572,
+      "source_frame": 4683,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 163
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 651675,
+      "source_frame": 4683,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 164
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 651778,
+      "source_frame": 4683,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 165
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 651839,
+      "source_frame": 4683,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 166
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 651950,
+      "source_frame": 4683,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 167
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 652061,
+      "source_frame": 4683,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 168
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 652172,
+      "source_frame": 4683,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 169
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 652283,
+      "source_frame": 4683,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 170
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 654197,
+      "source_frame": 4683,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 656918,
+      "source_frame": 4683,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 680635,
+      "source_frame": 4684,
+      "pc": "$9F04",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 681252,
+      "source_frame": 4684,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 171
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 681355,
+      "source_frame": 4684,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 172
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 681458,
+      "source_frame": 4684,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 173
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 681561,
+      "source_frame": 4684,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 174
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 681670,
+      "source_frame": 4684,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 175
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 681733,
+      "source_frame": 4684,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 176
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 681844,
+      "source_frame": 4684,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 177
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 681955,
+      "source_frame": 4684,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 178
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 682066,
+      "source_frame": 4684,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 179
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 684025,
+      "source_frame": 4684,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 686366,
+      "source_frame": 4684,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 710413,
+      "source_frame": 4685,
+      "pc": "$9F04",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 711030,
+      "source_frame": 4685,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 180
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 711088,
+      "source_frame": 4685,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 181
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 711191,
+      "source_frame": 4685,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 182
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 711294,
+      "source_frame": 4685,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 183
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 711400,
+      "source_frame": 4685,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 184
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 711511,
+      "source_frame": 4685,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 185
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 711574,
+      "source_frame": 4685,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 186
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 711685,
+      "source_frame": 4685,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 187
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 711796,
+      "source_frame": 4685,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 188
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 713755,
+      "source_frame": 4685,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 716378,
+      "source_frame": 4685,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 740194,
+      "source_frame": 4686,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 740811,
+      "source_frame": 4686,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 189
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 740914,
+      "source_frame": 4686,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 190
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 740972,
+      "source_frame": 4686,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 191
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 741075,
+      "source_frame": 4686,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 192
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 741181,
+      "source_frame": 4686,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 193
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 741292,
+      "source_frame": 4686,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 194
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 741403,
+      "source_frame": 4686,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 195
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 741466,
+      "source_frame": 4686,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 196
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 741577,
+      "source_frame": 4686,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 197
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 743539,
+      "source_frame": 4686,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 746339,
+      "source_frame": 4686,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 769975,
+      "source_frame": 4687,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 770592,
+      "source_frame": 4687,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 198
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 770695,
+      "source_frame": 4687,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 199
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 770798,
+      "source_frame": 4687,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 200
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 770856,
+      "source_frame": 4687,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 201
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 770962,
+      "source_frame": 4687,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 202
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 771073,
+      "source_frame": 4687,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 203
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 771184,
+      "source_frame": 4687,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 204
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 771295,
+      "source_frame": 4687,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 205
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 771358,
+      "source_frame": 4687,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 206
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 773320,
+      "source_frame": 4687,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 775981,
+      "source_frame": 4687,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 799755,
+      "source_frame": 4688,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 800372,
+      "source_frame": 4688,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 207
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 800475,
+      "source_frame": 4688,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 208
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 800578,
+      "source_frame": 4688,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 209
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 800681,
+      "source_frame": 4688,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 210
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 800742,
+      "source_frame": 4688,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 211
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 800853,
+      "source_frame": 4688,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 212
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 800964,
+      "source_frame": 4688,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 213
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 801075,
+      "source_frame": 4688,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 214
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 801186,
+      "source_frame": 4688,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 215
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 803100,
+      "source_frame": 4688,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 805863,
+      "source_frame": 4688,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 829535,
+      "source_frame": 4689,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 830152,
+      "source_frame": 4689,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 216
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 830255,
+      "source_frame": 4689,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 217
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 830358,
+      "source_frame": 4689,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 218
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 830461,
+      "source_frame": 4689,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 219
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 830570,
+      "source_frame": 4689,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 220
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 830633,
+      "source_frame": 4689,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 221
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 830744,
+      "source_frame": 4689,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 222
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 830855,
+      "source_frame": 4689,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 223
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 830966,
+      "source_frame": 4689,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 224
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 832928,
+      "source_frame": 4689,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 835311,
+      "source_frame": 4689,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 859316,
+      "source_frame": 4690,
+      "pc": "$9F04",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 859933,
+      "source_frame": 4690,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 225
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 859991,
+      "source_frame": 4690,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 226
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 860094,
+      "source_frame": 4690,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 227
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 860197,
+      "source_frame": 4690,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 228
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 860303,
+      "source_frame": 4690,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 229
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 860414,
+      "source_frame": 4690,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 230
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 860477,
+      "source_frame": 4690,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 231
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 860588,
+      "source_frame": 4690,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 232
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 860699,
+      "source_frame": 4690,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 233
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 862658,
+      "source_frame": 4690,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "queue_capacity_wait",
+      "cycle_offset": 868847,
+      "source_frame": 4690,
+      "pc": "$9B30",
+      "prg_bank_8k": 0,
+      "resume_pc": "$9B33",
+      "queue_limit": "$3D"
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 889097,
+      "source_frame": 4691,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 889714,
+      "source_frame": 4691,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 234
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 889817,
+      "source_frame": 4691,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 235
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 889875,
+      "source_frame": 4691,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 236
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 889978,
+      "source_frame": 4691,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 237
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 890084,
+      "source_frame": 4691,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 238
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 890195,
+      "source_frame": 4691,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 239
+    },
+    {
+      "kind": "queue_capacity_resume",
+      "cycle_offset": 892157,
+      "source_frame": 4691,
+      "pc": "$9B33",
+      "prg_bank_8k": 0,
+      "scheduler_return": "$9FA8"
+    },
+    {
+      "kind": "title_palette_cursor_setup",
+      "cycle_offset": 894234,
+      "source_frame": 4691,
+      "pc": "$807A",
+      "prg_bank_8k": 0
+    },
+    {
+      "kind": "nmi_accept",
+      "cycle_offset": 918877,
+      "source_frame": 4692,
+      "pc": "$9F06",
+      "prg_bank_8k": null
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 919494,
+      "source_frame": 4692,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 240
+    },
+    {
+      "kind": "queue_consumer_packet",
+      "cycle_offset": 920030,
+      "source_frame": 4692,
+      "pc": "$A029",
+      "prg_bank_8k": 2,
+      "ordinal": 241
+    }
+  ],
+  "limits": [
+    "Events come from ROM-only 6502/PPU/DMC execution with the recorded cold-start input route.",
+    "FCEUX is post-run validation only; no capture timing, pixels, or PCM are event-generation inputs.",
+    "The stepper carries one CPU cycle per DMC read and reproduces the aggregate FCEUX APU-write cycle count (45,452/45,452); DMC timestamp counts differ by one (104,105/104,106), with one +3-cycle residual. It does not model physical 2A03 halt/get-put arbitration or full 3/4-cycle stalls, and title per-PC cycles are not independently matched to FCEUX per-PC timestamps.",
+    "Cycle values do not establish physical 2C02 output-dot timing or live input-poll phase."
+  ]
+}

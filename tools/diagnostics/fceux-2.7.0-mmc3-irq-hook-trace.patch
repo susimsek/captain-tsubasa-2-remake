@@ -1,0 +1,70 @@
+diff --git a/src/boards/mmc3.cpp b/src/boards/mmc3.cpp
+index f0eb52d2..2ae4fe41 100644
+--- a/src/boards/mmc3.cpp
++++ b/src/boards/mmc3.cpp
+@@ -26,6 +26,7 @@
+ 
+ #include "mapinc.h"
+ #include "mmc3.h"
++#include <cstdlib>
+ 
+ uint8 MMC3_cmd;
+ uint8 kt_extra;
+@@ -204,18 +205,57 @@ DECLFW(KT008HackWrite) {
+ 	}
+ }
+ 
++static FILE *MMC3IRQTraceFile = nullptr;
++static bool MMC3IRQTraceInitialized = false;
++static uint64 MMC3IRQTraceStart = 0, MMC3IRQTraceEnd = 0, MMC3IRQTraceSequence = 0;
++
++static void InitMMC3IRQTrace(void) {
++	if (MMC3IRQTraceInitialized) return;
++	MMC3IRQTraceInitialized = true;
++	const char *path = std::getenv("FCEU_MMC3_IRQ_TRACE_PATH");
++	if (!path || !*path) return;
++	const char *start = std::getenv("FCEU_MMC3_IRQ_TRACE_START_CYCLE");
++	const char *end = std::getenv("FCEU_MMC3_IRQ_TRACE_END_CYCLE");
++	if (!start || !end) return;
++	MMC3IRQTraceStart = std::strtoull(start, nullptr, 0);
++	MMC3IRQTraceEnd = std::strtoull(end, nullptr, 0);
++	MMC3IRQTraceFile = std::fopen(path, "w");
++	if (MMC3IRQTraceFile) {
++		fprintf(MMC3IRQTraceFile, "sequence,absolute_cycle,timestamp,scanline,ppu_scanline,ppu_dot,cpu_budget_scaled,cpu_budget_cycles,tcount,pc,cpu_p,cpu_pi,irqlow_before,irqlow_after,irq_enable,count_before,count_after,latch,reload_before,reload_after,irq_asserted\n");
++		fflush(MMC3IRQTraceFile);
++	}
++}
++
++static void TraceMMC3IRQClock(int hookCycles, int countBefore, int countAfter,
++	int reloadBefore, int reloadAfter, uint32 irqLowBefore, int irqAsserted) {
++	InitMMC3IRQTrace();
++	const uint64 absoluteCycle = timestampbase + (uint64)timestamp;
++	if (!MMC3IRQTraceFile || absoluteCycle < MMC3IRQTraceStart || absoluteCycle > MMC3IRQTraceEnd) return;
++	fprintf(MMC3IRQTraceFile, "%llu,%llu,%u,%d,%d,%d,%d,%d,%d,%04X,%02X,%02X,%08X,%08X,%u,%d,%d,%u,%d,%d,%d\n",
++		(unsigned long long)MMC3IRQTraceSequence++, (unsigned long long)absoluteCycle, (unsigned)timestamp,
++		scanline, newppu_get_scanline(), newppu_get_dot(), X.count, X.count / 48, X.tcount, X.PC, X.P, X.mooPI,
++		(unsigned)irqLowBefore, (unsigned)X.IRQlow, (unsigned)IRQa, countBefore, countAfter,
++		(unsigned)IRQLatch, reloadBefore, reloadAfter, irqAsserted);
++	fflush(MMC3IRQTraceFile);
++}
++
+ static void ClockMMC3Counter(void) {
+ 	int count = IRQCount;
++	uint8 reloadBefore = IRQReload;
++	uint32 irqLowBefore = X.IRQlow;
+ 	if (!count || IRQReload) {
+ 		IRQCount = IRQLatch;
+ 		IRQReload = 0;
+ 	} else
+ 		IRQCount--;
++	int irqAsserted = 0;
+ 	if ((count | isRevB) && !IRQCount) {
+ 		if (IRQa) {
+ 			X6502_IRQBegin(FCEU_IQEXT);
++			irqAsserted = 1;
+ 		}
+ 	}
++	TraceMMC3IRQClock(X.tcount, count, IRQCount, reloadBefore, IRQReload, irqLowBefore, irqAsserted);
+ }
+ 
+ static void MMC3_hb(void) {

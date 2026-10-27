@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "resource_id": "animation_8d_sprite_palette",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "observed_scene": {
+    "cutscene_animation_id": "0x8D",
+    "animation_entry_file_offset": "0x0143E3",
+    "sprite_frame_cpu_address": "0xB15B",
+    "capture_ppu_state": "reference/opening_timing_capture_20261024_131000/ppu_states/ppu_00100.bin",
+    "ppu_palette_match_verified": true,
+    "ppu_palette_ram_offset": "0x3010"
+  },
+  "rgb_mapping": {
+    "source": "FCEUX internal default RGB palette, version 2.7.0; external emulator color mapping, not stored in the ROM.",
+    "source_path": "reference/palettes/FCEUX_internal_default_2.7.0_rgb.pal",
+    "source_sha256": "da30843b331e2e4474395866bc9871fcd60a7d716b3c8ee5ce3c89ee46e8c91e",
+    "rows": [
+      {
+        "palette_ram_slot": 0,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 1,
+        "nes_color_index": "0x05",
+        "rgb_hex": "#AA0010",
+        "raw_rom_byte": "0x05"
+      },
+      {
+        "palette_ram_slot": 2,
+        "nes_color_index": "0x16",
+        "rgb_hex": "#DB2800",
+        "raw_rom_byte": "0x16"
+      },
+      {
+        "palette_ram_slot": 3,
+        "nes_color_index": "0x15",
+        "rgb_hex": "#E70059",
+        "raw_rom_byte": "0x15"
+      },
+      {
+        "palette_ram_slot": 4,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 5,
+        "nes_color_index": "0x30",
+        "rgb_hex": "#FFFFFF",
+        "raw_rom_byte": "0x30"
+      },
+      {
+        "palette_ram_slot": 6,
+        "nes_color_index": "0x27",
+        "rgb_hex": "#FF9A38",
+        "raw_rom_byte": "0x27"
+      },
+      {
+        "palette_ram_slot": 7,
+        "nes_color_index": "0x37",
+        "rgb_hex": "#FFDBAA",
+        "raw_rom_byte": "0x37"
+      },
+      {
+        "palette_ram_slot": 8,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 9,
+        "nes_color_index": "0x10",
+        "rgb_hex": "#BEBEBE",
+        "raw_rom_byte": "0x10"
+      },
+      {
+        "palette_ram_slot": 10,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 11,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 12,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 13,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 14,
+        "nes_color_index": "0x00",
+        "rgb_hex": "#757575",
+        "raw_rom_byte": "0x00"
+      },
+      {
+        "palette_ram_slot": 15,
+        "nes_color_index": "0x30",
+        "rgb_hex": "#FFFFFF",
+        "raw_rom_byte": "0x30"
+      }
+    ]
+  },
+  "limitations": [
+    "The ROM palette loader path and frame-100 PPU palette bytes are verified. This establishes palette contents, but not the exact frame when the logo-specific staged update reaches the PPU.",
+    "FCEUX RGB values are an external palette choice. They reproduce this selected FCEUX palette mapping, not a universal NES analog RGB standard."
+  ],
+  "related_capture_check": {
+    "capture": "reference/opening_timing_capture_20261024_131000/ppu_states/ppu_00100.bin",
+    "emulator_frame": 100,
+    "snapshot_sha256": "416ff0dfa90bec72bc31c0b3523b9f5d49500d2b0beedb332366a5d5eaf9c43f",
+    "sprite_palette_ram_bytes_hex": "0f 05 16 15 0f 30 27 37 0f 10 0f 0f 0f 0f 00 30",
+    "matches_candidate_bytes": false,
+    "synchronization_with_animation_0x8D_observation": "Palette bytes match the frame-100 snapshot; the exact logo-specific PPU commit frame remains unverified.",
+    "matches_rom_bytes": true,
+    "source_file_offset": "0x00D670",
+    "palette_ram_offset": "0x3010",
+    "commit_timing_verified": false
+  },
+  "rom_palette_record": {
+    "animation_palette_operand": "0x36",
+    "loader_resolution": "ROM bank 6 CPU address $B300 + 16 * operand = $B660",
+    "source_file_offset": "0x00D670",
+    "prg_bank": "0x06",
+    "cpu_address": "0xB660",
+    "source_bin": "reference/rom_extract/intro/animation_8D_sprite_palette.bin",
+    "source_bin_sha256": "ec42f3f85cb8d9fae82740c0ee5c10c56d337279e05d556c3f4a27cfbca505cb",
+    "bytes_hex": "0f 05 16 15 0f 30 27 37 0f 10 0f 0f 0f 0f 00 30",
+    "ppu_destination": "$3F10-$3F1F",
+    "purpose": "Traced ROM palette record for animation 0x8D; byte-matches the frame-100 PPU palette snapshot."
+  }
+}

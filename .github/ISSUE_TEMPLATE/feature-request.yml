@@ -1,0 +1,33 @@
+name: Feature request
+description: Propose a focused improvement to the current remake milestone.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What user or developer problem does this address?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the intended behavior and its scope.
+    validations:
+      required: true
+  - type: textarea
+    id: original-evidence
+    attributes:
+      label: Original-game evidence
+      description: Link observations, ROM-byte notes, or trace evidence. Mark unknown behavior as unknown.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context

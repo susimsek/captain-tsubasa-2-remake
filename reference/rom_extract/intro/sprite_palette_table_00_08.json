@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "rom_file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "resource_path": "reference/rom_extract/intro/sprite_palette_table_00_08.bin",
+  "resource_sha256": "aa9d7380ef27e015b00235fcea79660f6e95845da0fb22d241bfa940569c2959",
+  "source_file_offset": "0x00D310",
+  "source_cpu_address": "0xB300",
+  "prg_bank": 6,
+  "palette_index_base": 0,
+  "palette_count": 9,
+  "bytes_per_palette": 16,
+  "source_bytes": 144,
+  "source_sha256": "aa9d7380ef27e015b00235fcea79660f6e95845da0fb22d241bfa940569c2959",
+  "conversion": "none; contiguous ROM bytes copied unchanged",
+  "rows": [
+    {
+      "palette_index": 0,
+      "palette_id": "0x00",
+      "source_file_offset": "0x00D310",
+      "table_byte_offset": 0,
+      "bytes_hex": "0f 0f 0f 36 0f 0f 16 36 0f 0f 30 36 0f 0f 30 36",
+      "sha256": "54ee9e2b3c2d6080fdd6ed463617d1124dcb97dc532604406587ae6096e20b3f"
+    },
+    {
+      "palette_index": 1,
+      "palette_id": "0x01",
+      "source_file_offset": "0x00D320",
+      "table_byte_offset": 16,
+      "bytes_hex": "0f 0f 36 27 0f 0f 36 30 0f 0f 30 27 0f 0f 30 36",
+      "sha256": "0ed01add1ebaf71b89dd0799e7dc9b6ac14c223c9d9443de14c50fa26f79b018"
+    },
+    {
+      "palette_index": 2,
+      "palette_id": "0x02",
+      "source_file_offset": "0x00D330",
+      "table_byte_offset": 32,
+      "bytes_hex": "0f 0f 0f 36 0f 0f 00 36 0f 0f 0f 36 0f 0f 30 36",
+      "sha256": "7dd86189a7158688f5b83d58954df2ec807918f40e982e78f4d9a86abeec8611"
+    },
+    {
+      "palette_index": 3,
+      "palette_id": "0x03",
+      "source_file_offset": "0x00D340",
+      "table_byte_offset": 48,
+      "bytes_hex": "0f 0f 27 36 0f 0f 16 36 0f 0f 16 06 0f 0f 30 36",
+      "sha256": "223973d8627260b9d7a0cc44e7d177153aa10b0dce07cbaf60353b34f5c57a01"
+    },
+    {
+      "palette_index": 4,
+      "palette_id": "0x04",
+      "source_file_offset": "0x00D350",
+      "table_byte_offset": 64,
+      "bytes_hex": "0f 0f 0f 26 0f 0f 16 26 0f 0f 11 26 0f 0f 30 36",
+      "sha256": "1b74b8e988d7df895d1249878e935af434ff047d53da904fa7cbb1a324b5c92f"
+    },
+    {
+      "palette_index": 5,
+      "palette_id": "0x05",
+      "source_file_offset": "0x00D360",
+      "table_byte_offset": 80,
+      "bytes_hex": "0f 0f 37 16 0f 0f 37 27 0f 0f 07 16 0f 0f 30 0f",
+      "sha256": "a896847f73f899d32ba703803b05c976c66b78e8358e4dbe3c6a2306e994d402"
+    },
+    {
+      "palette_index": 6,
+      "palette_id": "0x06",
+      "source_file_offset": "0x00D370",
+      "table_byte_offset": 96,
+      "bytes_hex": "0f 0f 36 27 0f 0f 07 27 0f 0f 36 30 0f 0f 07 36",
+      "sha256": "f36ff9a57ba663d34f6a2de4424fdabc32fa938a7dcd2b542ee8276e11378d65"
+    },
+    {
+      "palette_index": 7,
+      "palette_id": "0x07",
+      "source_file_offset": "0x00D380",
+      "table_byte_offset": 112,
+      "bytes_hex": "0f 0f 30 36 0f 0f 32 36 0f 0f 22 36 0f 0f 30 36",
+      "sha256": "150799fde48c92af98f99041f6214d03d63bbd064e83c72c2068132d34ccd957"
+    },
+    {
+      "palette_index": 8,
+      "palette_id": "0x08",
+      "source_file_offset": "0x00D390",
+      "table_byte_offset": 128,
+      "bytes_hex": "0f 0f 36 27 0f 0f 30 27 0f 0f 30 31 0f 0f 30 36",
+      "sha256": "909f5aa9efa8ebdf54eede54d7c9418592ccca602c0fc2a27ea506f5d4291e2d"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "rom_payload_md5": "eaf2b3745263efa4b1afd2b400f68dae",
+  "extraction": "unchanged byte copies from the supplied iNES file; file offsets include the 16-byte iNES header",
+  "selection": {
+    "cutscene_cpu_address": "$A03A",
+    "cutscene_file_offset": "0x00604A",
+    "command_bytes_hex": "F5 00",
+    "effect_selector_ram": "$4C=$80",
+    "pointer_ram": "$EC/$ED=$2A/$B8"
+  },
+  "pointer_table": {
+    "index": 0,
+    "prg_bank": 6,
+    "cpu_address": "$B800",
+    "file_offset": "0x00D810",
+    "pointer_bytes_hex": "2a b8",
+    "resolved_cpu_address": "$B82A",
+    "resolved_file_offset": "0x00D83A",
+    "path": "reference/rom_extract/intro/palette_effect_state/effect_00_pointer.bin",
+    "sha256": "39988786ab43c542ffcea851aa87ac847d89ffc2b73e6aaaf0904b7143d92c5c"
+  },
+  "effect_stream": {
+    "prg_bank": 6,
+    "cpu_address": "$B82A",
+    "file_offset": "0x00D83A",
+    "length_bytes": 14,
+    "bytes_hex": "0c 04 3a 1a 1a 04 1a 1a 3a 04 1a 3a 1a fe",
+    "path": "reference/rom_extract/intro/palette_effect_state/runner_effect_00_stream.bin",
+    "sha256": "38d267db8fdf3279b838a584b43b05a4173d118018d1157dbbcea6cd5b62dac2"
+  },
+  "writer": {
+    "cpu_address": "$8326",
+    "ram_addresses": "$0637-$0639",
+    "ppu_addresses": "$3F0D-$3F0F",
+    "updated_at_cpu_pc_after_store": "$8329",
+    "delay": "four cooperative scheduler releases per record; the captured source-frame cadence is 4 after the initial dispatch phase",
+    "sta_opcode_hex": "9D 2A 06"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_file_offset": "0x00DD10",
+  "source_cpu_range": "$BD00-$BEFF",
+  "source_prg_bank": 6,
+  "length_bytes": 512,
+  "sha256": "2d794632b7681192ade347ec004d15397726952c67c820bf104391894d27d2e1",
+  "regions": [
+    {
+      "name": "pointer_table",
+      "cpu_start": "$BD00",
+      "length_bytes": 12
+    },
+    {
+      "name": "ec_stream_00",
+      "cpu_start": "$BD0C",
+      "length_bytes": 116,
+      "terminator": "$FF"
+    },
+    {
+      "name": "ec_group_payloads",
+      "cpu_start": "$BD80",
+      "length_bytes": 384,
+      "record_size_bytes": 12,
+      "record_count": 32
+    }
+  ],
+  "runtime_note": "Extracted project-owned source bytes. No ROM or emulator runtime dependency."
+}

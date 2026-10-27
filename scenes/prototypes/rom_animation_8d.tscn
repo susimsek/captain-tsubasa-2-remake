@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/opening/rom_sprite_animation_prototype.gd" id="1_renderer"]
+
+[node name="RomAnimation8DPrototype" type="Node2D"]
+script = ExtResource("1_renderer")
+animation_id = "0x8D"

@@ -1,0 +1,127 @@
+{
+  "schema": "ct2-f8-helper-return-source-events-v1",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "cutscene_script_path": "reference/rom_extract/intro/cutscene_00.bin",
+  "cutscene_script_sha256": "499ccb62b8b2b9118d7ebfaa6e6b9fce46806cd3b9173b5e1d5d61de21c2a6b7",
+  "cutscene_f8_script_offset": "0x027B",
+  "cutscene_f8_script_bytes": "F8 00 DF FE 20 A0",
+  "event_builder": "tools/diagnostics/export_f8_helper_return_event.py",
+  "event_builder_sha256": "83913fe75745fa8b19cdc2ea72b10af97a0f9d7abd354178ff91681a007f071b",
+  "source_cpu_stepper": "tools/diagnostics/step_rom_source_cpu_ppu_dmc.py",
+  "source_cpu_stepper_sha256": "7507dbdceb0a40eac6f041732b79eb4c94880ac2824054b8b0eb45dc1249d033",
+  "stepper_report": "reference/diagnostics/f8_return_source_trace_20261026/source_stepper_report.json",
+  "stepper_report_sha256": "13649544f9f485081a0dd365963cf54ff64840dcf2835a44d2cf01be372ef4a7",
+  "stepper_instruction_trace": "reference/diagnostics/f8_return_source_trace_20261026/source_cpu_instructions.csv",
+  "stepper_instruction_trace_sha256": "c48cd49c3cabc9f0b666f87c27de80a2691dd621a2279e9c461089d18444cd6c",
+  "input_timeline_path": "reference/opening_reference_capture/input_timeline.csv",
+  "input_timeline_sha256": "195743d71b36da01b5148e46e14733988d3e5d21cf308ab09eaa735daf83d2d3",
+  "service_completion_source_frame": 3967,
+  "runtime_dispatch_frame": 3968,
+  "runtime_consumes_cycle_offsets": false,
+  "captured_frame_intervals_used": false,
+  "captured_pixels_or_audio_used": false,
+  "runtime_requires_rom_emulator_or_stepper_trace": false,
+  "events": [
+    {
+      "kind": "cpu_pc_edge",
+      "pc": "$A53E",
+      "next_pc": "$98A0",
+      "source_frame": 3967,
+      "prg_bank_8k": 2,
+      "modeled_cycle": 118119303
+    },
+    {
+      "kind": "cpu_pc_edge",
+      "pc": "$98DC",
+      "next_pc": "$A541",
+      "source_frame": 3967,
+      "prg_bank_8k": 0,
+      "modeled_cycle": 118138010
+    },
+    {
+      "kind": "cpu_pc_edge",
+      "pc": "$A54F",
+      "next_pc": "$98EA",
+      "source_frame": 3967,
+      "prg_bank_8k": 2,
+      "modeled_cycle": 118138032
+    },
+    {
+      "kind": "cpu_pc_edge",
+      "pc": "$895C",
+      "next_pc": "$A557",
+      "source_frame": 3968,
+      "prg_bank_8k": 0,
+      "modeled_cycle": 118143006
+    },
+    {
+      "kind": "cpu_pc_edge",
+      "pc": "$A559",
+      "next_pc": "$880A",
+      "source_frame": 3968,
+      "prg_bank_8k": 2,
+      "modeled_cycle": 118143014
+    },
+    {
+      "kind": "cpu_pc_edge",
+      "pc": "$880D",
+      "next_pc": "$C4B9",
+      "source_frame": 3968,
+      "prg_bank_8k": 0,
+      "modeled_cycle": 118143025
+    },
+    {
+      "kind": "cpu_pc_edge",
+      "pc": "$8811",
+      "next_pc": "$8879",
+      "source_frame": 3968,
+      "prg_bank_8k": 0,
+      "modeled_cycle": 118143058
+    },
+    {
+      "kind": "cpu_pc_edge",
+      "pc": "$8879",
+      "next_pc": "$887A",
+      "source_frame": 3968,
+      "prg_bank_8k": 0,
+      "modeled_cycle": 118143061
+    },
+    {
+      "kind": "cpu_pc_edge",
+      "pc": "$84E7",
+      "next_pc": "$84E9",
+      "source_frame": 3968,
+      "prg_bank_8k": 0,
+      "modeled_cycle": 118143080
+    },
+    {
+      "kind": "cpu_pc_edge",
+      "pc": "$8508",
+      "next_pc": "$8509",
+      "source_frame": 3968,
+      "prg_bank_8k": 0,
+      "modeled_cycle": 118143097
+    },
+    {
+      "kind": "cpu_pc_edge",
+      "pc": "$8514",
+      "next_pc": "$9FA8",
+      "source_frame": 3968,
+      "prg_bank_8k": 0,
+      "modeled_cycle": 118143136
+    },
+    {
+      "kind": "cpu_pc_edge",
+      "pc": "$9FA8",
+      "next_pc": "$9FAA",
+      "source_frame": 3968,
+      "prg_bank_8k": 0,
+      "modeled_cycle": 118143142
+    }
+  ],
+  "limits": [
+    "Event order and source-frame labels are generated from ROM-only CPU/PPU/DMC stepping; FCEUX timestamps, pixels, and PCM are not event-generation inputs.",
+    "The runtime uses only the derived source-frame dispatch edge. The recorded per-PC modeled cycles are provenance and are not consumed by Godot.",
+    "The stepper carries one CPU cycle per DMC read but does not model physical 2A03 3/4-cycle halt/get-put arbitration; title/helper per-PC cycle offsets are not independently validated against FCEUX per-PC cycles."
+  ]
+}

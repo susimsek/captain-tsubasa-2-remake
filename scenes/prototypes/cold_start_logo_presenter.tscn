@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/opening/cold_start_logo_presenter.gd" id="1_presenter"]
+[ext_resource type="Script" path="res://scripts/opening/rom_background_00_renderer.gd" id="2_background"]
+[ext_resource type="Script" path="res://scripts/opening/rom_sprite_animation_prototype.gd" id="3_sprite"]
+
+[node name="ColdStartLogoPresenter" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_presenter")
+
+[node name="Background" type="Node2D" parent="."]
+script = ExtResource("2_background")
+
+[node name="LogoSprite" type="Node2D" parent="."]
+script = ExtResource("3_sprite")
+animation_id = "0x8D"

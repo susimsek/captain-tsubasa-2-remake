@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "sequence_id": "cold_start_tecmotheater_logo",
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_cutscene": {
+    "metadata_path": "res://reference/rom_extract/intro/cutscene_00.json",
+    "script_path": "res://reference/rom_extract/intro/cutscene_00.bin",
+    "prg_bank": 3,
+    "cpu_start": "0xA020",
+    "file_start": "0x006030",
+    "script_sha256": "499ccb62b8b2b9118d7ebfaa6e6b9fce46806cd3b9173b5e1d5d61de21c2a6b7"
+  },
+  "commands": [
+    {
+      "kind": "visual_preset",
+      "opcode": 232,
+      "argument_bytes": [1],
+      "source_file_offset": "0x006030",
+      "source_cpu_address": "0xA020",
+      "raw_hex": "E8 01",
+      "preset_id": 1
+    },
+    {
+      "kind": "background_load",
+      "opcode": 249,
+      "argument_bytes": [0],
+      "source_file_offset": "0x006032",
+      "source_cpu_address": "0xA022",
+      "raw_hex": "F9 00",
+      "background_id": 0,
+      "background_variant": 1
+    },
+    {
+      "kind": "animations_load",
+      "opcode": 251,
+      "argument_bytes": [1, 141],
+      "source_file_offset": "0x006034",
+      "source_cpu_address": "0xA024",
+      "raw_hex": "FB 01 8D",
+      "animation_ids": [141]
+    },
+    {
+      "kind": "screen_on",
+      "opcode": 233,
+      "argument_bytes": [],
+      "source_file_offset": "0x006037",
+      "source_cpu_address": "0xA027",
+      "raw_hex": "E9"
+    },
+    {
+      "kind": "wait_frames",
+      "opcode": 223,
+      "argument_bytes": [],
+      "source_file_offset": "0x006038",
+      "source_cpu_address": "0xA028",
+      "raw_hex": "DF",
+      "wait_ticks": 240,
+      "duration_table_source": {
+        "file_offset": "0x000AF6",
+        "cpu_address": "0x8AE6",
+        "table_index": 7,
+        "table_value_hex": "F0"
+      }
+    },
+    {
+      "kind": "screen_off_clear",
+      "opcode": 234,
+      "argument_bytes": [],
+      "source_file_offset": "0x006039",
+      "source_cpu_address": "0xA029",
+      "raw_hex": "EA"
+    }
+  ],
+  "asset_provenance": {
+    "background": {
+      "id": "0x00",
+      "metadata_path": "res://reference/rom_extract/intro/background_00_layout.json",
+      "record_path": "res://reference/rom_extract/intro/background_00.bin",
+      "record_file_offset": "0x00E0E4",
+      "record_cpu_address": "0xA0D4",
+      "chr_1k_banks": [124, 125, 126, 127],
+      "palette_path": "res://reference/rom_extract/intro/background_palette_01.bin",
+      "palette_file_offset": "0x00D020",
+      "metatile_block_paths": [
+        "res://reference/rom_extract/intro/block_22.bin",
+        "res://reference/rom_extract/intro/block_23.bin",
+        "res://reference/rom_extract/intro/block_24.bin"
+      ],
+      "layout_limit": "Static tile and attribute placements are decoded; complete displayed logo composition and PPU upload timing are not verified."
+    },
+    "animation": {
+      "id": "0x8D",
+      "metadata_path": "res://reference/rom_extract/intro/cutscene_00.json",
+      "record_path": "res://reference/rom_extract/intro/animation_8D.bin",
+      "record_file_offset": "0x0143E3",
+      "record_cpu_address": "0xA3D3",
+      "raw_hex": "36 F1 30 28 91 5B FF",
+      "sprite_frame_cpu_address": "0xB15B",
+      "sprite_frame_file_offset": "0x01516B",
+      "sprite_frame_metadata_path": "res://reference/rom_extract/intro/sprite_frames_entry.json",
+      "sprite_chr_selectors_hex": "7C 71 52 53",
+      "animation_limit": "The ROM record selects a static sprite frame. The prototype stores the selection but does not compose OAM or raster pixels."
+    },
+    "chr": {
+      "path": "res://reference/rom_extract/chr_rom.2bpp",
+      "note": "Full extracted CHR byte stream; NES RGB palette selection remains external metadata."
+    }
+  },
+  "prototype_assumptions": [
+    "Each call to advance_one_frame() represents one script wait tick; the exact relationship between interpreter ticks, visible frame boundaries, and PPU commits is not verified for this scene.",
+    "The visual state fields describe command meaning only. They do not claim to render a pixel-exact background/sprite composition.",
+    "This sequence is isolated research code and is not connected to the playable main scene."
+  ]
+}

@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: godot-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  project-check:
+    name: Import and launch Godot project
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Install and verify Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64.zip"
+          godot_dir="$RUNNER_TEMP/godot"
+          curl --fail --silent --show-error --location \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip" \
+            --output "$archive"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $archive" | sha256sum --check -
+          mkdir -p "$godot_dir"
+          unzip -q "$archive" -d "$godot_dir"
+          echo "GODOT_BIN=$godot_dir/Godot_v4.7.2-stable_linux.x86_64" >> "$GITHUB_ENV"
+          chmod +x "$godot_dir/Godot_v4.7.2-stable_linux.x86_64"
+
+      - name: Check tracked files exclude ROMs and capture dumps
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git ls-files | rg -n '(^|/)[^/]+\.(nes|NES|nsf|NSF|fm2|fcm|sav|srm|state)$|^reference/diagnostics/|^reference/[^/]*capture|^assets/opening/intro/|^tools/audio/build/'; then
+            echo "ROM, generated audio, or observation-only capture files must not be tracked." >&2
+            exit 1
+          fi
+
+      - name: Import project resources
+        run: "$GODOT_BIN" --headless --editor --path . --import
+
+      - name: Launch main scene briefly
+        run: "$GODOT_BIN" --headless --path . --quit-after 2

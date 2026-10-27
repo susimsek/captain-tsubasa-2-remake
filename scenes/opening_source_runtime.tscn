@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/opening_source_runtime.gd" id="1_runtime"]
+[ext_resource type="PackedScene" path="res://scenes/prototypes/cold_start_source_command_presenter.tscn" id="2_source"]
+[ext_resource type="PackedScene" path="res://scenes/title_menu.tscn" id="3_title"]
+[ext_resource type="Script" path="res://scripts/opening_audio_player_cleanup.gd" id="4_audio_cleanup"]
+
+[node name="OpeningSourceRuntime" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_runtime")
+
+[node name="SourcePresenter" parent="." instance=ExtResource("2_source")]
+
+[node name="TitleMenu" parent="." instance=ExtResource("3_title")]
+visible = false
+
+[node name="OpeningAudio" type="AudioStreamPlayer" parent="."]
+script = ExtResource("4_audio_cleanup")
+
+[node name="TransitionBlack" type="ColorRect" parent="."]
+visible = false
+offset_right = 256.0
+offset_bottom = 240.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)

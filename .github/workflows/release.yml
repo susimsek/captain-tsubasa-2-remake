@@ -1,0 +1,76 @@
+name: Source Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag to release
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: source-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  source-release:
+    name: Verify and publish source release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.tag || github.ref }}
+
+      - name: Resolve and validate release tag
+        id: release
+        shell: bash
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          tag="$INPUT_TAG"
+          if [[ -z "$tag" ]]; then
+            tag="$REF_NAME"
+          fi
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Expected a semantic version tag such as v0.1.0; received '$tag'." >&2
+            exit 1
+          fi
+          git rev-parse --verify "refs/tags/$tag" >/dev/null
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Install and verify Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64.zip"
+          godot_dir="$RUNNER_TEMP/godot"
+          curl --fail --silent --show-error --location \
+            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip" \
+            --output "$archive"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $archive" | sha256sum --check -
+          mkdir -p "$godot_dir"
+          unzip -q "$archive" -d "$godot_dir"
+          echo "GODOT_BIN=$godot_dir/Godot_v4.7.2-stable_linux.x86_64" >> "$GITHUB_ENV"
+          chmod +x "$godot_dir/Godot_v4.7.2-stable_linux.x86_64"
+
+      - name: Import project resources
+        run: "$GODOT_BIN" --headless --editor --path . --import
+
+      - name: Launch main scene briefly
+        run: "$GODOT_BIN" --headless --path . --quit-after 2
+
+      - name: Publish source release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: gh release create "$RELEASE_TAG" --verify-tag --title "$RELEASE_TAG" --generate-notes

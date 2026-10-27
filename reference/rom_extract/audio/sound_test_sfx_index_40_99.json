@@ -1,0 +1,3625 @@
+{
+  "title": "Captain Tsubasa II: Super Striker (Turkish ROM)",
+  "target_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "scope": "Byte audit of community-indexed SOUND 40-99 SFX sequence pointers and their channel-header routes; opening queue IDs are mapped separately.",
+  "external_index_source": "https://tsubasatr.net/konu-ct2-muzik-sistemi-nasil-calisir.html",
+  "bank_mapping": {
+    "fixed_bank": "0x0C",
+    "file_range": "0x18010-0x1A00F",
+    "cpu_window": "$8000-$9FFF",
+    "pointer_table_file_base": "0x18BEA",
+    "runtime_lookup_formula": "table_file = 0x18BEA + 2*(runtime_queue_id-1)",
+    "cpu_pointer_to_file_formula": "0x18010 + (cpu_pointer - 0x8000)"
+  },
+  "validation": {
+    "entries_checked": 60,
+    "pointer_words_matching_external_target_offsets": 60,
+    "sequence_headers_with_verified_ff_terminator": 60,
+    "channel_pointer_targets_checked": 189,
+    "external_track_labels_used_as_rom_evidence": false
+  },
+  "effects": [
+    {
+      "sound_test_ordinal": 40,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18BEE",
+      "runtime_queue_id_from_driver_index": "0x03",
+      "pointer_word_le_hex": "688E",
+      "resolved_cpu_address": "$8E68",
+      "sequence_file_offset": "0x18E78",
+      "sequence_header": {
+        "header_file_offset": "0x18E78",
+        "header_bytes_hex": "00 71 8E 01 71 8E 03 72 8E FF",
+        "header_terminator_file_offset": "0x18E81",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x18E78",
+            "pointer_le_hex": "718E",
+            "stream_cpu_address": "$8E71",
+            "stream_file_offset": "0x18E81",
+            "stream_prefix_hex": "FF E0 12 E3 00 81 00 82 01 83 02 03 04 84 05 06",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x18E7B",
+            "pointer_le_hex": "718E",
+            "stream_cpu_address": "$8E71",
+            "stream_file_offset": "0x18E81",
+            "stream_prefix_hex": "FF E0 12 E3 00 81 00 82 01 83 02 03 04 84 05 06",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x18E7E",
+            "pointer_le_hex": "728E",
+            "stream_cpu_address": "$8E72",
+            "stream_file_offset": "0x18E82",
+            "stream_prefix_hex": "E0 12 E3 00 81 00 82 01 83 02 03 04 84 05 06 85",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 41,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18BF0",
+      "runtime_queue_id_from_driver_index": "0x04",
+      "pointer_word_le_hex": "898E",
+      "resolved_cpu_address": "$8E89",
+      "sequence_file_offset": "0x18E99",
+      "sequence_header": {
+        "header_file_offset": "0x18E99",
+        "header_bytes_hex": "00 92 8E 01 92 8E 03 93 8E FF",
+        "header_terminator_file_offset": "0x18EA2",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x18E99",
+            "pointer_le_hex": "928E",
+            "stream_cpu_address": "$8E92",
+            "stream_file_offset": "0x18EA2",
+            "stream_prefix_hex": "FF 81 E0 12 E3 00 0F 0E 0D 0C 0E 0D 0C 0B 0D 0C",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x18E9C",
+            "pointer_le_hex": "928E",
+            "stream_cpu_address": "$8E92",
+            "stream_file_offset": "0x18EA2",
+            "stream_prefix_hex": "FF 81 E0 12 E3 00 0F 0E 0D 0C 0E 0D 0C 0B 0D 0C",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x18E9F",
+            "pointer_le_hex": "938E",
+            "stream_cpu_address": "$8E93",
+            "stream_file_offset": "0x18EA3",
+            "stream_prefix_hex": "81 E0 12 E3 00 0F 0E 0D 0C 0E 0D 0C 0B 0D 0C 0B",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 42,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18BF2",
+      "runtime_queue_id_from_driver_index": "0x05",
+      "pointer_word_le_hex": "CF8E",
+      "resolved_cpu_address": "$8ECF",
+      "sequence_file_offset": "0x18EDF",
+      "sequence_header": {
+        "header_file_offset": "0x18EDF",
+        "header_bytes_hex": "00 D8 8E 01 D8 8E 03 D9 8E FF",
+        "header_terminator_file_offset": "0x18EE8",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x18EDF",
+            "pointer_le_hex": "D88E",
+            "stream_cpu_address": "$8ED8",
+            "stream_file_offset": "0x18EE8",
+            "stream_prefix_hex": "FF E0 12 E3 00 81 00 01 02 03 01 02 03 04 02 03",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x18EE2",
+            "pointer_le_hex": "D88E",
+            "stream_cpu_address": "$8ED8",
+            "stream_file_offset": "0x18EE8",
+            "stream_prefix_hex": "FF E0 12 E3 00 81 00 01 02 03 01 02 03 04 02 03",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x18EE5",
+            "pointer_le_hex": "D98E",
+            "stream_cpu_address": "$8ED9",
+            "stream_file_offset": "0x18EE9",
+            "stream_prefix_hex": "E0 12 E3 00 81 00 01 02 03 01 02 03 04 02 03 04",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 43,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18BF4",
+      "runtime_queue_id_from_driver_index": "0x06",
+      "pointer_word_le_hex": "AD8F",
+      "resolved_cpu_address": "$8FAD",
+      "sequence_file_offset": "0x18FBD",
+      "sequence_header": {
+        "header_file_offset": "0x18FBD",
+        "header_bytes_hex": "00 B6 8F 01 B6 8F 03 B7 8F FF",
+        "header_terminator_file_offset": "0x18FC6",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x18FBD",
+            "pointer_le_hex": "B68F",
+            "stream_cpu_address": "$8FB6",
+            "stream_file_offset": "0x18FC6",
+            "stream_prefix_hex": "FF 82 E8 94 8E 00 C5 8F 01 41 90 03 46 90 FF E0",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x18FC0",
+            "pointer_le_hex": "B68F",
+            "stream_cpu_address": "$8FB6",
+            "stream_file_offset": "0x18FC6",
+            "stream_prefix_hex": "FF 82 E8 94 8E 00 C5 8F 01 41 90 03 46 90 FF E0",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x18FC3",
+            "pointer_le_hex": "B78F",
+            "stream_cpu_address": "$8FB7",
+            "stream_file_offset": "0x18FC7",
+            "stream_prefix_hex": "82 E8 94 8E 00 C5 8F 01 41 90 03 46 90 FF E0 11",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 44,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18BF6",
+      "runtime_queue_id_from_driver_index": "0x07",
+      "pointer_word_le_hex": "148F",
+      "resolved_cpu_address": "$8F14",
+      "sequence_file_offset": "0x18F24",
+      "sequence_header": {
+        "header_file_offset": "0x18F24",
+        "header_bytes_hex": "00 1D 8F 01 47 8F 03 1E 8F FF",
+        "header_terminator_file_offset": "0x18F2D",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x18F24",
+            "pointer_le_hex": "1D8F",
+            "stream_cpu_address": "$8F1D",
+            "stream_file_offset": "0x18F2D",
+            "stream_prefix_hex": "FF E0 14 E3 00 81 00 0F 00 0F 01 0E 01 0E 02 0D",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x18F27",
+            "pointer_le_hex": "478F",
+            "stream_cpu_address": "$8F47",
+            "stream_file_offset": "0x18F57",
+            "stream_prefix_hex": "E0 14 E2 40 E3 06 81 EB 04 01 12 00 13 01 12 02",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x18F2A",
+            "pointer_le_hex": "1E8F",
+            "stream_cpu_address": "$8F1E",
+            "stream_file_offset": "0x18F2E",
+            "stream_prefix_hex": "E0 14 E3 00 81 00 0F 00 0F 01 0E 01 0E 02 0D 02",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 45,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18BF8",
+      "runtime_queue_id_from_driver_index": "0x08",
+      "pointer_word_le_hex": "A490",
+      "resolved_cpu_address": "$90A4",
+      "sequence_file_offset": "0x190B4",
+      "sequence_header": {
+        "header_file_offset": "0x190B4",
+        "header_bytes_hex": "00 AD 90 01 DD 90 03 AE 90 FF",
+        "header_terminator_file_offset": "0x190BD",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x190B4",
+            "pointer_le_hex": "AD90",
+            "stream_cpu_address": "$90AD",
+            "stream_file_offset": "0x190BD",
+            "stream_prefix_hex": "FF E0 12 E3 00 EB 04 81 00 0F 01 0E EC EB 03 02",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x190B7",
+            "pointer_le_hex": "DD90",
+            "stream_cpu_address": "$90DD",
+            "stream_file_offset": "0x190ED",
+            "stream_prefix_hex": "E0 14 E2 80 E3 06 81 EB 06 01 12 00 13 01 12 02",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x190BA",
+            "pointer_le_hex": "AE90",
+            "stream_cpu_address": "$90AE",
+            "stream_file_offset": "0x190BE",
+            "stream_prefix_hex": "E0 12 E3 00 EB 04 81 00 0F 01 0E EC EB 03 02 0F",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 46,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18BFA",
+      "runtime_queue_id_from_driver_index": "0x09",
+      "pointer_word_le_hex": "3592",
+      "resolved_cpu_address": "$9235",
+      "sequence_file_offset": "0x19245",
+      "sequence_header": {
+        "header_file_offset": "0x19245",
+        "header_bytes_hex": "00 3E 92 01 3F 92 03 DC 92 FF",
+        "header_terminator_file_offset": "0x1924E",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19245",
+            "pointer_le_hex": "3E92",
+            "stream_cpu_address": "$923E",
+            "stream_file_offset": "0x1924E",
+            "stream_prefix_hex": "FF E0 14 E2 80 E3 08 E9 C0 92 EB 06 03 10 EC EB",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19248",
+            "pointer_le_hex": "3F92",
+            "stream_cpu_address": "$923F",
+            "stream_file_offset": "0x1924F",
+            "stream_prefix_hex": "E0 14 E2 80 E3 08 E9 C0 92 EB 06 03 10 EC EB 07",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x1924B",
+            "pointer_le_hex": "DC92",
+            "stream_cpu_address": "$92DC",
+            "stream_file_offset": "0x192EC",
+            "stream_prefix_hex": "E0 14 E3 02 E9 C0 92 EB 06 03 0C EC EB 07 02 0D",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 47,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18BFC",
+      "runtime_queue_id_from_driver_index": "0x0A",
+      "pointer_word_le_hex": "CC96",
+      "resolved_cpu_address": "$96CC",
+      "sequence_file_offset": "0x196DC",
+      "sequence_header": {
+        "header_file_offset": "0x196DC",
+        "header_bytes_hex": "00 D5 96 01 D6 96 03 21 97 FF",
+        "header_terminator_file_offset": "0x196E5",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x196DC",
+            "pointer_le_hex": "D596",
+            "stream_cpu_address": "$96D5",
+            "stream_file_offset": "0x196E5",
+            "stream_prefix_hex": "FF E0 14 E2 80 E3 08 81 20 22 21 E3 0D 20 22 21",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x196DF",
+            "pointer_le_hex": "D696",
+            "stream_cpu_address": "$96D6",
+            "stream_file_offset": "0x196E6",
+            "stream_prefix_hex": "E0 14 E2 80 E3 08 81 20 22 21 E3 0D 20 22 21 E3",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x196E2",
+            "pointer_le_hex": "2197",
+            "stream_cpu_address": "$9721",
+            "stream_file_offset": "0x19731",
+            "stream_prefix_hex": "E0 14 E3 00 81 EB 08 0A 09 08 EC EB 04 0B 0A 09",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 48,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18BFE",
+      "runtime_queue_id_from_driver_index": "0x0B",
+      "pointer_word_le_hex": "4997",
+      "resolved_cpu_address": "$9749",
+      "sequence_file_offset": "0x19759",
+      "sequence_header": {
+        "header_file_offset": "0x19759",
+        "header_bytes_hex": "00 52 97 01 52 97 03 53 97 FF",
+        "header_terminator_file_offset": "0x19762",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19759",
+            "pointer_le_hex": "5297",
+            "stream_cpu_address": "$9752",
+            "stream_file_offset": "0x19762",
+            "stream_prefix_hex": "FF E0 12 E3 00 81 00 02 01 03 02 04 03 05 04 06",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x1975C",
+            "pointer_le_hex": "5297",
+            "stream_cpu_address": "$9752",
+            "stream_file_offset": "0x19762",
+            "stream_prefix_hex": "FF E0 12 E3 00 81 00 02 01 03 02 04 03 05 04 06",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x1975F",
+            "pointer_le_hex": "5397",
+            "stream_cpu_address": "$9753",
+            "stream_file_offset": "0x19763",
+            "stream_prefix_hex": "E0 12 E3 00 81 00 02 01 03 02 04 03 05 04 06 05",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 49,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C00",
+      "runtime_queue_id_from_driver_index": "0x0C",
+      "pointer_word_le_hex": "8191",
+      "resolved_cpu_address": "$9181",
+      "sequence_file_offset": "0x19191",
+      "sequence_header": {
+        "header_file_offset": "0x19191",
+        "header_bytes_hex": "00 8A 91 01 8B 91 03 A4 91 FF",
+        "header_terminator_file_offset": "0x1919A",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19191",
+            "pointer_le_hex": "8A91",
+            "stream_cpu_address": "$918A",
+            "stream_file_offset": "0x1919A",
+            "stream_prefix_hex": "FF E0 14 E2 C0 E3 00 81 EB 05 01 50 02 51 03 52",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19194",
+            "pointer_le_hex": "8B91",
+            "stream_cpu_address": "$918B",
+            "stream_file_offset": "0x1919B",
+            "stream_prefix_hex": "E0 14 E2 C0 E3 00 81 EB 05 01 50 02 51 03 52 04",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19197",
+            "pointer_le_hex": "A491",
+            "stream_cpu_address": "$91A4",
+            "stream_file_offset": "0x191B4",
+            "stream_prefix_hex": "E0 12 E3 00 81 00 01 02 03 04 03 02 01 01 02 03",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 50,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C02",
+      "runtime_queue_id_from_driver_index": "0x0D",
+      "pointer_word_le_hex": "EA91",
+      "resolved_cpu_address": "$91EA",
+      "sequence_file_offset": "0x191FA",
+      "sequence_header": {
+        "header_file_offset": "0x191FA",
+        "header_bytes_hex": "00 F4 91 01 30 92 03 F3 91 FF",
+        "header_terminator_file_offset": "0x19203",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x191FA",
+            "pointer_le_hex": "F491",
+            "stream_cpu_address": "$91F4",
+            "stream_file_offset": "0x19204",
+            "stream_prefix_hex": "E0 11 E2 C0 E3 00 81 48 E5 01 48 E5 02 48 E5 04",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x191FD",
+            "pointer_le_hex": "3092",
+            "stream_cpu_address": "$9230",
+            "stream_file_offset": "0x19240",
+            "stream_prefix_hex": "84 0C E8 F4 91 00 3E 92 01 3F 92 03 DC 92 FF E0",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19200",
+            "pointer_le_hex": "F391",
+            "stream_cpu_address": "$91F3",
+            "stream_file_offset": "0x19203",
+            "stream_prefix_hex": "FF E0 11 E2 C0 E3 00 81 48 E5 01 48 E5 02 48 E5",
+            "stream_starts_at_terminator": true
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 51,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C04",
+      "runtime_queue_id_from_driver_index": "0x0E",
+      "pointer_word_le_hex": "1D91",
+      "resolved_cpu_address": "$911D",
+      "sequence_file_offset": "0x1912D",
+      "sequence_header": {
+        "header_file_offset": "0x1912D",
+        "header_bytes_hex": "00 26 91 01 27 91 03 57 91 FF",
+        "header_terminator_file_offset": "0x19136",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x1912D",
+            "pointer_le_hex": "2691",
+            "stream_cpu_address": "$9126",
+            "stream_file_offset": "0x19136",
+            "stream_prefix_hex": "FF E0 12 E2 80 E3 05 81 10 20 0B 1B 11 21 0A 1A",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19130",
+            "pointer_le_hex": "2791",
+            "stream_cpu_address": "$9127",
+            "stream_file_offset": "0x19137",
+            "stream_prefix_hex": "E0 12 E2 80 E3 05 81 10 20 0B 1B 11 21 0A 1A 12",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19133",
+            "pointer_le_hex": "5791",
+            "stream_cpu_address": "$9157",
+            "stream_file_offset": "0x19167",
+            "stream_prefix_hex": "E0 12 E3 00 82 0C 81 0F 0E 0C 0D 0C 82 0C 81 0B",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 52,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C06",
+      "runtime_queue_id_from_driver_index": "0x0F",
+      "pointer_word_le_hex": "7990",
+      "resolved_cpu_address": "$9079",
+      "sequence_file_offset": "0x19089",
+      "sequence_header": {
+        "header_file_offset": "0x19089",
+        "header_bytes_hex": "00 82 90 01 82 90 03 83 90 FF",
+        "header_terminator_file_offset": "0x19092",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19089",
+            "pointer_le_hex": "8290",
+            "stream_cpu_address": "$9082",
+            "stream_file_offset": "0x19092",
+            "stream_prefix_hex": "FF E0 12 E3 00 81 00 01 02 03 04 05 06 EB 02 00",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x1908C",
+            "pointer_le_hex": "8290",
+            "stream_cpu_address": "$9082",
+            "stream_file_offset": "0x19092",
+            "stream_prefix_hex": "FF E0 12 E3 00 81 00 01 02 03 04 05 06 EB 02 00",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x1908F",
+            "pointer_le_hex": "8390",
+            "stream_cpu_address": "$9083",
+            "stream_file_offset": "0x19093",
+            "stream_prefix_hex": "E0 12 E3 00 81 00 01 02 03 04 05 06 EB 02 00 01",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 53,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C08",
+      "runtime_queue_id_from_driver_index": "0x10",
+      "pointer_word_le_hex": "5A8F",
+      "resolved_cpu_address": "$8F5A",
+      "sequence_file_offset": "0x18F6A",
+      "sequence_header": {
+        "header_file_offset": "0x18F6A",
+        "header_bytes_hex": "00 A4 8F 01 89 8F 03 64 8F FF",
+        "header_terminator_file_offset": "0x18F73",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x18F6A",
+            "pointer_le_hex": "A48F",
+            "stream_cpu_address": "$8FA4",
+            "stream_file_offset": "0x18FB4",
+            "stream_prefix_hex": "E3 09 82 0C E5 02 E8 8B 8F 00 B6 8F 01 B6 8F 03",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x18F6D",
+            "pointer_le_hex": "898F",
+            "stream_cpu_address": "$8F89",
+            "stream_file_offset": "0x18F99",
+            "stream_prefix_hex": "E3 05 E0 12 E2 00 8D 0C 81 30 F3 2B 2A 29 28 27",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x18F70",
+            "pointer_le_hex": "648F",
+            "stream_cpu_address": "$8F64",
+            "stream_file_offset": "0x18F74",
+            "stream_prefix_hex": "E0 12 E3 00 82 07 08 06 09 81 05 0A F3 04 0B 03",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 54,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C0A",
+      "runtime_queue_id_from_driver_index": "0x11",
+      "pointer_word_le_hex": "BB8F",
+      "resolved_cpu_address": "$8FBB",
+      "sequence_file_offset": "0x18FCB",
+      "sequence_header": {
+        "header_file_offset": "0x18FCB",
+        "header_bytes_hex": "00 C5 8F 01 41 90 03 46 90 FF",
+        "header_terminator_file_offset": "0x18FD4",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x18FCB",
+            "pointer_le_hex": "C58F",
+            "stream_cpu_address": "$8FC5",
+            "stream_file_offset": "0x18FD5",
+            "stream_prefix_hex": "E0 11 E2 C0 E3 00 81 E5 10 48 E5 0E 48 E5 0C 48",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x18FCE",
+            "pointer_le_hex": "4190",
+            "stream_cpu_address": "$9041",
+            "stream_file_offset": "0x19051",
+            "stream_prefix_hex": "84 0C E8 C5 8F E0 14 E3 00 EB 03 81 0F 00 0E 01",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x18FD1",
+            "pointer_le_hex": "4690",
+            "stream_cpu_address": "$9046",
+            "stream_file_offset": "0x19056",
+            "stream_prefix_hex": "E0 14 E3 00 EB 03 81 0F 00 0E 01 EC EB 05 0D 00",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 55,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C0C",
+      "runtime_queue_id_from_driver_index": "0x12",
+      "pointer_word_le_hex": "2D94",
+      "resolved_cpu_address": "$942D",
+      "sequence_file_offset": "0x1943D",
+      "sequence_header": {
+        "header_file_offset": "0x1943D",
+        "header_bytes_hex": "00 36 94 01 37 94 03 44 94 FF",
+        "header_terminator_file_offset": "0x19446",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x1943D",
+            "pointer_le_hex": "3694",
+            "stream_cpu_address": "$9436",
+            "stream_file_offset": "0x19446",
+            "stream_prefix_hex": "FF E0 12 E2 80 E3 00 81 10 20 00 10 20 FF E9 49",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19440",
+            "pointer_le_hex": "3794",
+            "stream_cpu_address": "$9437",
+            "stream_file_offset": "0x19447",
+            "stream_prefix_hex": "E0 12 E2 80 E3 00 81 10 20 00 10 20 FF E9 49 94",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19443",
+            "pointer_le_hex": "4494",
+            "stream_cpu_address": "$9444",
+            "stream_file_offset": "0x19454",
+            "stream_prefix_hex": "E9 49 94 05 FF E0 15 E3 00 84 ED 01 0A 8E EA 00",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 56,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C0E",
+      "runtime_queue_id_from_driver_index": "0x13",
+      "pointer_word_le_hex": "6294",
+      "resolved_cpu_address": "$9462",
+      "sequence_file_offset": "0x19472",
+      "sequence_header": {
+        "header_file_offset": "0x19472",
+        "header_bytes_hex": "00 6B 94 01 6C 94 03 91 94 FF",
+        "header_terminator_file_offset": "0x1947B",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19472",
+            "pointer_le_hex": "6B94",
+            "stream_cpu_address": "$946B",
+            "stream_file_offset": "0x1947B",
+            "stream_prefix_hex": "FF E0 12 E2 80 E3 00 81 15 14 12 10 0B 09 07 05",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19475",
+            "pointer_le_hex": "6C94",
+            "stream_cpu_address": "$946C",
+            "stream_file_offset": "0x1947C",
+            "stream_prefix_hex": "E0 12 E2 80 E3 00 81 15 14 12 10 0B 09 07 05 04",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19478",
+            "pointer_le_hex": "9194",
+            "stream_cpu_address": "$9491",
+            "stream_file_offset": "0x194A1",
+            "stream_prefix_hex": "E0 12 E3 00 81 0B 08 0D 0F 09 E3 08 0F 0E 0D 0C",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 57,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C10",
+      "runtime_queue_id_from_driver_index": "0x14",
+      "pointer_word_le_hex": "C694",
+      "resolved_cpu_address": "$94C6",
+      "sequence_file_offset": "0x194D6",
+      "sequence_header": {
+        "header_file_offset": "0x194D6",
+        "header_bytes_hex": "00 CF 94 01 D0 94 03 F9 94 FF",
+        "header_terminator_file_offset": "0x194DF",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x194D6",
+            "pointer_le_hex": "CF94",
+            "stream_cpu_address": "$94CF",
+            "stream_file_offset": "0x194DF",
+            "stream_prefix_hex": "FF E0 12 E2 80 E3 00 EB 03 81 15 14 12 10 EC 0B",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x194D9",
+            "pointer_le_hex": "D094",
+            "stream_cpu_address": "$94D0",
+            "stream_file_offset": "0x194E0",
+            "stream_prefix_hex": "E0 12 E2 80 E3 00 EB 03 81 15 14 12 10 EC 0B 09",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x194DC",
+            "pointer_le_hex": "F994",
+            "stream_cpu_address": "$94F9",
+            "stream_file_offset": "0x19509",
+            "stream_prefix_hex": "E0 12 E3 00 81 EB 03 0B 08 0D 0F EC 0C 06 0F 0A",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 58,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C12",
+      "runtime_queue_id_from_driver_index": "0x15",
+      "pointer_word_le_hex": "E49D",
+      "resolved_cpu_address": "$9DE4",
+      "sequence_file_offset": "0x19DF4",
+      "sequence_header": {
+        "header_file_offset": "0x19DF4",
+        "header_bytes_hex": "00 ED 9D 01 ED 9D 03 EE 9D FF",
+        "header_terminator_file_offset": "0x19DFD",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19DF4",
+            "pointer_le_hex": "ED9D",
+            "stream_cpu_address": "$9DED",
+            "stream_file_offset": "0x19DFD",
+            "stream_prefix_hex": "FF E0 14 E3 00 8A 01 89 02 88 03 87 04 88 05 FF",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19DF7",
+            "pointer_le_hex": "ED9D",
+            "stream_cpu_address": "$9DED",
+            "stream_file_offset": "0x19DFD",
+            "stream_prefix_hex": "FF E0 14 E3 00 8A 01 89 02 88 03 87 04 88 05 FF",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19DFA",
+            "pointer_le_hex": "EE9D",
+            "stream_cpu_address": "$9DEE",
+            "stream_file_offset": "0x19DFE",
+            "stream_prefix_hex": "E0 14 E3 00 8A 01 89 02 88 03 87 04 88 05 FF 00",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 59,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C14",
+      "runtime_queue_id_from_driver_index": "0x16",
+      "pointer_word_le_hex": "FD9D",
+      "resolved_cpu_address": "$9DFD",
+      "sequence_file_offset": "0x19E0D",
+      "sequence_header": {
+        "header_file_offset": "0x19E0D",
+        "header_bytes_hex": "00 06 9E 01 06 9E 03 07 9E FF",
+        "header_terminator_file_offset": "0x19E16",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19E0D",
+            "pointer_le_hex": "069E",
+            "stream_cpu_address": "$9E06",
+            "stream_file_offset": "0x19E16",
+            "stream_prefix_hex": "FF E0 17 E3 00 81 01 04 01 82 02 05 02 83 03 06",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19E10",
+            "pointer_le_hex": "069E",
+            "stream_cpu_address": "$9E06",
+            "stream_file_offset": "0x19E16",
+            "stream_prefix_hex": "FF E0 17 E3 00 81 01 04 01 82 02 05 02 83 03 06",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19E13",
+            "pointer_le_hex": "079E",
+            "stream_cpu_address": "$9E07",
+            "stream_file_offset": "0x19E17",
+            "stream_prefix_hex": "E0 17 E3 00 81 01 04 01 82 02 05 02 83 03 06 03",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 60,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C16",
+      "runtime_queue_id_from_driver_index": "0x17",
+      "pointer_word_le_hex": "5993",
+      "resolved_cpu_address": "$9359",
+      "sequence_file_offset": "0x19369",
+      "sequence_header": {
+        "header_file_offset": "0x19369",
+        "header_bytes_hex": "00 63 93 01 A7 93 03 EB 93 FF",
+        "header_terminator_file_offset": "0x19372",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19369",
+            "pointer_le_hex": "6393",
+            "stream_cpu_address": "$9363",
+            "stream_file_offset": "0x19373",
+            "stream_prefix_hex": "E0 13 E2 40 81 E3 07 11 12 13 14 15 16 17 18 19",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x1936C",
+            "pointer_le_hex": "A793",
+            "stream_cpu_address": "$93A7",
+            "stream_file_offset": "0x193B7",
+            "stream_prefix_hex": "E0 13 E2 80 81 E3 07 12 13 14 15 16 17 18 19 1A",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x1936F",
+            "pointer_le_hex": "EB93",
+            "stream_cpu_address": "$93EB",
+            "stream_file_offset": "0x193FB",
+            "stream_prefix_hex": "81 E0 12 E3 07 02 03 04 05 06 07 08 09 0A 03 04",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 61,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C18",
+      "runtime_queue_id_from_driver_index": "0x18",
+      "pointer_word_le_hex": "5396",
+      "resolved_cpu_address": "$9653",
+      "sequence_file_offset": "0x19663",
+      "sequence_header": {
+        "header_file_offset": "0x19663",
+        "header_bytes_hex": "00 A2 96 01 78 96 03 5D 96 FF",
+        "header_terminator_file_offset": "0x1966C",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19663",
+            "pointer_le_hex": "A296",
+            "stream_cpu_address": "$96A2",
+            "stream_file_offset": "0x196B2",
+            "stream_prefix_hex": "E0 17 E2 80 E3 05 81 EB 03 03 13 EC 12 11 10 0B",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19666",
+            "pointer_le_hex": "7896",
+            "stream_cpu_address": "$9678",
+            "stream_file_offset": "0x19688",
+            "stream_prefix_hex": "E0 17 E2 80 E3 00 81 EB 03 00 10 EC 0B 0A 09 08",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19669",
+            "pointer_le_hex": "5D96",
+            "stream_cpu_address": "$965D",
+            "stream_file_offset": "0x1966D",
+            "stream_prefix_hex": "E0 2F E3 00 82 04 09 0A 0B 81 0A 0B 0A 10 82 09",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 62,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C1A",
+      "runtime_queue_id_from_driver_index": "0x19",
+      "pointer_word_le_hex": "7F9E",
+      "resolved_cpu_address": "$9E7F",
+      "sequence_file_offset": "0x19E8F",
+      "sequence_header": {
+        "header_file_offset": "0x19E8F",
+        "header_bytes_hex": "00 88 9E 01 88 9E 03 89 9E FF",
+        "header_terminator_file_offset": "0x19E98",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19E8F",
+            "pointer_le_hex": "889E",
+            "stream_cpu_address": "$9E88",
+            "stream_file_offset": "0x19E98",
+            "stream_prefix_hex": "FF E0 11 E3 00 81 00 01 02 08 09 10 10 8B 09 FF",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19E92",
+            "pointer_le_hex": "889E",
+            "stream_cpu_address": "$9E88",
+            "stream_file_offset": "0x19E98",
+            "stream_prefix_hex": "FF E0 11 E3 00 81 00 01 02 08 09 10 10 8B 09 FF",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19E95",
+            "pointer_le_hex": "899E",
+            "stream_cpu_address": "$9E89",
+            "stream_file_offset": "0x19E99",
+            "stream_prefix_hex": "E0 11 E3 00 81 00 01 02 08 09 10 10 8B 09 FF 00",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 63,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C1C",
+      "runtime_queue_id_from_driver_index": "0x1A",
+      "pointer_word_le_hex": "7797",
+      "resolved_cpu_address": "$9777",
+      "sequence_file_offset": "0x19787",
+      "sequence_header": {
+        "header_file_offset": "0x19787",
+        "header_bytes_hex": "00 80 97 01 81 97 03 8F 97 FF",
+        "header_terminator_file_offset": "0x19790",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19787",
+            "pointer_le_hex": "8097",
+            "stream_cpu_address": "$9780",
+            "stream_file_offset": "0x19790",
+            "stream_prefix_hex": "FF E0 12 E2 80 E3 00 81 10 20 00 10 00 10 FF E0",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x1978A",
+            "pointer_le_hex": "8197",
+            "stream_cpu_address": "$9781",
+            "stream_file_offset": "0x19791",
+            "stream_prefix_hex": "E0 12 E2 80 E3 00 81 10 20 00 10 00 10 FF E0 15",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x1978D",
+            "pointer_le_hex": "8F97",
+            "stream_cpu_address": "$978F",
+            "stream_file_offset": "0x1979F",
+            "stream_prefix_hex": "E0 15 E3 00 84 ED 01 0C 88 08 E3 08 07 FF 00 A7",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 64,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C1E",
+      "runtime_queue_id_from_driver_index": "0x1B",
+      "pointer_word_le_hex": "1E9B",
+      "resolved_cpu_address": "$9B1E",
+      "sequence_file_offset": "0x19B2E",
+      "sequence_header": {
+        "header_file_offset": "0x19B2E",
+        "header_bytes_hex": "00 27 9B 01 28 9B 03 46 9B FF",
+        "header_terminator_file_offset": "0x19B37",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19B2E",
+            "pointer_le_hex": "279B",
+            "stream_cpu_address": "$9B27",
+            "stream_file_offset": "0x19B37",
+            "stream_prefix_hex": "FF E0 16 E2 80 E3 00 81 10 00 11 01 12 02 82 08",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19B31",
+            "pointer_le_hex": "289B",
+            "stream_cpu_address": "$9B28",
+            "stream_file_offset": "0x19B38",
+            "stream_prefix_hex": "E0 16 E2 80 E3 00 81 10 00 11 01 12 02 82 08 09",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19B34",
+            "pointer_le_hex": "469B",
+            "stream_cpu_address": "$9B46",
+            "stream_file_offset": "0x19B56",
+            "stream_prefix_hex": "E0 14 E3 00 81 0F 00 0E 01 FF 00 5A 9B 01 7A 9B",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 65,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C20",
+      "runtime_queue_id_from_driver_index": "0x1C",
+      "pointer_word_le_hex": "D39E",
+      "resolved_cpu_address": "$9ED3",
+      "sequence_file_offset": "0x19EE3",
+      "sequence_header": {
+        "header_file_offset": "0x19EE3",
+        "header_bytes_hex": "00 DC 9E 01 E9 9E 03 DD 9E FF",
+        "header_terminator_file_offset": "0x19EEC",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19EE3",
+            "pointer_le_hex": "DC9E",
+            "stream_cpu_address": "$9EDC",
+            "stream_file_offset": "0x19EEC",
+            "stream_prefix_hex": "FF E0 15 E3 00 81 0E 09 0F 09 84 08 FF E0 12 E2",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19EE6",
+            "pointer_le_hex": "E99E",
+            "stream_cpu_address": "$9EE9",
+            "stream_file_offset": "0x19EF9",
+            "stream_prefix_hex": "E0 12 E2 80 E3 00 81 05 0A 06 0B 07 10 FF 00 00",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19EE9",
+            "pointer_le_hex": "DD9E",
+            "stream_cpu_address": "$9EDD",
+            "stream_file_offset": "0x19EED",
+            "stream_prefix_hex": "E0 15 E3 00 81 0E 09 0F 09 84 08 FF E0 12 E2 80",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 66,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C22",
+      "runtime_queue_id_from_driver_index": "0x1D",
+      "pointer_word_le_hex": "CD9A",
+      "resolved_cpu_address": "$9ACD",
+      "sequence_file_offset": "0x19ADD",
+      "sequence_header": {
+        "header_file_offset": "0x19ADD",
+        "header_bytes_hex": "00 D7 9A 01 FB 9A 03 04 9B FF",
+        "header_terminator_file_offset": "0x19AE6",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19ADD",
+            "pointer_le_hex": "D79A",
+            "stream_cpu_address": "$9AD7",
+            "stream_file_offset": "0x19AE7",
+            "stream_prefix_hex": "E2 40 E3 00 82 0C E0 32 58 F3 E5 01 84 58 82 0C",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19AE0",
+            "pointer_le_hex": "FB9A",
+            "stream_cpu_address": "$9AFB",
+            "stream_file_offset": "0x19B0B",
+            "stream_prefix_hex": "86 0C E2 80 E3 03 E8 DB 9A E0 11 E3 05 81 00 01",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19AE3",
+            "pointer_le_hex": "049B",
+            "stream_cpu_address": "$9B04",
+            "stream_file_offset": "0x19B14",
+            "stream_prefix_hex": "E0 11 E3 05 81 00 01 82 02 F3 84 03 82 10 F4 83",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 67,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C24",
+      "runtime_queue_id_from_driver_index": "0x1E",
+      "pointer_word_le_hex": "509B",
+      "resolved_cpu_address": "$9B50",
+      "sequence_file_offset": "0x19B60",
+      "sequence_header": {
+        "header_file_offset": "0x19B60",
+        "header_bytes_hex": "00 5A 9B 01 7A 9B 03 59 9B FF",
+        "header_terminator_file_offset": "0x19B69",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19B60",
+            "pointer_le_hex": "5A9B",
+            "stream_cpu_address": "$9B5A",
+            "stream_file_offset": "0x19B6A",
+            "stream_prefix_hex": "E0 14 E2 80 E3 00 8E E4 95 37 E3 08 E4 95 37 E3",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19B63",
+            "pointer_le_hex": "7A9B",
+            "stream_cpu_address": "$9B7A",
+            "stream_file_offset": "0x19B8A",
+            "stream_prefix_hex": "E0 14 E2 80 8E 0C E5 02 E3 08 E4 95 37 E3 0A E4",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19B66",
+            "pointer_le_hex": "599B",
+            "stream_cpu_address": "$9B59",
+            "stream_file_offset": "0x19B69",
+            "stream_prefix_hex": "FF E0 14 E2 80 E3 00 8E E4 95 37 E3 08 E4 95 37",
+            "stream_starts_at_terminator": true
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 68,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C26",
+      "runtime_queue_id_from_driver_index": "0x1F",
+      "pointer_word_le_hex": "9D9B",
+      "resolved_cpu_address": "$9B9D",
+      "sequence_file_offset": "0x19BAD",
+      "sequence_header": {
+        "header_file_offset": "0x19BAD",
+        "header_bytes_hex": "00 A6 9B 01 A7 9B 03 A6 9B FF",
+        "header_terminator_file_offset": "0x19BB6",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19BAD",
+            "pointer_le_hex": "A69B",
+            "stream_cpu_address": "$9BA6",
+            "stream_file_offset": "0x19BB6",
+            "stream_prefix_hex": "FF E0 17 E2 40 89 E3 00 E4 85 18 E3 01 E4 85 18",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19BB0",
+            "pointer_le_hex": "A79B",
+            "stream_cpu_address": "$9BA7",
+            "stream_file_offset": "0x19BB7",
+            "stream_prefix_hex": "E0 17 E2 40 89 E3 00 E4 85 18 E3 01 E4 85 18 E3",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19BB3",
+            "pointer_le_hex": "A69B",
+            "stream_cpu_address": "$9BA6",
+            "stream_file_offset": "0x19BB6",
+            "stream_prefix_hex": "FF E0 17 E2 40 89 E3 00 E4 85 18 E3 01 E4 85 18",
+            "stream_starts_at_terminator": true
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 69,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C2C",
+      "runtime_queue_id_from_driver_index": "0x22",
+      "pointer_word_le_hex": "F79E",
+      "resolved_cpu_address": "$9EF7",
+      "sequence_file_offset": "0x19F07",
+      "sequence_header": {
+        "header_file_offset": "0x19F07",
+        "header_bytes_hex": "00 00 9F 01 00 9F 03 01 9F FF",
+        "header_terminator_file_offset": "0x19F10",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19F07",
+            "pointer_le_hex": "009F",
+            "stream_cpu_address": "$9F00",
+            "stream_file_offset": "0x19F10",
+            "stream_prefix_hex": "FF E0 12 E3 00 82 00 01 02 03 01 02 03 04 02 03",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19F0A",
+            "pointer_le_hex": "009F",
+            "stream_cpu_address": "$9F00",
+            "stream_file_offset": "0x19F10",
+            "stream_prefix_hex": "FF E0 12 E3 00 82 00 01 02 03 01 02 03 04 02 03",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19F0D",
+            "pointer_le_hex": "019F",
+            "stream_cpu_address": "$9F01",
+            "stream_file_offset": "0x19F11",
+            "stream_prefix_hex": "E0 12 E3 00 82 00 01 02 03 01 02 03 04 02 03 04",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 70,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C2E",
+      "runtime_queue_id_from_driver_index": "0x23",
+      "pointer_word_le_hex": "2D95",
+      "resolved_cpu_address": "$952D",
+      "sequence_file_offset": "0x1953D",
+      "sequence_header": {
+        "header_file_offset": "0x1953D",
+        "header_bytes_hex": "00 36 95 01 37 95 03 48 95 FF",
+        "header_terminator_file_offset": "0x19546",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x1953D",
+            "pointer_le_hex": "3695",
+            "stream_cpu_address": "$9536",
+            "stream_file_offset": "0x19546",
+            "stream_prefix_hex": "FF E0 12 E2 80 E3 00 EB 03 81 15 14 12 10 EC E8",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19540",
+            "pointer_le_hex": "3795",
+            "stream_cpu_address": "$9537",
+            "stream_file_offset": "0x19547",
+            "stream_prefix_hex": "E0 12 E2 80 E3 00 EB 03 81 15 14 12 10 EC E8 72",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19543",
+            "pointer_le_hex": "4895",
+            "stream_cpu_address": "$9548",
+            "stream_file_offset": "0x19558",
+            "stream_prefix_hex": "E0 12 E3 00 81 EB 03 0B 08 0D 0F EC E8 95 94 00",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 71,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C30",
+      "runtime_queue_id_from_driver_index": "0x24",
+      "pointer_word_le_hex": "5795",
+      "resolved_cpu_address": "$9557",
+      "sequence_file_offset": "0x19567",
+      "sequence_header": {
+        "header_file_offset": "0x19567",
+        "header_bytes_hex": "00 61 95 01 A7 95 03 AE 95 FF",
+        "header_terminator_file_offset": "0x19570",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19567",
+            "pointer_le_hex": "6195",
+            "stream_cpu_address": "$9561",
+            "stream_file_offset": "0x19571",
+            "stream_prefix_hex": "E0 17 E2 00 E3 05 83 EB 09 E9 9D 95 EC E3 06 82",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x1956A",
+            "pointer_le_hex": "A795",
+            "stream_cpu_address": "$95A7",
+            "stream_file_offset": "0x195B7",
+            "stream_prefix_hex": "E5 01 83 0C E8 61 95 E0 17 E3 00 81 02 82 03 83",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x1956D",
+            "pointer_le_hex": "AE95",
+            "stream_cpu_address": "$95AE",
+            "stream_file_offset": "0x195BE",
+            "stream_prefix_hex": "E0 17 E3 00 81 02 82 03 83 04 82 05 81 06 03 82",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 72,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C32",
+      "runtime_queue_id_from_driver_index": "0x25",
+      "pointer_word_le_hex": "EE9C",
+      "resolved_cpu_address": "$9CEE",
+      "sequence_file_offset": "0x19CFE",
+      "sequence_header": {
+        "header_file_offset": "0x19CFE",
+        "header_bytes_hex": "00 F7 9C 01 F7 9C 03 F8 9C FF",
+        "header_terminator_file_offset": "0x19D07",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19CFE",
+            "pointer_le_hex": "F79C",
+            "stream_cpu_address": "$9CF7",
+            "stream_file_offset": "0x19D07",
+            "stream_prefix_hex": "FF E0 11 E3 00 83 0A 82 0E 90 F3 ED 02 05 F4 EF",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19D01",
+            "pointer_le_hex": "F79C",
+            "stream_cpu_address": "$9CF7",
+            "stream_file_offset": "0x19D07",
+            "stream_prefix_hex": "FF E0 11 E3 00 83 0A 82 0E 90 F3 ED 02 05 F4 EF",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19D04",
+            "pointer_le_hex": "F89C",
+            "stream_cpu_address": "$9CF8",
+            "stream_file_offset": "0x19D08",
+            "stream_prefix_hex": "E0 11 E3 00 83 0A 82 0E 90 F3 ED 02 05 F4 EF FF",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 73,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C34",
+      "runtime_queue_id_from_driver_index": "0x26",
+      "pointer_word_le_hex": "589D",
+      "resolved_cpu_address": "$9D58",
+      "sequence_file_offset": "0x19D68",
+      "sequence_header": {
+        "header_file_offset": "0x19D68",
+        "header_bytes_hex": "00 61 9D 01 61 9D 03 62 9D FF",
+        "header_terminator_file_offset": "0x19D71",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19D68",
+            "pointer_le_hex": "619D",
+            "stream_cpu_address": "$9D61",
+            "stream_file_offset": "0x19D71",
+            "stream_prefix_hex": "FF E0 12 E3 00 81 0C 0D EB 08 08 0D 0A 00 10 10",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19D6B",
+            "pointer_le_hex": "619D",
+            "stream_cpu_address": "$9D61",
+            "stream_file_offset": "0x19D71",
+            "stream_prefix_hex": "FF E0 12 E3 00 81 0C 0D EB 08 08 0D 0A 00 10 10",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19D6E",
+            "pointer_le_hex": "629D",
+            "stream_cpu_address": "$9D62",
+            "stream_file_offset": "0x19D72",
+            "stream_prefix_hex": "E0 12 E3 00 81 0C 0D EB 08 08 0D 0A 00 10 10 EC",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 74,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C36",
+      "runtime_queue_id_from_driver_index": "0x27",
+      "pointer_word_le_hex": "739D",
+      "resolved_cpu_address": "$9D73",
+      "sequence_file_offset": "0x19D83",
+      "sequence_header": {
+        "header_file_offset": "0x19D83",
+        "header_bytes_hex": "00 7D 9D 01 A8 9D 03 D3 9D FF",
+        "header_terminator_file_offset": "0x19D8C",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19D83",
+            "pointer_le_hex": "7D9D",
+            "stream_cpu_address": "$9D7D",
+            "stream_file_offset": "0x19D8D",
+            "stream_prefix_hex": "E0 00 82 0C E2 C0 E3 05 EB 03 81 0A 00 0B 01 82",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19D86",
+            "pointer_le_hex": "A89D",
+            "stream_cpu_address": "$9DA8",
+            "stream_file_offset": "0x19DB8",
+            "stream_prefix_hex": "E0 00 E2 C0 82 0C E3 05 EB 03 81 07 06 05 04 03",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19D89",
+            "pointer_le_hex": "D39D",
+            "stream_cpu_address": "$9DD3",
+            "stream_file_offset": "0x19DE3",
+            "stream_prefix_hex": "E0 12 E3 00 81 0C 0D EB 12 08 0D 0A 00 10 10 EC",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 75,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C38",
+      "runtime_queue_id_from_driver_index": "0x28",
+      "pointer_word_le_hex": "559A",
+      "resolved_cpu_address": "$9A55",
+      "sequence_file_offset": "0x19A65",
+      "sequence_header": {
+        "header_file_offset": "0x19A65",
+        "header_bytes_hex": "00 5E 9A 01 5E 9A 03 5F 9A FF",
+        "header_terminator_file_offset": "0x19A6E",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19A65",
+            "pointer_le_hex": "5E9A",
+            "stream_cpu_address": "$9A5E",
+            "stream_file_offset": "0x19A6E",
+            "stream_prefix_hex": "FF E0 12 E3 00 81 0A F3 0B 08 09 0A F4 84 10 07",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19A68",
+            "pointer_le_hex": "5E9A",
+            "stream_cpu_address": "$9A5E",
+            "stream_file_offset": "0x19A6E",
+            "stream_prefix_hex": "FF E0 12 E3 00 81 0A F3 0B 08 09 0A F4 84 10 07",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19A6B",
+            "pointer_le_hex": "5F9A",
+            "stream_cpu_address": "$9A5F",
+            "stream_file_offset": "0x19A6F",
+            "stream_prefix_hex": "E0 12 E3 00 81 0A F3 0B 08 09 0A F4 84 10 07 08",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 76,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C3A",
+      "runtime_queue_id_from_driver_index": "0x29",
+      "pointer_word_le_hex": "D697",
+      "resolved_cpu_address": "$97D6",
+      "sequence_file_offset": "0x197E6",
+      "sequence_header": {
+        "header_file_offset": "0x197E6",
+        "header_bytes_hex": "00 DF 97 01 E0 97 03 F7 97 FF",
+        "header_terminator_file_offset": "0x197EF",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x197E6",
+            "pointer_le_hex": "DF97",
+            "stream_cpu_address": "$97DF",
+            "stream_file_offset": "0x197EF",
+            "stream_prefix_hex": "FF E0 16 E2 80 E3 00 E9 EF 97 E3 0B E9 EF 97 FF",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x197E9",
+            "pointer_le_hex": "E097",
+            "stream_cpu_address": "$97E0",
+            "stream_file_offset": "0x197F0",
+            "stream_prefix_hex": "E0 16 E2 80 E3 00 E9 EF 97 E3 0B E9 EF 97 FF 82",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x197EC",
+            "pointer_le_hex": "F797",
+            "stream_cpu_address": "$97F7",
+            "stream_file_offset": "0x19807",
+            "stream_prefix_hex": "E0 12 E3 00 82 07 08 07 06 81 05 FF 00 0C 98 01",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 77,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C3C",
+      "runtime_queue_id_from_driver_index": "0x2A",
+      "pointer_word_le_hex": "779A",
+      "resolved_cpu_address": "$9A77",
+      "sequence_file_offset": "0x19A87",
+      "sequence_header": {
+        "header_file_offset": "0x19A87",
+        "header_bytes_hex": "00 80 9A 01 81 9A 03 8F 9A FF",
+        "header_terminator_file_offset": "0x19A90",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19A87",
+            "pointer_le_hex": "809A",
+            "stream_cpu_address": "$9A80",
+            "stream_file_offset": "0x19A90",
+            "stream_prefix_hex": "FF E0 12 E2 80 E3 00 81 00 05 01 06 02 07 FF E0",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19A8A",
+            "pointer_le_hex": "819A",
+            "stream_cpu_address": "$9A81",
+            "stream_file_offset": "0x19A91",
+            "stream_prefix_hex": "E0 12 E2 80 E3 00 81 00 05 01 06 02 07 FF E0 15",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19A8D",
+            "pointer_le_hex": "8F9A",
+            "stream_cpu_address": "$9A8F",
+            "stream_file_offset": "0x19A9F",
+            "stream_prefix_hex": "E0 15 E3 00 84 ED 02 0E 8C 05 FF 00 A4 9A 01 B2",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 78,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C3E",
+      "runtime_queue_id_from_driver_index": "0x2B",
+      "pointer_word_le_hex": "5394",
+      "resolved_cpu_address": "$9453",
+      "sequence_file_offset": "0x19463",
+      "sequence_header": {
+        "header_file_offset": "0x19463",
+        "header_bytes_hex": "00 5C 94 01 37 94 03 5D 94 FF",
+        "header_terminator_file_offset": "0x1946C",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19463",
+            "pointer_le_hex": "5C94",
+            "stream_cpu_address": "$945C",
+            "stream_file_offset": "0x1946C",
+            "stream_prefix_hex": "FF E9 49 94 0F FF 00 6B 94 01 6C 94 03 91 94 FF",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19466",
+            "pointer_le_hex": "3794",
+            "stream_cpu_address": "$9437",
+            "stream_file_offset": "0x19447",
+            "stream_prefix_hex": "E0 12 E2 80 E3 00 81 10 20 00 10 20 FF E9 49 94",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19469",
+            "pointer_le_hex": "5D94",
+            "stream_cpu_address": "$945D",
+            "stream_file_offset": "0x1946D",
+            "stream_prefix_hex": "E9 49 94 0F FF 00 6B 94 01 6C 94 03 91 94 FF E0",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 79,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C40",
+      "runtime_queue_id_from_driver_index": "0x2C",
+      "pointer_word_le_hex": "0398",
+      "resolved_cpu_address": "$9803",
+      "sequence_file_offset": "0x19813",
+      "sequence_header": {
+        "header_file_offset": "0x19813",
+        "header_bytes_hex": "00 0C 98 01 0C 98 03 0D 98 FF",
+        "header_terminator_file_offset": "0x1981C",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19813",
+            "pointer_le_hex": "0C98",
+            "stream_cpu_address": "$980C",
+            "stream_file_offset": "0x1981C",
+            "stream_prefix_hex": "FF E0 12 E3 00 82 0D E3 02 0C 07 E3 06 0D FF 00",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19816",
+            "pointer_le_hex": "0C98",
+            "stream_cpu_address": "$980C",
+            "stream_file_offset": "0x1981C",
+            "stream_prefix_hex": "FF E0 12 E3 00 82 0D E3 02 0C 07 E3 06 0D FF 00",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19819",
+            "pointer_le_hex": "0D98",
+            "stream_cpu_address": "$980D",
+            "stream_file_offset": "0x1981D",
+            "stream_prefix_hex": "E0 12 E3 00 82 0D E3 02 0C 07 E3 06 0D FF 00 25",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 80,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C42",
+      "runtime_queue_id_from_driver_index": "0x2D",
+      "pointer_word_le_hex": "9A9A",
+      "resolved_cpu_address": "$9A9A",
+      "sequence_file_offset": "0x19AAA",
+      "sequence_header": {
+        "header_file_offset": "0x19AAA",
+        "header_bytes_hex": "00 A4 9A 01 B2 9A 03 C0 9A FF",
+        "header_terminator_file_offset": "0x19AB3",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19AAA",
+            "pointer_le_hex": "A49A",
+            "stream_cpu_address": "$9AA4",
+            "stream_file_offset": "0x19AB4",
+            "stream_prefix_hex": "E0 16 E2 80 E3 00 81 10 00 16 06 10 00 FF E0 14",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19AAD",
+            "pointer_le_hex": "B29A",
+            "stream_cpu_address": "$9AB2",
+            "stream_file_offset": "0x19AC2",
+            "stream_prefix_hex": "E0 14 E2 40 E3 04 81 22 21 15 14 24 25 FF E0 17",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19AB0",
+            "pointer_le_hex": "C09A",
+            "stream_cpu_address": "$9AC0",
+            "stream_file_offset": "0x19AD0",
+            "stream_prefix_hex": "E0 17 E3 00 82 0E 0D 09 81 0A 09 08 FF 00 D7 9A",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 81,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C44",
+      "runtime_queue_id_from_driver_index": "0x2E",
+      "pointer_word_le_hex": "9D97",
+      "resolved_cpu_address": "$979D",
+      "sequence_file_offset": "0x197AD",
+      "sequence_header": {
+        "header_file_offset": "0x197AD",
+        "header_bytes_hex": "00 A7 97 01 B7 97 03 C7 97 FF",
+        "header_terminator_file_offset": "0x197B6",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x197AD",
+            "pointer_le_hex": "A797",
+            "stream_cpu_address": "$97A7",
+            "stream_file_offset": "0x197B7",
+            "stream_prefix_hex": "E0 14 E2 80 E3 00 81 10 00 15 05 10 00 16 06 FF",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x197B0",
+            "pointer_le_hex": "B797",
+            "stream_cpu_address": "$97B7",
+            "stream_file_offset": "0x197C7",
+            "stream_prefix_hex": "E0 14 E2 80 E3 00 81 11 01 16 06 11 01 17 07 FF",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x197B3",
+            "pointer_le_hex": "C797",
+            "stream_cpu_address": "$97C7",
+            "stream_file_offset": "0x197D7",
+            "stream_prefix_hex": "E0 17 E3 00 81 0B 08 0D 0F 0C 06 0F 0A 0F FF 00",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 82,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C46",
+      "runtime_queue_id_from_driver_index": "0x2F",
+      "pointer_word_le_hex": "1B98",
+      "resolved_cpu_address": "$981B",
+      "sequence_file_offset": "0x1982B",
+      "sequence_header": {
+        "header_file_offset": "0x1982B",
+        "header_bytes_hex": "00 25 98 01 39 98 03 40 98 FF",
+        "header_terminator_file_offset": "0x19834",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x1982B",
+            "pointer_le_hex": "2598",
+            "stream_cpu_address": "$9825",
+            "stream_file_offset": "0x19835",
+            "stream_prefix_hex": "E0 17 E2 80 E3 00 81 10 00 15 05 10 00 16 06 10",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x1982E",
+            "pointer_le_hex": "3998",
+            "stream_cpu_address": "$9839",
+            "stream_file_offset": "0x19849",
+            "stream_prefix_hex": "E5 08 81 0C E8 25 98 E0 17 E3 00 81 0B 0C 05 0F",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19831",
+            "pointer_le_hex": "4098",
+            "stream_cpu_address": "$9840",
+            "stream_file_offset": "0x19850",
+            "stream_prefix_hex": "E0 17 E3 00 81 0B 0C 05 0F 0A 08 05 0F 0E 0D 0C",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 83,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C48",
+      "runtime_queue_id_from_driver_index": "0x30",
+      "pointer_word_le_hex": "139C",
+      "resolved_cpu_address": "$9C13",
+      "sequence_file_offset": "0x19C23",
+      "sequence_header": {
+        "header_file_offset": "0x19C23",
+        "header_bytes_hex": "00 1C 9C 01 1C 9C 03 1D 9C FF",
+        "header_terminator_file_offset": "0x19C2C",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19C23",
+            "pointer_le_hex": "1C9C",
+            "stream_cpu_address": "$9C1C",
+            "stream_file_offset": "0x19C2C",
+            "stream_prefix_hex": "FF E0 2F E3 00 85 00 82 04 83 08 09 0A 0B 0C 0A",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19C26",
+            "pointer_le_hex": "1C9C",
+            "stream_cpu_address": "$9C1C",
+            "stream_file_offset": "0x19C2C",
+            "stream_prefix_hex": "FF E0 2F E3 00 85 00 82 04 83 08 09 0A 0B 0C 0A",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19C29",
+            "pointer_le_hex": "1D9C",
+            "stream_cpu_address": "$9C1D",
+            "stream_file_offset": "0x19C2D",
+            "stream_prefix_hex": "E0 2F E3 00 85 00 82 04 83 08 09 0A 0B 0C 0A 0B",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 84,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CA6",
+      "runtime_queue_id_from_driver_index": "0x5F",
+      "pointer_word_le_hex": "469F",
+      "resolved_cpu_address": "$9F46",
+      "sequence_file_offset": "0x19F56",
+      "sequence_header": {
+        "header_file_offset": "0x19F56",
+        "header_bytes_hex": "00 4F 9F 01 4F 9F 03 50 9F FF",
+        "header_terminator_file_offset": "0x19F5F",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19F56",
+            "pointer_le_hex": "4F9F",
+            "stream_cpu_address": "$9F4F",
+            "stream_file_offset": "0x19F5F",
+            "stream_prefix_hex": "FF 82 E0 12 E3 00 0F 0E 0D 0C 0E 0D 0C 0B 0D 0C",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19F59",
+            "pointer_le_hex": "4F9F",
+            "stream_cpu_address": "$9F4F",
+            "stream_file_offset": "0x19F5F",
+            "stream_prefix_hex": "FF 82 E0 12 E3 00 0F 0E 0D 0C 0E 0D 0C 0B 0D 0C",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19F5C",
+            "pointer_le_hex": "509F",
+            "stream_cpu_address": "$9F50",
+            "stream_file_offset": "0x19F60",
+            "stream_prefix_hex": "82 E0 12 E3 00 0F 0E 0D 0C 0E 0D 0C 0B 0D 0C 0B",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 85,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CA8",
+      "runtime_queue_id_from_driver_index": "0x60",
+      "pointer_word_le_hex": "7E98",
+      "resolved_cpu_address": "$987E",
+      "sequence_file_offset": "0x1988E",
+      "sequence_header": {
+        "header_file_offset": "0x1988E",
+        "header_bytes_hex": "00 93 98 01 94 98 03 9D 98 04 93 98 05 93 98 06 93 98 07 93 98 FF",
+        "header_terminator_file_offset": "0x198A3",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x1988E",
+            "pointer_le_hex": "9398",
+            "stream_cpu_address": "$9893",
+            "stream_file_offset": "0x198A3",
+            "stream_prefix_hex": "FF 8E 0C E9 36 9A E9 14 9A FF E9 A5 98 8F 10 E8",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19891",
+            "pointer_le_hex": "9498",
+            "stream_cpu_address": "$9894",
+            "stream_file_offset": "0x198A4",
+            "stream_prefix_hex": "8E 0C E9 36 9A E9 14 9A FF E9 A5 98 8F 10 E8 F4",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19894",
+            "pointer_le_hex": "9D98",
+            "stream_cpu_address": "$989D",
+            "stream_file_offset": "0x198AD",
+            "stream_prefix_hex": "E9 A5 98 8F 10 E8 F4 98 E0 17 E3 00 81 0D 0E 0F",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 4,
+            "record_file_offset": "0x19897",
+            "pointer_le_hex": "9398",
+            "stream_cpu_address": "$9893",
+            "stream_file_offset": "0x198A3",
+            "stream_prefix_hex": "FF 8E 0C E9 36 9A E9 14 9A FF E9 A5 98 8F 10 E8",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 5,
+            "record_file_offset": "0x1989A",
+            "pointer_le_hex": "9398",
+            "stream_cpu_address": "$9893",
+            "stream_file_offset": "0x198A3",
+            "stream_prefix_hex": "FF 8E 0C E9 36 9A E9 14 9A FF E9 A5 98 8F 10 E8",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 6,
+            "record_file_offset": "0x1989D",
+            "pointer_le_hex": "9398",
+            "stream_cpu_address": "$9893",
+            "stream_file_offset": "0x198A3",
+            "stream_prefix_hex": "FF 8E 0C E9 36 9A E9 14 9A FF E9 A5 98 8F 10 E8",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 7,
+            "record_file_offset": "0x198A0",
+            "pointer_le_hex": "9398",
+            "stream_cpu_address": "$9893",
+            "stream_file_offset": "0x198A3",
+            "stream_prefix_hex": "FF 8E 0C E9 36 9A E9 14 9A FF E9 A5 98 8F 10 E8",
+            "stream_starts_at_terminator": true
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 86,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CAA",
+      "runtime_queue_id_from_driver_index": "0x61",
+      "pointer_word_le_hex": "BD98",
+      "resolved_cpu_address": "$98BD",
+      "sequence_file_offset": "0x198CD",
+      "sequence_header": {
+        "header_file_offset": "0x198CD",
+        "header_bytes_hex": "00 D2 98 01 3B 99 03 D3 98 04 D2 98 05 D2 98 06 D2 98 07 D2 98 FF",
+        "header_terminator_file_offset": "0x198E2",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x198CD",
+            "pointer_le_hex": "D298",
+            "stream_cpu_address": "$98D2",
+            "stream_file_offset": "0x198E2",
+            "stream_prefix_hex": "FF E0 15 E3 00 81 0D 0E 06 09 0A 0C 0D 05 08 09",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x198D0",
+            "pointer_le_hex": "3B99",
+            "stream_cpu_address": "$993B",
+            "stream_file_offset": "0x1994B",
+            "stream_prefix_hex": "95 0C E9 36 9A E9 14 9A FF 00 4D 99 01 4D 99 03",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x198D3",
+            "pointer_le_hex": "D398",
+            "stream_cpu_address": "$98D3",
+            "stream_file_offset": "0x198E3",
+            "stream_prefix_hex": "E0 15 E3 00 81 0D 0E 06 09 0A 0C 0D 05 08 09 0B",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 4,
+            "record_file_offset": "0x198D6",
+            "pointer_le_hex": "D298",
+            "stream_cpu_address": "$98D2",
+            "stream_file_offset": "0x198E2",
+            "stream_prefix_hex": "FF E0 15 E3 00 81 0D 0E 06 09 0A 0C 0D 05 08 09",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 5,
+            "record_file_offset": "0x198D9",
+            "pointer_le_hex": "D298",
+            "stream_cpu_address": "$98D2",
+            "stream_file_offset": "0x198E2",
+            "stream_prefix_hex": "FF E0 15 E3 00 81 0D 0E 06 09 0A 0C 0D 05 08 09",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 6,
+            "record_file_offset": "0x198DC",
+            "pointer_le_hex": "D298",
+            "stream_cpu_address": "$98D2",
+            "stream_file_offset": "0x198E2",
+            "stream_prefix_hex": "FF E0 15 E3 00 81 0D 0E 06 09 0A 0C 0D 05 08 09",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 7,
+            "record_file_offset": "0x198DF",
+            "pointer_le_hex": "D298",
+            "stream_cpu_address": "$98D2",
+            "stream_file_offset": "0x198E2",
+            "stream_prefix_hex": "FF E0 15 E3 00 81 0D 0E 06 09 0A 0C 0D 05 08 09",
+            "stream_starts_at_terminator": true
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 87,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CAC",
+      "runtime_queue_id_from_driver_index": "0x62",
+      "pointer_word_le_hex": "4499",
+      "resolved_cpu_address": "$9944",
+      "sequence_file_offset": "0x19954",
+      "sequence_header": {
+        "header_file_offset": "0x19954",
+        "header_bytes_hex": "00 4D 99 01 4D 99 03 4E 99 FF",
+        "header_terminator_file_offset": "0x1995D",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19954",
+            "pointer_le_hex": "4D99",
+            "stream_cpu_address": "$994D",
+            "stream_file_offset": "0x1995D",
+            "stream_prefix_hex": "FF E0 21 E0 17 E3 04 8E 0A E3 01 95 0A E3 03 8A",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19957",
+            "pointer_le_hex": "4D99",
+            "stream_cpu_address": "$994D",
+            "stream_file_offset": "0x1995D",
+            "stream_prefix_hex": "FF E0 21 E0 17 E3 04 8E 0A E3 01 95 0A E3 03 8A",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x1995A",
+            "pointer_le_hex": "4E99",
+            "stream_cpu_address": "$994E",
+            "stream_file_offset": "0x1995E",
+            "stream_prefix_hex": "E0 21 E0 17 E3 04 8E 0A E3 01 95 0A E3 03 8A 0A",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 88,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CAE",
+      "runtime_queue_id_from_driver_index": "0x63",
+      "pointer_word_le_hex": "8E99",
+      "resolved_cpu_address": "$998E",
+      "sequence_file_offset": "0x1999E",
+      "sequence_header": {
+        "header_file_offset": "0x1999E",
+        "header_bytes_hex": "00 98 99 01 A6 99 03 97 99 FF",
+        "header_terminator_file_offset": "0x199A7",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x1999E",
+            "pointer_le_hex": "9899",
+            "stream_cpu_address": "$9998",
+            "stream_file_offset": "0x199A8",
+            "stream_prefix_hex": "E0 12 E2 80 E3 05 81 28 29 28 27 94 26 FF E0 12",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x199A1",
+            "pointer_le_hex": "A699",
+            "stream_cpu_address": "$99A6",
+            "stream_file_offset": "0x199B6",
+            "stream_prefix_hex": "E0 12 E2 80 E3 01 81 15 16 15 14 94 13 FF 00 BD",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x199A4",
+            "pointer_le_hex": "9799",
+            "stream_cpu_address": "$9997",
+            "stream_file_offset": "0x199A7",
+            "stream_prefix_hex": "FF E0 12 E2 80 E3 05 81 28 29 28 27 94 26 FF E0",
+            "stream_starts_at_terminator": true
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 89,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CB0",
+      "runtime_queue_id_from_driver_index": "0x64",
+      "pointer_word_le_hex": "CB9C",
+      "resolved_cpu_address": "$9CCB",
+      "sequence_file_offset": "0x19CDB",
+      "sequence_header": {
+        "header_file_offset": "0x19CDB",
+        "header_bytes_hex": "00 D4 9C 01 D5 9C 03 D4 9C FF",
+        "header_terminator_file_offset": "0x19CE4",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19CDB",
+            "pointer_le_hex": "D49C",
+            "stream_cpu_address": "$9CD4",
+            "stream_file_offset": "0x19CE4",
+            "stream_prefix_hex": "FF E0 12 E2 80 E3 00 84 E4 85 10 83 E4 8D 11 E3",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19CDE",
+            "pointer_le_hex": "D59C",
+            "stream_cpu_address": "$9CD5",
+            "stream_file_offset": "0x19CE5",
+            "stream_prefix_hex": "E0 12 E2 80 E3 00 84 E4 85 10 83 E4 8D 11 E3 0A",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19CE1",
+            "pointer_le_hex": "D49C",
+            "stream_cpu_address": "$9CD4",
+            "stream_file_offset": "0x19CE4",
+            "stream_prefix_hex": "FF E0 12 E2 80 E3 00 84 E4 85 10 83 E4 8D 11 E3",
+            "stream_starts_at_terminator": true
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 90,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CB2",
+      "runtime_queue_id_from_driver_index": "0x65",
+      "pointer_word_le_hex": "B499",
+      "resolved_cpu_address": "$99B4",
+      "sequence_file_offset": "0x199C4",
+      "sequence_header": {
+        "header_file_offset": "0x199C4",
+        "header_bytes_hex": "00 BD 99 01 BE 99 03 D5 99 FF",
+        "header_terminator_file_offset": "0x199CD",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x199C4",
+            "pointer_le_hex": "BD99",
+            "stream_cpu_address": "$99BD",
+            "stream_file_offset": "0x199CD",
+            "stream_prefix_hex": "FF E0 12 E2 40 E3 05 81 15 13 11 0B 09 0B 11 10",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x199C7",
+            "pointer_le_hex": "BE99",
+            "stream_cpu_address": "$99BE",
+            "stream_file_offset": "0x199CE",
+            "stream_prefix_hex": "E0 12 E2 40 E3 05 81 15 13 11 0B 09 0B 11 10 0B",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x199CA",
+            "pointer_le_hex": "D599",
+            "stream_cpu_address": "$99D5",
+            "stream_file_offset": "0x199E5",
+            "stream_prefix_hex": "E0 12 E3 00 81 03 05 04 06 05 07 06 08 E3 07 8E",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 91,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CB4",
+      "runtime_queue_id_from_driver_index": "0x66",
+      "pointer_word_le_hex": "FC99",
+      "resolved_cpu_address": "$99FC",
+      "sequence_file_offset": "0x19A0C",
+      "sequence_header": {
+        "header_file_offset": "0x19A0C",
+        "header_bytes_hex": "00 05 9A 01 06 9A 03 05 9A FF",
+        "header_terminator_file_offset": "0x19A15",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19A0C",
+            "pointer_le_hex": "059A",
+            "stream_cpu_address": "$9A05",
+            "stream_file_offset": "0x19A15",
+            "stream_prefix_hex": "FF E0 12 E2 80 E3 00 81 4A 82 4B E9 14 9A FF 81",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19A0F",
+            "pointer_le_hex": "069A",
+            "stream_cpu_address": "$9A06",
+            "stream_file_offset": "0x19A16",
+            "stream_prefix_hex": "E0 12 E2 80 E3 00 81 4A 82 4B E9 14 9A FF 81 54",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19A12",
+            "pointer_le_hex": "059A",
+            "stream_cpu_address": "$9A05",
+            "stream_file_offset": "0x19A15",
+            "stream_prefix_hex": "FF E0 12 E2 80 E3 00 81 4A 82 4B E9 14 9A FF 81",
+            "stream_starts_at_terminator": true
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 92,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CB8",
+      "runtime_queue_id_from_driver_index": "0x68",
+      "pointer_word_le_hex": "E799",
+      "resolved_cpu_address": "$99E7",
+      "sequence_file_offset": "0x199F7",
+      "sequence_header": {
+        "header_file_offset": "0x199F7",
+        "header_bytes_hex": "00 F0 99 01 F0 99 03 F1 99 FF",
+        "header_terminator_file_offset": "0x19A00",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x199F7",
+            "pointer_le_hex": "F099",
+            "stream_cpu_address": "$99F0",
+            "stream_file_offset": "0x19A00",
+            "stream_prefix_hex": "FF E0 12 E3 00 ED 02 84 09 93 06 FF 00 05 9A 01",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x199FA",
+            "pointer_le_hex": "F099",
+            "stream_cpu_address": "$99F0",
+            "stream_file_offset": "0x19A00",
+            "stream_prefix_hex": "FF E0 12 E3 00 ED 02 84 09 93 06 FF 00 05 9A 01",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x199FD",
+            "pointer_le_hex": "F199",
+            "stream_cpu_address": "$99F1",
+            "stream_file_offset": "0x19A01",
+            "stream_prefix_hex": "E0 12 E3 00 ED 02 84 09 93 06 FF 00 05 9A 01 06",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 93,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CBA",
+      "runtime_queue_id_from_driver_index": "0x69",
+      "pointer_word_le_hex": "9C9F",
+      "resolved_cpu_address": "$9F9C",
+      "sequence_file_offset": "0x19FAC",
+      "sequence_header": {
+        "header_file_offset": "0x19FAC",
+        "header_bytes_hex": "00 A5 9F 01 A5 9F 03 A6 9F FF",
+        "header_terminator_file_offset": "0x19FB5",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19FAC",
+            "pointer_le_hex": "A59F",
+            "stream_cpu_address": "$9FA5",
+            "stream_file_offset": "0x19FB5",
+            "stream_prefix_hex": "FF E0 21 E0 17 E3 0C 85 0A E3 0B 0A E3 0A 0A E3",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19FAF",
+            "pointer_le_hex": "A59F",
+            "stream_cpu_address": "$9FA5",
+            "stream_file_offset": "0x19FB5",
+            "stream_prefix_hex": "FF E0 21 E0 17 E3 0C 85 0A E3 0B 0A E3 0A 0A E3",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19FB2",
+            "pointer_le_hex": "A69F",
+            "stream_cpu_address": "$9FA6",
+            "stream_file_offset": "0x19FB6",
+            "stream_prefix_hex": "E0 21 E0 17 E3 0C 85 0A E3 0B 0A E3 0A 0A E3 09",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 94,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CBC",
+      "runtime_queue_id_from_driver_index": "0x6A",
+      "pointer_word_le_hex": "359C",
+      "resolved_cpu_address": "$9C35",
+      "sequence_file_offset": "0x19C45",
+      "sequence_header": {
+        "header_file_offset": "0x19C45",
+        "header_bytes_hex": "04 42 9C 05 60 9C 06 41 9C 07 67 9C FF",
+        "header_terminator_file_offset": "0x19C51",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 4,
+            "record_file_offset": "0x19C45",
+            "pointer_le_hex": "429C",
+            "stream_cpu_address": "$9C42",
+            "stream_file_offset": "0x19C52",
+            "stream_prefix_hex": "E0 17 E2 40 E3 0D AD E4 FF 40 9F E3 0E 53 E3 0D",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 5,
+            "record_file_offset": "0x19C48",
+            "pointer_le_hex": "609C",
+            "stream_cpu_address": "$9C60",
+            "stream_file_offset": "0x19C70",
+            "stream_prefix_hex": "E5 02 85 0C E8 42 9C E0 17 E3 0D 96 0C E3 0C 0C",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 6,
+            "record_file_offset": "0x19C4B",
+            "pointer_le_hex": "419C",
+            "stream_cpu_address": "$9C41",
+            "stream_file_offset": "0x19C51",
+            "stream_prefix_hex": "FF E0 17 E2 40 E3 0D AD E4 FF 40 9F E3 0E 53 E3",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 7,
+            "record_file_offset": "0x19C4E",
+            "pointer_le_hex": "679C",
+            "stream_cpu_address": "$9C67",
+            "stream_file_offset": "0x19C77",
+            "stream_prefix_hex": "E0 17 E3 0D 96 0C E3 0C 0C E3 0B 0C E3 0A 0C E3",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 95,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CBE",
+      "runtime_queue_id_from_driver_index": "0x6B",
+      "pointer_word_le_hex": "CA9F",
+      "resolved_cpu_address": "$9FCA",
+      "sequence_file_offset": "0x19FDA",
+      "sequence_header": {
+        "header_file_offset": "0x19FDA",
+        "header_bytes_hex": "00 D3 9F 01 D3 9F 03 D4 9F FF",
+        "header_terminator_file_offset": "0x19FE3",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19FDA",
+            "pointer_le_hex": "D39F",
+            "stream_cpu_address": "$9FD3",
+            "stream_file_offset": "0x19FE3",
+            "stream_prefix_hex": "FF E0 17 E3 03 81 01 04 01 82 02 05 02 83 03 06",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19FDD",
+            "pointer_le_hex": "D39F",
+            "stream_cpu_address": "$9FD3",
+            "stream_file_offset": "0x19FE3",
+            "stream_prefix_hex": "FF E0 17 E3 03 81 01 04 01 82 02 05 02 83 03 06",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19FE0",
+            "pointer_le_hex": "D49F",
+            "stream_cpu_address": "$9FD4",
+            "stream_file_offset": "0x19FE4",
+            "stream_prefix_hex": "E0 17 E3 03 81 01 04 01 82 02 05 02 83 03 06 03",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 96,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18C48",
+      "runtime_queue_id_from_driver_index": "0x30",
+      "pointer_word_le_hex": "139C",
+      "resolved_cpu_address": "$9C13",
+      "sequence_file_offset": "0x19C23",
+      "sequence_header": {
+        "header_file_offset": "0x19C23",
+        "header_bytes_hex": "00 1C 9C 01 1C 9C 03 1D 9C FF",
+        "header_terminator_file_offset": "0x19C2C",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19C23",
+            "pointer_le_hex": "1C9C",
+            "stream_cpu_address": "$9C1C",
+            "stream_file_offset": "0x19C2C",
+            "stream_prefix_hex": "FF E0 2F E3 00 85 00 82 04 83 08 09 0A 0B 0C 0A",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19C26",
+            "pointer_le_hex": "1C9C",
+            "stream_cpu_address": "$9C1C",
+            "stream_file_offset": "0x19C2C",
+            "stream_prefix_hex": "FF E0 2F E3 00 85 00 82 04 83 08 09 0A 0B 0C 0A",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19C29",
+            "pointer_le_hex": "1D9C",
+            "stream_cpu_address": "$9C1D",
+            "stream_file_offset": "0x19C2D",
+            "stream_prefix_hex": "E0 2F E3 00 85 00 82 04 83 08 09 0A 0B 0C 0A 0B",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 97,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CC2",
+      "runtime_queue_id_from_driver_index": "0x6D",
+      "pointer_word_le_hex": "089D",
+      "resolved_cpu_address": "$9D08",
+      "sequence_file_offset": "0x19D18",
+      "sequence_header": {
+        "header_file_offset": "0x19D18",
+        "header_bytes_hex": "00 11 9D 01 12 9D 03 36 9D FF",
+        "header_terminator_file_offset": "0x19D21",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19D18",
+            "pointer_le_hex": "119D",
+            "stream_cpu_address": "$9D11",
+            "stream_file_offset": "0x19D21",
+            "stream_prefix_hex": "FF E0 11 E2 80 E3 00 88 E4 85 15 E3 04 E4 85 15",
+            "stream_starts_at_terminator": true
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19D1B",
+            "pointer_le_hex": "129D",
+            "stream_cpu_address": "$9D12",
+            "stream_file_offset": "0x19D22",
+            "stream_prefix_hex": "E0 11 E2 80 E3 00 88 E4 85 15 E3 04 E4 85 15 E3",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19D1E",
+            "pointer_le_hex": "369D",
+            "stream_cpu_address": "$9D36",
+            "stream_file_offset": "0x19D46",
+            "stream_prefix_hex": "E0 14 E3 00 81 0F 05 0E 05 0D 05 06 07 08 09 0A",
+            "stream_starts_at_terminator": false
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 98,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CC4",
+      "runtime_queue_id_from_driver_index": "0x6E",
+      "pointer_word_le_hex": "5D9E",
+      "resolved_cpu_address": "$9E5D",
+      "sequence_file_offset": "0x19E6D",
+      "sequence_header": {
+        "header_file_offset": "0x19E6D",
+        "header_bytes_hex": "00 67 9E 01 72 9E 03 66 9E FF",
+        "header_terminator_file_offset": "0x19E76",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19E6D",
+            "pointer_le_hex": "679E",
+            "stream_cpu_address": "$9E67",
+            "stream_file_offset": "0x19E77",
+            "stream_prefix_hex": "E3 00 E2 80 E0 13 E5 81 9A 39 FF E3 0A ED 01 83",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19E70",
+            "pointer_le_hex": "729E",
+            "stream_cpu_address": "$9E72",
+            "stream_file_offset": "0x19E82",
+            "stream_prefix_hex": "E3 0A ED 01 83 0C E2 80 E0 13 9A 39 FF 00 88 9E",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19E73",
+            "pointer_le_hex": "669E",
+            "stream_cpu_address": "$9E66",
+            "stream_file_offset": "0x19E76",
+            "stream_prefix_hex": "FF E3 00 E2 80 E0 13 E5 81 9A 39 FF E3 0A ED 01",
+            "stream_starts_at_terminator": true
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    },
+    {
+      "sound_test_ordinal": 99,
+      "category": "SFX",
+      "pointer_table_file_offset": "0x18CC6",
+      "runtime_queue_id_from_driver_index": "0x6F",
+      "pointer_word_le_hex": "219E",
+      "resolved_cpu_address": "$9E21",
+      "sequence_file_offset": "0x19E31",
+      "sequence_header": {
+        "header_file_offset": "0x19E31",
+        "header_bytes_hex": "00 2B 9E 01 37 9E 03 2A 9E FF",
+        "header_terminator_file_offset": "0x19E3A",
+        "header_terminator_verified": true,
+        "channels": [
+          {
+            "channel_id": 0,
+            "record_file_offset": "0x19E31",
+            "pointer_le_hex": "2B9E",
+            "stream_cpu_address": "$9E2B",
+            "stream_file_offset": "0x19E3B",
+            "stream_prefix_hex": "E3 00 E0 11 E2 80 E9 4C 9E 90 50 FF E0 12 E2 80",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 1,
+            "record_file_offset": "0x19E34",
+            "pointer_le_hex": "379E",
+            "stream_cpu_address": "$9E37",
+            "stream_file_offset": "0x19E47",
+            "stream_prefix_hex": "E0 12 E2 80 E3 05 E5 01 84 0C E9 4C 9E E5 00 ED",
+            "stream_starts_at_terminator": false
+          },
+          {
+            "channel_id": 3,
+            "record_file_offset": "0x19E37",
+            "pointer_le_hex": "2A9E",
+            "stream_cpu_address": "$9E2A",
+            "stream_file_offset": "0x19E3A",
+            "stream_prefix_hex": "FF E3 00 E0 11 E2 80 E9 4C 9E 90 50 FF E0 12 E2",
+            "stream_starts_at_terminator": true
+          }
+        ],
+        "all_channels_start_at_terminator": false
+      },
+      "rom_pointer_target_verified": true
+    }
+  ],
+  "opening_same_input_trace": {
+    "source_trace": "reference/diagnostics/audio/opening_timeline_rom_driver_pre_start_tail_4661f.json",
+    "events": [
+      {
+        "source_frame": 282,
+        "runtime_queue_id": "0x58",
+        "queue_origin_status": "rom_command_verified_frame_capture_anchored",
+        "queue_source": "ROM cutscene-0 ED command confirmed by FC-aware VM",
+        "sound_test_matches": [
+          {
+            "ordinal": 0,
+            "category": "BGM"
+          }
+        ],
+        "pointer_table_file_offset": "0x18C98",
+        "pointer_word_le_hex": "ADB7",
+        "resolved_cpu_address": "$B7AD",
+        "resolved_file_offset": "0x1F7BD",
+        "active_prg_route_for_trace": "0x0F/$A000",
+        "sequence_header": {
+          "header_file_offset": "0x1F7BD",
+          "header_bytes_hex": "04 BA B7 05 BD BA 06 5E BD 07 3F BF FF",
+          "header_terminator_file_offset": "0x1F7C9",
+          "header_terminator_verified": true,
+          "channels": [
+            {
+              "channel_id": 4,
+              "record_file_offset": "0x1F7BD",
+              "pointer_le_hex": "BAB7",
+              "stream_cpu_address": "$B7BA",
+              "stream_file_offset": "0x1F7CA",
+              "stream_prefix_hex": "E0 22 E2 00 E3 08 87 45 40 38 37 35 30 2A 27 25",
+              "stream_starts_at_terminator": false
+            },
+            {
+              "channel_id": 5,
+              "record_file_offset": "0x1F7C0",
+              "pointer_le_hex": "BDBA",
+              "stream_cpu_address": "$BABD",
+              "stream_file_offset": "0x1FACD",
+              "stream_prefix_hex": "E0 24 E2 80 E3 08 ED 01 8C 0C 91 35 E0 23 8C 30",
+              "stream_starts_at_terminator": false
+            },
+            {
+              "channel_id": 6,
+              "record_file_offset": "0x1F7C3",
+              "pointer_le_hex": "5EBD",
+              "stream_cpu_address": "$BD5E",
+              "stream_file_offset": "0x1FD6E",
+              "stream_prefix_hex": "E0 17 9C 20 E0 20 E9 69 BE E9 A3 BE E0 20 99 27",
+              "stream_starts_at_terminator": false
+            },
+            {
+              "channel_id": 7,
+              "record_file_offset": "0x1F7C6",
+              "pointer_le_hex": "3FBF",
+              "stream_cpu_address": "$BF3F",
+              "stream_file_offset": "0x1FF4F",
+              "stream_prefix_hex": "E0 16 E3 06 A1 10 87 FA 00 FA 01 FA 02 FA 03 EB",
+              "stream_starts_at_terminator": false
+            }
+          ],
+          "all_channels_start_at_terminator": false
+        }
+      },
+      {
+        "source_frame": 379,
+        "runtime_queue_id": "0x68",
+        "queue_origin_status": "rom_command_verified_frame_capture_anchored",
+        "queue_source": "ROM cutscene-0 ED command confirmed by FC-aware VM",
+        "sound_test_matches": [
+          {
+            "ordinal": 92,
+            "category": "SFX"
+          }
+        ],
+        "pointer_table_file_offset": "0x18CB8",
+        "pointer_word_le_hex": "E799",
+        "resolved_cpu_address": "$99E7",
+        "resolved_file_offset": "0x199F7",
+        "active_prg_route_for_trace": "0x0C/$8000",
+        "sequence_header": {
+          "header_file_offset": "0x199F7",
+          "header_bytes_hex": "00 F0 99 01 F0 99 03 F1 99 FF",
+          "header_terminator_file_offset": "0x19A00",
+          "header_terminator_verified": true,
+          "channels": [
+            {
+              "channel_id": 0,
+              "record_file_offset": "0x199F7",
+              "pointer_le_hex": "F099",
+              "stream_cpu_address": "$99F0",
+              "stream_file_offset": "0x19A00",
+              "stream_prefix_hex": "FF E0 12 E3 00 ED 02 84 09 93 06 FF 00 05 9A 01",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 1,
+              "record_file_offset": "0x199FA",
+              "pointer_le_hex": "F099",
+              "stream_cpu_address": "$99F0",
+              "stream_file_offset": "0x19A00",
+              "stream_prefix_hex": "FF E0 12 E3 00 ED 02 84 09 93 06 FF 00 05 9A 01",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 3,
+              "record_file_offset": "0x199FD",
+              "pointer_le_hex": "F199",
+              "stream_cpu_address": "$99F1",
+              "stream_file_offset": "0x19A01",
+              "stream_prefix_hex": "E0 12 E3 00 ED 02 84 09 93 06 FF 00 05 9A 01 06",
+              "stream_starts_at_terminator": false
+            }
+          ],
+          "all_channels_start_at_terminator": false
+        }
+      },
+      {
+        "source_frame": 1048,
+        "runtime_queue_id": "0x28",
+        "queue_origin_status": "capture_observed_unmapped",
+        "queue_source": "captured RAM $0700 queue write; ROM source unresolved",
+        "sound_test_matches": [
+          {
+            "ordinal": 75,
+            "category": "SFX"
+          }
+        ],
+        "pointer_table_file_offset": "0x18C38",
+        "pointer_word_le_hex": "559A",
+        "resolved_cpu_address": "$9A55",
+        "resolved_file_offset": "0x19A65",
+        "active_prg_route_for_trace": "0x0C/$8000",
+        "sequence_header": {
+          "header_file_offset": "0x19A65",
+          "header_bytes_hex": "00 5E 9A 01 5E 9A 03 5F 9A FF",
+          "header_terminator_file_offset": "0x19A6E",
+          "header_terminator_verified": true,
+          "channels": [
+            {
+              "channel_id": 0,
+              "record_file_offset": "0x19A65",
+              "pointer_le_hex": "5E9A",
+              "stream_cpu_address": "$9A5E",
+              "stream_file_offset": "0x19A6E",
+              "stream_prefix_hex": "FF E0 12 E3 00 81 0A F3 0B 08 09 0A F4 84 10 07",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 1,
+              "record_file_offset": "0x19A68",
+              "pointer_le_hex": "5E9A",
+              "stream_cpu_address": "$9A5E",
+              "stream_file_offset": "0x19A6E",
+              "stream_prefix_hex": "FF E0 12 E3 00 81 0A F3 0B 08 09 0A F4 84 10 07",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 3,
+              "record_file_offset": "0x19A6B",
+              "pointer_le_hex": "5F9A",
+              "stream_cpu_address": "$9A5F",
+              "stream_file_offset": "0x19A6F",
+              "stream_prefix_hex": "E0 12 E3 00 81 0A F3 0B 08 09 0A F4 84 10 07 08",
+              "stream_starts_at_terminator": false
+            }
+          ],
+          "all_channels_start_at_terminator": false
+        }
+      },
+      {
+        "source_frame": 1068,
+        "runtime_queue_id": "0x28",
+        "queue_origin_status": "capture_observed_unmapped",
+        "queue_source": "captured RAM $0700 queue write; ROM source unresolved",
+        "sound_test_matches": [
+          {
+            "ordinal": 75,
+            "category": "SFX"
+          }
+        ],
+        "pointer_table_file_offset": "0x18C38",
+        "pointer_word_le_hex": "559A",
+        "resolved_cpu_address": "$9A55",
+        "resolved_file_offset": "0x19A65",
+        "active_prg_route_for_trace": "0x0C/$8000",
+        "sequence_header": {
+          "header_file_offset": "0x19A65",
+          "header_bytes_hex": "00 5E 9A 01 5E 9A 03 5F 9A FF",
+          "header_terminator_file_offset": "0x19A6E",
+          "header_terminator_verified": true,
+          "channels": [
+            {
+              "channel_id": 0,
+              "record_file_offset": "0x19A65",
+              "pointer_le_hex": "5E9A",
+              "stream_cpu_address": "$9A5E",
+              "stream_file_offset": "0x19A6E",
+              "stream_prefix_hex": "FF E0 12 E3 00 81 0A F3 0B 08 09 0A F4 84 10 07",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 1,
+              "record_file_offset": "0x19A68",
+              "pointer_le_hex": "5E9A",
+              "stream_cpu_address": "$9A5E",
+              "stream_file_offset": "0x19A6E",
+              "stream_prefix_hex": "FF E0 12 E3 00 81 0A F3 0B 08 09 0A F4 84 10 07",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 3,
+              "record_file_offset": "0x19A6B",
+              "pointer_le_hex": "5F9A",
+              "stream_cpu_address": "$9A5F",
+              "stream_file_offset": "0x19A6F",
+              "stream_prefix_hex": "E0 12 E3 00 81 0A F3 0B 08 09 0A F4 84 10 07 08",
+              "stream_starts_at_terminator": false
+            }
+          ],
+          "all_channels_start_at_terminator": false
+        }
+      },
+      {
+        "source_frame": 1088,
+        "runtime_queue_id": "0x28",
+        "queue_origin_status": "capture_observed_unmapped",
+        "queue_source": "captured RAM $0700 queue write; ROM source unresolved",
+        "sound_test_matches": [
+          {
+            "ordinal": 75,
+            "category": "SFX"
+          }
+        ],
+        "pointer_table_file_offset": "0x18C38",
+        "pointer_word_le_hex": "559A",
+        "resolved_cpu_address": "$9A55",
+        "resolved_file_offset": "0x19A65",
+        "active_prg_route_for_trace": "0x0C/$8000",
+        "sequence_header": {
+          "header_file_offset": "0x19A65",
+          "header_bytes_hex": "00 5E 9A 01 5E 9A 03 5F 9A FF",
+          "header_terminator_file_offset": "0x19A6E",
+          "header_terminator_verified": true,
+          "channels": [
+            {
+              "channel_id": 0,
+              "record_file_offset": "0x19A65",
+              "pointer_le_hex": "5E9A",
+              "stream_cpu_address": "$9A5E",
+              "stream_file_offset": "0x19A6E",
+              "stream_prefix_hex": "FF E0 12 E3 00 81 0A F3 0B 08 09 0A F4 84 10 07",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 1,
+              "record_file_offset": "0x19A68",
+              "pointer_le_hex": "5E9A",
+              "stream_cpu_address": "$9A5E",
+              "stream_file_offset": "0x19A6E",
+              "stream_prefix_hex": "FF E0 12 E3 00 81 0A F3 0B 08 09 0A F4 84 10 07",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 3,
+              "record_file_offset": "0x19A6B",
+              "pointer_le_hex": "5F9A",
+              "stream_cpu_address": "$9A5F",
+              "stream_file_offset": "0x19A6F",
+              "stream_prefix_hex": "E0 12 E3 00 81 0A F3 0B 08 09 0A F4 84 10 07 08",
+              "stream_starts_at_terminator": false
+            }
+          ],
+          "all_channels_start_at_terminator": false
+        }
+      },
+      {
+        "source_frame": 1108,
+        "runtime_queue_id": "0x0E",
+        "queue_origin_status": "capture_observed_unmapped",
+        "queue_source": "captured RAM $0700 queue write; ROM source unresolved",
+        "sound_test_matches": [
+          {
+            "ordinal": 51,
+            "category": "SFX"
+          }
+        ],
+        "pointer_table_file_offset": "0x18C04",
+        "pointer_word_le_hex": "1D91",
+        "resolved_cpu_address": "$911D",
+        "resolved_file_offset": "0x1912D",
+        "active_prg_route_for_trace": "0x0C/$8000",
+        "sequence_header": {
+          "header_file_offset": "0x1912D",
+          "header_bytes_hex": "00 26 91 01 27 91 03 57 91 FF",
+          "header_terminator_file_offset": "0x19136",
+          "header_terminator_verified": true,
+          "channels": [
+            {
+              "channel_id": 0,
+              "record_file_offset": "0x1912D",
+              "pointer_le_hex": "2691",
+              "stream_cpu_address": "$9126",
+              "stream_file_offset": "0x19136",
+              "stream_prefix_hex": "FF E0 12 E2 80 E3 05 81 10 20 0B 1B 11 21 0A 1A",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 1,
+              "record_file_offset": "0x19130",
+              "pointer_le_hex": "2791",
+              "stream_cpu_address": "$9127",
+              "stream_file_offset": "0x19137",
+              "stream_prefix_hex": "E0 12 E2 80 E3 05 81 10 20 0B 1B 11 21 0A 1A 12",
+              "stream_starts_at_terminator": false
+            },
+            {
+              "channel_id": 3,
+              "record_file_offset": "0x19133",
+              "pointer_le_hex": "5791",
+              "stream_cpu_address": "$9157",
+              "stream_file_offset": "0x19167",
+              "stream_prefix_hex": "E0 12 E3 00 82 0C 81 0F 0E 0C 0D 0C 82 0C 81 0B",
+              "stream_starts_at_terminator": false
+            }
+          ],
+          "all_channels_start_at_terminator": false
+        }
+      },
+      {
+        "source_frame": 1510,
+        "runtime_queue_id": "0x02",
+        "queue_origin_status": "capture_observed_unmapped",
+        "queue_source": "captured RAM $0700 queue write; ROM source unresolved",
+        "sound_test_matches": [],
+        "pointer_table_file_offset": "0x18BEC",
+        "pointer_word_le_hex": "5B8E",
+        "resolved_cpu_address": "$8E5B",
+        "resolved_file_offset": "0x18E6B",
+        "active_prg_route_for_trace": "0x0C/$8000",
+        "sequence_header": {
+          "header_file_offset": "0x18E6B",
+          "header_bytes_hex": "00 67 8E 01 67 8E 02 67 8E 03 67 8E FF",
+          "header_terminator_file_offset": "0x18E77",
+          "header_terminator_verified": true,
+          "channels": [
+            {
+              "channel_id": 0,
+              "record_file_offset": "0x18E6B",
+              "pointer_le_hex": "678E",
+              "stream_cpu_address": "$8E67",
+              "stream_file_offset": "0x18E77",
+              "stream_prefix_hex": "FF 00 71 8E 01 71 8E 03 72 8E FF E0 12 E3 00 81",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 1,
+              "record_file_offset": "0x18E6E",
+              "pointer_le_hex": "678E",
+              "stream_cpu_address": "$8E67",
+              "stream_file_offset": "0x18E77",
+              "stream_prefix_hex": "FF 00 71 8E 01 71 8E 03 72 8E FF E0 12 E3 00 81",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 2,
+              "record_file_offset": "0x18E71",
+              "pointer_le_hex": "678E",
+              "stream_cpu_address": "$8E67",
+              "stream_file_offset": "0x18E77",
+              "stream_prefix_hex": "FF 00 71 8E 01 71 8E 03 72 8E FF E0 12 E3 00 81",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 3,
+              "record_file_offset": "0x18E74",
+              "pointer_le_hex": "678E",
+              "stream_cpu_address": "$8E67",
+              "stream_file_offset": "0x18E77",
+              "stream_prefix_hex": "FF 00 71 8E 01 71 8E 03 72 8E FF E0 12 E3 00 81",
+              "stream_starts_at_terminator": true
+            }
+          ],
+          "all_channels_start_at_terminator": true
+        }
+      },
+      {
+        "source_frame": 1779,
+        "runtime_queue_id": "0x0E",
+        "queue_origin_status": "capture_observed_unmapped",
+        "queue_source": "captured RAM $0700 queue write; ROM source unresolved",
+        "sound_test_matches": [
+          {
+            "ordinal": 51,
+            "category": "SFX"
+          }
+        ],
+        "pointer_table_file_offset": "0x18C04",
+        "pointer_word_le_hex": "1D91",
+        "resolved_cpu_address": "$911D",
+        "resolved_file_offset": "0x1912D",
+        "active_prg_route_for_trace": "0x0C/$8000",
+        "sequence_header": {
+          "header_file_offset": "0x1912D",
+          "header_bytes_hex": "00 26 91 01 27 91 03 57 91 FF",
+          "header_terminator_file_offset": "0x19136",
+          "header_terminator_verified": true,
+          "channels": [
+            {
+              "channel_id": 0,
+              "record_file_offset": "0x1912D",
+              "pointer_le_hex": "2691",
+              "stream_cpu_address": "$9126",
+              "stream_file_offset": "0x19136",
+              "stream_prefix_hex": "FF E0 12 E2 80 E3 05 81 10 20 0B 1B 11 21 0A 1A",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 1,
+              "record_file_offset": "0x19130",
+              "pointer_le_hex": "2791",
+              "stream_cpu_address": "$9127",
+              "stream_file_offset": "0x19137",
+              "stream_prefix_hex": "E0 12 E2 80 E3 05 81 10 20 0B 1B 11 21 0A 1A 12",
+              "stream_starts_at_terminator": false
+            },
+            {
+              "channel_id": 3,
+              "record_file_offset": "0x19133",
+              "pointer_le_hex": "5791",
+              "stream_cpu_address": "$9157",
+              "stream_file_offset": "0x19167",
+              "stream_prefix_hex": "E0 12 E3 00 82 0C 81 0F 0E 0C 0D 0C 82 0C 81 0B",
+              "stream_starts_at_terminator": false
+            }
+          ],
+          "all_channels_start_at_terminator": false
+        }
+      },
+      {
+        "source_frame": 1839,
+        "runtime_queue_id": "0x09",
+        "queue_origin_status": "capture_observed_unmapped",
+        "queue_source": "captured RAM $0700 queue write; ROM source unresolved",
+        "sound_test_matches": [
+          {
+            "ordinal": 46,
+            "category": "SFX"
+          }
+        ],
+        "pointer_table_file_offset": "0x18BFA",
+        "pointer_word_le_hex": "3592",
+        "resolved_cpu_address": "$9235",
+        "resolved_file_offset": "0x19245",
+        "active_prg_route_for_trace": "0x0C/$8000",
+        "sequence_header": {
+          "header_file_offset": "0x19245",
+          "header_bytes_hex": "00 3E 92 01 3F 92 03 DC 92 FF",
+          "header_terminator_file_offset": "0x1924E",
+          "header_terminator_verified": true,
+          "channels": [
+            {
+              "channel_id": 0,
+              "record_file_offset": "0x19245",
+              "pointer_le_hex": "3E92",
+              "stream_cpu_address": "$923E",
+              "stream_file_offset": "0x1924E",
+              "stream_prefix_hex": "FF E0 14 E2 80 E3 08 E9 C0 92 EB 06 03 10 EC EB",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 1,
+              "record_file_offset": "0x19248",
+              "pointer_le_hex": "3F92",
+              "stream_cpu_address": "$923F",
+              "stream_file_offset": "0x1924F",
+              "stream_prefix_hex": "E0 14 E2 80 E3 08 E9 C0 92 EB 06 03 10 EC EB 07",
+              "stream_starts_at_terminator": false
+            },
+            {
+              "channel_id": 3,
+              "record_file_offset": "0x1924B",
+              "pointer_le_hex": "DC92",
+              "stream_cpu_address": "$92DC",
+              "stream_file_offset": "0x192EC",
+              "stream_prefix_hex": "E0 14 E3 02 E9 C0 92 EB 06 03 0C EC EB 07 02 0D",
+              "stream_starts_at_terminator": false
+            }
+          ],
+          "all_channels_start_at_terminator": false
+        }
+      },
+      {
+        "source_frame": 2368,
+        "runtime_queue_id": "0x07",
+        "queue_origin_status": "capture_observed_unmapped",
+        "queue_source": "captured RAM $0700 queue write; ROM source unresolved",
+        "sound_test_matches": [
+          {
+            "ordinal": 44,
+            "category": "SFX"
+          }
+        ],
+        "pointer_table_file_offset": "0x18BF6",
+        "pointer_word_le_hex": "148F",
+        "resolved_cpu_address": "$8F14",
+        "resolved_file_offset": "0x18F24",
+        "active_prg_route_for_trace": "0x0C/$8000",
+        "sequence_header": {
+          "header_file_offset": "0x18F24",
+          "header_bytes_hex": "00 1D 8F 01 47 8F 03 1E 8F FF",
+          "header_terminator_file_offset": "0x18F2D",
+          "header_terminator_verified": true,
+          "channels": [
+            {
+              "channel_id": 0,
+              "record_file_offset": "0x18F24",
+              "pointer_le_hex": "1D8F",
+              "stream_cpu_address": "$8F1D",
+              "stream_file_offset": "0x18F2D",
+              "stream_prefix_hex": "FF E0 14 E3 00 81 00 0F 00 0F 01 0E 01 0E 02 0D",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 1,
+              "record_file_offset": "0x18F27",
+              "pointer_le_hex": "478F",
+              "stream_cpu_address": "$8F47",
+              "stream_file_offset": "0x18F57",
+              "stream_prefix_hex": "E0 14 E2 40 E3 06 81 EB 04 01 12 00 13 01 12 02",
+              "stream_starts_at_terminator": false
+            },
+            {
+              "channel_id": 3,
+              "record_file_offset": "0x18F2A",
+              "pointer_le_hex": "1E8F",
+              "stream_cpu_address": "$8F1E",
+              "stream_file_offset": "0x18F2E",
+              "stream_prefix_hex": "E0 14 E3 00 81 00 0F 00 0F 01 0E 01 0E 02 0D 02",
+              "stream_starts_at_terminator": false
+            }
+          ],
+          "all_channels_start_at_terminator": false
+        }
+      },
+      {
+        "source_frame": 4481,
+        "runtime_queue_id": "0x58",
+        "queue_origin_status": "rom_command_verified_frame_capture_anchored",
+        "queue_source": "ROM cutscene-0 ED command confirmed by FC-aware VM",
+        "sound_test_matches": [
+          {
+            "ordinal": 0,
+            "category": "BGM"
+          }
+        ],
+        "pointer_table_file_offset": "0x18C98",
+        "pointer_word_le_hex": "ADB7",
+        "resolved_cpu_address": "$B7AD",
+        "resolved_file_offset": "0x1F7BD",
+        "active_prg_route_for_trace": "0x0F/$A000",
+        "sequence_header": {
+          "header_file_offset": "0x1F7BD",
+          "header_bytes_hex": "04 BA B7 05 BD BA 06 5E BD 07 3F BF FF",
+          "header_terminator_file_offset": "0x1F7C9",
+          "header_terminator_verified": true,
+          "channels": [
+            {
+              "channel_id": 4,
+              "record_file_offset": "0x1F7BD",
+              "pointer_le_hex": "BAB7",
+              "stream_cpu_address": "$B7BA",
+              "stream_file_offset": "0x1F7CA",
+              "stream_prefix_hex": "E0 22 E2 00 E3 08 87 45 40 38 37 35 30 2A 27 25",
+              "stream_starts_at_terminator": false
+            },
+            {
+              "channel_id": 5,
+              "record_file_offset": "0x1F7C0",
+              "pointer_le_hex": "BDBA",
+              "stream_cpu_address": "$BABD",
+              "stream_file_offset": "0x1FACD",
+              "stream_prefix_hex": "E0 24 E2 80 E3 08 ED 01 8C 0C 91 35 E0 23 8C 30",
+              "stream_starts_at_terminator": false
+            },
+            {
+              "channel_id": 6,
+              "record_file_offset": "0x1F7C3",
+              "pointer_le_hex": "5EBD",
+              "stream_cpu_address": "$BD5E",
+              "stream_file_offset": "0x1FD6E",
+              "stream_prefix_hex": "E0 17 9C 20 E0 20 E9 69 BE E9 A3 BE E0 20 99 27",
+              "stream_starts_at_terminator": false
+            },
+            {
+              "channel_id": 7,
+              "record_file_offset": "0x1F7C6",
+              "pointer_le_hex": "3FBF",
+              "stream_cpu_address": "$BF3F",
+              "stream_file_offset": "0x1FF4F",
+              "stream_prefix_hex": "E0 16 E3 06 A1 10 87 FA 00 FA 01 FA 02 FA 03 EB",
+              "stream_starts_at_terminator": false
+            }
+          ],
+          "all_channels_start_at_terminator": false
+        }
+      },
+      {
+        "source_frame": 4578,
+        "runtime_queue_id": "0x68",
+        "queue_origin_status": "rom_command_verified_frame_capture_anchored",
+        "queue_source": "ROM cutscene-0 ED command confirmed by FC-aware VM",
+        "sound_test_matches": [
+          {
+            "ordinal": 92,
+            "category": "SFX"
+          }
+        ],
+        "pointer_table_file_offset": "0x18CB8",
+        "pointer_word_le_hex": "E799",
+        "resolved_cpu_address": "$99E7",
+        "resolved_file_offset": "0x199F7",
+        "active_prg_route_for_trace": "0x0C/$8000",
+        "sequence_header": {
+          "header_file_offset": "0x199F7",
+          "header_bytes_hex": "00 F0 99 01 F0 99 03 F1 99 FF",
+          "header_terminator_file_offset": "0x19A00",
+          "header_terminator_verified": true,
+          "channels": [
+            {
+              "channel_id": 0,
+              "record_file_offset": "0x199F7",
+              "pointer_le_hex": "F099",
+              "stream_cpu_address": "$99F0",
+              "stream_file_offset": "0x19A00",
+              "stream_prefix_hex": "FF E0 12 E3 00 ED 02 84 09 93 06 FF 00 05 9A 01",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 1,
+              "record_file_offset": "0x199FA",
+              "pointer_le_hex": "F099",
+              "stream_cpu_address": "$99F0",
+              "stream_file_offset": "0x19A00",
+              "stream_prefix_hex": "FF E0 12 E3 00 ED 02 84 09 93 06 FF 00 05 9A 01",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 3,
+              "record_file_offset": "0x199FD",
+              "pointer_le_hex": "F199",
+              "stream_cpu_address": "$99F1",
+              "stream_file_offset": "0x19A01",
+              "stream_prefix_hex": "E0 12 E3 00 ED 02 84 09 93 06 FF 00 05 9A 01 06",
+              "stream_starts_at_terminator": false
+            }
+          ],
+          "all_channels_start_at_terminator": false
+        }
+      },
+      {
+        "source_frame": 4661,
+        "runtime_queue_id": "0x01",
+        "queue_origin_status": "rom_store_verified_frame_capture_anchored",
+        "queue_source": "ROM bank-0 title-entry code",
+        "sound_test_matches": [],
+        "pointer_table_file_offset": "0x18BEA",
+        "pointer_word_le_hex": "428E",
+        "resolved_cpu_address": "$8E42",
+        "resolved_file_offset": "0x18E52",
+        "active_prg_route_for_trace": "0x0C/$8000",
+        "sequence_header": {
+          "header_file_offset": "0x18E52",
+          "header_bytes_hex": "00 5A 8E 01 5A 8E 02 5A 8E 03 5A 8E 04 5A 8E 05 5A 8E 06 5A 8E 07 5A 8E FF",
+          "header_terminator_file_offset": "0x18E6A",
+          "header_terminator_verified": true,
+          "channels": [
+            {
+              "channel_id": 0,
+              "record_file_offset": "0x18E52",
+              "pointer_le_hex": "5A8E",
+              "stream_cpu_address": "$8E5A",
+              "stream_file_offset": "0x18E6A",
+              "stream_prefix_hex": "FF 00 67 8E 01 67 8E 02 67 8E 03 67 8E FF 00 71",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 1,
+              "record_file_offset": "0x18E55",
+              "pointer_le_hex": "5A8E",
+              "stream_cpu_address": "$8E5A",
+              "stream_file_offset": "0x18E6A",
+              "stream_prefix_hex": "FF 00 67 8E 01 67 8E 02 67 8E 03 67 8E FF 00 71",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 2,
+              "record_file_offset": "0x18E58",
+              "pointer_le_hex": "5A8E",
+              "stream_cpu_address": "$8E5A",
+              "stream_file_offset": "0x18E6A",
+              "stream_prefix_hex": "FF 00 67 8E 01 67 8E 02 67 8E 03 67 8E FF 00 71",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 3,
+              "record_file_offset": "0x18E5B",
+              "pointer_le_hex": "5A8E",
+              "stream_cpu_address": "$8E5A",
+              "stream_file_offset": "0x18E6A",
+              "stream_prefix_hex": "FF 00 67 8E 01 67 8E 02 67 8E 03 67 8E FF 00 71",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 4,
+              "record_file_offset": "0x18E5E",
+              "pointer_le_hex": "5A8E",
+              "stream_cpu_address": "$8E5A",
+              "stream_file_offset": "0x18E6A",
+              "stream_prefix_hex": "FF 00 67 8E 01 67 8E 02 67 8E 03 67 8E FF 00 71",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 5,
+              "record_file_offset": "0x18E61",
+              "pointer_le_hex": "5A8E",
+              "stream_cpu_address": "$8E5A",
+              "stream_file_offset": "0x18E6A",
+              "stream_prefix_hex": "FF 00 67 8E 01 67 8E 02 67 8E 03 67 8E FF 00 71",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 6,
+              "record_file_offset": "0x18E64",
+              "pointer_le_hex": "5A8E",
+              "stream_cpu_address": "$8E5A",
+              "stream_file_offset": "0x18E6A",
+              "stream_prefix_hex": "FF 00 67 8E 01 67 8E 02 67 8E 03 67 8E FF 00 71",
+              "stream_starts_at_terminator": true
+            },
+            {
+              "channel_id": 7,
+              "record_file_offset": "0x18E67",
+              "pointer_le_hex": "5A8E",
+              "stream_cpu_address": "$8E5A",
+              "stream_file_offset": "0x18E6A",
+              "stream_prefix_hex": "FF 00 67 8E 01 67 8E 02 67 8E 03 67 8E FF 00 71",
+              "stream_starts_at_terminator": true
+            }
+          ],
+          "all_channels_start_at_terminator": true
+        }
+      }
+    ]
+  },
+  "limits": [
+    "The SFX ordinal/target candidate table comes from the Turkish community post; every listed pointer word and mapped target was independently checked against this target ROM hash.",
+    "Channel headers and stream pointer prefixes are byte-checked; this audit does not decode every SFX command, establish sound design names, or prove sample-level audio.",
+    "The same-input queue trace records the IDs and frames. Only ROM-command entries marked rom_command_verified_frame_capture_anchored have a fully verified cutscene command origin; other queue writes remain capture-observed with producer context unresolved."
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "chr_file_offset": "0x40010",
+  "chr_bank_size": 1024,
+  "source_chr_banks_by_ppu_slot": [
+    124,
+    125,
+    126,
+    127,
+    124,
+    125,
+    126,
+    127
+  ],
+  "layout_reference": "reference/opening_reference_capture/ppu_states/ppu_004692.bin",
+  "oam_reference": "reference/opening_reference_capture/ram_states/ram_004692.bin",
+  "requested_frame": 4692,
+  "ppu_snapshot_frame": 4692,
+  "ram_snapshot_frame": 4692,
+  "palette_file_external_to_rom": "reference/palettes/FCEUX_internal_default_2.7.0_rgb.pal",
+  "nametable_page_assumption": 0,
+  "background_pattern_base_assumption": 0,
+  "sprite_height_assumption": 8,
+  "sprite_pattern_base_assumption": 0,
+  "scroll_assumption": [
+    0,
+    0
+  ],
+  "oam_y_offset_assumption": 0,
+  "rom_driven_nametable_writes": [],
+  "scanline0_overlay": {
+    "path": "res://assets/opening/title_menu_scanline0.png",
+    "position": [
+      0,
+      0
+    ],
+    "shared_by": [
+      "KICK OFF",
+      "CONTINUE"
+    ],
+    "frame_004692_rgb_validation": {
+      "exact_pixels": 61440,
+      "total_pixels": 61440,
+      "ratio": 1.0,
+      "composition": "scanline0 at y=0 plus title_menu frame at y=1, clipped to 256x240"
+    }
+  }
+}

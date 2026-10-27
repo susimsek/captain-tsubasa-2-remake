@@ -1,0 +1,48 @@
+{
+  "asset": "title_menu_scanline0.png",
+  "dimensions": [
+    256,
+    1
+  ],
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "chr_file_offset": "0x40010",
+  "chr_banks_by_ppu_slot": [
+    124,
+    125,
+    126,
+    127,
+    124,
+    125,
+    126,
+    127
+  ],
+  "capture_directory": "reference/opening_timing_capture_20261024_125300",
+  "source_frame": 4692,
+  "script_frame": 4693,
+  "emulator_frame_after": 4692,
+  "ppu_source": "reference/opening_timing_capture_20261024_125300/ppu_states/ppu_04692.bin",
+  "ppu_source_sha256": "651ea94f90688b4c48a706ab015583fa2c7d425875e5ab9457135a54cc346322",
+  "ppu_normalization": "captured PPU $0000-$2FFF plus palette RAM $3F00-$3F1F; CHR patterns replaced by mapped bytes from the supplied ROM",
+  "ram_source": "reference/opening_timing_capture_20261024_125300/ram_states/ram_04692.bin",
+  "ram_source_sha256": "9fed522c4212fcb0c6cdaff7d22406ffda9785c2a91803041ab6a7b34dd87d5f",
+  "raster_plan": "reference/diagnostics/timing_capture_004692_ppu_plan.json",
+  "palette_file_external_to_rom": "reference/palettes/FCEUX_internal_default_2.7.0_rgb.pal",
+  "background_register_state": {
+    "nametable_page": 0,
+    "pattern_base": 0,
+    "scroll_x": 0,
+    "scroll_y": 255
+  },
+  "decode_method": "NES loopy first-visible-line fetch: coarseY=31, fineY=7 for scrollY=$FF; nametable offsets $3E0-$3FF supply tile IDs; 2bpp pixels and RGB palette decoded from ROM CHR and captured PPU palette state",
+  "screenshot_pixels_used_for_asset": false,
+  "comparison_reference": "reference/opening_reference_capture/screens/frame_004692.gd (validation only; not read during asset generation)",
+  "observation_rgb_validation": {
+    "reference": "reference/opening_reference_capture/screens/frame_004692.gd",
+    "row_exact_pixels": 256,
+    "row_total_pixels": 256,
+    "full_kickoff_composition_exact_pixels": 61440,
+    "full_kickoff_composition_total_pixels": 61440,
+    "full_kickoff_composition": "scanline0 at y=0 plus title_menu.png at y=1, clipped to 256x240"
+  }
+}

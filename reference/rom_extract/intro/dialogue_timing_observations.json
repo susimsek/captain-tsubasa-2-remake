@@ -1,0 +1,152 @@
+{
+  "schema": 1,
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "status": "source-traced with frame-snapshot corroboration; exact character visibility edge still has a possible one-frame offset",
+  "source_interpreter": {
+    "cutscene_dispatch_file": "0x000474",
+    "cutscene_dispatch_cpu": "0x8464",
+    "opcode_vector_file": "0x000555",
+    "opcode_vector_cpu_low": "0x8545",
+    "opcode_vector_cpu_high": "0x8546",
+    "text_tile_loop_file_range": [
+      "0x0004F7",
+      "0x00050F"
+    ],
+    "text_tile_loop_cpu_start": "0x84E7",
+    "f1_window_handler_cpu": "0x8649",
+    "f1_window_handler_file": "0x000659",
+    "f2_text_speed_handler_cpu": "0x8677",
+    "f2_text_speed_handler_file": "0x000687",
+    "fc_line_block_handler_cpu": "0x8836",
+    "fc_line_block_handler_file": "0x000846",
+    "fc_callee_cpu": "0x9085",
+    "fc_callee_file": "0x001095",
+    "glyph_upload_helper_cpu": "0x88CA",
+    "glyph_upload_helper_file": "0x0008DA",
+    "tile_delay_helper_cpu": "0x895D",
+    "tile_delay_helper_file": "0x00096D",
+    "pause_decode_file_range": [
+      "0x000504",
+      "0x00052C"
+    ],
+    "compact_pause_table_file_range": [
+      "0x000AF6",
+      "0x000AFD"
+    ]
+  },
+  "text_speed": {
+    "rom_effect": "F2 reads its next byte into RAM $55. For each $00-$D7 text byte, the interpreter calls glyph helper $88CA, increments the text X cursor, then calls $895D if $55 is nonzero before advancing the script pointer.",
+    "measured_model": "Observed source-pointer spacing equals the active $55 operand: one next text byte per 1 source frame at speed 1; one per 5 source frames at speed 5.",
+    "samples": [
+      {
+        "speed": 5,
+        "pointer": "0xA040",
+        "frames": [
+          379,
+          383
+        ],
+        "next_pointer": "0xA041",
+        "next_frame": 384,
+        "second_pointer": "0xA042",
+        "second_frame": 389,
+        "third_pointer": "0xA043",
+        "third_frame": 394,
+        "ram_capture": "reference/opening_reference_capture/ram_states/ram_000379.bin through ram_000394.bin"
+      },
+      {
+        "speed": 1,
+        "pointer": "0xA09B",
+        "frame": 836,
+        "next_pointer": "0xA09C",
+        "next_frame": 837,
+        "next_next_pointer": "0xA09D",
+        "next_next_frame": 838,
+        "ram_capture": "reference/opening_reference_capture/ram_states/ram_000836.bin through ram_000839.bin"
+      }
+    ],
+    "ppu_sample": {
+      "frame": 837,
+      "writes": [
+        {
+          "address": "0x2249",
+          "value": "0x00"
+        },
+        {
+          "address": "0x2269",
+          "value": "0x4F"
+        }
+      ],
+      "next_frame": 838,
+      "next_writes": [
+        {
+          "address": "0x224A",
+          "value": "0x00"
+        },
+        {
+          "address": "0x226A",
+          "value": "0x6F"
+        }
+      ],
+      "capture": "reference/opening_reference_capture/ppu_register_writes.csv",
+      "interpretation": "One glyph update is observed per speed interval in these samples. With PPUCTRL $2000=$84, each PPUDATA write increments PPUADDR by 32: the zero write and glyph value are vertically separated by 32 address bytes. Frame-end RAM pointer samples and cycle-stamped PPU writes are different observation times; do not use one as an exact sub-frame timestamp. These register writes alone do not prove final raster-visible screen coordinates.",
+      "ppu_ctrl": "0x84",
+      "address_increment_bytes": 32
+    }
+  },
+  "fc_dialog_line_block": {
+    "confirmed_handler_behavior": "On the captured cold-start path, the bank-0 dispatch table stores $8836 for FC as an RTS return address. RTS enters at $8837; the live trace then returns to the main interpreter and dispatches the next script byte at pointer $A055. FC does not consume a count or following payload in this observed context.",
+    "not_resolved": "The complete visual effects of the $8837 handler, other FC contexts, all command boundaries and the exact raster-visible schedule are unresolved. The independent PPU writes below are not attributed to FC.",
+    "dispatch_evidence": {
+      "script_pointer": "0xA054",
+      "source_frame": 479,
+      "opcode": "0xFC",
+      "interpreter_pc": "$84E7",
+      "rts_table_word": "$8836",
+      "handler_pc_after_rts": "$8837",
+      "next_dispatch_pointer": "0xA055",
+      "mmc3_select": "$06",
+      "mmc3_r6": "$00",
+      "mmc3_r7": "$03",
+      "trace": "reference/diagnostics/audio_command_context_20261024_145219/dispatch_context.csv",
+      "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+    },
+    "independent_ppu_samples": [
+      {
+        "source_frames": [837, 838, 839, 840, 841, 842, 843, 844, 845],
+        "ppu_writes": ["$2249-$2251", "$2269-$2271"],
+        "ppu_ctrl": "$84",
+        "increment_per_ppudata_write": 32,
+        "capture": "reference/opening_reference_capture/ppu_register_writes.csv",
+        "interpretation": "Observed PPU register writes only; their producer, script-byte ownership and raster-visible coordinates are not proven."
+      }
+    ],
+    "superseded_counted_block_claims_withdrawn": true,
+    "integration": "Keep the VM isolated until all dispatches, pointer changes, handler side effects and timing are traced on the cold-start path."
+  },
+  "cold_start_edges": {
+    "observed_ram_pointer_boundaries": [
+      {
+        "frame": 10,
+        "pointer": "0xA027",
+        "command": "E9 pending"
+      },
+      {
+        "frame": 27,
+        "pointer": "0xA028",
+        "command": "DF 240-tick pause pending"
+      },
+      {
+        "frame": 267,
+        "pointer": "0xA029",
+        "command": "EA pending"
+      },
+      {
+        "frame": 282,
+        "pointer": "0xA02C",
+        "command": "ED $58 has queued; DC pause follows"
+      }
+    ],
+    "interpretation": "The DF pointer span is 240 frame intervals, A028 at frame 27 to A029 at 267. EA's screen-off/clear work occupies about 15 observed frame states before the sound command is queued. RAM snapshots are end-of-frame, so event-visible edge may be offset by one frame.",
+    "captures": "reference/opening_reference_capture/ram_states/ram_000010.bin through ram_000282.bin"
+  }
+}

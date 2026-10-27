@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "name": "f1_01_graphics",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "source": {
+    "prg_bank": 6,
+    "bank_size_bytes": 8192,
+    "cpu_window": "$A000-$BFFF",
+    "cpu_address": "$BB9A",
+    "file_offset_start": "0x00DBAA",
+    "file_offset_end_exclusive": "0x00DBF8",
+    "file_offset_end_inclusive": "0x00DBF7",
+    "ines_header_bytes": 16
+  },
+  "resource": {
+    "file": "f1_01_graphics.bin",
+    "byte_length": 78,
+    "sha256": "6f2b7603e57aec97c109eef96eeab562963e7f097a1a000da99c3eda89532d92",
+    "byte_identity": "copied unchanged from the ROM source range"
+  },
+  "format": {
+    "description": "F1 01 PPU header/address/payload packet stream",
+    "record_count": 4,
+    "records": [
+      {
+        "record_index": 0,
+        "source_file_offset": "0x00DBAA",
+        "header": "0x18",
+        "payload_length": 24,
+        "ppu_address": "0x2227",
+        "increment": 1,
+        "final": false,
+        "record_sha256": "b7e289c5d97fd4fd9cf0bfb194eb64e8f50e37f2baa47d8b02a19ea7ff5a6d48",
+        "payload_sha256": "e06fe7e4c870d8601160e1a57349b566e01ce5d6fe583aa9d3e521f0b7409e79"
+      },
+      {
+        "record_index": 1,
+        "source_file_offset": "0x00DBC5",
+        "header": "0x18",
+        "payload_length": 24,
+        "ppu_address": "0x2367",
+        "increment": 1,
+        "final": false,
+        "record_sha256": "ae4bf591cb249e4ecc7844e44fd219f861dca90359e269dc77bb569e85364996",
+        "payload_sha256": "97f5445fc171b5e814f7cefe84d04f86bb852e21a1bc5ba46a46efcd48652863"
+      },
+      {
+        "record_index": 2,
+        "source_file_offset": "0x00DBE0",
+        "header": "0x89",
+        "payload_length": 9,
+        "ppu_address": "0x2247",
+        "increment": 32,
+        "final": false,
+        "record_sha256": "b8d9e1c4ed3113ff4961b62ce54144071286fc74ed223c4dbee879ce799f34cf",
+        "payload_sha256": "dc7df25e22ec515274f25eef9a1df14c4cd58ac5d15b52d1a0b13482d9a90930"
+      },
+      {
+        "record_index": 3,
+        "source_file_offset": "0x00DBEC",
+        "header": "0xC9",
+        "payload_length": 9,
+        "ppu_address": "0x225E",
+        "increment": 32,
+        "final": true,
+        "record_sha256": "2573459ebabfbf540b69cc0e9313ecd537d46c8fc1ff60cfe39fdef2ba1debec",
+        "payload_sha256": "6d6bfb6eec278cc589d1eca5bb17693be529e6866cabc531bb9cd41fef5026dc"
+      }
+    ]
+  }
+}

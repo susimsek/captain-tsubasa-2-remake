@@ -1,0 +1,219 @@
+--- a/src/sound.cpp
++++ b/src/sound.cpp
+@@ -144,6 +144,81 @@
+ static void (*DoSQ2)(void)=Dummyfunc;
+ 
+ static uint32 ChannelBC[5];
++
++// Opt-in, bounded per-channel WaveHi input trace for diagnostics. It records
++// channel contributions before nonlinear mixing/filtering; no audio samples
++// are written and the path is unset in ordinary emulator runs.
++struct ChannelWaveHiTraceRecord
++{
++ uint64 cycle;
++ int32 channel[5]; // pulse 1, pulse 2, triangle, noise, DMC
++ int32 rawWaveHi;
++};
++static_assert(sizeof(ChannelWaveHiTraceRecord)==32, "unexpected channel trace record layout");
++static int32 ChannelTraceWaveHi[5][40000];
++static FILE *ChannelWaveHiTraceFile = nullptr;
++static bool ChannelWaveHiTraceInitialized = false;
++static uint64 ChannelWaveHiTraceStartCycle = 0;
++static uint64 ChannelWaveHiTraceEndCycle = 0;
++
++static void InitChannelWaveHiTrace(void)
++{
++ if(ChannelWaveHiTraceInitialized) return;
++ ChannelWaveHiTraceInitialized = true;
++ const char *path = std::getenv("FCEU_CHANNEL_WAVEHI_TRACE_PATH");
++ if(!path || !*path) return;
++ const char *start = std::getenv("FCEU_CHANNEL_WAVEHI_TRACE_START_CYCLE");
++ const char *end = std::getenv("FCEU_CHANNEL_WAVEHI_TRACE_END_CYCLE");
++ if(!start || !end)
++ {
++  fprintf(stderr, "FCEUX channel WaveHi trace needs START_CYCLE and END_CYCLE.\n");
++  return;
++ }
++ ChannelWaveHiTraceStartCycle = std::strtoull(start, nullptr, 0);
++ ChannelWaveHiTraceEndCycle = std::strtoull(end, nullptr, 0);
++ if(ChannelWaveHiTraceEndCycle <= ChannelWaveHiTraceStartCycle)
++ {
++  fprintf(stderr, "FCEUX channel WaveHi trace cycle window is invalid.\n");
++  return;
++ }
++ ChannelWaveHiTraceFile = std::fopen(path, "wb");
++ if(!ChannelWaveHiTraceFile)
++  fprintf(stderr, "Unable to create FCEUX channel WaveHi trace: %s\n", path);
++}
++
++static bool ChannelWaveHiTraceActive(void)
++{
++ return ChannelWaveHiTraceFile && timestampbase >= ChannelWaveHiTraceStartCycle &&
++  timestampbase < ChannelWaveHiTraceEndCycle;
++}
++
++static void WriteChannelWaveHiTrace(void)
++{
++ if(!ChannelWaveHiTraceFile) return;
++ for(uint32 index=soundtsoffs; index<SOUNDTS; ++index)
++ {
++  const uint64 cycle = timestampbase + (index - soundtsoffs);
++  if(cycle < ChannelWaveHiTraceStartCycle || cycle >= ChannelWaveHiTraceEndCycle) continue;
++  ChannelWaveHiTraceRecord record{};
++  record.cycle = cycle;
++  for(int channel=0; channel<5; ++channel)
++   record.channel[channel] = ChannelTraceWaveHi[channel][index];
++  record.rawWaveHi = WaveHi[index];
++  if(std::fwrite(&record, sizeof(record), 1, ChannelWaveHiTraceFile) != 1)
++  {
++   fprintf(stderr, "Failed to write FCEUX channel WaveHi trace row at cycle %llu.\n", (unsigned long long)cycle);
++   std::fclose(ChannelWaveHiTraceFile);
++   ChannelWaveHiTraceFile = nullptr;
++   return;
++  }
++ }
++ std::fflush(ChannelWaveHiTraceFile);
++ if(timestampbase + soundtimestamp >= ChannelWaveHiTraceEndCycle)
++ {
++  std::fclose(ChannelWaveHiTraceFile);
++  ChannelWaveHiTraceFile = nullptr;
++ }
++}
+ 
+ 
+ // Opt-in timing trace for the FCEUX DMC/audio CPU-hook model.
+@@ -739,9 +814,14 @@
+ {
+  DMCTraceEvent("RDoPCM_IN", -1, -1, 0, RawDALatch, ChannelBC[4]);
+  uint32 V; //mbg merge 7/17/06 made uint32
++ const bool traceChannel = ChannelWaveHiTraceActive();
+ 
+  for(V=ChannelBC[4];V<SOUNDTS;V++)
+-  WaveHi[V]+=(((RawDALatch<<16)/256) * FSettings.PCMVolume)&(~0xFFFF); // TODO get rid of floating calculations to binary. set log volume scaling.
++ {
++  int32 contribution=(((RawDALatch<<16)/256) * FSettings.PCMVolume)&(~0xFFFF);
++  WaveHi[V]+=contribution; // TODO get rid of floating calculations to binary. set log volume scaling.
++  if(traceChannel) ChannelTraceWaveHi[4][V]+=contribution;
++ }
+  ChannelBC[4]=SOUNDTS;
+  DMCTraceEvent("RDoPCM_OUT", -1, -1, 0, RawDALatch, ChannelBC[4]);
+ }
+@@ -753,6 +833,7 @@
+    int32 amp, ampx;
+    int32 rthresh;
+    int32 *D;
++   int32 *C;
+    int32 currdc;
+    int32 cf;
+    int32 rc;
+@@ -779,6 +860,8 @@
+    rthresh=RectDuties[(PSG[(x<<2)]&0xC0)>>6];
+ 
+    D=&WaveHi[ChannelBC[x]];
++   const bool traceChannel = ChannelWaveHiTraceActive();
++   C=traceChannel ? &ChannelTraceWaveHi[x][ChannelBC[x]] : nullptr;
+    V=SOUNDTS-ChannelBC[x];
+ 
+    currdc=RectDutyCount[x];
+@@ -788,7 +871,10 @@
+    while(V>0)
+    {
+     if(currdc<rthresh)
++    {
+      *D+=amp;
++     if(C) *C+=amp;
++    }
+     rc--;
+     if(!rc)
+     {
+@@ -797,6 +883,7 @@
+     }
+     V--;
+     D++;
++    if(C) C++;
+    }
+ 
+    RectDutyCount[x]=currdc;
+@@ -918,6 +1005,7 @@
+ {
+  uint32 V; //mbg merge 7/17/06 made uitn32
+  int32 tcout;
++ const bool traceChannel = ChannelWaveHiTraceActive();
+ 
+  tcout=(tristep&0xF);
+  if(!(tristep&0x10)) tcout^=0xF;
+@@ -935,13 +1023,18 @@
+   }*/
+   int32 cout = (tcout/256*FSettings.TriangleVolume)&(~0xFFFF);
+   for(V=ChannelBC[2];V<SOUNDTS;V++)
++  {
+    WaveHi[V]+=cout;
++   if(traceChannel) ChannelTraceWaveHi[2][V]+=cout;
++  }
+  }
+  else
+   for(V=ChannelBC[2];V<SOUNDTS;V++)
+   {
+     //Modify volume based on channel volume modifiers
+-	WaveHi[V]+=(tcout/256*FSettings.TriangleVolume)&(~0xFFFF);  // TODO OPTIMIZE ME!
++	int32 contribution=(tcout/256*FSettings.TriangleVolume)&(~0xFFFF);
++	WaveHi[V]+=contribution;  // TODO OPTIMIZE ME!
++	if(traceChannel) ChannelTraceWaveHi[2][V]+=contribution;
+     wlcount[2]--;
+     if(!wlcount[2])
+     {
+@@ -1105,6 +1198,7 @@
+  uint32 V; //mbg merge 7/17/06 made uint32
+  int32 outo;
+  uint32 amptab[2];
++ const bool traceChannel = ChannelWaveHiTraceActive();
+ 
+  if(EnvUnits[2].Mode&0x1)
+   amptab[0]=EnvUnits[2].Speed;
+@@ -1130,6 +1224,7 @@
+   for(V=ChannelBC[3];V<SOUNDTS;V++)
+   {
+    WaveHi[V]+=outo;
++   if(traceChannel) ChannelTraceWaveHi[3][V]+=outo;
+    wlcount[3]--;
+    if(!wlcount[3])
+    {
+@@ -1148,6 +1243,7 @@
+   for(V=ChannelBC[3];V<SOUNDTS;V++)
+   {
+    WaveHi[V]+=outo;
++   if(traceChannel) ChannelTraceWaveHi[3][V]+=outo;
+    wlcount[3]--;
+    if(!wlcount[3])
+    {
+@@ -1209,6 +1305,9 @@
+   DoNoise();
+   DoPCM();
+ 
++  InitChannelWaveHiTrace();
++  if(ChannelWaveHiTraceActive()) WriteChannelWaveHiTrace();
++
+   if(FSettings.soundq>=1)
+   {
+    int32 *tmpo=&WaveHi[soundtsoffs];
+@@ -1225,6 +1324,11 @@
+ 
+    memmove(WaveHi,WaveHi+SOUNDTS-left,left*sizeof(uint32));
+    memset(WaveHi+left,0,sizeof(WaveHi)-left*sizeof(uint32));
++   if(ChannelWaveHiTraceFile) for(x=0;x<5;x++)
++   {
++    memmove(ChannelTraceWaveHi[x],ChannelTraceWaveHi[x]+SOUNDTS-left,left*sizeof(uint32));
++    memset(ChannelTraceWaveHi[x]+left,0,sizeof(ChannelTraceWaveHi[x])-left*sizeof(uint32));
++   }
+ 
+    if(GameExpSound.HiSync) GameExpSound.HiSync(left);
+    for(x=0;x<5;x++)
+@@ -1359,6 +1463,8 @@
+ 
+ 	memset(Wave,0,sizeof(Wave));
+         memset(WaveHi,0,sizeof(WaveHi));
++	memset(ChannelTraceWaveHi,0,sizeof(ChannelTraceWaveHi));
++	InitChannelWaveHiTrace();
+ 	memset(&EnvUnits,0,sizeof(EnvUnits));
+ 
+         for(x=0;x<5;x++)

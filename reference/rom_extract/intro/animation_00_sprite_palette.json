@@ -1,0 +1,15 @@
+{
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "animation_palette_index": "0x00",
+  "prg_bank": 6,
+  "source_file_offset": "0x00D310",
+  "source_cpu_address": "0xB300",
+  "source_bytes": 16,
+  "source_sha256": "54ee9e2b3c2d6080fdd6ed463617d1124dcb97dc532604406587ae6096e20b3f",
+  "bytes_hex": "0f 0f 0f 36 0f 0f 16 36 0f 0f 30 36 0f 0f 30 36",
+  "ppu_destination": "$3F10-$3F1F",
+  "reference_ppu_snapshot": "reference/opening_reference_capture/ppu_states/ppu_000380.bin",
+  "reference_ppu_sprite_palette_hex": "0f 0f 0f 36 0f 0f 16 36 0f 0f 30 36 0f 0f 30 36",
+  "matches_reference_ppu_palette": true,
+  "conversion": "none; raw 16-byte palette record copied unchanged from the supplied ROM"
+}

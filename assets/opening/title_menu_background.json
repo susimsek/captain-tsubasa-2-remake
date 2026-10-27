@@ -1,0 +1,32 @@
+{
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "chr_file_offset": "0x40010",
+  "source_chr_banks_by_ppu_slot": [
+    124,
+    125,
+    126,
+    127,
+    124,
+    125,
+    126,
+    127
+  ],
+  "layout_reference": "reference/opening_reference_capture/ppu_states/ppu_004692.bin",
+  "layout_reference_frame": 4692,
+  "layout_reference_sha256": "32cf7c513f71072167c395233a155e2f4e10700be8da56a04cd324a2c67d95a0",
+  "rgb_palette_source": "reference/palettes/FCEUX_internal_default_2.7.0_rgb.pal",
+  "rgb_palette_sha256": "da30843b331e2e4474395866bc9871fcd60a7d716b3c8ee5ce3c89ee46e8c91e",
+  "ppu_render_assumptions": {
+    "nametable_page": 0,
+    "background_pattern_base": 0,
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "runtime_layer": "background only; ROM sprite animation is rendered separately",
+  "alpha_rule": "pixels whose CHR color index is zero are transparent so NES behind-background sprites can show through",
+  "nametable_writes": [],
+  "screenshot_pixels_used": false
+}

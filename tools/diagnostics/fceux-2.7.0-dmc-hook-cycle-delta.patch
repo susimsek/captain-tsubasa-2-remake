@@ -1,0 +1,47 @@
+diff --git a/src/sound.cpp b/src/sound.cpp
+--- a/src/sound.cpp
++++ b/src/sound.cpp
+@@ -158,6 +158,7 @@
+ static uint64 DMCTraceHook = 0;
+ static bool DMCTraceCurrentHookActive = false;
+ static int DMCTraceCurrentHookCycles = -1;
++static uint32 DMCTraceHookStartTimestamp = 0;
+ 
+ static void DMCTraceInit(void)
+ {
+@@ -645,6 +646,7 @@
+   if(DMCSize && !DMCHaveDMA)
+   {
+    uint32 address = 0x8000+DMCAddress;
++   const uint32 dmcReadStartTimestamp = timestamp;
+    DMCTraceEvent("DMC_DMA_IN");
+    DMCTraceRead(address, 0);
+    DMCTraceRead(address, 1);
+@@ -653,7 +655,8 @@
+    DMCHaveDMA=1;
+    DMCAddress=(DMCAddress+1)&0x7fff;
+    DMCSize--;
+-   DMCTraceEvent("DMC_DMA_OUT", -1, -1, address, DMCDMABuf, 0);
++   DMCTraceEvent("DMC_DMA_OUT", -1, -1, address, DMCDMABuf,
++    (long long)(timestamp - dmcReadStartTimestamp));
+    if(!DMCSize)
+    {
+     if(DMCFormat&0x40)
+@@ -674,6 +677,7 @@
+  DMCTraceCurrentHookCycles = cycles;
+  DMCTraceCurrentHookActive = DMCSize || DMCHaveDMA || DMCHaveSample;
+  DMCTraceHook++;
++ DMCTraceHookStartTimestamp = timestamp;
+  DMCTraceEvent("HOOK_IN", cycles);
+  const int fhcntBefore = fhcnt;
+  fhcnt-=cycles*48;
+@@ -721,7 +725,8 @@
+   tester();
+   DMCTraceEvent("DMC_BIT_OUT", cycles);
+  }
+- DMCTraceEvent("HOOK_OUT", cycles);
++ DMCTraceEvent("HOOK_OUT", cycles, -1, 0, 0,
++  (long long)(timestamp - DMCTraceHookStartTimestamp));
+  if(DMCTraceFile && (DMCTraceSequence & 0x7ff) == 0) fflush(DMCTraceFile);
+  DMCTraceCurrentHookActive = false;
+ }

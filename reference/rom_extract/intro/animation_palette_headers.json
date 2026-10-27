@@ -1,0 +1,85 @@
+{
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "entries": [
+    {
+      "animation_id": "0x6E",
+      "palette_index": 0,
+      "raw_first_byte": "0x00",
+      "header_file_offset": "0x0140D6",
+      "source_bin": "reference/rom_extract/intro/animation_6E.bin",
+      "source_sha256": "1684d3d50666a5489e91a55aa3c093a74fd58a500fe83e4e8c9ac329022e1d12"
+    },
+    {
+      "animation_id": "0x75",
+      "palette_index": 1,
+      "raw_first_byte": "0x01",
+      "header_file_offset": "0x014196",
+      "source_bin": "reference/rom_extract/intro/animation_75.bin",
+      "source_sha256": "50eb3e26cc184211eab776a0937b94c2e89dc9819ec58125c87d4955ea8d61ca"
+    },
+    {
+      "animation_id": "0xC1",
+      "palette_index": 2,
+      "raw_first_byte": "0x02",
+      "header_file_offset": "0x014767",
+      "source_bin": "reference/rom_extract/intro/animation_C1.bin",
+      "source_sha256": "835b654afbdafc848934deffd83bcbba5dbeb7f92adb625b111d93255310680d"
+    },
+    {
+      "animation_id": "0x82",
+      "palette_index": 2,
+      "raw_first_byte": "0x02",
+      "header_file_offset": "0x01426F",
+      "source_bin": "reference/rom_extract/intro/animation_82.bin",
+      "source_sha256": "61dbe93dff7ec33b4dc49a57593206554074d8051556cf8acd04b96ae44c28e1"
+    },
+    {
+      "animation_id": "0x76",
+      "palette_index": 1,
+      "raw_first_byte": "0x01",
+      "header_file_offset": "0x01419F",
+      "source_bin": "reference/rom_extract/intro/animation_76.bin",
+      "source_sha256": "5b1aa4c701a134fcc88cb89c64b92fd297f870c9caa95d1a040eb793f8f501a6"
+    },
+    {
+      "animation_id": "0x84",
+      "palette_index": 0,
+      "raw_first_byte": "0x00",
+      "header_file_offset": "0x0142DB",
+      "source_bin": "reference/rom_extract/intro/animation_84.bin",
+      "source_sha256": "8f3b8c07ea8da074034cf3d53b938c5c864d5a14faaf2467ad39f37ea141cea7"
+    },
+    {
+      "animation_id": "0x77",
+      "palette_index": 6,
+      "raw_first_byte": "0x06",
+      "header_file_offset": "0x0141A9",
+      "source_bin": "reference/rom_extract/intro/animation_77.bin",
+      "source_sha256": "0942cd69e1e238b111f5c2ad19b97229e0ebc701f795778a61f0281040cd74aa"
+    },
+    {
+      "animation_id": "0xA2",
+      "palette_index": 7,
+      "raw_first_byte": "0x07",
+      "header_file_offset": "0x01451E",
+      "source_bin": "reference/rom_extract/intro/animation_A2.bin",
+      "source_sha256": "07b0592e7343f7460bb152b1b5a17e95634336b64b8a6d7622833c92bc207830"
+    },
+    {
+      "animation_id": "0x7D",
+      "palette_index": 7,
+      "raw_first_byte": "0x07",
+      "header_file_offset": "0x0141DA",
+      "source_bin": "reference/rom_extract/intro/animation_7D.bin",
+      "source_sha256": "2de24a632fad1abad773b8d9cb295db078d4b8bf49e44910813feee4335ebdd1"
+    },
+    {
+      "animation_id": "0x7C",
+      "palette_index": 8,
+      "raw_first_byte": "0x08",
+      "header_file_offset": "0x0141D1",
+      "source_bin": "reference/rom_extract/intro/animation_7C.bin",
+      "source_sha256": "fec722bf3992fd532eb5fd062af8057f264828b8e74eafa3edf87a818d368f8a"
+    }
+  ]
+}

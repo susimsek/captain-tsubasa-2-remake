@@ -1,0 +1,25 @@
+{
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "rom_payload_md5": "eaf2b3745263efa4b1afd2b400f68dae",
+  "extraction": "unchanged byte copies from the supplied iNES file; file offsets include the 16-byte iNES header",
+  "pointer_table": {
+    "index": 1,
+    "prg_bank": 6,
+    "cpu_address": "$B802",
+    "file_offset": "0x00D812",
+    "pointer_bytes_hex": "38 b8",
+    "resolved_cpu_address": "$B838",
+    "resolved_file_offset": "0x00D848",
+    "path": "reference/rom_extract/intro/palette_effect_state/effect_01_pointer.bin",
+    "sha256": "a00c050819cc8b1a42f90272a93b4d3f17d428fdc7cfbe5e99e7e1e451bb71b4"
+  },
+  "effect_stream": {
+    "prg_bank": 6,
+    "cpu_address": "$B838",
+    "file_offset": "0x00D848",
+    "length_bytes": 18,
+    "bytes_hex": "08 04 30 00 00 04 21 00 00 04 30 00 00 04 25 00 00 fe",
+    "path": "reference/rom_extract/intro/palette_effect_state/bg09_effect_01_stream.bin",
+    "sha256": "0629ca5f5b33860f4cb96ccf1eb180341ec70c6b464a7685752776ad70145837"
+  }
+}

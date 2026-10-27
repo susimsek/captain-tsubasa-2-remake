@@ -1,0 +1,245 @@
+--- a/src/sound.cpp
++++ b/src/sound.cpp
+@@ -144,6 +144,125 @@
+ static void (*DoSQ2)(void)=Dummyfunc;
+ 
+ static uint32 ChannelBC[5];
++
++
++// Opt-in timing trace for the FCEUX DMC/audio CPU-hook model.
++// Without FCEU_DMC_TRACE_PATH, these helpers emit no file and do not alter audio.
++static FILE *DMCTraceFile = nullptr;
++static bool DMCTraceInitialized = false;
++static bool DMCTraceCompact = false;
++static bool DMCTraceInstructionMode = false;
++static uint64 DMCTraceStartCycle = 0;
++static uint64 DMCTraceEndCycle = 0;
++static uint64 DMCTraceSequence = 0;
++static uint64 DMCTraceHook = 0;
++static bool DMCTraceCurrentHookActive = false;
++static int DMCTraceCurrentHookCycles = -1;
++
++static void DMCTraceInit(void)
++{
++ if(DMCTraceInitialized) return;
++ DMCTraceInitialized = true;
++ const char *compact = std::getenv("FCEU_DMC_TRACE_COMPACT");
++ DMCTraceCompact = compact && std::strcmp(compact, "1") == 0;
++ const char *instructions = std::getenv("FCEU_DMC_TRACE_INSTRUCTIONS");
++ DMCTraceInstructionMode = instructions && std::strcmp(instructions, "1") == 0;
++ const char *path = std::getenv("FCEU_DMC_TRACE_PATH");
++ if(!path || !*path) return;
++ const char *start = std::getenv("FCEU_DMC_TRACE_START_CYCLE");
++ const char *end = std::getenv("FCEU_DMC_TRACE_END_CYCLE");
++ if(!start || !end)
++ {
++  fprintf(stderr, "FCEUX DMC trace needs START_CYCLE and END_CYCLE.\n");
++  return;
++ }
++ DMCTraceStartCycle = std::strtoull(start, nullptr, 0);
++ DMCTraceEndCycle = std::strtoull(end, nullptr, 0);
++ if(DMCTraceEndCycle <= DMCTraceStartCycle)
++ {
++  fprintf(stderr, "FCEUX DMC trace END_CYCLE must be greater than START_CYCLE.\n");
++  return;
++ }
++ DMCTraceFile = std::fopen(path, "w");
++ if(!DMCTraceFile)
++ {
++  fprintf(stderr, "FCEUX could not open DMC trace path: %s\n", path);
++  return;
++ }
++ fprintf(DMCTraceFile,
++  "seq,event,hook,pc,hook_cycles,absolute_cycle,timestamp,soundtimestamp,soundtsoffs,soundts,"
++  "dmcacc,dmcperiod,dmcbitcount,dmcaddress,dmcsize,dmcshift,dmchavedma,"
++  "dmchavesample,dmcdmabuf,rawdalatch,fcnt,fhcnt,fhinc,detail_index,"
++  "detail_address,detail_value,detail_extra,prg_offset,prg_bank_8k,opcode\n");
++ fflush(DMCTraceFile);
++}
++
++static void DMCTraceEvent(const char *event, int hookCycles = -1,
++ int detailIndex = -1, uint32 detailAddress = 0,
++ int detailValue = -1, long long detailExtra = 0)
++{
++ DMCTraceInit();
++ const uint64 absoluteCycle = timestampbase + (uint64)timestamp;
++ if(!DMCTraceFile || absoluteCycle < DMCTraceStartCycle || absoluteCycle > DMCTraceEndCycle) return;
++ const bool hookEvent = std::strcmp(event, "HOOK_IN") == 0 || std::strcmp(event, "HOOK_OUT") == 0;
++ if(DMCTraceCompact && event[0] == 'H') return;
++ if(DMCTraceInstructionMode && !hookEvent &&
++    std::strcmp(event, "DMC_REGISTER_WRITE") != 0 &&
++    std::strcmp(event, "DMC_STATUS_WRITE") != 0 &&
++    std::strcmp(event, "FRAME_UPDATE_IN") != 0 &&
++    std::strcmp(event, "FRAME_UPDATE_OUT") != 0 &&
++    std::strcmp(event, "FRAME_UPDATE_CROSSING") != 0 &&
++    std::strcmp(event, "FRAME_UPDATE_RELOAD") != 0 &&
++    std::strcmp(event, "DMC_DMA_OUT") != 0 &&
++    std::strcmp(event, "DMC_BIT_OUT") != 0 &&
++    std::strcmp(event, "PCM_SYNC_IN") != 0)
++  return;
++ if(DMCTraceCompact &&
++    std::strcmp(event, "DMC_REGISTER_WRITE") != 0 &&
++    std::strcmp(event, "DMC_STATUS_WRITE") != 0 &&
++    std::strcmp(event, "FRAME_UPDATE_IN") != 0 &&
++    std::strcmp(event, "FRAME_UPDATE_OUT") != 0 &&
++    std::strcmp(event, "FRAME_UPDATE_CROSSING") != 0 &&
++    std::strcmp(event, "FRAME_UPDATE_RELOAD") != 0 &&
++    std::strcmp(event, "DMC_DMA_OUT") != 0 &&
++    std::strcmp(event, "DMC_BIT_OUT") != 0 &&
++    std::strcmp(event, "PCM_SYNC_IN") != 0)
++  return;
++ const bool alwaysRecord =
++   (DMCTraceInstructionMode && hookEvent) ||
++   std::strcmp(event, "DMC_REGISTER_WRITE") == 0 ||
++   std::strcmp(event, "DMC_STATUS_WRITE") == 0 ||
++   std::strcmp(event, "FRAME_UPDATE_IN") == 0 ||
++   std::strcmp(event, "FRAME_UPDATE_OUT") == 0 ||
++   std::strcmp(event, "FRAME_UPDATE_CROSSING") == 0 ||
++   std::strcmp(event, "FRAME_UPDATE_RELOAD") == 0;
++ if(!DMCTraceCurrentHookActive && !DMCSize && !DMCHaveDMA && !DMCHaveSample && !alwaysRecord)
++  return;
++ const int prgOffset = GetPRGAddress(X.PC);
++ const int prgBank8k = prgOffset >= 0 ? prgOffset / 0x2000 : -1;
++ const unsigned opcode = prgOffset >= 0 ? GetNesPRGPointer(prgOffset)[0] : 0xFF;
++ fprintf(DMCTraceFile,
++  "%llu,%s,%llu,%04X,%d,%llu,%u,%u,%u,%u,%d,%d,%u,%08X,%d,%02X,%d,%d,%02X,%02X,%u,%d,%d,%d,%08X,%d,%lld,%d,%d,%02X\n",
++  (unsigned long long)DMCTraceSequence++, event,
++  (unsigned long long)DMCTraceHook, (unsigned)X.PC, hookCycles,
++  (unsigned long long)absoluteCycle, (unsigned)timestamp, (unsigned)soundtimestamp, (unsigned)soundtsoffs,
++  (unsigned)SOUNDTS, (int)DMCacc, (int)DMCPeriod, (unsigned)DMCBitCount,
++  (unsigned)DMCAddress, (int)DMCSize, (unsigned)DMCShift,
++  (int)DMCHaveDMA, (int)DMCHaveSample, (unsigned)DMCDMABuf,
++  (unsigned)RawDALatch, (unsigned)fcnt, (int)fhcnt, (int)fhinc,
++  detailIndex, (unsigned)detailAddress, detailValue, detailExtra,
++  prgOffset, prgBank8k, opcode);
++ if(DMCTraceInstructionMode || DMCTraceCompact) fflush(DMCTraceFile);
++}
++
++static uint8 DMCTraceRead(uint32 address, int readIndex)
++{
++ uint32 before = timestamp;
++ uint8 value = X6502_DMR(address);
++ DMCTraceEvent("DMR", -1, readIndex, address, value,
++  (long long)(timestamp - before));
++ return value;
++}
+ 
+ //savestate sync hack stuff
+ int movieSyncHackOn=0,resetDMCacc=0,movieConvertOffset1,movieConvertOffset2;
+@@ -345,6 +464,7 @@
+ 			DMC_7bit = 0;
+ 		break;
+ 	}
++	DMCTraceEvent("DMC_REGISTER_WRITE", -1, A, 0x4010 + A, V, 0);
+ }
+ 
+ static DECLFW(StatusWrite)
+@@ -372,6 +492,7 @@
+ 	SIRQStat&=~0x80;
+ 	X6502_IRQEnd(FCEU_IQDPCM);
+ 	EnabledChannels=V&0x1F;
++	DMCTraceEvent("DMC_STATUS_WRITE", -1, -1, 0x4015, V, 0);
+ }
+ 
+ static DECLFR(StatusRead)
+@@ -483,6 +604,7 @@
+ 
+ void FrameSoundUpdate(void)
+ {
++ DMCTraceEvent("FRAME_UPDATE_IN", DMCTraceCurrentHookCycles);
+  // Linear counter:  Bit 0-6 of $4008
+  // Length counter:  Bit 4-7 of $4003, $4007, $400b, $400f
+ 
+@@ -499,6 +621,7 @@
+  }
+  FrameSoundStuff(fcnt);
+  fcnt=(fcnt+1)&3;
++ DMCTraceEvent("FRAME_UPDATE_OUT", DMCTraceCurrentHookCycles);
+ }
+ 
+ 
+@@ -521,13 +644,16 @@
+ {
+   if(DMCSize && !DMCHaveDMA)
+   {
+-   X6502_DMR(0x8000+DMCAddress);
+-   X6502_DMR(0x8000+DMCAddress);
+-   X6502_DMR(0x8000+DMCAddress);
+-   DMCDMABuf=X6502_DMR(0x8000+DMCAddress);
++   uint32 address = 0x8000+DMCAddress;
++   DMCTraceEvent("DMC_DMA_IN");
++   DMCTraceRead(address, 0);
++   DMCTraceRead(address, 1);
++   DMCTraceRead(address, 2);
++   DMCDMABuf=DMCTraceRead(address, 3);
+    DMCHaveDMA=1;
+    DMCAddress=(DMCAddress+1)&0x7fff;
+    DMCSize--;
++   DMCTraceEvent("DMC_DMA_OUT", -1, -1, address, DMCDMABuf, 0);
+    if(!DMCSize)
+    {
+     if(DMCFormat&0x40)
+@@ -545,18 +671,30 @@
+ 
+ void FCEU_SoundCPUHook(int cycles)
+ {
++ DMCTraceCurrentHookCycles = cycles;
++ DMCTraceCurrentHookActive = DMCSize || DMCHaveDMA || DMCHaveSample;
++ DMCTraceHook++;
++ DMCTraceEvent("HOOK_IN", cycles);
++ const int fhcntBefore = fhcnt;
+  fhcnt-=cycles*48;
+  if(fhcnt<=0)
+  {
++  const int fhcntAfterSubtract = fhcnt;
++  DMCTraceEvent("FRAME_UPDATE_CROSSING", cycles, -1, 0, fhcntBefore, fhcntAfterSubtract);
+   FrameSoundUpdate();
+   fhcnt+=fhinc;
++  DMCTraceEvent("FRAME_UPDATE_RELOAD", cycles, -1, 0, fhcntBefore, fhcntAfterSubtract);
+  }
+ 
++ DMCTraceEvent("DMA_POLL", cycles);
+  DMCDMA();
++ DMCTraceEvent("AFTER_DMA", cycles);
+  DMCacc-=cycles;
++ DMCTraceEvent("AFTER_CYCLE_SUBTRACT", cycles);
+ 
+  while(DMCacc<=0)
+  {
++  DMCTraceEvent("DMC_BIT_IN", cycles);
+   if(DMCHaveSample)
+   {
+    uint8 bah=RawDALatch;
+@@ -567,7 +705,9 @@
+    {
+ 		const uint32 fudge = std::min<uint32>(-DMCacc, soundtsoffs + timestamp);
+ 		soundtsoffs -= fudge;
++		DMCTraceEvent("PCM_SYNC_IN", cycles, -1, 0, RawDALatch, fudge);
+ 		DoPCM();
++		DMCTraceEvent("PCM_SYNC_OUT", cycles, -1, 0, RawDALatch, fudge);
+ 		soundtsoffs += fudge;
+    }
+    RawDALatch+=t;
+@@ -579,16 +719,22 @@
+   DMCBitCount=(DMCBitCount+1)&7;
+   DMCShift>>=1;
+   tester();
++  DMCTraceEvent("DMC_BIT_OUT", cycles);
+  }
++ DMCTraceEvent("HOOK_OUT", cycles);
++ if(DMCTraceFile && (DMCTraceSequence & 0x7ff) == 0) fflush(DMCTraceFile);
++ DMCTraceCurrentHookActive = false;
+ }
+ 
+ void RDoPCM(void)
+ {
++ DMCTraceEvent("RDoPCM_IN", -1, -1, 0, RawDALatch, ChannelBC[4]);
+  uint32 V; //mbg merge 7/17/06 made uint32
+ 
+  for(V=ChannelBC[4];V<SOUNDTS;V++)
+   WaveHi[V]+=(((RawDALatch<<16)/256) * FSettings.PCMVolume)&(~0xFFFF); // TODO get rid of floating calculations to binary. set log volume scaling.
+  ChannelBC[4]=SOUNDTS;
++ DMCTraceEvent("RDoPCM_OUT", -1, -1, 0, RawDALatch, ChannelBC[4]);
+ }
+ 
+ /* This has the correct phase.  Don't mess with it. */

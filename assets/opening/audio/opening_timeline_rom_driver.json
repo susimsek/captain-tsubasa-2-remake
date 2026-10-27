@@ -1,0 +1,121 @@
+{
+  "schema": "ct2-opening-rom-stepper-wavehi-v1",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "audio_path": "assets/opening/audio/opening_timeline_rom_driver.wav",
+  "audio_sha256": "445afa1fc9e35ffd05e4eded941626cd728f5d1034e859e9601aa7a9f472edc4",
+  "frame_rate_hz": 60.0988,
+  "sample_rate_hz": 44100,
+  "channels": 1,
+  "bits_per_sample": 16,
+  "audio_samples": 3442925,
+  "video_frames": 4693,
+  "captured_pcm_used": false,
+  "emulator_screenshots_used": false,
+  "runtime_needs_rom_or_emulator": false,
+  "promotion_status": "Promoted 2026-10-26 from an independently rebuilt ROM-only CE6 WaveHi render. All 3,442,925 samples match the same-input FCEUX 2.7.0 PCM capture exactly. The 255/256 channel gains reproduce the recorded FCEUX output profile; this is not a claim about physical NES analog output.",
+  "source_build": {
+    "kind": "Supplied-ROM-only CE6 CPU/APU/DMC stepper events rendered offline through pinned FCEUX WaveHi/SexyFilter code and coefficient tables",
+    "candidate_report": "reference/diagnostics/audio/ce6_wavehi_channel_volume255_rebuild_20261026/candidate_report.json",
+    "candidate_report_sha256": "ab4c394b79ce16cb5ea08e5b4da402c30cef5a454f3bf3e921b9c2094e6fc885",
+    "pcm_identity_validation": "reference/diagnostics/audio/ce6_wavehi_channel_volume255_rebuild_20261026/pcm_identity_validation.json",
+    "pcm_identity_validation_sha256": "d7a1b38226d81d5d2cf690c251a1db2238ead8c9080a5a9ebcdba4266507bc50",
+    "source_stepper_report": "reference/diagnostics/audio/rom_stepper_opcode_ce6_full_4692_20261026/source_stepper_report.json",
+    "source_stepper_report_sha256": "d5eb2f11691347e212bacd8807c5a0be1c5a1ec3b9c1ae067293c88757e4c2d6",
+    "source_cycle_range": [
+      0,
+      139730109
+    ],
+    "source_apu_writes": 45452,
+    "source_frame_updates": 18736,
+    "source_dmc_bytes": 104106,
+    "source_dmc_dac_transition_edges": 831274,
+    "source_dmc_dac_edge_events": {
+      "path": "reference/diagnostics/audio/rom_stepper_opcode_ce6_full_4692_20261026/source_apu_dmc_state_events.csv.gz",
+      "sha256": "993e29fb373350464abf7a582cfec94359ec99d24801aa5c8152b3fe46875d7c",
+      "cycle_field_used": "edge_cycle"
+    },
+    "source_frame_update_events": {
+      "path": "reference/diagnostics/audio/rom_stepper_opcode_ce6_full_4692_20261026/source_frame_updates.csv",
+      "sha256": "3c65263926cc6826e913a0dfc8c7ec2831ba754f1cd7ee6473f4db897dff35c6"
+    },
+    "source_apu_writes_sha256": "d8d098d834934770acc16ee63e122f2acacb9c7b6507aa4b27078fb0a737e3a0",
+    "source_dmc_dma_reads_sha256": "424f785fcab83c23c014a826ffaf79be5f3aa44092c5433095903d71191f65bb",
+    "source_frame_cycles_sha256": "ea660259b30ce71b33ccd972c606bf1418f07300fb7be2b9e83412009e7f55f9",
+    "renderer_source": "reference/diagnostics/audio/ce6_wavehi_channel_volume255_rebuild_20261026/apu_wavehi_renderer_volume255.cpp",
+    "renderer_source_sha256": "282b33335fb99eee647b34693f145d2a92220f9d6f9a12a9ced44c53012eb641",
+    "unscaled_renderer_source_sha256": "d47844debc1392ae1be38105cdf6aa9cf2e9524ea116087d137b6ef8d4b925ba",
+    "renderer_filter_hashes": {
+      "filter.cpp": "ddde69adb6cdd940a54535f3a39f39ae3233b5d110624cae14a553be1a4ad4d4",
+      "sound.cpp": "10e4223d666f87b27f319fcb7759b644c686d8728e0799a49935b845bbc80de5",
+      "wave.cpp": "f5e02189dd9c3501017aa7bce833cf6cb97e3ffdbdf410bd5d2962653a04f379",
+      "fcoeffs.h": "aac6289c43da2540bad1b2a321dc5afb00225a1504611d07a5ee147d09cefdcc",
+      "fir/c44100ntsc.h": "47bbd5ec088344f3d83978796e617ec211dbdeee3b29a5584162428918160691",
+      "x6502.h": "39fccaf76ee38c349f5e06c7b302712ecf24268076ca09aebb9ba887aa00e704"
+    },
+    "channel_gain_profile": {
+      "values_pulse1_pulse2_triangle_noise_dmc": [
+        255,
+        255,
+        255,
+        255,
+        255
+      ],
+      "formula": "floor(level * volume / 256) applied before WaveHi mixing",
+      "source": "recorded FCEUX 2.7.0 output profile; not ROM data"
+    },
+    "controller_timeline": {
+      "path": "reference/opening_reference_capture/input_timeline.csv",
+      "sha256": "195743d71b36da01b5148e46e14733988d3e5d21cf308ab09eaa735daf83d2d3",
+      "role": "drives ROM CPU execution only; not synthesis timing or PCM"
+    },
+    "fceux_trace_used_for_scheduling": false,
+    "captured_pcm_or_wav_used_as_synthesis_input": false,
+    "runtime_needs_rom_or_emulator": false,
+    "build_recipe": [
+      "python3 reference/diagnostics/audio/ce6_wavehi_channel_volume255_20261026/render_volume255_candidate.py --output-dir reference/diagnostics/audio/ce6_wavehi_channel_volume255_rebuild_20261026",
+      "python3 reference/diagnostics/audio/ce6_wavehi_channel_volume255_20261026/validate_pcm_identity.py --candidate reference/diagnostics/audio/ce6_wavehi_channel_volume255_rebuild_20261026/rom_stepper_wavehi_candidate.wav --output reference/diagnostics/audio/ce6_wavehi_channel_volume255_rebuild_20261026/pcm_identity_validation.json"
+    ],
+    "same_input_validation": {
+      "reference_pcm": "reference/diagnostics/audio/fceux_cold_start_silent_pcm_precise_20261024.wav",
+      "reference_pcm_sha256": "445afa1fc9e35ffd05e4eded941626cd728f5d1034e859e9601aa7a9f472edc4",
+      "reference_pcm_used_for_synthesis": false,
+      "same_index_pearson": 1.0,
+      "rmse": 0.0,
+      "mae": 0.0,
+      "exact_samples": 3442925,
+      "exact_sample_fraction": 1.0,
+      "max_absolute_sample_difference": 0,
+      "byte_identical_pcm": true,
+      "candidate_sha256": "445afa1fc9e35ffd05e4eded941626cd728f5d1034e859e9601aa7a9f472edc4"
+    },
+    "known_limitations": [
+      "This proves byte-exact PCM reproduction of the retained same-input FCEUX 2.7.0 output for this ROM, input route, filter implementation, and 255/256 channel profile; it does not measure physical NES analog output.",
+      "The ROM-only stepper models DMC DMA arbitration rather than executing the complete 2A03 bus pipeline; one of 104,106 DMC output-byte cycle labels differs by +3 cycles, but this render is byte-identical to the retained FCEUX PCM.",
+      "The archived full PCM capture metadata does not retain its effective per-channel configuration; the exact comparison confirms the output profile, not the lost settings file."
+    ],
+    "previous_runtime_asset_backup": "reference/diagnostics/audio/runtime_audio_pre_volume255_pcm_exact_20261026/opening_timeline_rom_driver.wav",
+    "previous_manifest_backup": "reference/diagnostics/audio/runtime_audio_pre_volume255_pcm_exact_20261026/opening_timeline_rom_driver.json"
+  },
+  "same_input_validation": {
+    "reference_pcm": "reference/diagnostics/audio/fceux_cold_start_silent_pcm_precise_20261024.wav",
+    "reference_pcm_sha256": "445afa1fc9e35ffd05e4eded941626cd728f5d1034e859e9601aa7a9f472edc4",
+    "reference_pcm_used_for_synthesis": false,
+    "same_index_pearson": 1.0,
+    "rmse": 0.0,
+    "mae": 0.0,
+    "exact_samples": 3442925,
+    "exact_sample_fraction": 1.0,
+    "max_absolute_sample_difference": 0,
+    "byte_identical_pcm": true,
+    "candidate_sha256": "445afa1fc9e35ffd05e4eded941626cd728f5d1034e859e9601aa7a9f472edc4",
+    "purpose": "validation only; candidate was synthesized from supplied-ROM source events and matches the retained same-input FCEUX PCM byte-for-byte"
+  },
+  "known_limitations": [
+    "One of 104,106 ROM-stepper DMC output-byte cycle labels differs from the retained FCEUX trace by +3 CPU cycles; the generated PCM remains byte-identical.",
+    "The ROM-only stepper models FCEUX-compatible DMC DMA arbitration and does not execute the complete physical 2A03 bus pipeline or establish physical NES analog output.",
+    "The 255/256 channel-gain profile is from the recorded FCEUX 2.7.0 output profile, not ROM data; the archived full PCM capture does not retain its effective settings file, while direct byte identity validates this profile for that recording.",
+    "This is an offline-generated ROM-derived WAV; runtime playback has no ROM or emulator dependency."
+  ],
+  "previous_runtime_asset_backup": "reference/diagnostics/audio/runtime_audio_pre_ce6_wavehi_20261026/opening_timeline_rom_driver.wav",
+  "previous_manifest_backup": "reference/diagnostics/audio/runtime_audio_pre_ce6_wavehi_20261026/opening_timeline_rom_driver.json"
+}

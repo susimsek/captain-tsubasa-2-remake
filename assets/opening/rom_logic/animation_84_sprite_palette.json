@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "resource_id": "animation_84_sprite_palette",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "rom_palette_record": {
+    "palette_index": "0x30",
+    "record_file_offset": "0x00D310",
+    "prg_bank": "0x06",
+    "cpu_address": "0xB300",
+    "bytes_hex": "0f 0f 0f 36 0f 0f 16 36 0f 0f 30 36 0f 0f 30 36",
+    "purpose": "16 bytes loaded into NES sprite palette RAM slots $3F10-$3F1F for the observed animation 0x84 scene."
+  },
+  "observed_scene": {
+    "cutscene_background_id": "0x09",
+    "background_palette_index": "0x03",
+    "background_palette_file_offset": "0x00D040",
+    "background_palette_bytes_hex": "0f 19 21 30 0f 36 25 30 0f 0f 00 30 0f 15 00 30",
+    "animation_id": "0x84",
+    "matching_sprite_frame": "0xAEAE",
+    "capture_frame": 1780,
+    "capture_ppu_state": "reference/opening_capture/emulator_ppu/states/ppu_00527.bin",
+    "capture_ppu_sha256": "15a840a66dad7e694140d857aa6e2a938126bcc71abd5fff078ec158272c9da8",
+    "ppu_sprite_palette_ram_offset": "0x3010",
+    "ppu_sprite_palette_matches_rom_bytes": true,
+    "ppu_background_palette_matches_rom_bytes": true,
+    "ppu_chr_slots_4_to_7_match_frame_selectors": true
+  },
+  "rgb_mapping": {
+    "source": "FCEUX internal default RGB palette, version 2.7.0; external hardware/emulator color mapping, not stored in the ROM.",
+    "source_path": "reference/palettes/FCEUX_internal_default_2.7.0_rgb.pal",
+    "source_sha256": "da30843b331e2e4474395866bc9871fcd60a7d716b3c8ee5ce3c89ee46e8c91e",
+    "rows": [
+      {
+        "palette_ram_slot": 0,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 1,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 2,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 3,
+        "nes_color_index": "0x36",
+        "rgb_hex": "#FFBEB2",
+        "raw_rom_byte": "0x36"
+      },
+      {
+        "palette_ram_slot": 4,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 5,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 6,
+        "nes_color_index": "0x16",
+        "rgb_hex": "#DB2800",
+        "raw_rom_byte": "0x16"
+      },
+      {
+        "palette_ram_slot": 7,
+        "nes_color_index": "0x36",
+        "rgb_hex": "#FFBEB2",
+        "raw_rom_byte": "0x36"
+      },
+      {
+        "palette_ram_slot": 8,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 9,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 10,
+        "nes_color_index": "0x30",
+        "rgb_hex": "#FFFFFF",
+        "raw_rom_byte": "0x30"
+      },
+      {
+        "palette_ram_slot": 11,
+        "nes_color_index": "0x36",
+        "rgb_hex": "#FFBEB2",
+        "raw_rom_byte": "0x36"
+      },
+      {
+        "palette_ram_slot": 12,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 13,
+        "nes_color_index": "0x0F",
+        "rgb_hex": "#000000",
+        "raw_rom_byte": "0x0F"
+      },
+      {
+        "palette_ram_slot": 14,
+        "nes_color_index": "0x30",
+        "rgb_hex": "#FFFFFF",
+        "raw_rom_byte": "0x30"
+      },
+      {
+        "palette_ram_slot": 15,
+        "nes_color_index": "0x36",
+        "rgb_hex": "#FFBEB2",
+        "raw_rom_byte": "0x36"
+      }
+    ]
+  },
+  "limitations": [
+    "The frame-1780 PPU palette dump verifies the palette bytes in use and byte equality to ROM palette record 0x30. This does not by itself establish the exact code path that chooses record 0x30 from animation record palette operand 0x00.",
+    "FCEUX RGB values are an external palette choice. They reproduce this selected FCEUX palette mapping, not a universal NES analog RGB standard."
+  ]
+}

@@ -1,0 +1,53 @@
+name: Bug report
+description: Report a reproducible issue in the Godot project.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the smallest reproducible issue. Do not attach the supplied ROM or emulator state files.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include the scene, inputs, and approximate source frame when relevant.
+      placeholder: |
+        1. Start the project.
+        2. Press ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Godot version, operating system, and keyboard/gamepad.
+      placeholder: Godot 4.7.2, macOS, keyboard
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Relevant evidence
+      description: Link source notes or report frame/input details. Do not commit emulator captures.

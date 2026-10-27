@@ -1,0 +1,5070 @@
+{
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "interpreter_cpu_range": "0x9154-0x94D7",
+  "animations": [
+    {
+      "animation_id": "0x0D",
+      "prg_bank": 9,
+      "start_cpu_address": "0xA28E",
+      "terminal": {
+        "kind": "exit",
+        "at_relative_tick": 0,
+        "cpu_address": "0xA294",
+        "file_offset": "0x0122A4"
+      },
+      "beats": [],
+      "commands": [
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA28F",
+          "file_offset": "0x01229F",
+          "kind": "set_y_x",
+          "y": 38,
+          "x": 62,
+          "raw_hex": "f1 26 3e"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA292",
+          "file_offset": "0x0122A2",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xA7CB",
+          "raw_hex": "87 cb"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA294",
+          "file_offset": "0x0122A4",
+          "kind": "exit",
+          "raw_hex": "ff"
+        }
+      ],
+      "caution": "Ticks follow ROM animation wait counters. Scene call timing, movement integration, palette effects and OAM clipping need separate reconstruction."
+    },
+    {
+      "animation_id": "0x6E",
+      "prg_bank": 10,
+      "start_cpu_address": "0xA0C6",
+      "terminal": {
+        "kind": "repeat_cycle",
+        "at_relative_tick": 40,
+        "cycle_start_tick": 16,
+        "cycle_length_ticks": 24,
+        "cycle_start_beat_index": 8,
+        "cpu_address": "0xA0DD"
+      },
+      "beats": [
+        {
+          "start_tick": 0,
+          "hold_ticks": 2,
+          "palette_index": 0,
+          "initial_y": 30,
+          "initial_x": 246,
+          "mirror_h": true,
+          "physics_raw_hex": "05 00 00",
+          "sprite_frame_cpu_address": "0xA837"
+        },
+        {
+          "start_tick": 2,
+          "hold_ticks": 2,
+          "palette_index": 0,
+          "initial_y": 30,
+          "initial_x": 246,
+          "mirror_h": true,
+          "physics_raw_hex": "05 00 00",
+          "sprite_frame_cpu_address": "0xA86F"
+        },
+        {
+          "start_tick": 4,
+          "hold_ticks": 2,
+          "palette_index": 0,
+          "initial_y": 30,
+          "initial_x": 246,
+          "mirror_h": true,
+          "physics_raw_hex": "05 00 00",
+          "sprite_frame_cpu_address": "0xA8BA"
+        },
+        {
+          "start_tick": 6,
+          "hold_ticks": 2,
+          "palette_index": 0,
+          "initial_y": 30,
+          "initial_x": 246,
+          "mirror_h": true,
+          "physics_raw_hex": "05 00 00",
+          "sprite_frame_cpu_address": "0xA908"
+        },
+        {
+          "start_tick": 8,
+          "hold_ticks": 2,
+          "palette_index": 0,
+          "initial_y": 30,
+          "initial_x": 246,
+          "mirror_h": true,
+          "physics_raw_hex": "05 00 00",
+          "sprite_frame_cpu_address": "0xA837"
+        },
+        {
+          "start_tick": 10,
+          "hold_ticks": 2,
+          "palette_index": 0,
+          "initial_y": 30,
+          "initial_x": 246,
+          "mirror_h": true,
+          "physics_raw_hex": "05 00 00",
+          "sprite_frame_cpu_address": "0xA86F"
+        },
+        {
+          "start_tick": 12,
+          "hold_ticks": 2,
+          "palette_index": 0,
+          "initial_y": 30,
+          "initial_x": 246,
+          "mirror_h": true,
+          "physics_raw_hex": "05 00 00",
+          "sprite_frame_cpu_address": "0xA8BA"
+        },
+        {
+          "start_tick": 14,
+          "hold_ticks": 2,
+          "palette_index": 0,
+          "initial_y": 30,
+          "initial_x": 246,
+          "mirror_h": true,
+          "physics_raw_hex": "05 00 00",
+          "sprite_frame_cpu_address": "0xA908"
+        },
+        {
+          "start_tick": 16,
+          "hold_ticks": 6,
+          "palette_index": 0,
+          "initial_y": 30,
+          "initial_x": 246,
+          "mirror_h": true,
+          "physics_raw_hex": "00 00 02",
+          "sprite_frame_cpu_address": "0xA837"
+        },
+        {
+          "start_tick": 22,
+          "hold_ticks": 6,
+          "palette_index": 0,
+          "initial_y": 30,
+          "initial_x": 246,
+          "mirror_h": true,
+          "physics_raw_hex": "00 00 02",
+          "sprite_frame_cpu_address": "0xA86F"
+        },
+        {
+          "start_tick": 28,
+          "hold_ticks": 6,
+          "palette_index": 0,
+          "initial_y": 30,
+          "initial_x": 246,
+          "mirror_h": true,
+          "physics_raw_hex": "00 00 02",
+          "sprite_frame_cpu_address": "0xA8BA"
+        },
+        {
+          "start_tick": 34,
+          "hold_ticks": 6,
+          "palette_index": 0,
+          "initial_y": 30,
+          "initial_x": 246,
+          "mirror_h": true,
+          "physics_raw_hex": "00 00 02",
+          "sprite_frame_cpu_address": "0xA908"
+        }
+      ],
+      "commands": [
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA0C7",
+          "file_offset": "0x0140D7",
+          "kind": "set_y_x",
+          "y": 30,
+          "x": 246,
+          "raw_hex": "f1 1e f6"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA0CA",
+          "file_offset": "0x0140DA",
+          "kind": "set_physics",
+          "physics_raw_hex": "05 00 00",
+          "raw_hex": "f7 05 00 00"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA0CE",
+          "file_offset": "0x0140DE",
+          "kind": "repeat_begin",
+          "count": 2,
+          "depth": 1,
+          "raw_hex": "e2"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA0CF",
+          "file_offset": "0x0140DF",
+          "kind": "mirror_on",
+          "raw_hex": "f5"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA0D0",
+          "file_offset": "0x0140E0",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xA837",
+          "raw_hex": "88 37"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA0D2",
+          "file_offset": "0x0140E2",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 2,
+          "cpu_address": "0xA0D3",
+          "file_offset": "0x0140E3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xA86F",
+          "raw_hex": "88 6f"
+        },
+        {
+          "at_relative_tick": 2,
+          "cpu_address": "0xA0D5",
+          "file_offset": "0x0140E5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 4,
+          "cpu_address": "0xA0D6",
+          "file_offset": "0x0140E6",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xA8BA",
+          "raw_hex": "88 ba"
+        },
+        {
+          "at_relative_tick": 4,
+          "cpu_address": "0xA0D8",
+          "file_offset": "0x0140E8",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 6,
+          "cpu_address": "0xA0D9",
+          "file_offset": "0x0140E9",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xA908",
+          "raw_hex": "89 08"
+        },
+        {
+          "at_relative_tick": 6,
+          "cpu_address": "0xA0DB",
+          "file_offset": "0x0140EB",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA0DC",
+          "file_offset": "0x0140EC",
+          "kind": "repeat_end",
+          "remaining": 1,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA0CF",
+          "file_offset": "0x0140DF",
+          "kind": "mirror_on",
+          "raw_hex": "f5"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA0D0",
+          "file_offset": "0x0140E0",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xA837",
+          "raw_hex": "88 37"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA0D2",
+          "file_offset": "0x0140E2",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 10,
+          "cpu_address": "0xA0D3",
+          "file_offset": "0x0140E3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xA86F",
+          "raw_hex": "88 6f"
+        },
+        {
+          "at_relative_tick": 10,
+          "cpu_address": "0xA0D5",
+          "file_offset": "0x0140E5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 12,
+          "cpu_address": "0xA0D6",
+          "file_offset": "0x0140E6",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xA8BA",
+          "raw_hex": "88 ba"
+        },
+        {
+          "at_relative_tick": 12,
+          "cpu_address": "0xA0D8",
+          "file_offset": "0x0140E8",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 14,
+          "cpu_address": "0xA0D9",
+          "file_offset": "0x0140E9",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xA908",
+          "raw_hex": "89 08"
+        },
+        {
+          "at_relative_tick": 14,
+          "cpu_address": "0xA0DB",
+          "file_offset": "0x0140EB",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 16,
+          "cpu_address": "0xA0DC",
+          "file_offset": "0x0140EC",
+          "kind": "repeat_end",
+          "remaining": 0,
+          "depth": 0,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 16,
+          "cpu_address": "0xA0DD",
+          "file_offset": "0x0140ED",
+          "kind": "mirror_on",
+          "raw_hex": "f5"
+        },
+        {
+          "at_relative_tick": 16,
+          "cpu_address": "0xA0DE",
+          "file_offset": "0x0140EE",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xA837",
+          "raw_hex": "88 37"
+        },
+        {
+          "at_relative_tick": 16,
+          "cpu_address": "0xA0E0",
+          "file_offset": "0x0140F0",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 02",
+          "raw_hex": "f7 00 00 02"
+        },
+        {
+          "at_relative_tick": 16,
+          "cpu_address": "0xA0E4",
+          "file_offset": "0x0140F4",
+          "kind": "duration",
+          "hold_ticks": 6,
+          "raw_hex": "03"
+        },
+        {
+          "at_relative_tick": 22,
+          "cpu_address": "0xA0E5",
+          "file_offset": "0x0140F5",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xA86F",
+          "raw_hex": "88 6f"
+        },
+        {
+          "at_relative_tick": 22,
+          "cpu_address": "0xA0E7",
+          "file_offset": "0x0140F7",
+          "kind": "duration",
+          "hold_ticks": 6,
+          "raw_hex": "03"
+        },
+        {
+          "at_relative_tick": 28,
+          "cpu_address": "0xA0E8",
+          "file_offset": "0x0140F8",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xA8BA",
+          "raw_hex": "88 ba"
+        },
+        {
+          "at_relative_tick": 28,
+          "cpu_address": "0xA0EA",
+          "file_offset": "0x0140FA",
+          "kind": "duration",
+          "hold_ticks": 6,
+          "raw_hex": "03"
+        },
+        {
+          "at_relative_tick": 34,
+          "cpu_address": "0xA0EB",
+          "file_offset": "0x0140FB",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xA908",
+          "raw_hex": "89 08"
+        },
+        {
+          "at_relative_tick": 34,
+          "cpu_address": "0xA0ED",
+          "file_offset": "0x0140FD",
+          "kind": "duration",
+          "hold_ticks": 6,
+          "raw_hex": "03"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA0EE",
+          "file_offset": "0x0140FE",
+          "kind": "jump",
+          "target_cpu_address": "0xA0DD",
+          "raw_hex": "a0 dd"
+        }
+      ],
+      "caution": "Ticks follow ROM animation wait counters. Scene call timing, movement integration, palette effects and OAM clipping need separate reconstruction."
+    },
+    {
+      "animation_id": "0x75",
+      "prg_bank": 10,
+      "start_cpu_address": "0xA186",
+      "terminal": {
+        "kind": "exit",
+        "at_relative_tick": 60,
+        "cpu_address": "0xA18E",
+        "file_offset": "0x01419E"
+      },
+      "beats": [
+        {
+          "start_tick": 0,
+          "hold_ticks": 60,
+          "palette_index": 1,
+          "initial_y": 48,
+          "initial_x": 188,
+          "mirror_h": false,
+          "physics_raw_hex": null,
+          "sprite_frame_cpu_address": "0xAA8C"
+        }
+      ],
+      "commands": [
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA187",
+          "file_offset": "0x014197",
+          "kind": "set_y_x",
+          "y": 48,
+          "x": 188,
+          "raw_hex": "f1 30 bc"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA18A",
+          "file_offset": "0x01419A",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAA8C",
+          "raw_hex": "8a 8c"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA18C",
+          "file_offset": "0x01419C",
+          "kind": "set_flag_bit4",
+          "raw_hex": "f9"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA18D",
+          "file_offset": "0x01419D",
+          "kind": "duration",
+          "hold_ticks": 60,
+          "raw_hex": "1e"
+        },
+        {
+          "at_relative_tick": 60,
+          "cpu_address": "0xA18E",
+          "file_offset": "0x01419E",
+          "kind": "exit",
+          "raw_hex": "ff"
+        }
+      ],
+      "caution": "Ticks follow ROM animation wait counters. Scene call timing, movement integration, palette effects and OAM clipping need separate reconstruction."
+    },
+    {
+      "animation_id": "0x76",
+      "prg_bank": 10,
+      "start_cpu_address": "0xA18F",
+      "terminal": {
+        "kind": "exit",
+        "at_relative_tick": 60,
+        "cpu_address": "0xA198",
+        "file_offset": "0x0141A8"
+      },
+      "beats": [
+        {
+          "start_tick": 0,
+          "hold_ticks": 60,
+          "palette_index": 1,
+          "initial_y": 48,
+          "initial_x": 192,
+          "mirror_h": true,
+          "physics_raw_hex": null,
+          "sprite_frame_cpu_address": "0xAAE7"
+        }
+      ],
+      "commands": [
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA190",
+          "file_offset": "0x0141A0",
+          "kind": "set_y_x",
+          "y": 48,
+          "x": 192,
+          "raw_hex": "f1 30 c0"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA193",
+          "file_offset": "0x0141A3",
+          "kind": "mirror_on",
+          "raw_hex": "f5"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA194",
+          "file_offset": "0x0141A4",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAAE7",
+          "raw_hex": "8a e7"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA196",
+          "file_offset": "0x0141A6",
+          "kind": "set_flag_bit4",
+          "raw_hex": "f9"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA197",
+          "file_offset": "0x0141A7",
+          "kind": "duration",
+          "hold_ticks": 60,
+          "raw_hex": "1e"
+        },
+        {
+          "at_relative_tick": 60,
+          "cpu_address": "0xA198",
+          "file_offset": "0x0141A8",
+          "kind": "exit",
+          "raw_hex": "ff"
+        }
+      ],
+      "caution": "Ticks follow ROM animation wait counters. Scene call timing, movement integration, palette effects and OAM clipping need separate reconstruction."
+    },
+    {
+      "animation_id": "0x77",
+      "prg_bank": 10,
+      "start_cpu_address": "0xA199",
+      "terminal": {
+        "kind": "exit",
+        "at_relative_tick": 60,
+        "cpu_address": "0xA1A1",
+        "file_offset": "0x0141B1"
+      },
+      "beats": [
+        {
+          "start_tick": 0,
+          "hold_ticks": 60,
+          "palette_index": 6,
+          "initial_y": 48,
+          "initial_x": 188,
+          "mirror_h": false,
+          "physics_raw_hex": null,
+          "sprite_frame_cpu_address": "0xAB4A"
+        }
+      ],
+      "commands": [
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA19A",
+          "file_offset": "0x0141AA",
+          "kind": "set_y_x",
+          "y": 48,
+          "x": 188,
+          "raw_hex": "f1 30 bc"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA19D",
+          "file_offset": "0x0141AD",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAB4A",
+          "raw_hex": "8b 4a"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA19F",
+          "file_offset": "0x0141AF",
+          "kind": "set_flag_bit4",
+          "raw_hex": "f9"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA1A0",
+          "file_offset": "0x0141B0",
+          "kind": "duration",
+          "hold_ticks": 60,
+          "raw_hex": "1e"
+        },
+        {
+          "at_relative_tick": 60,
+          "cpu_address": "0xA1A1",
+          "file_offset": "0x0141B1",
+          "kind": "exit",
+          "raw_hex": "ff"
+        }
+      ],
+      "caution": "Ticks follow ROM animation wait counters. Scene call timing, movement integration, palette effects and OAM clipping need separate reconstruction."
+    },
+    {
+      "animation_id": "0x7C",
+      "prg_bank": 10,
+      "start_cpu_address": "0xA1C1",
+      "terminal": {
+        "kind": "exit",
+        "at_relative_tick": 60,
+        "cpu_address": "0xA1C9",
+        "file_offset": "0x0141D9"
+      },
+      "beats": [
+        {
+          "start_tick": 0,
+          "hold_ticks": 60,
+          "palette_index": 8,
+          "initial_y": 48,
+          "initial_x": 196,
+          "mirror_h": false,
+          "physics_raw_hex": null,
+          "sprite_frame_cpu_address": "0xAD14"
+        }
+      ],
+      "commands": [
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA1C2",
+          "file_offset": "0x0141D2",
+          "kind": "set_y_x",
+          "y": 48,
+          "x": 196,
+          "raw_hex": "f1 30 c4"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA1C5",
+          "file_offset": "0x0141D5",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD14",
+          "raw_hex": "8d 14"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA1C7",
+          "file_offset": "0x0141D7",
+          "kind": "set_flag_bit4",
+          "raw_hex": "f9"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA1C8",
+          "file_offset": "0x0141D8",
+          "kind": "duration",
+          "hold_ticks": 60,
+          "raw_hex": "1e"
+        },
+        {
+          "at_relative_tick": 60,
+          "cpu_address": "0xA1C9",
+          "file_offset": "0x0141D9",
+          "kind": "exit",
+          "raw_hex": "ff"
+        }
+      ],
+      "caution": "Ticks follow ROM animation wait counters. Scene call timing, movement integration, palette effects and OAM clipping need separate reconstruction."
+    },
+    {
+      "animation_id": "0x7D",
+      "prg_bank": 10,
+      "start_cpu_address": "0xA1CA",
+      "terminal": {
+        "kind": "repeat_cycle",
+        "at_relative_tick": 100,
+        "cycle_start_tick": 96,
+        "cycle_length_ticks": 4,
+        "cycle_start_beat_index": 48,
+        "cpu_address": "0xA1F0"
+      },
+      "beats": [
+        {
+          "start_tick": 0,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "2f 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 2,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 4,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "2f 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 6,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 8,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "2f 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 10,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 12,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "2f 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 14,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 16,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "2f 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 18,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 20,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "2f 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 22,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 24,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "2f 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 26,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 28,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "2f 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 30,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 32,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "2f 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 34,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 36,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "2f 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 38,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 40,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "2f 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 42,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 44,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "2f 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 46,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xAD72"
+        },
+        {
+          "start_tick": 48,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xADC2"
+        },
+        {
+          "start_tick": 50,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB258"
+        },
+        {
+          "start_tick": 52,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB297"
+        },
+        {
+          "start_tick": 54,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB2DA"
+        },
+        {
+          "start_tick": 56,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xADC2"
+        },
+        {
+          "start_tick": 58,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB258"
+        },
+        {
+          "start_tick": 60,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB297"
+        },
+        {
+          "start_tick": 62,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB2DA"
+        },
+        {
+          "start_tick": 64,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xADC2"
+        },
+        {
+          "start_tick": 66,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB258"
+        },
+        {
+          "start_tick": 68,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB297"
+        },
+        {
+          "start_tick": 70,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB2DA"
+        },
+        {
+          "start_tick": 72,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xADC2"
+        },
+        {
+          "start_tick": 74,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB258"
+        },
+        {
+          "start_tick": 76,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB297"
+        },
+        {
+          "start_tick": 78,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB2DA"
+        },
+        {
+          "start_tick": 80,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xADC2"
+        },
+        {
+          "start_tick": 82,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB258"
+        },
+        {
+          "start_tick": 84,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB297"
+        },
+        {
+          "start_tick": 86,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB2DA"
+        },
+        {
+          "start_tick": 88,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xADC2"
+        },
+        {
+          "start_tick": 90,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB258"
+        },
+        {
+          "start_tick": 92,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB297"
+        },
+        {
+          "start_tick": 94,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xB2DA"
+        },
+        {
+          "start_tick": 96,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xAD9A"
+        },
+        {
+          "start_tick": 98,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 6,
+          "initial_x": 78,
+          "mirror_h": false,
+          "physics_raw_hex": "00 01 ff",
+          "sprite_frame_cpu_address": "0xAD9A"
+        }
+      ],
+      "commands": [
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA1CB",
+          "file_offset": "0x0141DB",
+          "kind": "set_y_x",
+          "y": 6,
+          "x": 78,
+          "raw_hex": "f1 06 4e"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA1CE",
+          "file_offset": "0x0141DE",
+          "kind": "repeat_begin",
+          "count": 12,
+          "depth": 1,
+          "raw_hex": "ec"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA1CF",
+          "file_offset": "0x0141DF",
+          "kind": "set_physics",
+          "physics_raw_hex": "2f 00 00",
+          "raw_hex": "f7 2f 00 00"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA1D3",
+          "file_offset": "0x0141E3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA1D5",
+          "file_offset": "0x0141E5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 2,
+          "cpu_address": "0xA1D6",
+          "file_offset": "0x0141E6",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 2,
+          "cpu_address": "0xA1DA",
+          "file_offset": "0x0141EA",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 2,
+          "cpu_address": "0xA1DC",
+          "file_offset": "0x0141EC",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 4,
+          "cpu_address": "0xA1DD",
+          "file_offset": "0x0141ED",
+          "kind": "repeat_end",
+          "remaining": 11,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 4,
+          "cpu_address": "0xA1CF",
+          "file_offset": "0x0141DF",
+          "kind": "set_physics",
+          "physics_raw_hex": "2f 00 00",
+          "raw_hex": "f7 2f 00 00"
+        },
+        {
+          "at_relative_tick": 4,
+          "cpu_address": "0xA1D3",
+          "file_offset": "0x0141E3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 4,
+          "cpu_address": "0xA1D5",
+          "file_offset": "0x0141E5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 6,
+          "cpu_address": "0xA1D6",
+          "file_offset": "0x0141E6",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 6,
+          "cpu_address": "0xA1DA",
+          "file_offset": "0x0141EA",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 6,
+          "cpu_address": "0xA1DC",
+          "file_offset": "0x0141EC",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA1DD",
+          "file_offset": "0x0141ED",
+          "kind": "repeat_end",
+          "remaining": 10,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA1CF",
+          "file_offset": "0x0141DF",
+          "kind": "set_physics",
+          "physics_raw_hex": "2f 00 00",
+          "raw_hex": "f7 2f 00 00"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA1D3",
+          "file_offset": "0x0141E3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA1D5",
+          "file_offset": "0x0141E5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 10,
+          "cpu_address": "0xA1D6",
+          "file_offset": "0x0141E6",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 10,
+          "cpu_address": "0xA1DA",
+          "file_offset": "0x0141EA",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 10,
+          "cpu_address": "0xA1DC",
+          "file_offset": "0x0141EC",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 12,
+          "cpu_address": "0xA1DD",
+          "file_offset": "0x0141ED",
+          "kind": "repeat_end",
+          "remaining": 9,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 12,
+          "cpu_address": "0xA1CF",
+          "file_offset": "0x0141DF",
+          "kind": "set_physics",
+          "physics_raw_hex": "2f 00 00",
+          "raw_hex": "f7 2f 00 00"
+        },
+        {
+          "at_relative_tick": 12,
+          "cpu_address": "0xA1D3",
+          "file_offset": "0x0141E3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 12,
+          "cpu_address": "0xA1D5",
+          "file_offset": "0x0141E5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 14,
+          "cpu_address": "0xA1D6",
+          "file_offset": "0x0141E6",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 14,
+          "cpu_address": "0xA1DA",
+          "file_offset": "0x0141EA",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 14,
+          "cpu_address": "0xA1DC",
+          "file_offset": "0x0141EC",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 16,
+          "cpu_address": "0xA1DD",
+          "file_offset": "0x0141ED",
+          "kind": "repeat_end",
+          "remaining": 8,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 16,
+          "cpu_address": "0xA1CF",
+          "file_offset": "0x0141DF",
+          "kind": "set_physics",
+          "physics_raw_hex": "2f 00 00",
+          "raw_hex": "f7 2f 00 00"
+        },
+        {
+          "at_relative_tick": 16,
+          "cpu_address": "0xA1D3",
+          "file_offset": "0x0141E3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 16,
+          "cpu_address": "0xA1D5",
+          "file_offset": "0x0141E5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 18,
+          "cpu_address": "0xA1D6",
+          "file_offset": "0x0141E6",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 18,
+          "cpu_address": "0xA1DA",
+          "file_offset": "0x0141EA",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 18,
+          "cpu_address": "0xA1DC",
+          "file_offset": "0x0141EC",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA1DD",
+          "file_offset": "0x0141ED",
+          "kind": "repeat_end",
+          "remaining": 7,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA1CF",
+          "file_offset": "0x0141DF",
+          "kind": "set_physics",
+          "physics_raw_hex": "2f 00 00",
+          "raw_hex": "f7 2f 00 00"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA1D3",
+          "file_offset": "0x0141E3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA1D5",
+          "file_offset": "0x0141E5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 22,
+          "cpu_address": "0xA1D6",
+          "file_offset": "0x0141E6",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 22,
+          "cpu_address": "0xA1DA",
+          "file_offset": "0x0141EA",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 22,
+          "cpu_address": "0xA1DC",
+          "file_offset": "0x0141EC",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 24,
+          "cpu_address": "0xA1DD",
+          "file_offset": "0x0141ED",
+          "kind": "repeat_end",
+          "remaining": 6,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 24,
+          "cpu_address": "0xA1CF",
+          "file_offset": "0x0141DF",
+          "kind": "set_physics",
+          "physics_raw_hex": "2f 00 00",
+          "raw_hex": "f7 2f 00 00"
+        },
+        {
+          "at_relative_tick": 24,
+          "cpu_address": "0xA1D3",
+          "file_offset": "0x0141E3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 24,
+          "cpu_address": "0xA1D5",
+          "file_offset": "0x0141E5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 26,
+          "cpu_address": "0xA1D6",
+          "file_offset": "0x0141E6",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 26,
+          "cpu_address": "0xA1DA",
+          "file_offset": "0x0141EA",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 26,
+          "cpu_address": "0xA1DC",
+          "file_offset": "0x0141EC",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 28,
+          "cpu_address": "0xA1DD",
+          "file_offset": "0x0141ED",
+          "kind": "repeat_end",
+          "remaining": 5,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 28,
+          "cpu_address": "0xA1CF",
+          "file_offset": "0x0141DF",
+          "kind": "set_physics",
+          "physics_raw_hex": "2f 00 00",
+          "raw_hex": "f7 2f 00 00"
+        },
+        {
+          "at_relative_tick": 28,
+          "cpu_address": "0xA1D3",
+          "file_offset": "0x0141E3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 28,
+          "cpu_address": "0xA1D5",
+          "file_offset": "0x0141E5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 30,
+          "cpu_address": "0xA1D6",
+          "file_offset": "0x0141E6",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 30,
+          "cpu_address": "0xA1DA",
+          "file_offset": "0x0141EA",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 30,
+          "cpu_address": "0xA1DC",
+          "file_offset": "0x0141EC",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 32,
+          "cpu_address": "0xA1DD",
+          "file_offset": "0x0141ED",
+          "kind": "repeat_end",
+          "remaining": 4,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 32,
+          "cpu_address": "0xA1CF",
+          "file_offset": "0x0141DF",
+          "kind": "set_physics",
+          "physics_raw_hex": "2f 00 00",
+          "raw_hex": "f7 2f 00 00"
+        },
+        {
+          "at_relative_tick": 32,
+          "cpu_address": "0xA1D3",
+          "file_offset": "0x0141E3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 32,
+          "cpu_address": "0xA1D5",
+          "file_offset": "0x0141E5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 34,
+          "cpu_address": "0xA1D6",
+          "file_offset": "0x0141E6",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 34,
+          "cpu_address": "0xA1DA",
+          "file_offset": "0x0141EA",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 34,
+          "cpu_address": "0xA1DC",
+          "file_offset": "0x0141EC",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 36,
+          "cpu_address": "0xA1DD",
+          "file_offset": "0x0141ED",
+          "kind": "repeat_end",
+          "remaining": 3,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 36,
+          "cpu_address": "0xA1CF",
+          "file_offset": "0x0141DF",
+          "kind": "set_physics",
+          "physics_raw_hex": "2f 00 00",
+          "raw_hex": "f7 2f 00 00"
+        },
+        {
+          "at_relative_tick": 36,
+          "cpu_address": "0xA1D3",
+          "file_offset": "0x0141E3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 36,
+          "cpu_address": "0xA1D5",
+          "file_offset": "0x0141E5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 38,
+          "cpu_address": "0xA1D6",
+          "file_offset": "0x0141E6",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 38,
+          "cpu_address": "0xA1DA",
+          "file_offset": "0x0141EA",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 38,
+          "cpu_address": "0xA1DC",
+          "file_offset": "0x0141EC",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA1DD",
+          "file_offset": "0x0141ED",
+          "kind": "repeat_end",
+          "remaining": 2,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA1CF",
+          "file_offset": "0x0141DF",
+          "kind": "set_physics",
+          "physics_raw_hex": "2f 00 00",
+          "raw_hex": "f7 2f 00 00"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA1D3",
+          "file_offset": "0x0141E3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA1D5",
+          "file_offset": "0x0141E5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 42,
+          "cpu_address": "0xA1D6",
+          "file_offset": "0x0141E6",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 42,
+          "cpu_address": "0xA1DA",
+          "file_offset": "0x0141EA",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 42,
+          "cpu_address": "0xA1DC",
+          "file_offset": "0x0141EC",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 44,
+          "cpu_address": "0xA1DD",
+          "file_offset": "0x0141ED",
+          "kind": "repeat_end",
+          "remaining": 1,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 44,
+          "cpu_address": "0xA1CF",
+          "file_offset": "0x0141DF",
+          "kind": "set_physics",
+          "physics_raw_hex": "2f 00 00",
+          "raw_hex": "f7 2f 00 00"
+        },
+        {
+          "at_relative_tick": 44,
+          "cpu_address": "0xA1D3",
+          "file_offset": "0x0141E3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 44,
+          "cpu_address": "0xA1D5",
+          "file_offset": "0x0141E5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 46,
+          "cpu_address": "0xA1D6",
+          "file_offset": "0x0141E6",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 46,
+          "cpu_address": "0xA1DA",
+          "file_offset": "0x0141EA",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD72",
+          "raw_hex": "8d 72"
+        },
+        {
+          "at_relative_tick": 46,
+          "cpu_address": "0xA1DC",
+          "file_offset": "0x0141EC",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 48,
+          "cpu_address": "0xA1DD",
+          "file_offset": "0x0141ED",
+          "kind": "repeat_end",
+          "remaining": 0,
+          "depth": 0,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 48,
+          "cpu_address": "0xA1DE",
+          "file_offset": "0x0141EE",
+          "kind": "repeat_begin",
+          "count": 6,
+          "depth": 1,
+          "raw_hex": "e6"
+        },
+        {
+          "at_relative_tick": 48,
+          "cpu_address": "0xA1DF",
+          "file_offset": "0x0141EF",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 01 ff",
+          "raw_hex": "f7 00 01 ff"
+        },
+        {
+          "at_relative_tick": 48,
+          "cpu_address": "0xA1E3",
+          "file_offset": "0x0141F3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADC2",
+          "raw_hex": "8d c2"
+        },
+        {
+          "at_relative_tick": 48,
+          "cpu_address": "0xA1E5",
+          "file_offset": "0x0141F5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 50,
+          "cpu_address": "0xA1E6",
+          "file_offset": "0x0141F6",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB258",
+          "raw_hex": "92 58"
+        },
+        {
+          "at_relative_tick": 50,
+          "cpu_address": "0xA1E8",
+          "file_offset": "0x0141F8",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 52,
+          "cpu_address": "0xA1E9",
+          "file_offset": "0x0141F9",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB297",
+          "raw_hex": "92 97"
+        },
+        {
+          "at_relative_tick": 52,
+          "cpu_address": "0xA1EB",
+          "file_offset": "0x0141FB",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 54,
+          "cpu_address": "0xA1EC",
+          "file_offset": "0x0141FC",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB2DA",
+          "raw_hex": "92 da"
+        },
+        {
+          "at_relative_tick": 54,
+          "cpu_address": "0xA1EE",
+          "file_offset": "0x0141FE",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 56,
+          "cpu_address": "0xA1EF",
+          "file_offset": "0x0141FF",
+          "kind": "repeat_end",
+          "remaining": 5,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 56,
+          "cpu_address": "0xA1DF",
+          "file_offset": "0x0141EF",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 01 ff",
+          "raw_hex": "f7 00 01 ff"
+        },
+        {
+          "at_relative_tick": 56,
+          "cpu_address": "0xA1E3",
+          "file_offset": "0x0141F3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADC2",
+          "raw_hex": "8d c2"
+        },
+        {
+          "at_relative_tick": 56,
+          "cpu_address": "0xA1E5",
+          "file_offset": "0x0141F5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 58,
+          "cpu_address": "0xA1E6",
+          "file_offset": "0x0141F6",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB258",
+          "raw_hex": "92 58"
+        },
+        {
+          "at_relative_tick": 58,
+          "cpu_address": "0xA1E8",
+          "file_offset": "0x0141F8",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 60,
+          "cpu_address": "0xA1E9",
+          "file_offset": "0x0141F9",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB297",
+          "raw_hex": "92 97"
+        },
+        {
+          "at_relative_tick": 60,
+          "cpu_address": "0xA1EB",
+          "file_offset": "0x0141FB",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 62,
+          "cpu_address": "0xA1EC",
+          "file_offset": "0x0141FC",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB2DA",
+          "raw_hex": "92 da"
+        },
+        {
+          "at_relative_tick": 62,
+          "cpu_address": "0xA1EE",
+          "file_offset": "0x0141FE",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 64,
+          "cpu_address": "0xA1EF",
+          "file_offset": "0x0141FF",
+          "kind": "repeat_end",
+          "remaining": 4,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 64,
+          "cpu_address": "0xA1DF",
+          "file_offset": "0x0141EF",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 01 ff",
+          "raw_hex": "f7 00 01 ff"
+        },
+        {
+          "at_relative_tick": 64,
+          "cpu_address": "0xA1E3",
+          "file_offset": "0x0141F3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADC2",
+          "raw_hex": "8d c2"
+        },
+        {
+          "at_relative_tick": 64,
+          "cpu_address": "0xA1E5",
+          "file_offset": "0x0141F5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 66,
+          "cpu_address": "0xA1E6",
+          "file_offset": "0x0141F6",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB258",
+          "raw_hex": "92 58"
+        },
+        {
+          "at_relative_tick": 66,
+          "cpu_address": "0xA1E8",
+          "file_offset": "0x0141F8",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 68,
+          "cpu_address": "0xA1E9",
+          "file_offset": "0x0141F9",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB297",
+          "raw_hex": "92 97"
+        },
+        {
+          "at_relative_tick": 68,
+          "cpu_address": "0xA1EB",
+          "file_offset": "0x0141FB",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 70,
+          "cpu_address": "0xA1EC",
+          "file_offset": "0x0141FC",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB2DA",
+          "raw_hex": "92 da"
+        },
+        {
+          "at_relative_tick": 70,
+          "cpu_address": "0xA1EE",
+          "file_offset": "0x0141FE",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 72,
+          "cpu_address": "0xA1EF",
+          "file_offset": "0x0141FF",
+          "kind": "repeat_end",
+          "remaining": 3,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 72,
+          "cpu_address": "0xA1DF",
+          "file_offset": "0x0141EF",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 01 ff",
+          "raw_hex": "f7 00 01 ff"
+        },
+        {
+          "at_relative_tick": 72,
+          "cpu_address": "0xA1E3",
+          "file_offset": "0x0141F3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADC2",
+          "raw_hex": "8d c2"
+        },
+        {
+          "at_relative_tick": 72,
+          "cpu_address": "0xA1E5",
+          "file_offset": "0x0141F5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 74,
+          "cpu_address": "0xA1E6",
+          "file_offset": "0x0141F6",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB258",
+          "raw_hex": "92 58"
+        },
+        {
+          "at_relative_tick": 74,
+          "cpu_address": "0xA1E8",
+          "file_offset": "0x0141F8",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 76,
+          "cpu_address": "0xA1E9",
+          "file_offset": "0x0141F9",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB297",
+          "raw_hex": "92 97"
+        },
+        {
+          "at_relative_tick": 76,
+          "cpu_address": "0xA1EB",
+          "file_offset": "0x0141FB",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 78,
+          "cpu_address": "0xA1EC",
+          "file_offset": "0x0141FC",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB2DA",
+          "raw_hex": "92 da"
+        },
+        {
+          "at_relative_tick": 78,
+          "cpu_address": "0xA1EE",
+          "file_offset": "0x0141FE",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 80,
+          "cpu_address": "0xA1EF",
+          "file_offset": "0x0141FF",
+          "kind": "repeat_end",
+          "remaining": 2,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 80,
+          "cpu_address": "0xA1DF",
+          "file_offset": "0x0141EF",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 01 ff",
+          "raw_hex": "f7 00 01 ff"
+        },
+        {
+          "at_relative_tick": 80,
+          "cpu_address": "0xA1E3",
+          "file_offset": "0x0141F3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADC2",
+          "raw_hex": "8d c2"
+        },
+        {
+          "at_relative_tick": 80,
+          "cpu_address": "0xA1E5",
+          "file_offset": "0x0141F5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 82,
+          "cpu_address": "0xA1E6",
+          "file_offset": "0x0141F6",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB258",
+          "raw_hex": "92 58"
+        },
+        {
+          "at_relative_tick": 82,
+          "cpu_address": "0xA1E8",
+          "file_offset": "0x0141F8",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 84,
+          "cpu_address": "0xA1E9",
+          "file_offset": "0x0141F9",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB297",
+          "raw_hex": "92 97"
+        },
+        {
+          "at_relative_tick": 84,
+          "cpu_address": "0xA1EB",
+          "file_offset": "0x0141FB",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 86,
+          "cpu_address": "0xA1EC",
+          "file_offset": "0x0141FC",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB2DA",
+          "raw_hex": "92 da"
+        },
+        {
+          "at_relative_tick": 86,
+          "cpu_address": "0xA1EE",
+          "file_offset": "0x0141FE",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 88,
+          "cpu_address": "0xA1EF",
+          "file_offset": "0x0141FF",
+          "kind": "repeat_end",
+          "remaining": 1,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 88,
+          "cpu_address": "0xA1DF",
+          "file_offset": "0x0141EF",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 01 ff",
+          "raw_hex": "f7 00 01 ff"
+        },
+        {
+          "at_relative_tick": 88,
+          "cpu_address": "0xA1E3",
+          "file_offset": "0x0141F3",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADC2",
+          "raw_hex": "8d c2"
+        },
+        {
+          "at_relative_tick": 88,
+          "cpu_address": "0xA1E5",
+          "file_offset": "0x0141F5",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 90,
+          "cpu_address": "0xA1E6",
+          "file_offset": "0x0141F6",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB258",
+          "raw_hex": "92 58"
+        },
+        {
+          "at_relative_tick": 90,
+          "cpu_address": "0xA1E8",
+          "file_offset": "0x0141F8",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 92,
+          "cpu_address": "0xA1E9",
+          "file_offset": "0x0141F9",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB297",
+          "raw_hex": "92 97"
+        },
+        {
+          "at_relative_tick": 92,
+          "cpu_address": "0xA1EB",
+          "file_offset": "0x0141FB",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 94,
+          "cpu_address": "0xA1EC",
+          "file_offset": "0x0141FC",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB2DA",
+          "raw_hex": "92 da"
+        },
+        {
+          "at_relative_tick": 94,
+          "cpu_address": "0xA1EE",
+          "file_offset": "0x0141FE",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 96,
+          "cpu_address": "0xA1EF",
+          "file_offset": "0x0141FF",
+          "kind": "repeat_end",
+          "remaining": 0,
+          "depth": 0,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 96,
+          "cpu_address": "0xA1F0",
+          "file_offset": "0x014200",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 01 ff",
+          "raw_hex": "f7 00 01 ff"
+        },
+        {
+          "at_relative_tick": 96,
+          "cpu_address": "0xA1F4",
+          "file_offset": "0x014204",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD9A",
+          "raw_hex": "8d 9a"
+        },
+        {
+          "at_relative_tick": 96,
+          "cpu_address": "0xA1F6",
+          "file_offset": "0x014206",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 98,
+          "cpu_address": "0xA1F7",
+          "file_offset": "0x014207",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAD9A",
+          "raw_hex": "8d 9a"
+        },
+        {
+          "at_relative_tick": 98,
+          "cpu_address": "0xA1F9",
+          "file_offset": "0x014209",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 100,
+          "cpu_address": "0xA1FA",
+          "file_offset": "0x01420A",
+          "kind": "jump",
+          "target_cpu_address": "0xA1F0",
+          "raw_hex": "a1 f0"
+        }
+      ],
+      "caution": "Ticks follow ROM animation wait counters. Scene call timing, movement integration, palette effects and OAM clipping need separate reconstruction."
+    },
+    {
+      "animation_id": "0x82",
+      "prg_bank": 10,
+      "start_cpu_address": "0xA25F",
+      "terminal": {
+        "kind": "repeat_cycle",
+        "at_relative_tick": 112,
+        "cycle_start_tick": 108,
+        "cycle_length_ticks": 4,
+        "cycle_start_beat_index": 27,
+        "cpu_address": "0xA28E"
+      },
+      "beats": [
+        {
+          "start_tick": 0,
+          "hold_ticks": 20,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "26 00 00",
+          "sprite_frame_cpu_address": "0xADF0"
+        },
+        {
+          "start_tick": 20,
+          "hold_ticks": 20,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "26 00 00",
+          "sprite_frame_cpu_address": "0xADF0"
+        },
+        {
+          "start_tick": 40,
+          "hold_ticks": 20,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "26 00 00",
+          "sprite_frame_cpu_address": "0xADF0"
+        },
+        {
+          "start_tick": 60,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "e0 00 00",
+          "sprite_frame_cpu_address": "0xAE12"
+        },
+        {
+          "start_tick": 62,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "20 00 00",
+          "sprite_frame_cpu_address": "0xAE29"
+        },
+        {
+          "start_tick": 64,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "e0 00 00",
+          "sprite_frame_cpu_address": "0xAE38"
+        },
+        {
+          "start_tick": 66,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "20 00 00",
+          "sprite_frame_cpu_address": "0xAE4C"
+        },
+        {
+          "start_tick": 68,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "e0 00 00",
+          "sprite_frame_cpu_address": "0xAE12"
+        },
+        {
+          "start_tick": 70,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "20 00 00",
+          "sprite_frame_cpu_address": "0xAE29"
+        },
+        {
+          "start_tick": 72,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "e0 00 00",
+          "sprite_frame_cpu_address": "0xAE38"
+        },
+        {
+          "start_tick": 74,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "20 00 00",
+          "sprite_frame_cpu_address": "0xAE4C"
+        },
+        {
+          "start_tick": 76,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "e0 00 00",
+          "sprite_frame_cpu_address": "0xAE12"
+        },
+        {
+          "start_tick": 78,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "20 00 00",
+          "sprite_frame_cpu_address": "0xAE29"
+        },
+        {
+          "start_tick": 80,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "e0 00 00",
+          "sprite_frame_cpu_address": "0xAE38"
+        },
+        {
+          "start_tick": 82,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "20 00 00",
+          "sprite_frame_cpu_address": "0xAE4C"
+        },
+        {
+          "start_tick": 84,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "e0 00 00",
+          "sprite_frame_cpu_address": "0xAE12"
+        },
+        {
+          "start_tick": 86,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "20 00 00",
+          "sprite_frame_cpu_address": "0xAE29"
+        },
+        {
+          "start_tick": 88,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "e0 00 00",
+          "sprite_frame_cpu_address": "0xAE38"
+        },
+        {
+          "start_tick": 90,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "20 00 00",
+          "sprite_frame_cpu_address": "0xAE4C"
+        },
+        {
+          "start_tick": 92,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "e0 00 00",
+          "sprite_frame_cpu_address": "0xAE12"
+        },
+        {
+          "start_tick": 94,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "20 00 00",
+          "sprite_frame_cpu_address": "0xAE29"
+        },
+        {
+          "start_tick": 96,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "e0 00 00",
+          "sprite_frame_cpu_address": "0xAE38"
+        },
+        {
+          "start_tick": 98,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "20 00 00",
+          "sprite_frame_cpu_address": "0xAE4C"
+        },
+        {
+          "start_tick": 100,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "e0 00 00",
+          "sprite_frame_cpu_address": "0xAE12"
+        },
+        {
+          "start_tick": 102,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "20 00 00",
+          "sprite_frame_cpu_address": "0xAE29"
+        },
+        {
+          "start_tick": 104,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "e0 00 00",
+          "sprite_frame_cpu_address": "0xAE38"
+        },
+        {
+          "start_tick": 106,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "20 00 00",
+          "sprite_frame_cpu_address": "0xAE4C"
+        },
+        {
+          "start_tick": 108,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "f0 00 00",
+          "sprite_frame_cpu_address": "0xAE08"
+        },
+        {
+          "start_tick": 110,
+          "hold_ticks": 2,
+          "palette_index": 2,
+          "initial_y": 14,
+          "initial_x": 254,
+          "mirror_h": false,
+          "physics_raw_hex": "10 00 00",
+          "sprite_frame_cpu_address": "0xAE08"
+        }
+      ],
+      "commands": [
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA260",
+          "file_offset": "0x014270",
+          "kind": "repeat_begin",
+          "count": 3,
+          "depth": 1,
+          "raw_hex": "e3"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA261",
+          "file_offset": "0x014271",
+          "kind": "set_y_x",
+          "y": 14,
+          "x": 254,
+          "raw_hex": "f1 0e fe"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA264",
+          "file_offset": "0x014274",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADF0",
+          "raw_hex": "8d f0"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA266",
+          "file_offset": "0x014276",
+          "kind": "set_physics",
+          "physics_raw_hex": "26 00 00",
+          "raw_hex": "f7 26 00 00"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA26A",
+          "file_offset": "0x01427A",
+          "kind": "duration",
+          "hold_ticks": 20,
+          "raw_hex": "0a"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA26B",
+          "file_offset": "0x01427B",
+          "kind": "repeat_end",
+          "remaining": 2,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA261",
+          "file_offset": "0x014271",
+          "kind": "set_y_x",
+          "y": 14,
+          "x": 254,
+          "raw_hex": "f1 0e fe"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA264",
+          "file_offset": "0x014274",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADF0",
+          "raw_hex": "8d f0"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA266",
+          "file_offset": "0x014276",
+          "kind": "set_physics",
+          "physics_raw_hex": "26 00 00",
+          "raw_hex": "f7 26 00 00"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA26A",
+          "file_offset": "0x01427A",
+          "kind": "duration",
+          "hold_ticks": 20,
+          "raw_hex": "0a"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA26B",
+          "file_offset": "0x01427B",
+          "kind": "repeat_end",
+          "remaining": 1,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA261",
+          "file_offset": "0x014271",
+          "kind": "set_y_x",
+          "y": 14,
+          "x": 254,
+          "raw_hex": "f1 0e fe"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA264",
+          "file_offset": "0x014274",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADF0",
+          "raw_hex": "8d f0"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA266",
+          "file_offset": "0x014276",
+          "kind": "set_physics",
+          "physics_raw_hex": "26 00 00",
+          "raw_hex": "f7 26 00 00"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA26A",
+          "file_offset": "0x01427A",
+          "kind": "duration",
+          "hold_ticks": 20,
+          "raw_hex": "0a"
+        },
+        {
+          "at_relative_tick": 60,
+          "cpu_address": "0xA26B",
+          "file_offset": "0x01427B",
+          "kind": "repeat_end",
+          "remaining": 0,
+          "depth": 0,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 60,
+          "cpu_address": "0xA26C",
+          "file_offset": "0x01427C",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 60,
+          "cpu_address": "0xA270",
+          "file_offset": "0x014280",
+          "kind": "repeat_begin",
+          "count": 6,
+          "depth": 1,
+          "raw_hex": "e6"
+        },
+        {
+          "at_relative_tick": 60,
+          "cpu_address": "0xA271",
+          "file_offset": "0x014281",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE12",
+          "raw_hex": "8e 12"
+        },
+        {
+          "at_relative_tick": 60,
+          "cpu_address": "0xA273",
+          "file_offset": "0x014283",
+          "kind": "set_physics",
+          "physics_raw_hex": "e0 00 00",
+          "raw_hex": "f7 e0 00 00"
+        },
+        {
+          "at_relative_tick": 60,
+          "cpu_address": "0xA277",
+          "file_offset": "0x014287",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 62,
+          "cpu_address": "0xA278",
+          "file_offset": "0x014288",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE29",
+          "raw_hex": "8e 29"
+        },
+        {
+          "at_relative_tick": 62,
+          "cpu_address": "0xA27A",
+          "file_offset": "0x01428A",
+          "kind": "set_physics",
+          "physics_raw_hex": "20 00 00",
+          "raw_hex": "f7 20 00 00"
+        },
+        {
+          "at_relative_tick": 62,
+          "cpu_address": "0xA27E",
+          "file_offset": "0x01428E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 64,
+          "cpu_address": "0xA27F",
+          "file_offset": "0x01428F",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE38",
+          "raw_hex": "8e 38"
+        },
+        {
+          "at_relative_tick": 64,
+          "cpu_address": "0xA281",
+          "file_offset": "0x014291",
+          "kind": "set_physics",
+          "physics_raw_hex": "e0 00 00",
+          "raw_hex": "f7 e0 00 00"
+        },
+        {
+          "at_relative_tick": 64,
+          "cpu_address": "0xA285",
+          "file_offset": "0x014295",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 66,
+          "cpu_address": "0xA286",
+          "file_offset": "0x014296",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE4C",
+          "raw_hex": "8e 4c"
+        },
+        {
+          "at_relative_tick": 66,
+          "cpu_address": "0xA288",
+          "file_offset": "0x014298",
+          "kind": "set_physics",
+          "physics_raw_hex": "20 00 00",
+          "raw_hex": "f7 20 00 00"
+        },
+        {
+          "at_relative_tick": 66,
+          "cpu_address": "0xA28C",
+          "file_offset": "0x01429C",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 68,
+          "cpu_address": "0xA28D",
+          "file_offset": "0x01429D",
+          "kind": "repeat_end",
+          "remaining": 5,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 68,
+          "cpu_address": "0xA271",
+          "file_offset": "0x014281",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE12",
+          "raw_hex": "8e 12"
+        },
+        {
+          "at_relative_tick": 68,
+          "cpu_address": "0xA273",
+          "file_offset": "0x014283",
+          "kind": "set_physics",
+          "physics_raw_hex": "e0 00 00",
+          "raw_hex": "f7 e0 00 00"
+        },
+        {
+          "at_relative_tick": 68,
+          "cpu_address": "0xA277",
+          "file_offset": "0x014287",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 70,
+          "cpu_address": "0xA278",
+          "file_offset": "0x014288",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE29",
+          "raw_hex": "8e 29"
+        },
+        {
+          "at_relative_tick": 70,
+          "cpu_address": "0xA27A",
+          "file_offset": "0x01428A",
+          "kind": "set_physics",
+          "physics_raw_hex": "20 00 00",
+          "raw_hex": "f7 20 00 00"
+        },
+        {
+          "at_relative_tick": 70,
+          "cpu_address": "0xA27E",
+          "file_offset": "0x01428E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 72,
+          "cpu_address": "0xA27F",
+          "file_offset": "0x01428F",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE38",
+          "raw_hex": "8e 38"
+        },
+        {
+          "at_relative_tick": 72,
+          "cpu_address": "0xA281",
+          "file_offset": "0x014291",
+          "kind": "set_physics",
+          "physics_raw_hex": "e0 00 00",
+          "raw_hex": "f7 e0 00 00"
+        },
+        {
+          "at_relative_tick": 72,
+          "cpu_address": "0xA285",
+          "file_offset": "0x014295",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 74,
+          "cpu_address": "0xA286",
+          "file_offset": "0x014296",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE4C",
+          "raw_hex": "8e 4c"
+        },
+        {
+          "at_relative_tick": 74,
+          "cpu_address": "0xA288",
+          "file_offset": "0x014298",
+          "kind": "set_physics",
+          "physics_raw_hex": "20 00 00",
+          "raw_hex": "f7 20 00 00"
+        },
+        {
+          "at_relative_tick": 74,
+          "cpu_address": "0xA28C",
+          "file_offset": "0x01429C",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 76,
+          "cpu_address": "0xA28D",
+          "file_offset": "0x01429D",
+          "kind": "repeat_end",
+          "remaining": 4,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 76,
+          "cpu_address": "0xA271",
+          "file_offset": "0x014281",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE12",
+          "raw_hex": "8e 12"
+        },
+        {
+          "at_relative_tick": 76,
+          "cpu_address": "0xA273",
+          "file_offset": "0x014283",
+          "kind": "set_physics",
+          "physics_raw_hex": "e0 00 00",
+          "raw_hex": "f7 e0 00 00"
+        },
+        {
+          "at_relative_tick": 76,
+          "cpu_address": "0xA277",
+          "file_offset": "0x014287",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 78,
+          "cpu_address": "0xA278",
+          "file_offset": "0x014288",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE29",
+          "raw_hex": "8e 29"
+        },
+        {
+          "at_relative_tick": 78,
+          "cpu_address": "0xA27A",
+          "file_offset": "0x01428A",
+          "kind": "set_physics",
+          "physics_raw_hex": "20 00 00",
+          "raw_hex": "f7 20 00 00"
+        },
+        {
+          "at_relative_tick": 78,
+          "cpu_address": "0xA27E",
+          "file_offset": "0x01428E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 80,
+          "cpu_address": "0xA27F",
+          "file_offset": "0x01428F",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE38",
+          "raw_hex": "8e 38"
+        },
+        {
+          "at_relative_tick": 80,
+          "cpu_address": "0xA281",
+          "file_offset": "0x014291",
+          "kind": "set_physics",
+          "physics_raw_hex": "e0 00 00",
+          "raw_hex": "f7 e0 00 00"
+        },
+        {
+          "at_relative_tick": 80,
+          "cpu_address": "0xA285",
+          "file_offset": "0x014295",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 82,
+          "cpu_address": "0xA286",
+          "file_offset": "0x014296",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE4C",
+          "raw_hex": "8e 4c"
+        },
+        {
+          "at_relative_tick": 82,
+          "cpu_address": "0xA288",
+          "file_offset": "0x014298",
+          "kind": "set_physics",
+          "physics_raw_hex": "20 00 00",
+          "raw_hex": "f7 20 00 00"
+        },
+        {
+          "at_relative_tick": 82,
+          "cpu_address": "0xA28C",
+          "file_offset": "0x01429C",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 84,
+          "cpu_address": "0xA28D",
+          "file_offset": "0x01429D",
+          "kind": "repeat_end",
+          "remaining": 3,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 84,
+          "cpu_address": "0xA271",
+          "file_offset": "0x014281",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE12",
+          "raw_hex": "8e 12"
+        },
+        {
+          "at_relative_tick": 84,
+          "cpu_address": "0xA273",
+          "file_offset": "0x014283",
+          "kind": "set_physics",
+          "physics_raw_hex": "e0 00 00",
+          "raw_hex": "f7 e0 00 00"
+        },
+        {
+          "at_relative_tick": 84,
+          "cpu_address": "0xA277",
+          "file_offset": "0x014287",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 86,
+          "cpu_address": "0xA278",
+          "file_offset": "0x014288",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE29",
+          "raw_hex": "8e 29"
+        },
+        {
+          "at_relative_tick": 86,
+          "cpu_address": "0xA27A",
+          "file_offset": "0x01428A",
+          "kind": "set_physics",
+          "physics_raw_hex": "20 00 00",
+          "raw_hex": "f7 20 00 00"
+        },
+        {
+          "at_relative_tick": 86,
+          "cpu_address": "0xA27E",
+          "file_offset": "0x01428E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 88,
+          "cpu_address": "0xA27F",
+          "file_offset": "0x01428F",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE38",
+          "raw_hex": "8e 38"
+        },
+        {
+          "at_relative_tick": 88,
+          "cpu_address": "0xA281",
+          "file_offset": "0x014291",
+          "kind": "set_physics",
+          "physics_raw_hex": "e0 00 00",
+          "raw_hex": "f7 e0 00 00"
+        },
+        {
+          "at_relative_tick": 88,
+          "cpu_address": "0xA285",
+          "file_offset": "0x014295",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 90,
+          "cpu_address": "0xA286",
+          "file_offset": "0x014296",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE4C",
+          "raw_hex": "8e 4c"
+        },
+        {
+          "at_relative_tick": 90,
+          "cpu_address": "0xA288",
+          "file_offset": "0x014298",
+          "kind": "set_physics",
+          "physics_raw_hex": "20 00 00",
+          "raw_hex": "f7 20 00 00"
+        },
+        {
+          "at_relative_tick": 90,
+          "cpu_address": "0xA28C",
+          "file_offset": "0x01429C",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 92,
+          "cpu_address": "0xA28D",
+          "file_offset": "0x01429D",
+          "kind": "repeat_end",
+          "remaining": 2,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 92,
+          "cpu_address": "0xA271",
+          "file_offset": "0x014281",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE12",
+          "raw_hex": "8e 12"
+        },
+        {
+          "at_relative_tick": 92,
+          "cpu_address": "0xA273",
+          "file_offset": "0x014283",
+          "kind": "set_physics",
+          "physics_raw_hex": "e0 00 00",
+          "raw_hex": "f7 e0 00 00"
+        },
+        {
+          "at_relative_tick": 92,
+          "cpu_address": "0xA277",
+          "file_offset": "0x014287",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 94,
+          "cpu_address": "0xA278",
+          "file_offset": "0x014288",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE29",
+          "raw_hex": "8e 29"
+        },
+        {
+          "at_relative_tick": 94,
+          "cpu_address": "0xA27A",
+          "file_offset": "0x01428A",
+          "kind": "set_physics",
+          "physics_raw_hex": "20 00 00",
+          "raw_hex": "f7 20 00 00"
+        },
+        {
+          "at_relative_tick": 94,
+          "cpu_address": "0xA27E",
+          "file_offset": "0x01428E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 96,
+          "cpu_address": "0xA27F",
+          "file_offset": "0x01428F",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE38",
+          "raw_hex": "8e 38"
+        },
+        {
+          "at_relative_tick": 96,
+          "cpu_address": "0xA281",
+          "file_offset": "0x014291",
+          "kind": "set_physics",
+          "physics_raw_hex": "e0 00 00",
+          "raw_hex": "f7 e0 00 00"
+        },
+        {
+          "at_relative_tick": 96,
+          "cpu_address": "0xA285",
+          "file_offset": "0x014295",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 98,
+          "cpu_address": "0xA286",
+          "file_offset": "0x014296",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE4C",
+          "raw_hex": "8e 4c"
+        },
+        {
+          "at_relative_tick": 98,
+          "cpu_address": "0xA288",
+          "file_offset": "0x014298",
+          "kind": "set_physics",
+          "physics_raw_hex": "20 00 00",
+          "raw_hex": "f7 20 00 00"
+        },
+        {
+          "at_relative_tick": 98,
+          "cpu_address": "0xA28C",
+          "file_offset": "0x01429C",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 100,
+          "cpu_address": "0xA28D",
+          "file_offset": "0x01429D",
+          "kind": "repeat_end",
+          "remaining": 1,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 100,
+          "cpu_address": "0xA271",
+          "file_offset": "0x014281",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE12",
+          "raw_hex": "8e 12"
+        },
+        {
+          "at_relative_tick": 100,
+          "cpu_address": "0xA273",
+          "file_offset": "0x014283",
+          "kind": "set_physics",
+          "physics_raw_hex": "e0 00 00",
+          "raw_hex": "f7 e0 00 00"
+        },
+        {
+          "at_relative_tick": 100,
+          "cpu_address": "0xA277",
+          "file_offset": "0x014287",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 102,
+          "cpu_address": "0xA278",
+          "file_offset": "0x014288",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE29",
+          "raw_hex": "8e 29"
+        },
+        {
+          "at_relative_tick": 102,
+          "cpu_address": "0xA27A",
+          "file_offset": "0x01428A",
+          "kind": "set_physics",
+          "physics_raw_hex": "20 00 00",
+          "raw_hex": "f7 20 00 00"
+        },
+        {
+          "at_relative_tick": 102,
+          "cpu_address": "0xA27E",
+          "file_offset": "0x01428E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 104,
+          "cpu_address": "0xA27F",
+          "file_offset": "0x01428F",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE38",
+          "raw_hex": "8e 38"
+        },
+        {
+          "at_relative_tick": 104,
+          "cpu_address": "0xA281",
+          "file_offset": "0x014291",
+          "kind": "set_physics",
+          "physics_raw_hex": "e0 00 00",
+          "raw_hex": "f7 e0 00 00"
+        },
+        {
+          "at_relative_tick": 104,
+          "cpu_address": "0xA285",
+          "file_offset": "0x014295",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 106,
+          "cpu_address": "0xA286",
+          "file_offset": "0x014296",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE4C",
+          "raw_hex": "8e 4c"
+        },
+        {
+          "at_relative_tick": 106,
+          "cpu_address": "0xA288",
+          "file_offset": "0x014298",
+          "kind": "set_physics",
+          "physics_raw_hex": "20 00 00",
+          "raw_hex": "f7 20 00 00"
+        },
+        {
+          "at_relative_tick": 106,
+          "cpu_address": "0xA28C",
+          "file_offset": "0x01429C",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 108,
+          "cpu_address": "0xA28D",
+          "file_offset": "0x01429D",
+          "kind": "repeat_end",
+          "remaining": 0,
+          "depth": 0,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 108,
+          "cpu_address": "0xA28E",
+          "file_offset": "0x01429E",
+          "kind": "set_physics",
+          "physics_raw_hex": "f0 00 00",
+          "raw_hex": "f7 f0 00 00"
+        },
+        {
+          "at_relative_tick": 108,
+          "cpu_address": "0xA292",
+          "file_offset": "0x0142A2",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE08",
+          "raw_hex": "8e 08"
+        },
+        {
+          "at_relative_tick": 108,
+          "cpu_address": "0xA294",
+          "file_offset": "0x0142A4",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 110,
+          "cpu_address": "0xA295",
+          "file_offset": "0x0142A5",
+          "kind": "set_physics",
+          "physics_raw_hex": "10 00 00",
+          "raw_hex": "f7 10 00 00"
+        },
+        {
+          "at_relative_tick": 110,
+          "cpu_address": "0xA299",
+          "file_offset": "0x0142A9",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE08",
+          "raw_hex": "8e 08"
+        },
+        {
+          "at_relative_tick": 110,
+          "cpu_address": "0xA29B",
+          "file_offset": "0x0142AB",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 112,
+          "cpu_address": "0xA29C",
+          "file_offset": "0x0142AC",
+          "kind": "jump",
+          "target_cpu_address": "0xA28E",
+          "raw_hex": "a2 8e"
+        }
+      ],
+      "caution": "Ticks follow ROM animation wait counters. Scene call timing, movement integration, palette effects and OAM clipping need separate reconstruction."
+    },
+    {
+      "animation_id": "0x84",
+      "prg_bank": 10,
+      "start_cpu_address": "0xA2CB",
+      "terminal": {
+        "kind": "repeat_cycle",
+        "at_relative_tick": 12,
+        "cycle_start_tick": 0,
+        "cycle_length_ticks": 12,
+        "cycle_start_beat_index": 0,
+        "cpu_address": "0xA2CC"
+      },
+      "beats": [
+        {
+          "start_tick": 0,
+          "hold_ticks": 2,
+          "palette_index": 0,
+          "initial_y": 34,
+          "initial_x": 56,
+          "mirror_h": false,
+          "physics_raw_hex": null,
+          "sprite_frame_cpu_address": "0xAE9E"
+        },
+        {
+          "start_tick": 2,
+          "hold_ticks": 2,
+          "palette_index": 0,
+          "initial_y": 34,
+          "initial_x": 62,
+          "mirror_h": true,
+          "physics_raw_hex": null,
+          "sprite_frame_cpu_address": "0xAEAE"
+        },
+        {
+          "start_tick": 4,
+          "hold_ticks": 2,
+          "palette_index": 0,
+          "initial_y": 34,
+          "initial_x": 56,
+          "mirror_h": false,
+          "physics_raw_hex": null,
+          "sprite_frame_cpu_address": "0xB311"
+        },
+        {
+          "start_tick": 6,
+          "hold_ticks": 2,
+          "palette_index": 0,
+          "initial_y": 34,
+          "initial_x": 62,
+          "mirror_h": true,
+          "physics_raw_hex": null,
+          "sprite_frame_cpu_address": "0xB325"
+        },
+        {
+          "start_tick": 8,
+          "hold_ticks": 2,
+          "palette_index": 0,
+          "initial_y": 34,
+          "initial_x": 56,
+          "mirror_h": false,
+          "physics_raw_hex": null,
+          "sprite_frame_cpu_address": "0xB339"
+        },
+        {
+          "start_tick": 10,
+          "hold_ticks": 2,
+          "palette_index": 0,
+          "initial_y": 34,
+          "initial_x": 62,
+          "mirror_h": true,
+          "physics_raw_hex": null,
+          "sprite_frame_cpu_address": "0xADB8"
+        }
+      ],
+      "commands": [
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA2CC",
+          "file_offset": "0x0142DC",
+          "kind": "set_y_x",
+          "y": 34,
+          "x": 56,
+          "raw_hex": "f1 22 38"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA2CF",
+          "file_offset": "0x0142DF",
+          "kind": "mirror_off",
+          "raw_hex": "f6"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA2D0",
+          "file_offset": "0x0142E0",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAE9E",
+          "raw_hex": "8e 9e"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA2D2",
+          "file_offset": "0x0142E2",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 2,
+          "cpu_address": "0xA2D3",
+          "file_offset": "0x0142E3",
+          "kind": "set_y_x",
+          "y": 34,
+          "x": 62,
+          "raw_hex": "f1 22 3e"
+        },
+        {
+          "at_relative_tick": 2,
+          "cpu_address": "0xA2D6",
+          "file_offset": "0x0142E6",
+          "kind": "mirror_on",
+          "raw_hex": "f5"
+        },
+        {
+          "at_relative_tick": 2,
+          "cpu_address": "0xA2D7",
+          "file_offset": "0x0142E7",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xAEAE",
+          "raw_hex": "8e ae"
+        },
+        {
+          "at_relative_tick": 2,
+          "cpu_address": "0xA2D9",
+          "file_offset": "0x0142E9",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 4,
+          "cpu_address": "0xA2DA",
+          "file_offset": "0x0142EA",
+          "kind": "set_y_x",
+          "y": 34,
+          "x": 56,
+          "raw_hex": "f1 22 38"
+        },
+        {
+          "at_relative_tick": 4,
+          "cpu_address": "0xA2DD",
+          "file_offset": "0x0142ED",
+          "kind": "mirror_off",
+          "raw_hex": "f6"
+        },
+        {
+          "at_relative_tick": 4,
+          "cpu_address": "0xA2DE",
+          "file_offset": "0x0142EE",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB311",
+          "raw_hex": "93 11"
+        },
+        {
+          "at_relative_tick": 4,
+          "cpu_address": "0xA2E0",
+          "file_offset": "0x0142F0",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 6,
+          "cpu_address": "0xA2E1",
+          "file_offset": "0x0142F1",
+          "kind": "set_y_x",
+          "y": 34,
+          "x": 62,
+          "raw_hex": "f1 22 3e"
+        },
+        {
+          "at_relative_tick": 6,
+          "cpu_address": "0xA2E4",
+          "file_offset": "0x0142F4",
+          "kind": "mirror_on",
+          "raw_hex": "f5"
+        },
+        {
+          "at_relative_tick": 6,
+          "cpu_address": "0xA2E5",
+          "file_offset": "0x0142F5",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB325",
+          "raw_hex": "93 25"
+        },
+        {
+          "at_relative_tick": 6,
+          "cpu_address": "0xA2E7",
+          "file_offset": "0x0142F7",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA2E8",
+          "file_offset": "0x0142F8",
+          "kind": "set_y_x",
+          "y": 34,
+          "x": 56,
+          "raw_hex": "f1 22 38"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA2EB",
+          "file_offset": "0x0142FB",
+          "kind": "mirror_off",
+          "raw_hex": "f6"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA2EC",
+          "file_offset": "0x0142FC",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB339",
+          "raw_hex": "93 39"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA2EE",
+          "file_offset": "0x0142FE",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 10,
+          "cpu_address": "0xA2EF",
+          "file_offset": "0x0142FF",
+          "kind": "set_y_x",
+          "y": 34,
+          "x": 62,
+          "raw_hex": "f1 22 3e"
+        },
+        {
+          "at_relative_tick": 10,
+          "cpu_address": "0xA2F2",
+          "file_offset": "0x014302",
+          "kind": "mirror_on",
+          "raw_hex": "f5"
+        },
+        {
+          "at_relative_tick": 10,
+          "cpu_address": "0xA2F3",
+          "file_offset": "0x014303",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADB8",
+          "raw_hex": "8d b8"
+        },
+        {
+          "at_relative_tick": 10,
+          "cpu_address": "0xA2F5",
+          "file_offset": "0x014305",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 12,
+          "cpu_address": "0xA2F6",
+          "file_offset": "0x014306",
+          "kind": "jump",
+          "target_cpu_address": "0xA2CC",
+          "raw_hex": "a2 cc"
+        }
+      ],
+      "caution": "Ticks follow ROM animation wait counters. Scene call timing, movement integration, palette effects and OAM clipping need separate reconstruction."
+    },
+    {
+      "animation_id": "0x8D",
+      "prg_bank": 10,
+      "start_cpu_address": "0xA3D3",
+      "terminal": {
+        "kind": "exit",
+        "at_relative_tick": 0,
+        "cpu_address": "0xA3D9",
+        "file_offset": "0x0143E9"
+      },
+      "beats": [],
+      "commands": [
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA3D4",
+          "file_offset": "0x0143E4",
+          "kind": "set_y_x",
+          "y": 48,
+          "x": 40,
+          "raw_hex": "f1 30 28"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA3D7",
+          "file_offset": "0x0143E7",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB15B",
+          "raw_hex": "91 5b"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA3D9",
+          "file_offset": "0x0143E9",
+          "kind": "exit",
+          "raw_hex": "ff"
+        }
+      ],
+      "caution": "Ticks follow ROM animation wait counters. Scene call timing, movement integration, palette effects and OAM clipping need separate reconstruction."
+    },
+    {
+      "animation_id": "0xA2",
+      "prg_bank": 10,
+      "start_cpu_address": "0xA50E",
+      "terminal": {
+        "kind": "exit",
+        "at_relative_tick": 48,
+        "cpu_address": "0xA529",
+        "file_offset": "0x014539"
+      },
+      "beats": [
+        {
+          "start_tick": 0,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "29 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 2,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 4,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "29 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 6,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 8,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "29 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 10,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 12,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "29 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 14,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 16,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "29 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 18,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 20,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "29 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 22,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 24,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "29 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 26,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 28,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "29 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 30,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 32,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "29 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 34,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 36,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "29 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 38,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 40,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "29 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 42,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 44,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "29 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        },
+        {
+          "start_tick": 46,
+          "hold_ticks": 2,
+          "palette_index": 7,
+          "initial_y": 18,
+          "initial_x": 142,
+          "mirror_h": false,
+          "physics_raw_hex": "00 00 00",
+          "sprite_frame_cpu_address": "0xADD6"
+        }
+      ],
+      "commands": [
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA50F",
+          "file_offset": "0x01451F",
+          "kind": "set_y_x",
+          "y": 18,
+          "x": 142,
+          "raw_hex": "f1 12 8e"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA512",
+          "file_offset": "0x014522",
+          "kind": "repeat_begin",
+          "count": 12,
+          "depth": 1,
+          "raw_hex": "ec"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA513",
+          "file_offset": "0x014523",
+          "kind": "set_physics",
+          "physics_raw_hex": "29 00 00",
+          "raw_hex": "f7 29 00 00"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA517",
+          "file_offset": "0x014527",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADD6",
+          "raw_hex": "8d d6"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA519",
+          "file_offset": "0x014529",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 2,
+          "cpu_address": "0xA51A",
+          "file_offset": "0x01452A",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 2,
+          "cpu_address": "0xA51E",
+          "file_offset": "0x01452E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 4,
+          "cpu_address": "0xA51F",
+          "file_offset": "0x01452F",
+          "kind": "repeat_end",
+          "remaining": 11,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 4,
+          "cpu_address": "0xA513",
+          "file_offset": "0x014523",
+          "kind": "set_physics",
+          "physics_raw_hex": "29 00 00",
+          "raw_hex": "f7 29 00 00"
+        },
+        {
+          "at_relative_tick": 4,
+          "cpu_address": "0xA517",
+          "file_offset": "0x014527",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADD6",
+          "raw_hex": "8d d6"
+        },
+        {
+          "at_relative_tick": 4,
+          "cpu_address": "0xA519",
+          "file_offset": "0x014529",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 6,
+          "cpu_address": "0xA51A",
+          "file_offset": "0x01452A",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 6,
+          "cpu_address": "0xA51E",
+          "file_offset": "0x01452E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA51F",
+          "file_offset": "0x01452F",
+          "kind": "repeat_end",
+          "remaining": 10,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA513",
+          "file_offset": "0x014523",
+          "kind": "set_physics",
+          "physics_raw_hex": "29 00 00",
+          "raw_hex": "f7 29 00 00"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA517",
+          "file_offset": "0x014527",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADD6",
+          "raw_hex": "8d d6"
+        },
+        {
+          "at_relative_tick": 8,
+          "cpu_address": "0xA519",
+          "file_offset": "0x014529",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 10,
+          "cpu_address": "0xA51A",
+          "file_offset": "0x01452A",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 10,
+          "cpu_address": "0xA51E",
+          "file_offset": "0x01452E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 12,
+          "cpu_address": "0xA51F",
+          "file_offset": "0x01452F",
+          "kind": "repeat_end",
+          "remaining": 9,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 12,
+          "cpu_address": "0xA513",
+          "file_offset": "0x014523",
+          "kind": "set_physics",
+          "physics_raw_hex": "29 00 00",
+          "raw_hex": "f7 29 00 00"
+        },
+        {
+          "at_relative_tick": 12,
+          "cpu_address": "0xA517",
+          "file_offset": "0x014527",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADD6",
+          "raw_hex": "8d d6"
+        },
+        {
+          "at_relative_tick": 12,
+          "cpu_address": "0xA519",
+          "file_offset": "0x014529",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 14,
+          "cpu_address": "0xA51A",
+          "file_offset": "0x01452A",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 14,
+          "cpu_address": "0xA51E",
+          "file_offset": "0x01452E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 16,
+          "cpu_address": "0xA51F",
+          "file_offset": "0x01452F",
+          "kind": "repeat_end",
+          "remaining": 8,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 16,
+          "cpu_address": "0xA513",
+          "file_offset": "0x014523",
+          "kind": "set_physics",
+          "physics_raw_hex": "29 00 00",
+          "raw_hex": "f7 29 00 00"
+        },
+        {
+          "at_relative_tick": 16,
+          "cpu_address": "0xA517",
+          "file_offset": "0x014527",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADD6",
+          "raw_hex": "8d d6"
+        },
+        {
+          "at_relative_tick": 16,
+          "cpu_address": "0xA519",
+          "file_offset": "0x014529",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 18,
+          "cpu_address": "0xA51A",
+          "file_offset": "0x01452A",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 18,
+          "cpu_address": "0xA51E",
+          "file_offset": "0x01452E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA51F",
+          "file_offset": "0x01452F",
+          "kind": "repeat_end",
+          "remaining": 7,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA513",
+          "file_offset": "0x014523",
+          "kind": "set_physics",
+          "physics_raw_hex": "29 00 00",
+          "raw_hex": "f7 29 00 00"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA517",
+          "file_offset": "0x014527",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADD6",
+          "raw_hex": "8d d6"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA519",
+          "file_offset": "0x014529",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 22,
+          "cpu_address": "0xA51A",
+          "file_offset": "0x01452A",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 22,
+          "cpu_address": "0xA51E",
+          "file_offset": "0x01452E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 24,
+          "cpu_address": "0xA51F",
+          "file_offset": "0x01452F",
+          "kind": "repeat_end",
+          "remaining": 6,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 24,
+          "cpu_address": "0xA513",
+          "file_offset": "0x014523",
+          "kind": "set_physics",
+          "physics_raw_hex": "29 00 00",
+          "raw_hex": "f7 29 00 00"
+        },
+        {
+          "at_relative_tick": 24,
+          "cpu_address": "0xA517",
+          "file_offset": "0x014527",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADD6",
+          "raw_hex": "8d d6"
+        },
+        {
+          "at_relative_tick": 24,
+          "cpu_address": "0xA519",
+          "file_offset": "0x014529",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 26,
+          "cpu_address": "0xA51A",
+          "file_offset": "0x01452A",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 26,
+          "cpu_address": "0xA51E",
+          "file_offset": "0x01452E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 28,
+          "cpu_address": "0xA51F",
+          "file_offset": "0x01452F",
+          "kind": "repeat_end",
+          "remaining": 5,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 28,
+          "cpu_address": "0xA513",
+          "file_offset": "0x014523",
+          "kind": "set_physics",
+          "physics_raw_hex": "29 00 00",
+          "raw_hex": "f7 29 00 00"
+        },
+        {
+          "at_relative_tick": 28,
+          "cpu_address": "0xA517",
+          "file_offset": "0x014527",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADD6",
+          "raw_hex": "8d d6"
+        },
+        {
+          "at_relative_tick": 28,
+          "cpu_address": "0xA519",
+          "file_offset": "0x014529",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 30,
+          "cpu_address": "0xA51A",
+          "file_offset": "0x01452A",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 30,
+          "cpu_address": "0xA51E",
+          "file_offset": "0x01452E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 32,
+          "cpu_address": "0xA51F",
+          "file_offset": "0x01452F",
+          "kind": "repeat_end",
+          "remaining": 4,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 32,
+          "cpu_address": "0xA513",
+          "file_offset": "0x014523",
+          "kind": "set_physics",
+          "physics_raw_hex": "29 00 00",
+          "raw_hex": "f7 29 00 00"
+        },
+        {
+          "at_relative_tick": 32,
+          "cpu_address": "0xA517",
+          "file_offset": "0x014527",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADD6",
+          "raw_hex": "8d d6"
+        },
+        {
+          "at_relative_tick": 32,
+          "cpu_address": "0xA519",
+          "file_offset": "0x014529",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 34,
+          "cpu_address": "0xA51A",
+          "file_offset": "0x01452A",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 34,
+          "cpu_address": "0xA51E",
+          "file_offset": "0x01452E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 36,
+          "cpu_address": "0xA51F",
+          "file_offset": "0x01452F",
+          "kind": "repeat_end",
+          "remaining": 3,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 36,
+          "cpu_address": "0xA513",
+          "file_offset": "0x014523",
+          "kind": "set_physics",
+          "physics_raw_hex": "29 00 00",
+          "raw_hex": "f7 29 00 00"
+        },
+        {
+          "at_relative_tick": 36,
+          "cpu_address": "0xA517",
+          "file_offset": "0x014527",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADD6",
+          "raw_hex": "8d d6"
+        },
+        {
+          "at_relative_tick": 36,
+          "cpu_address": "0xA519",
+          "file_offset": "0x014529",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 38,
+          "cpu_address": "0xA51A",
+          "file_offset": "0x01452A",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 38,
+          "cpu_address": "0xA51E",
+          "file_offset": "0x01452E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA51F",
+          "file_offset": "0x01452F",
+          "kind": "repeat_end",
+          "remaining": 2,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA513",
+          "file_offset": "0x014523",
+          "kind": "set_physics",
+          "physics_raw_hex": "29 00 00",
+          "raw_hex": "f7 29 00 00"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA517",
+          "file_offset": "0x014527",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADD6",
+          "raw_hex": "8d d6"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA519",
+          "file_offset": "0x014529",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 42,
+          "cpu_address": "0xA51A",
+          "file_offset": "0x01452A",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 42,
+          "cpu_address": "0xA51E",
+          "file_offset": "0x01452E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 44,
+          "cpu_address": "0xA51F",
+          "file_offset": "0x01452F",
+          "kind": "repeat_end",
+          "remaining": 1,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 44,
+          "cpu_address": "0xA513",
+          "file_offset": "0x014523",
+          "kind": "set_physics",
+          "physics_raw_hex": "29 00 00",
+          "raw_hex": "f7 29 00 00"
+        },
+        {
+          "at_relative_tick": 44,
+          "cpu_address": "0xA517",
+          "file_offset": "0x014527",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADD6",
+          "raw_hex": "8d d6"
+        },
+        {
+          "at_relative_tick": 44,
+          "cpu_address": "0xA519",
+          "file_offset": "0x014529",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 46,
+          "cpu_address": "0xA51A",
+          "file_offset": "0x01452A",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 46,
+          "cpu_address": "0xA51E",
+          "file_offset": "0x01452E",
+          "kind": "duration",
+          "hold_ticks": 2,
+          "raw_hex": "01"
+        },
+        {
+          "at_relative_tick": 48,
+          "cpu_address": "0xA51F",
+          "file_offset": "0x01452F",
+          "kind": "repeat_end",
+          "remaining": 0,
+          "depth": 0,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 48,
+          "cpu_address": "0xA520",
+          "file_offset": "0x014530",
+          "kind": "set_physics",
+          "physics_raw_hex": "00 00 00",
+          "raw_hex": "f7 00 00 00"
+        },
+        {
+          "at_relative_tick": 48,
+          "cpu_address": "0xA524",
+          "file_offset": "0x014534",
+          "kind": "set_y_x",
+          "y": 62,
+          "x": 190,
+          "raw_hex": "f1 3e be"
+        },
+        {
+          "at_relative_tick": 48,
+          "cpu_address": "0xA527",
+          "file_offset": "0x014537",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xADD6",
+          "raw_hex": "8d d6"
+        },
+        {
+          "at_relative_tick": 48,
+          "cpu_address": "0xA529",
+          "file_offset": "0x014539",
+          "kind": "exit",
+          "raw_hex": "ff"
+        }
+      ],
+      "caution": "Ticks follow ROM animation wait counters. Scene call timing, movement integration, palette effects and OAM clipping need separate reconstruction."
+    },
+    {
+      "animation_id": "0xC0",
+      "prg_bank": 10,
+      "start_cpu_address": "0xA750",
+      "terminal": {
+        "kind": "exit",
+        "at_relative_tick": 0,
+        "cpu_address": "0xA756",
+        "file_offset": "0x014766"
+      },
+      "beats": [],
+      "commands": [
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA751",
+          "file_offset": "0x014761",
+          "kind": "set_y_x",
+          "y": 4,
+          "x": 4,
+          "raw_hex": "f1 04 04"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA754",
+          "file_offset": "0x014764",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB6EB",
+          "raw_hex": "96 eb"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA756",
+          "file_offset": "0x014766",
+          "kind": "exit",
+          "raw_hex": "ff"
+        }
+      ],
+      "caution": "Ticks follow ROM animation wait counters. Scene call timing, movement integration, palette effects and OAM clipping need separate reconstruction."
+    },
+    {
+      "animation_id": "0xC1",
+      "prg_bank": 10,
+      "start_cpu_address": "0xA757",
+      "terminal": {
+        "kind": "exit",
+        "at_relative_tick": 60,
+        "cpu_address": "0xA764",
+        "file_offset": "0x014774"
+      },
+      "beats": [
+        {
+          "start_tick": 0,
+          "hold_ticks": 20,
+          "palette_index": 2,
+          "initial_y": 4,
+          "initial_x": 252,
+          "mirror_h": false,
+          "physics_raw_hex": "05 00 00",
+          "sprite_frame_cpu_address": "0xB711"
+        },
+        {
+          "start_tick": 20,
+          "hold_ticks": 20,
+          "palette_index": 2,
+          "initial_y": 4,
+          "initial_x": 252,
+          "mirror_h": false,
+          "physics_raw_hex": "05 00 00",
+          "sprite_frame_cpu_address": "0xB711"
+        },
+        {
+          "start_tick": 40,
+          "hold_ticks": 20,
+          "palette_index": 2,
+          "initial_y": 4,
+          "initial_x": 252,
+          "mirror_h": false,
+          "physics_raw_hex": "05 00 00",
+          "sprite_frame_cpu_address": "0xB711"
+        }
+      ],
+      "commands": [
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA758",
+          "file_offset": "0x014768",
+          "kind": "repeat_begin",
+          "count": 3,
+          "depth": 1,
+          "raw_hex": "e3"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA759",
+          "file_offset": "0x014769",
+          "kind": "set_y_x",
+          "y": 4,
+          "x": 252,
+          "raw_hex": "f1 04 fc"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA75C",
+          "file_offset": "0x01476C",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB711",
+          "raw_hex": "97 11"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA75E",
+          "file_offset": "0x01476E",
+          "kind": "set_physics",
+          "physics_raw_hex": "05 00 00",
+          "raw_hex": "f7 05 00 00"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA762",
+          "file_offset": "0x014772",
+          "kind": "duration",
+          "hold_ticks": 20,
+          "raw_hex": "0a"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA763",
+          "file_offset": "0x014773",
+          "kind": "repeat_end",
+          "remaining": 2,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA759",
+          "file_offset": "0x014769",
+          "kind": "set_y_x",
+          "y": 4,
+          "x": 252,
+          "raw_hex": "f1 04 fc"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA75C",
+          "file_offset": "0x01476C",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB711",
+          "raw_hex": "97 11"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA75E",
+          "file_offset": "0x01476E",
+          "kind": "set_physics",
+          "physics_raw_hex": "05 00 00",
+          "raw_hex": "f7 05 00 00"
+        },
+        {
+          "at_relative_tick": 20,
+          "cpu_address": "0xA762",
+          "file_offset": "0x014772",
+          "kind": "duration",
+          "hold_ticks": 20,
+          "raw_hex": "0a"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA763",
+          "file_offset": "0x014773",
+          "kind": "repeat_end",
+          "remaining": 1,
+          "depth": 1,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA759",
+          "file_offset": "0x014769",
+          "kind": "set_y_x",
+          "y": 4,
+          "x": 252,
+          "raw_hex": "f1 04 fc"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA75C",
+          "file_offset": "0x01476C",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xB711",
+          "raw_hex": "97 11"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA75E",
+          "file_offset": "0x01476E",
+          "kind": "set_physics",
+          "physics_raw_hex": "05 00 00",
+          "raw_hex": "f7 05 00 00"
+        },
+        {
+          "at_relative_tick": 40,
+          "cpu_address": "0xA762",
+          "file_offset": "0x014772",
+          "kind": "duration",
+          "hold_ticks": 20,
+          "raw_hex": "0a"
+        },
+        {
+          "at_relative_tick": 60,
+          "cpu_address": "0xA763",
+          "file_offset": "0x014773",
+          "kind": "repeat_end",
+          "remaining": 0,
+          "depth": 0,
+          "raw_hex": "f0"
+        },
+        {
+          "at_relative_tick": 60,
+          "cpu_address": "0xA764",
+          "file_offset": "0x014774",
+          "kind": "exit",
+          "raw_hex": "ff"
+        }
+      ],
+      "caution": "Ticks follow ROM animation wait counters. Scene call timing, movement integration, palette effects and OAM clipping need separate reconstruction."
+    }
+  ]
+}

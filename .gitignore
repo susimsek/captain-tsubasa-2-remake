@@ -1,0 +1,38 @@
+# Godot-generated editor/import cache
+.godot/
+.DS_Store
+
+# Original ROMs, emulator states, and captured observations
+*.nes
+*.NES
+*.fm2
+*.fcm
+*.sav
+*.srm
+*.state
+*.nsf
+*.NSF
+/reference/diagnostics/
+/reference/*capture*/
+/reference/*probe*/
+/reference/*progress*/
+
+# Superseded capture-based opening prototype; main scene uses ROM-derived runtime.
+/assets/opening/intro/
+/scenes/opening_controller.tscn
+/scripts/opening_controller.gd
+
+# Local export and build output
+/build/
+/dist/
+/export/
+/exports/
+/tools/audio/build/
+
+# Local secrets and temporary files
+.env
+.env.*
+!.env.example
+*.log
+*.tmp
+*.bak

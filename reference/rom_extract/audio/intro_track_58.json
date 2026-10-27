@@ -1,0 +1,139 @@
+{
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "format": "iNES 1.0; offsets are absolute file offsets including the 16-byte iNES header",
+  "track": {
+    "id": "0x58",
+    "name": "intro/opening cue",
+    "prg_bank": "0x0F / disassembly bank label 8F (CPU address $B7AD; the original machine code writes the selected bank through MMC3 register $8001)",
+    "header_cpu_address": "$B7AD",
+    "header_file_offset": "0x01F7BD",
+    "rom_file_start_inclusive": "0x01F7BD",
+    "rom_file_end_inclusive": "0x020001",
+    "channels": [
+      {
+        "id": "04",
+        "rom_file_start_inclusive": "0x01F7CA",
+        "rom_file_end_inclusive": "0x01FACC",
+        "size_bytes": 771,
+        "sha256": "568f6f9527d85e593200f00262ebf0a49e6ccee413c40fba81fccf122aa221d8"
+      },
+      {
+        "id": "05",
+        "rom_file_start_inclusive": "0x01FACD",
+        "rom_file_end_inclusive": "0x01FD6D",
+        "size_bytes": 673,
+        "sha256": "46343136a8b3f83e5a6e0d1ffe1138a7a63a2bd934b805eb18baffd8cb500a4c"
+      },
+      {
+        "id": "06",
+        "rom_file_start_inclusive": "0x01FD6E",
+        "rom_file_end_inclusive": "0x01FF4E",
+        "size_bytes": 481,
+        "sha256": "06a9479c8e567b7393ec7a64f5ee62b7d65048d1172ed41b0c4d3de84344a9f3"
+      },
+      {
+        "id": "07",
+        "rom_file_start_inclusive": "0x01FF4F",
+        "rom_file_end_inclusive": "0x020001",
+        "size_bytes": 179,
+        "sha256": "3ad8ac066ee23d6985d6ce23947a70aa01ad514ac02784f3e551194abb0dba00"
+      }
+    ],
+    "file": {
+      "path": "reference/rom_extract/audio/intro_track_58.bin",
+      "size_bytes": 2117,
+      "sha256": "b2917f192cd4992b4a09ba07e90a27b2c2d912ae75290f72064da7e3c8c25b03"
+    }
+  },
+  "driver": {
+    "entry_cpu_address": "$8000",
+    "entry_file_offset": "0x018010",
+    "entry_symbol_from_byte_verified_disassembly": "sub_0x018010_sound_engine_update",
+    "prg_bank": "0x0C (bank 8C)",
+    "file": {
+      "path": "reference/rom_extract/audio/bank_8c_sound_driver.bin",
+      "size_bytes": 8192,
+      "sha256": "8c5dbc34a2f4ea3e7f6bcc503dcfd032d7cb4474ebba0c6c0af90efffe7c7468"
+    },
+    "note": "This is original 6502 driver code, not a standalone audio waveform. It requires the game's CPU/RAM/APU and MMC3 bank context to execute faithfully. The local disassembly renders the operand symbol as $5115, but the verified 6502 instruction bytes are 8C 01 80: STY $8001."
+  },
+  "music_data_bank": {
+    "prg_bank": "0x0F (bank 8F)",
+    "rom_file_start_inclusive": "0x01E010",
+    "rom_file_end_inclusive": "0x02000F",
+    "file": {
+      "path": "reference/rom_extract/audio/bank_8f_music_data.bin",
+      "size_bytes": 8192,
+      "sha256": "aaa64b798c9ce752ba9188c625a1537a7ae5cd5097cfa06ffd786767ff2be1bf"
+    }
+  },
+  "dpcm_sample_blob": {
+    "rom_file_start_inclusive": "0x03C010",
+    "rom_file_end_inclusive": "0x03C400",
+    "size_bytes": 1009,
+    "byte_verified_lead": "Exact match to DPCM.bin in the local disassembly repository; the target ROM itself is the extraction source.",
+    "file": {
+      "path": "reference/rom_extract/audio/dpcm_sample_blob.bin",
+      "size_bytes": 1009,
+      "sha256": "8dd8281875a73557ef4a0ad3161ea6792e35016392f79a071263f4d745313ef2"
+    },
+    "mapping_note": "The F9/FA/FB driver handlers program DMC $4012/$4013. Their DMC-address-to-ROM-bank mapping on this mapper has not yet been traced, so this source blob is not assigned to those commands as a proven playback mapping."
+  },
+  "nsf_banking_analysis": {
+    "source_cartridge_mapper": 4,
+    "source_prg_layout": "32 x 8 KiB banks; iNES header excluded from bank arithmetic",
+    "nsf_page_size": "4 KiB",
+    "known_page_pairs": [
+      {
+        "source_bank": "0x0C (bank label 8C)",
+        "nsf_page_indices": [
+          24,
+          25
+        ],
+        "source_file_offsets": [
+          "0x018010",
+          "0x019010"
+        ],
+        "original_cpu_windows": [
+          "$8000-$8FFF",
+          "$9000-$9FFF"
+        ]
+      },
+      {
+        "source_bank": "0x0F (bank label 8F)",
+        "nsf_page_indices": [
+          30,
+          31
+        ],
+        "source_file_offsets": [
+          "0x01E010",
+          "0x01F010"
+        ],
+        "original_cpu_windows": [
+          "$A000-$AFFF",
+          "$B000-$BFFF"
+        ]
+      },
+      {
+        "source_bank": "0x1E (DPCM blob's physical PRG bank)",
+        "nsf_page_indices": [
+          60,
+          61
+        ],
+        "source_file_offsets": [
+          "0x03C010",
+          "0x03D010"
+        ],
+        "original_cpu_windows": [
+          "MMC3 mapping to be confirmed"
+        ]
+      }
+    ],
+    "limitation": "The game driver expects MMC3 $8001 bank writes and original RAM/channel initialization. Standard NSF 4 KiB pages are not a drop-in replacement; no init/play wrapper or bank-write translation has been implemented."
+  },
+  "extraction": {
+    "method": "Copied exact byte ranges from the supplied ROM after validating its full-file SHA-256; no emulator capture, WAV, or screenshot is used.",
+    "runtime_note": "These reference extracts are not runtime dependencies. A playback implementation still needs a byte-verified driver/sequence renderer or a pre-render generated from the original driver."
+  }
+}

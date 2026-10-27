@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://bao3dt5x35vth"
+
+[deps]
+
+files=["res://docs/opening-ppu-state-map.raw.translation", "res://docs/opening-ppu-state-map.frames.translation", "res://docs/opening-ppu-state-map.changed.translation", "res://docs/opening-ppu-state-map.changed.translation", "res://docs/opening-ppu-state-map.changed.translation", "res://docs/opening-ppu-state-map.changed.translation", "res://docs/opening-ppu-state-map.changed.translation"]
+
+source_file="res://docs/opening-ppu-state-map.csv"
+dest_files=["res://docs/opening-ppu-state-map.raw.translation", "res://docs/opening-ppu-state-map.frames.translation", "res://docs/opening-ppu-state-map.changed.translation", "res://docs/opening-ppu-state-map.changed.translation", "res://docs/opening-ppu-state-map.changed.translation", "res://docs/opening-ppu-state-map.changed.translation", "res://docs/opening-ppu-state-map.changed.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

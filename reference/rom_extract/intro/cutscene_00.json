@@ -1,0 +1,2773 @@
+{
+  "rom_file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "status": "byte-exact source extract plus a separately verified bounded live dispatch trace; old execution parse withdrawn",
+  "events_semantics": "events below remain a lexical export of the 641-byte pointer span, not an executed event stream; see observed_dispatch_trace and fc_scene_boundary_audit.md",
+  "entry": {
+    "reset_call_file_offset": "0x000035",
+    "reset_call_cpu_address": "0x8025",
+    "reset_call_bytes": "a9 00 20 64 84",
+    "preceding_init_call_file_offset": "0x000030",
+    "preceding_init_call_cpu_address": "0x8020",
+    "preceding_init_call_bytes": "20 a0 9b",
+    "file_0x32_role": "high operand byte 0x9B of preceding JSR $9BA0; not the cutscene dispatch call",
+    "cutscene_dispatch_file_offset": "0x000474",
+    "cutscene_bank_table_file_offset": "0x000AFE",
+    "cutscene_bank_table_hex": "00 03 10 04 20 05 60 06 ff",
+    "cutscene_id": 0,
+    "prg_bank": 3,
+    "pointer_table_file_offset": "0x006010",
+    "cpu_address": "0xA020",
+    "file_offset": "0x006030",
+    "length_bytes": 641,
+    "next_cutscene_cpu_address": "0xA2A1",
+    "pointer_span_note": "The next pointer is another valid entry point, not a proven exclusive execution end. Live dispatch now verifies a FE loop at $A29E back to $A020; the later Start/title handoff ends the captured replay at shared pointer $00E8.",
+    "source_bin": "reference/rom_extract/intro/cutscene_00.bin",
+    "script_sha256": "499ccb62b8b2b9118d7ebfaa6e6b9fce46806cd3b9173b5e1d5d61de21c2a6b7",
+    "terminal_behavior": "Withdrawn: old counted-FC parse claimed FF at $A6DB and treated FE at $A29E as payload. Live cold-start trace dispatches FE at $A29E and jumps to $A020."
+  },
+  "execution_stream": {
+    "prg_bank": 3,
+    "start_cpu_address": "0xA020",
+    "start_file_offset": "0x006030",
+    "end_cpu_exclusive": "0xA6DC",
+    "end_file_exclusive": "0x0066EC",
+    "length_bytes": 1724,
+    "terminator_cpu_address": "0xA6DB",
+    "terminator_file_offset": "0x0066EB",
+    "source_bin": "reference/rom_extract/intro/cutscene_00_execution.bin",
+    "sha256": "6b620e8a888690b2ddd42c1de986a880d3c78d0b264db5db1d0c226166f0cca4",
+    "boundary_method": "Withdrawn counted-FC assumption; not an executed-stream boundary.",
+    "status": "withdrawn historical parse; retained only to preserve old evidence",
+    "withdrawal_reason": "Live bank-0 dispatch maps FC through RTS return word $8836 to handler $8837, then advances to the next script byte. The former FC counted payload premise is false on the captured cold-start path."
+  },
+  "compact_pause_values_file_offset": "0x000AF6",
+  "compact_pause_values_frames": [
+    1,
+    10,
+    20,
+    40,
+    60,
+    80,
+    120,
+    240
+  ],
+  "title_entry": {
+    "start_press_poll_cpu_address": "0x8027",
+    "start_press_poll_file_offset": "0x000037",
+    "sound_stop_command": "0x01",
+    "sound_stop_file_offset": "0x000058",
+    "background_id": "0x17",
+    "background_command_file_offset": "0x00007A",
+    "initial_cursor_ppu_address": "0x220A",
+    "other_cursor_ppu_address": "0x224A",
+    "cursor_tile_id": "0x7F",
+    "title_input_poll_file_offset": "0x0000B7",
+    "title_input_mask": "0x3C",
+    "select_press": "toggle 0x220A <-> 0x224A",
+    "up_press": "set cursor to 0x220A (KICK OFF)",
+    "down_press": "set cursor to 0x224A (CONTINUE)",
+    "confirmation_press": "Start",
+    "a_and_b_press": "ignored by the title-menu button mask",
+    "caution": "Entry and cursor control are from byte-verified ROM bank 0; frame-accurate transition rendering remains to be measured."
+  },
+  "events": [
+    {
+      "kind": "visual_preset",
+      "opcode": "0xE8",
+      "arguments_hex": "01",
+      "file_offset": "0x006030",
+      "cpu_address": "0xA020",
+      "raw_hex": "e8 01"
+    },
+    {
+      "kind": "background_1",
+      "opcode": "0xF9",
+      "arguments_hex": "00",
+      "background_id": "0x00",
+      "file_offset": "0x006032",
+      "cpu_address": "0xA022",
+      "raw_hex": "f9 00"
+    },
+    {
+      "kind": "animations",
+      "opcode": "0xFB",
+      "arguments_hex": "01 8d",
+      "animation_ids": [
+        "0x8D"
+      ],
+      "file_offset": "0x006034",
+      "cpu_address": "0xA024",
+      "raw_hex": "fb 01 8d"
+    },
+    {
+      "kind": "screen_on",
+      "opcode": "0xE9",
+      "arguments_hex": "",
+      "file_offset": "0x006037",
+      "cpu_address": "0xA027",
+      "raw_hex": "e9"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 240,
+      "file_offset": "0x006038",
+      "cpu_address": "0xA028",
+      "raw_hex": "df"
+    },
+    {
+      "kind": "screen_off_clear",
+      "opcode": "0xEA",
+      "arguments_hex": "",
+      "file_offset": "0x006039",
+      "cpu_address": "0xA029",
+      "raw_hex": "ea"
+    },
+    {
+      "kind": "sound_command",
+      "opcode": "0xED",
+      "arguments_hex": "58",
+      "sound_id": "0x58",
+      "file_offset": "0x00603A",
+      "cpu_address": "0xA02A",
+      "raw_hex": "ed 58"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 60,
+      "file_offset": "0x00603C",
+      "cpu_address": "0xA02C",
+      "raw_hex": "dc"
+    },
+    {
+      "kind": "dialog_window",
+      "opcode": "0xF1",
+      "arguments_hex": "01",
+      "file_offset": "0x00603D",
+      "cpu_address": "0xA02D",
+      "raw_hex": "f1 01"
+    },
+    {
+      "kind": "commentator_portrait",
+      "opcode": "0xEC",
+      "arguments_hex": "00",
+      "file_offset": "0x00603F",
+      "cpu_address": "0xA02F",
+      "raw_hex": "ec 00"
+    },
+    {
+      "kind": "background_1",
+      "opcode": "0xF9",
+      "arguments_hex": "01",
+      "background_id": "0x01",
+      "file_offset": "0x006041",
+      "cpu_address": "0xA031",
+      "raw_hex": "f9 01"
+    },
+    {
+      "kind": "animations",
+      "opcode": "0xFB",
+      "arguments_hex": "01 6e",
+      "animation_ids": [
+        "0x6E"
+      ],
+      "file_offset": "0x006043",
+      "cpu_address": "0xA033",
+      "raw_hex": "fb 01 6e"
+    },
+    {
+      "kind": "visual_subroutine",
+      "opcode": "0xF8",
+      "arguments_hex": "0a",
+      "file_offset": "0x006046",
+      "cpu_address": "0xA036",
+      "raw_hex": "f8 0a"
+    },
+    {
+      "kind": "palette_command",
+      "opcode": "0xF3",
+      "arguments_hex": "00",
+      "file_offset": "0x006048",
+      "cpu_address": "0xA038",
+      "raw_hex": "f3 00"
+    },
+    {
+      "kind": "visual_flag",
+      "opcode": "0xF5",
+      "arguments_hex": "00",
+      "file_offset": "0x00604A",
+      "cpu_address": "0xA03A",
+      "raw_hex": "f5 00"
+    },
+    {
+      "kind": "sound_command",
+      "opcode": "0xED",
+      "arguments_hex": "68",
+      "sound_id": "0x68",
+      "file_offset": "0x00604C",
+      "cpu_address": "0xA03C",
+      "raw_hex": "ed 68"
+    },
+    {
+      "kind": "text_speed",
+      "opcode": "0xF2",
+      "arguments_hex": "05",
+      "file_offset": "0x00604E",
+      "cpu_address": "0xA03E",
+      "raw_hex": "f2 05"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "4b 6f 1d 51 72 21 20 55 34 3b 20 23 70 13 1b 20 1a 70 10 0a",
+      "file_offset": "0x006050",
+      "cpu_address": "0xA040",
+      "raw_hex": "4b 6f 1d 51 72 21 20 55 34 3b 20 23 70 13 1b 20 1a 70 10 0a"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x006064",
+      "cpu_address": "0xA054",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "4f 6f 7a 6f 0b 20 01 02 03 20 42 05 7a 0d 1b 20 1a 04 58 7c",
+      "file_offset": "0x006065",
+      "cpu_address": "0xA055",
+      "raw_hex": "4f 6f 7a 6f 0b 20 01 02 03 20 42 05 7a 0d 1b 20 1a 04 58 7c"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x006079",
+      "cpu_address": "0xA069",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "64 6f 67 72 75 20 74 6f 70 20 1d 05 05 6b",
+      "file_offset": "0x00607A",
+      "cpu_address": "0xA06A",
+      "raw_hex": "64 6f 67 72 75 20 74 6f 70 20 1d 05 05 6b"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x006088",
+      "cpu_address": "0xA078",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "6f 72 10 20 03 11 79 69 20 25 63 69 51 72",
+      "file_offset": "0x006089",
+      "cpu_address": "0xA079",
+      "raw_hex": "6f 72 10 20 03 11 79 69 20 25 63 69 51 72"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x006097",
+      "cpu_address": "0xA087",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 60,
+      "file_offset": "0x006098",
+      "cpu_address": "0xA088",
+      "raw_hex": "dc"
+    },
+    {
+      "kind": "screen_off_clear",
+      "opcode": "0xEA",
+      "arguments_hex": "",
+      "file_offset": "0x006099",
+      "cpu_address": "0xA089",
+      "raw_hex": "ea"
+    },
+    {
+      "kind": "clear_text",
+      "opcode": "0xFD",
+      "arguments_hex": "",
+      "file_offset": "0x00609A",
+      "cpu_address": "0xA08A",
+      "raw_hex": "fd"
+    },
+    {
+      "kind": "visual_preset",
+      "opcode": "0xE8",
+      "arguments_hex": "01",
+      "file_offset": "0x00609B",
+      "cpu_address": "0xA08B",
+      "raw_hex": "e8 01"
+    },
+    {
+      "kind": "commentator_portrait",
+      "opcode": "0xEC",
+      "arguments_hex": "ff",
+      "file_offset": "0x00609D",
+      "cpu_address": "0xA08D",
+      "raw_hex": "ec ff"
+    },
+    {
+      "kind": "clear_lower_area",
+      "opcode": "0xEE",
+      "arguments_hex": "",
+      "file_offset": "0x00609F",
+      "cpu_address": "0xA08F",
+      "raw_hex": "ee"
+    },
+    {
+      "kind": "background_2",
+      "opcode": "0xFA",
+      "arguments_hex": "03",
+      "background_id": "0x03",
+      "file_offset": "0x0060A0",
+      "cpu_address": "0xA090",
+      "raw_hex": "fa 03"
+    },
+    {
+      "kind": "animations",
+      "opcode": "0xFB",
+      "arguments_hex": "01 75",
+      "animation_ids": [
+        "0x75"
+      ],
+      "file_offset": "0x0060A2",
+      "cpu_address": "0xA092",
+      "raw_hex": "fb 01 75"
+    },
+    {
+      "kind": "palette_command",
+      "opcode": "0xF3",
+      "arguments_hex": "00",
+      "file_offset": "0x0060A5",
+      "cpu_address": "0xA095",
+      "raw_hex": "f3 00"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": "0xF4",
+      "arguments_hex": "05",
+      "file_offset": "0x0060A7",
+      "cpu_address": "0xA097",
+      "raw_hex": "f4 05"
+    },
+    {
+      "kind": "text_speed",
+      "opcode": "0xF2",
+      "arguments_hex": "01",
+      "file_offset": "0x0060A9",
+      "cpu_address": "0xA099",
+      "raw_hex": "f2 01"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "4f 6f 7a 6f 0b 20 01 02 03",
+      "file_offset": "0x0060AB",
+      "cpu_address": "0xA09B",
+      "raw_hex": "4f 6f 7a 6f 0b 20 01 02 03"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x0060B4",
+      "cpu_address": "0xA0A4",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "42 05 7a 0d 1b",
+      "file_offset": "0x0060B5",
+      "cpu_address": "0xA0A5",
+      "raw_hex": "42 05 7a 0d 1b"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x0060BA",
+      "cpu_address": "0xA0AA",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "03 6f 20 1c 75 7d 20 46 43 20 4d 46",
+      "file_offset": "0x0060BB",
+      "cpu_address": "0xA0AB",
+      "raw_hex": "03 6f 20 1c 75 7d 20 46 43 20 4d 46"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x0060C7",
+      "cpu_address": "0xA0B7",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": "0xF4",
+      "arguments_hex": "04",
+      "file_offset": "0x0060C8",
+      "cpu_address": "0xA0B8",
+      "raw_hex": "f4 04"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 120,
+      "file_offset": "0x0060CA",
+      "cpu_address": "0xA0BA",
+      "raw_hex": "de"
+    },
+    {
+      "kind": "screen_off_clear",
+      "opcode": "0xEA",
+      "arguments_hex": "",
+      "file_offset": "0x0060CB",
+      "cpu_address": "0xA0BB",
+      "raw_hex": "ea"
+    },
+    {
+      "kind": "clear_text",
+      "opcode": "0xFD",
+      "arguments_hex": "",
+      "file_offset": "0x0060CC",
+      "cpu_address": "0xA0BC",
+      "raw_hex": "fd"
+    },
+    {
+      "kind": "background_1",
+      "opcode": "0xF9",
+      "arguments_hex": "08",
+      "background_id": "0x08",
+      "file_offset": "0x0060CD",
+      "cpu_address": "0xA0BD",
+      "raw_hex": "f9 08"
+    },
+    {
+      "kind": "animations",
+      "opcode": "0xFB",
+      "arguments_hex": "02 c1 82",
+      "animation_ids": [
+        "0xC1",
+        "0x82"
+      ],
+      "file_offset": "0x0060CF",
+      "cpu_address": "0xA0BF",
+      "raw_hex": "fb 02 c1 82"
+    },
+    {
+      "kind": "palette_command",
+      "opcode": "0xF3",
+      "arguments_hex": "00",
+      "file_offset": "0x0060D3",
+      "cpu_address": "0xA0C3",
+      "raw_hex": "f3 00"
+    },
+    {
+      "kind": "visual_flag",
+      "opcode": "0xF5",
+      "arguments_hex": "10",
+      "file_offset": "0x0060D5",
+      "cpu_address": "0xA0C5",
+      "raw_hex": "f5 10"
+    },
+    {
+      "kind": "sound_command",
+      "opcode": "0xED",
+      "arguments_hex": "28",
+      "sound_id": "0x28",
+      "file_offset": "0x0060D7",
+      "cpu_address": "0xA0C7",
+      "raw_hex": "ed 28"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 20,
+      "file_offset": "0x0060D9",
+      "cpu_address": "0xA0C9",
+      "raw_hex": "da"
+    },
+    {
+      "kind": "sound_command",
+      "opcode": "0xED",
+      "arguments_hex": "28",
+      "sound_id": "0x28",
+      "file_offset": "0x0060DA",
+      "cpu_address": "0xA0CA",
+      "raw_hex": "ed 28"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 20,
+      "file_offset": "0x0060DC",
+      "cpu_address": "0xA0CC",
+      "raw_hex": "da"
+    },
+    {
+      "kind": "sound_command",
+      "opcode": "0xED",
+      "arguments_hex": "28",
+      "sound_id": "0x28",
+      "file_offset": "0x0060DD",
+      "cpu_address": "0xA0CD",
+      "raw_hex": "ed 28"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 20,
+      "file_offset": "0x0060DF",
+      "cpu_address": "0xA0CF",
+      "raw_hex": "da"
+    },
+    {
+      "kind": "sound_command",
+      "opcode": "0xED",
+      "arguments_hex": "0e",
+      "sound_id": "0x0E",
+      "file_offset": "0x0060E0",
+      "cpu_address": "0xA0D0",
+      "raw_hex": "ed 0e"
+    },
+    {
+      "kind": "dialog_window",
+      "opcode": "0xF1",
+      "arguments_hex": "01",
+      "file_offset": "0x0060E2",
+      "cpu_address": "0xA0D2",
+      "raw_hex": "f1 01"
+    },
+    {
+      "kind": "commentator_portrait",
+      "opcode": "0xEC",
+      "arguments_hex": "05",
+      "file_offset": "0x0060E4",
+      "cpu_address": "0xA0D4",
+      "raw_hex": "ec 05"
+    },
+    {
+      "kind": "text_speed",
+      "opcode": "0xF2",
+      "arguments_hex": "05",
+      "file_offset": "0x0060E6",
+      "cpu_address": "0xA0D6",
+      "raw_hex": "f2 05"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "48 79 75 28 2d 2f 6e 27 18 6e 20 41 0a 20 7e",
+      "file_offset": "0x0060E8",
+      "cpu_address": "0xA0D8",
+      "raw_hex": "48 79 75 28 2d 2f 6e 27 18 6e 20 41 0a 20 7e"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x0060F7",
+      "cpu_address": "0xA0E7",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "54 69 67 5e 20 10 63 6b 04 21",
+      "file_offset": "0x0060F8",
+      "cpu_address": "0xA0E8",
+      "raw_hex": "54 69 67 5e 20 10 63 6b 04 21"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x006102",
+      "cpu_address": "0xA0F2",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "41 76 12 69 20 5c 7a 75 7c 20 3e 5f 69 72 1f 73 20 7e",
+      "file_offset": "0x006103",
+      "cpu_address": "0xA0F3",
+      "raw_hex": "41 76 12 69 20 5c 7a 75 7c 20 3e 5f 69 72 1f 73 20 7e"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x006115",
+      "cpu_address": "0xA105",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "1a 70 14 6e 20 1e 3d 20 74 6f 70 75 20 2b 2f 70 20 7f 64 69",
+      "file_offset": "0x006116",
+      "cpu_address": "0xA106",
+      "raw_hex": "1a 70 14 6e 20 1e 3d 20 74 6f 70 75 20 2b 2f 70 20 7f 64 69"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x00612A",
+      "cpu_address": "0xA11A",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 60,
+      "file_offset": "0x00612B",
+      "cpu_address": "0xA11B",
+      "raw_hex": "dc"
+    },
+    {
+      "kind": "sound_command",
+      "opcode": "0xED",
+      "arguments_hex": "02",
+      "sound_id": "0x02",
+      "file_offset": "0x00612C",
+      "cpu_address": "0xA11C",
+      "raw_hex": "ed 02"
+    },
+    {
+      "kind": "screen_off_clear",
+      "opcode": "0xEA",
+      "arguments_hex": "",
+      "file_offset": "0x00612E",
+      "cpu_address": "0xA11E",
+      "raw_hex": "ea"
+    },
+    {
+      "kind": "clear_text",
+      "opcode": "0xFD",
+      "arguments_hex": "",
+      "file_offset": "0x00612F",
+      "cpu_address": "0xA11F",
+      "raw_hex": "fd"
+    },
+    {
+      "kind": "commentator_portrait",
+      "opcode": "0xEC",
+      "arguments_hex": "ff",
+      "file_offset": "0x006130",
+      "cpu_address": "0xA120",
+      "raw_hex": "ec ff"
+    },
+    {
+      "kind": "clear_lower_area",
+      "opcode": "0xEE",
+      "arguments_hex": "",
+      "file_offset": "0x006132",
+      "cpu_address": "0xA122",
+      "raw_hex": "ee"
+    },
+    {
+      "kind": "background_2",
+      "opcode": "0xFA",
+      "arguments_hex": "07",
+      "background_id": "0x07",
+      "file_offset": "0x006133",
+      "cpu_address": "0xA123",
+      "raw_hex": "fa 07"
+    },
+    {
+      "kind": "animations",
+      "opcode": "0xFB",
+      "arguments_hex": "01 76",
+      "animation_ids": [
+        "0x76"
+      ],
+      "file_offset": "0x006135",
+      "cpu_address": "0xA125",
+      "raw_hex": "fb 01 76"
+    },
+    {
+      "kind": "palette_command",
+      "opcode": "0xF3",
+      "arguments_hex": "00",
+      "file_offset": "0x006138",
+      "cpu_address": "0xA128",
+      "raw_hex": "f3 00"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": "0xF4",
+      "arguments_hex": "05",
+      "file_offset": "0x00613A",
+      "cpu_address": "0xA12A",
+      "raw_hex": "f4 05"
+    },
+    {
+      "kind": "text_speed",
+      "opcode": "0xF2",
+      "arguments_hex": "02",
+      "file_offset": "0x00613C",
+      "cpu_address": "0xA12C",
+      "raw_hex": "f2 02"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "48 79 75 28 20 4b 6f 6a 69 31",
+      "file_offset": "0x00613E",
+      "cpu_address": "0xA12E",
+      "raw_hex": "48 79 75 28 20 4b 6f 6a 69 31"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x006148",
+      "cpu_address": "0xA138",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "54 6f 68 6f 20 41 1a 7b 1f 58 20 43 46",
+      "file_offset": "0x006149",
+      "cpu_address": "0xA139",
+      "raw_hex": "54 6f 68 6f 20 41 1a 7b 1f 58 20 43 46"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x006156",
+      "cpu_address": "0xA146",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": "0xF4",
+      "arguments_hex": "04",
+      "file_offset": "0x006157",
+      "cpu_address": "0xA147",
+      "raw_hex": "f4 04"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 120,
+      "file_offset": "0x006159",
+      "cpu_address": "0xA149",
+      "raw_hex": "de"
+    },
+    {
+      "kind": "screen_off_clear",
+      "opcode": "0xEA",
+      "arguments_hex": "",
+      "file_offset": "0x00615A",
+      "cpu_address": "0xA14A",
+      "raw_hex": "ea"
+    },
+    {
+      "kind": "clear_text",
+      "opcode": "0xFD",
+      "arguments_hex": "",
+      "file_offset": "0x00615B",
+      "cpu_address": "0xA14B",
+      "raw_hex": "fd"
+    },
+    {
+      "kind": "dialog_window",
+      "opcode": "0xF1",
+      "arguments_hex": "01",
+      "file_offset": "0x00615C",
+      "cpu_address": "0xA14C",
+      "raw_hex": "f1 01"
+    },
+    {
+      "kind": "commentator_portrait",
+      "opcode": "0xEC",
+      "arguments_hex": "02",
+      "file_offset": "0x00615E",
+      "cpu_address": "0xA14E",
+      "raw_hex": "ec 02"
+    },
+    {
+      "kind": "background_1",
+      "opcode": "0xF9",
+      "arguments_hex": "09",
+      "background_id": "0x09",
+      "file_offset": "0x006160",
+      "cpu_address": "0xA150",
+      "raw_hex": "f9 09"
+    },
+    {
+      "kind": "animations",
+      "opcode": "0xFB",
+      "arguments_hex": "01 84",
+      "animation_ids": [
+        "0x84"
+      ],
+      "file_offset": "0x006162",
+      "cpu_address": "0xA152",
+      "raw_hex": "fb 01 84"
+    },
+    {
+      "kind": "palette_command",
+      "opcode": "0xF3",
+      "arguments_hex": "00",
+      "file_offset": "0x006165",
+      "cpu_address": "0xA155",
+      "raw_hex": "f3 00"
+    },
+    {
+      "kind": "visual_flag",
+      "opcode": "0xF5",
+      "arguments_hex": "01",
+      "file_offset": "0x006167",
+      "cpu_address": "0xA157",
+      "raw_hex": "f5 01"
+    },
+    {
+      "kind": "sound_command",
+      "opcode": "0xED",
+      "arguments_hex": "0e",
+      "sound_id": "0x0E",
+      "file_offset": "0x006169",
+      "cpu_address": "0xA159",
+      "raw_hex": "ed 0e"
+    },
+    {
+      "kind": "text_speed",
+      "opcode": "0xF2",
+      "arguments_hex": "05",
+      "file_offset": "0x00616B",
+      "cpu_address": "0xA15B",
+      "raw_hex": "f2 05"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "0f 74 65 21",
+      "file_offset": "0x00616D",
+      "cpu_address": "0xA15D",
+      "raw_hex": "0f 74 65 21"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 40,
+      "file_offset": "0x006171",
+      "cpu_address": "0xA161",
+      "raw_hex": "db"
+    },
+    {
+      "kind": "sound_command",
+      "opcode": "0xED",
+      "arguments_hex": "09",
+      "sound_id": "0x09",
+      "file_offset": "0x006172",
+      "cpu_address": "0xA162",
+      "raw_hex": "ed 09"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "7f 74 12 20 69 16 07 0a 6e",
+      "file_offset": "0x006174",
+      "cpu_address": "0xA164",
+      "raw_hex": "7f 74 12 20 69 16 07 0a 6e"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x00617D",
+      "cpu_address": "0xA16D",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "3d 74 69 09 63 69 20 54 57 12 20 1d 74 75",
+      "file_offset": "0x00617E",
+      "cpu_address": "0xA16E",
+      "raw_hex": "3d 74 69 09 63 69 20 54 57 12 20 1d 74 75"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x00618C",
+      "cpu_address": "0xA17C",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "69 16 73 12 12 20 75 79 75 24 20 2f 1d 72 1d 7a",
+      "file_offset": "0x00618D",
+      "cpu_address": "0xA17D",
+      "raw_hex": "69 16 73 12 12 20 75 79 75 24 20 2f 1d 72 1d 7a"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 60,
+      "file_offset": "0x00619D",
+      "cpu_address": "0xA18D",
+      "raw_hex": "dc"
+    },
+    {
+      "kind": "screen_off_clear",
+      "opcode": "0xEA",
+      "arguments_hex": "",
+      "file_offset": "0x00619E",
+      "cpu_address": "0xA18E",
+      "raw_hex": "ea"
+    },
+    {
+      "kind": "clear_text",
+      "opcode": "0xFD",
+      "arguments_hex": "",
+      "file_offset": "0x00619F",
+      "cpu_address": "0xA18F",
+      "raw_hex": "fd"
+    },
+    {
+      "kind": "commentator_portrait",
+      "opcode": "0xEC",
+      "arguments_hex": "ff",
+      "file_offset": "0x0061A0",
+      "cpu_address": "0xA190",
+      "raw_hex": "ec ff"
+    },
+    {
+      "kind": "clear_lower_area",
+      "opcode": "0xEE",
+      "arguments_hex": "",
+      "file_offset": "0x0061A2",
+      "cpu_address": "0xA192",
+      "raw_hex": "ee"
+    },
+    {
+      "kind": "background_2",
+      "opcode": "0xFA",
+      "arguments_hex": "03",
+      "background_id": "0x03",
+      "file_offset": "0x0061A3",
+      "cpu_address": "0xA193",
+      "raw_hex": "fa 03"
+    },
+    {
+      "kind": "animations",
+      "opcode": "0xFB",
+      "arguments_hex": "01 77",
+      "animation_ids": [
+        "0x77"
+      ],
+      "file_offset": "0x0061A5",
+      "cpu_address": "0xA195",
+      "raw_hex": "fb 01 77"
+    },
+    {
+      "kind": "palette_command",
+      "opcode": "0xF3",
+      "arguments_hex": "00",
+      "file_offset": "0x0061A8",
+      "cpu_address": "0xA198",
+      "raw_hex": "f3 00"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": "0xF4",
+      "arguments_hex": "05",
+      "file_offset": "0x0061AA",
+      "cpu_address": "0xA19A",
+      "raw_hex": "f4 05"
+    },
+    {
+      "kind": "text_speed",
+      "opcode": "0xF2",
+      "arguments_hex": "02",
+      "file_offset": "0x0061AC",
+      "cpu_address": "0xA19C",
+      "raw_hex": "f2 02"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "10 31 20 1f 03 16",
+      "file_offset": "0x0061AE",
+      "cpu_address": "0xA19E",
+      "raw_hex": "10 31 20 1f 03 16"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x0061B4",
+      "cpu_address": "0xA1A4",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "19 6e 1a 01 20 07 0e 58 20 4d 46",
+      "file_offset": "0x0061B5",
+      "cpu_address": "0xA1A5",
+      "raw_hex": "19 6e 1a 01 20 07 0e 58 20 4d 46"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x0061C0",
+      "cpu_address": "0xA1B0",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": "0xF4",
+      "arguments_hex": "04",
+      "file_offset": "0x0061C1",
+      "cpu_address": "0xA1B1",
+      "raw_hex": "f4 04"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 120,
+      "file_offset": "0x0061C3",
+      "cpu_address": "0xA1B3",
+      "raw_hex": "de"
+    },
+    {
+      "kind": "screen_off_clear",
+      "opcode": "0xEA",
+      "arguments_hex": "",
+      "file_offset": "0x0061C4",
+      "cpu_address": "0xA1B4",
+      "raw_hex": "ea"
+    },
+    {
+      "kind": "clear_text",
+      "opcode": "0xFD",
+      "arguments_hex": "",
+      "file_offset": "0x0061C5",
+      "cpu_address": "0xA1B5",
+      "raw_hex": "fd"
+    },
+    {
+      "kind": "dialog_window",
+      "opcode": "0xF1",
+      "arguments_hex": "01",
+      "file_offset": "0x0061C6",
+      "cpu_address": "0xA1B6",
+      "raw_hex": "f1 01"
+    },
+    {
+      "kind": "commentator_portrait",
+      "opcode": "0xEC",
+      "arguments_hex": "04",
+      "file_offset": "0x0061C8",
+      "cpu_address": "0xA1B8",
+      "raw_hex": "ec 04"
+    },
+    {
+      "kind": "background_1",
+      "opcode": "0xF9",
+      "arguments_hex": "0a",
+      "background_id": "0x0A",
+      "file_offset": "0x0061CA",
+      "cpu_address": "0xA1BA",
+      "raw_hex": "f9 0a"
+    },
+    {
+      "kind": "animations",
+      "opcode": "0xFB",
+      "arguments_hex": "03 c0 a2 7d",
+      "animation_ids": [
+        "0xC0",
+        "0xA2",
+        "0x7D"
+      ],
+      "file_offset": "0x0061CC",
+      "cpu_address": "0xA1BC",
+      "raw_hex": "fb 03 c0 a2 7d"
+    },
+    {
+      "kind": "palette_command",
+      "opcode": "0xF3",
+      "arguments_hex": "00",
+      "file_offset": "0x0061D1",
+      "cpu_address": "0xA1C1",
+      "raw_hex": "f3 00"
+    },
+    {
+      "kind": "sound_command",
+      "opcode": "0xED",
+      "arguments_hex": "07",
+      "sound_id": "0x07",
+      "file_offset": "0x0061D3",
+      "cpu_address": "0xA1C3",
+      "raw_hex": "ed 07"
+    },
+    {
+      "kind": "text_speed",
+      "opcode": "0xF2",
+      "arguments_hex": "05",
+      "file_offset": "0x0061D5",
+      "cpu_address": "0xA1C5",
+      "raw_hex": "f2 05"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "57 61 1a 02 1b 17 20 74 65 6b 20 65 6c 04",
+      "file_offset": "0x0061D7",
+      "cpu_address": "0xA1C7",
+      "raw_hex": "57 61 1a 02 1b 17 20 74 65 6b 20 65 6c 04"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x0061E5",
+      "cpu_address": "0xA1D5",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "2f 72 10 09 51 72 2e 44 6f 67 75 6e 75 6e",
+      "file_offset": "0x0061E6",
+      "cpu_address": "0xA1D6",
+      "raw_hex": "2f 72 10 09 51 72 2e 44 6f 67 75 6e 75 6e"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x0061F4",
+      "cpu_address": "0xA1E4",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "6b 6f 72 75 79 75 63 75 1d 19 20 18",
+      "file_offset": "0x0061F5",
+      "cpu_address": "0xA1E5",
+      "raw_hex": "6b 6f 72 75 79 75 63 75 1d 19 20 18"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x006201",
+      "cpu_address": "0xA1F1",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "22 20 1b 16 58 72",
+      "file_offset": "0x006202",
+      "cpu_address": "0xA1F2",
+      "raw_hex": "22 20 1b 16 58 72"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 60,
+      "file_offset": "0x006208",
+      "cpu_address": "0xA1F8",
+      "raw_hex": "dc"
+    },
+    {
+      "kind": "screen_off_clear",
+      "opcode": "0xEA",
+      "arguments_hex": "",
+      "file_offset": "0x006209",
+      "cpu_address": "0xA1F9",
+      "raw_hex": "ea"
+    },
+    {
+      "kind": "clear_text",
+      "opcode": "0xFD",
+      "arguments_hex": "",
+      "file_offset": "0x00620A",
+      "cpu_address": "0xA1FA",
+      "raw_hex": "fd"
+    },
+    {
+      "kind": "commentator_portrait",
+      "opcode": "0xEC",
+      "arguments_hex": "ff",
+      "file_offset": "0x00620B",
+      "cpu_address": "0xA1FB",
+      "raw_hex": "ec ff"
+    },
+    {
+      "kind": "clear_lower_area",
+      "opcode": "0xEE",
+      "arguments_hex": "",
+      "file_offset": "0x00620D",
+      "cpu_address": "0xA1FD",
+      "raw_hex": "ee"
+    },
+    {
+      "kind": "background_2",
+      "opcode": "0xFA",
+      "arguments_hex": "0b",
+      "background_id": "0x0B",
+      "file_offset": "0x00620E",
+      "cpu_address": "0xA1FE",
+      "raw_hex": "fa 0b"
+    },
+    {
+      "kind": "animations",
+      "opcode": "0xFB",
+      "arguments_hex": "01 7c",
+      "animation_ids": [
+        "0x7C"
+      ],
+      "file_offset": "0x006210",
+      "cpu_address": "0xA200",
+      "raw_hex": "fb 01 7c"
+    },
+    {
+      "kind": "palette_command",
+      "opcode": "0xF3",
+      "arguments_hex": "00",
+      "file_offset": "0x006213",
+      "cpu_address": "0xA203",
+      "raw_hex": "f3 00"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": "0xF4",
+      "arguments_hex": "05",
+      "file_offset": "0x006215",
+      "cpu_address": "0xA205",
+      "raw_hex": "f4 05"
+    },
+    {
+      "kind": "text_speed",
+      "opcode": "0xF2",
+      "arguments_hex": "01",
+      "file_offset": "0x006217",
+      "cpu_address": "0xA207",
+      "raw_hex": "f2 01"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "57 61 1a 02 1b 17 20 25 6e 7a 6f",
+      "file_offset": "0x006219",
+      "cpu_address": "0xA209",
+      "raw_hex": "57 61 1a 02 1b 17 20 25 6e 7a 6f"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x006224",
+      "cpu_address": "0xA214",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "02 74 69 20 7f 08 6e 1b",
+      "file_offset": "0x006225",
+      "cpu_address": "0xA215",
+      "raw_hex": "02 74 69 20 7f 08 6e 1b"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x00622D",
+      "cpu_address": "0xA21D",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "11 6d 22 72 67 20 53 56 20 47 4b",
+      "file_offset": "0x00622E",
+      "cpu_address": "0xA21E",
+      "raw_hex": "11 6d 22 72 67 20 53 56 20 47 4b"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x006239",
+      "cpu_address": "0xA229",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": "0xF4",
+      "arguments_hex": "04",
+      "file_offset": "0x00623A",
+      "cpu_address": "0xA22A",
+      "raw_hex": "f4 04"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 120,
+      "file_offset": "0x00623C",
+      "cpu_address": "0xA22C",
+      "raw_hex": "de"
+    },
+    {
+      "kind": "screen_off_clear",
+      "opcode": "0xEA",
+      "arguments_hex": "",
+      "file_offset": "0x00623D",
+      "cpu_address": "0xA22D",
+      "raw_hex": "ea"
+    },
+    {
+      "kind": "clear_text",
+      "opcode": "0xFD",
+      "arguments_hex": "",
+      "file_offset": "0x00623E",
+      "cpu_address": "0xA22E",
+      "raw_hex": "fd"
+    },
+    {
+      "kind": "commentator_portrait",
+      "opcode": "0xEC",
+      "arguments_hex": "ff",
+      "file_offset": "0x00623F",
+      "cpu_address": "0xA22F",
+      "raw_hex": "ec ff"
+    },
+    {
+      "kind": "clear_lower_area",
+      "opcode": "0xEE",
+      "arguments_hex": "",
+      "file_offset": "0x006241",
+      "cpu_address": "0xA231",
+      "raw_hex": "ee"
+    },
+    {
+      "kind": "animations",
+      "opcode": "0xFB",
+      "arguments_hex": "01 0d",
+      "animation_ids": [
+        "0x0D"
+      ],
+      "file_offset": "0x006242",
+      "cpu_address": "0xA232",
+      "raw_hex": "fb 01 0d"
+    },
+    {
+      "kind": "text_speed",
+      "opcode": "0xF2",
+      "arguments_hex": "00",
+      "file_offset": "0x006245",
+      "cpu_address": "0xA235",
+      "raw_hex": "f2 00"
+    },
+    {
+      "kind": "text_cursor_back",
+      "tiles": 3,
+      "file_offset": "0x006247",
+      "cpu_address": "0xA237",
+      "raw_hex": "e3"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "20 30 20 67 75 63 6c 75 20 0b 16 70 20 55 34 3b 20 42 05 7a 0d 1b",
+      "file_offset": "0x006248",
+      "cpu_address": "0xA238",
+      "raw_hex": "20 30 20 67 75 63 6c 75 20 0b 16 70 20 55 34 3b 20 42 05 7a 0d 1b"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x00625E",
+      "cpu_address": "0xA24E",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "1a 72 73 0f 12 18 20 64 75 6e 1b 0a 6e 20 30 20 69 79 69 58",
+      "file_offset": "0x00625F",
+      "cpu_address": "0xA24F",
+      "raw_hex": "1a 72 73 0f 12 18 20 64 75 6e 1b 0a 6e 20 30 20 69 79 69 58"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x006273",
+      "cpu_address": "0xA263",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "6f 6c 08 20 11 1b 07 0a 20 2f 72 24 5f 75 6b",
+      "file_offset": "0x006274",
+      "cpu_address": "0xA264",
+      "raw_hex": "6f 6c 08 20 11 1b 07 0a 20 2f 72 24 5f 75 6b"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x006283",
+      "cpu_address": "0xA273",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "55 34 3b 20 23 70 13 1b 0a 6e 20 2b 6e 20 08 63 69",
+      "file_offset": "0x006284",
+      "cpu_address": "0xA274",
+      "raw_hex": "55 34 3b 20 23 70 13 1b 0a 6e 20 2b 6e 20 08 63 69"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x006295",
+      "cpu_address": "0xA285",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "02 73 14 08 6b 20 75 7a 65 05",
+      "file_offset": "0x006296",
+      "cpu_address": "0xA286",
+      "raw_hex": "02 73 14 08 6b 20 75 7a 65 05"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x0062A0",
+      "cpu_address": "0xA290",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids_hex": "20 20",
+      "file_offset": "0x0062A1",
+      "cpu_address": "0xA291",
+      "raw_hex": "20 20"
+    },
+    {
+      "kind": "new_text_line",
+      "opcode": "0xFC",
+      "arguments_hex": "",
+      "file_offset": "0x0062A3",
+      "cpu_address": "0xA293",
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "screen_on",
+      "opcode": "0xE9",
+      "arguments_hex": "",
+      "file_offset": "0x0062A4",
+      "cpu_address": "0xA294",
+      "raw_hex": "e9"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 20,
+      "file_offset": "0x0062A5",
+      "cpu_address": "0xA295",
+      "raw_hex": "da"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 240,
+      "file_offset": "0x0062A6",
+      "cpu_address": "0xA296",
+      "raw_hex": "df"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 240,
+      "file_offset": "0x0062A7",
+      "cpu_address": "0xA297",
+      "raw_hex": "df"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": "0xF4",
+      "arguments_hex": "05",
+      "file_offset": "0x0062A8",
+      "cpu_address": "0xA298",
+      "raw_hex": "f4 05"
+    },
+    {
+      "kind": "clear_text",
+      "opcode": "0xFD",
+      "arguments_hex": "",
+      "file_offset": "0x0062AA",
+      "cpu_address": "0xA29A",
+      "raw_hex": "fd"
+    },
+    {
+      "kind": "visual_subroutine",
+      "opcode": "0xF8",
+      "arguments_hex": "00",
+      "file_offset": "0x0062AB",
+      "cpu_address": "0xA29B",
+      "raw_hex": "f8 00"
+    },
+    {
+      "kind": "compact_pause",
+      "frames": 240,
+      "file_offset": "0x0062AD",
+      "cpu_address": "0xA29D",
+      "raw_hex": "df"
+    },
+    {
+      "kind": "jump",
+      "opcode": "0xFE",
+      "arguments_hex": "20 a0",
+      "target_cpu_address": "0xA020",
+      "file_offset": "0x0062AE",
+      "cpu_address": "0xA29E",
+      "raw_hex": "fe 20 a0"
+    }
+  ],
+  "backgrounds": [
+    {
+      "id": "0x00",
+      "pointer_table_file_offset": "0x00E010",
+      "cpu_address": "0xA0D4",
+      "file_offset": "0x00E0E4",
+      "length_bytes": 11,
+      "raw_hex": "7c 7e 81 01 03 1b 22 23 24 00 a0",
+      "source_bin": "reference/rom_extract/intro/background_00.bin",
+      "used_by": "cutscene_00"
+    },
+    {
+      "id": "0x01",
+      "pointer_table_file_offset": "0x00E012",
+      "cpu_address": "0xA0DF",
+      "file_offset": "0x00E0EF",
+      "length_bytes": 72,
+      "raw_hex": "3c 3e 02 04 10 00 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 3d 01 01 3c 01 01 3d 01 01 3d 01 01 3c 01 3d 01 3e 3e 3e 3e 3e 3e 3e 3e 3e 3e 3e 3e 3e 3e 3e 3e 3f 3f 3f 3f 3f 3f 3f 3f 3f 3f 3f 3f 3f 3f 3f 3f 00 a0",
+      "source_bin": "reference/rom_extract/intro/background_01.bin",
+      "used_by": "cutscene_00"
+    },
+    {
+      "id": "0x03",
+      "pointer_table_file_offset": "0x00E016",
+      "cpu_address": "0xA13F",
+      "file_offset": "0x00E14F",
+      "length_bytes": 17,
+      "raw_hex": "3a 00 04 02 04 12 93 75 42 43 94 77 78 79 00 bf 08",
+      "source_bin": "reference/rom_extract/intro/background_03.bin",
+      "used_by": "cutscene_00"
+    },
+    {
+      "id": "0x07",
+      "pointer_table_file_offset": "0x00E01E",
+      "cpu_address": "0xA190",
+      "file_offset": "0x00E1A0",
+      "length_bytes": 17,
+      "raw_hex": "3a 00 1b 02 04 15 93 42 80 43 81 82 7e 44 00 3f 08",
+      "source_bin": "reference/rom_extract/intro/background_07.bin",
+      "used_by": "cutscene_00"
+    },
+    {
+      "id": "0x08",
+      "pointer_table_file_offset": "0x00E020",
+      "cpu_address": "0xA1A1",
+      "file_offset": "0x00E1B1",
+      "length_bytes": 40,
+      "raw_hex": "40 00 8e 04 08 00 67 67 67 67 67 67 67 67 01 01 01 01 01 01 01 01 6c 6d 6e 01 01 01 01 01 68 69 6a 6b 6c 6d 6e 01 00 a0",
+      "source_bin": "reference/rom_extract/intro/background_08.bin",
+      "used_by": "cutscene_00"
+    },
+    {
+      "id": "0x09",
+      "pointer_table_file_offset": "0x00E022",
+      "cpu_address": "0xA1C9",
+      "file_offset": "0x00E1D9",
+      "length_bytes": 40,
+      "raw_hex": "3c 3e 03 04 08 00 42 42 42 42 42 42 42 42 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 00 a0",
+      "source_bin": "reference/rom_extract/intro/background_09.bin",
+      "used_by": "cutscene_00"
+    },
+    {
+      "id": "0x0A",
+      "pointer_table_file_offset": "0x00E024",
+      "cpu_address": "0xA1F1",
+      "file_offset": "0x00E201",
+      "length_bytes": 57,
+      "raw_hex": "3c 4c 00 04 0c 07 98 99 42 42 42 42 42 42 42 42 42 42 9a 9b 9c 01 3c 01 01 01 01 01 01 01 9d 9e 9f a0 01 01 01 01 01 01 3d 01 a1 a2 a3 a4 01 39 3a 3b 01 01 01 01 00 21 04",
+      "source_bin": "reference/rom_extract/intro/background_0A.bin",
+      "used_by": "cutscene_00"
+    },
+    {
+      "id": "0x0B",
+      "pointer_table_file_offset": "0x00E026",
+      "cpu_address": "0xA22A",
+      "file_offset": "0x00E23A",
+      "length_bytes": 17,
+      "raw_hex": "38 3a 05 02 04 15 8d 42 42 8e 8f 90 91 92 00 3f 08",
+      "source_bin": "reference/rom_extract/intro/background_0B.bin",
+      "used_by": "cutscene_00"
+    },
+    {
+      "id": "0x17",
+      "pointer_table_file_offset": "0x00E03E",
+      "cpu_address": "0xA373",
+      "file_offset": "0x00E383",
+      "length_bytes": 56,
+      "raw_hex": "7c 7e 81 06 08 08 00 04 05 06 07 08 09 00 00 0a 0b 0c 0d 0e 0f 00 00 00 10 11 12 13 00 00 00 00 00 14 15 00 00 00 16 17 18 19 1a 1b 1c 1d 00 00 1e 1f 20 21 00 00 00 a0",
+      "source_bin": "reference/rom_extract/intro/background_17.bin",
+      "used_by": "title_entry"
+    }
+  ],
+  "animations": [
+    {
+      "id": "0x0D",
+      "prg_bank": 9,
+      "pointer_table_file_offset": "0x01202A",
+      "cpu_address": "0xA28E",
+      "file_offset": "0x01229E",
+      "next_pointer": "0xA295",
+      "length_bytes": 7,
+      "raw_hex": "09 f1 26 3e 87 cb ff",
+      "source_bin": "reference/rom_extract/intro/animation_0D.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x09",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x01229F",
+            "raw_hex": "f1 26 3e",
+            "y": 38,
+            "x": 62
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0122A2",
+            "raw_hex": "87 cb",
+            "cpu_address": "0xA7CB"
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x0122A4",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x6E",
+      "prg_bank": 10,
+      "pointer_table_file_offset": "0x014012",
+      "cpu_address": "0xA0C6",
+      "file_offset": "0x0140D6",
+      "next_pointer": "0xA0F0",
+      "length_bytes": 42,
+      "raw_hex": "00 f1 1e f6 f7 05 00 00 e2 f5 88 37 01 88 6f 01 88 ba 01 89 08 01 f0 f5 88 37 f7 00 00 02 03 88 6f 03 88 ba 03 89 08 03 a0 dd",
+      "source_bin": "reference/rom_extract/intro/animation_6E.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x00",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0140D7",
+            "raw_hex": "f1 1e f6",
+            "y": 30,
+            "x": 246
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x0140DA",
+            "raw_hex": "f7 05 00 00"
+          },
+          {
+            "kind": "repeat_begin",
+            "file_offset": "0x0140DE",
+            "raw_hex": "e2",
+            "count": 2
+          },
+          {
+            "kind": "mirror_on",
+            "file_offset": "0x0140DF",
+            "raw_hex": "f5"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0140E0",
+            "raw_hex": "88 37",
+            "cpu_address": "0xA837"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0140E2",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0140E3",
+            "raw_hex": "88 6f",
+            "cpu_address": "0xA86F"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0140E5",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0140E6",
+            "raw_hex": "88 ba",
+            "cpu_address": "0xA8BA"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0140E8",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0140E9",
+            "raw_hex": "89 08",
+            "cpu_address": "0xA908"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0140EB",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "repeat_end",
+            "file_offset": "0x0140EC",
+            "raw_hex": "f0"
+          },
+          {
+            "kind": "mirror_on",
+            "file_offset": "0x0140ED",
+            "raw_hex": "f5"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0140EE",
+            "raw_hex": "88 37",
+            "cpu_address": "0xA837"
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x0140F0",
+            "raw_hex": "f7 00 00 02"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0140F4",
+            "raw_hex": "03",
+            "frames": 6
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0140F5",
+            "raw_hex": "88 6f",
+            "cpu_address": "0xA86F"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0140F7",
+            "raw_hex": "03",
+            "frames": 6
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0140F8",
+            "raw_hex": "88 ba",
+            "cpu_address": "0xA8BA"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0140FA",
+            "raw_hex": "03",
+            "frames": 6
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0140FB",
+            "raw_hex": "89 08",
+            "cpu_address": "0xA908"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0140FD",
+            "raw_hex": "03",
+            "frames": 6
+          },
+          {
+            "kind": "jump",
+            "file_offset": "0x0140FE",
+            "raw_hex": "a0 dd",
+            "target_cpu_address": "0xA0DD"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x75",
+      "prg_bank": 10,
+      "pointer_table_file_offset": "0x014020",
+      "cpu_address": "0xA186",
+      "file_offset": "0x014196",
+      "next_pointer": "0xA18F",
+      "length_bytes": 9,
+      "raw_hex": "01 f1 30 bc 8a 8c f9 1e ff",
+      "source_bin": "reference/rom_extract/intro/animation_75.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x01",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x014197",
+            "raw_hex": "f1 30 bc",
+            "y": 48,
+            "x": 188
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x01419A",
+            "raw_hex": "8a 8c",
+            "cpu_address": "0xAA8C"
+          },
+          {
+            "kind": "set_animation_flag",
+            "file_offset": "0x01419C",
+            "raw_hex": "f9"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x01419D",
+            "raw_hex": "1e",
+            "frames": 60
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x01419E",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x76",
+      "prg_bank": 10,
+      "pointer_table_file_offset": "0x014022",
+      "cpu_address": "0xA18F",
+      "file_offset": "0x01419F",
+      "next_pointer": "0xA199",
+      "length_bytes": 10,
+      "raw_hex": "01 f1 30 c0 f5 8a e7 f9 1e ff",
+      "source_bin": "reference/rom_extract/intro/animation_76.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x01",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0141A0",
+            "raw_hex": "f1 30 c0",
+            "y": 48,
+            "x": 192
+          },
+          {
+            "kind": "mirror_on",
+            "file_offset": "0x0141A3",
+            "raw_hex": "f5"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0141A4",
+            "raw_hex": "8a e7",
+            "cpu_address": "0xAAE7"
+          },
+          {
+            "kind": "set_animation_flag",
+            "file_offset": "0x0141A6",
+            "raw_hex": "f9"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0141A7",
+            "raw_hex": "1e",
+            "frames": 60
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x0141A8",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x77",
+      "prg_bank": 10,
+      "pointer_table_file_offset": "0x014024",
+      "cpu_address": "0xA199",
+      "file_offset": "0x0141A9",
+      "next_pointer": "0xA1A2",
+      "length_bytes": 9,
+      "raw_hex": "06 f1 30 bc 8b 4a f9 1e ff",
+      "source_bin": "reference/rom_extract/intro/animation_77.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x06",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0141AA",
+            "raw_hex": "f1 30 bc",
+            "y": 48,
+            "x": 188
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0141AD",
+            "raw_hex": "8b 4a",
+            "cpu_address": "0xAB4A"
+          },
+          {
+            "kind": "set_animation_flag",
+            "file_offset": "0x0141AF",
+            "raw_hex": "f9"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0141B0",
+            "raw_hex": "1e",
+            "frames": 60
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x0141B1",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x7C",
+      "prg_bank": 10,
+      "pointer_table_file_offset": "0x01402E",
+      "cpu_address": "0xA1C1",
+      "file_offset": "0x0141D1",
+      "next_pointer": "0xA1CA",
+      "length_bytes": 9,
+      "raw_hex": "08 f1 30 c4 8d 14 f9 1e ff",
+      "source_bin": "reference/rom_extract/intro/animation_7C.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x08",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0141D2",
+            "raw_hex": "f1 30 c4",
+            "y": 48,
+            "x": 196
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0141D5",
+            "raw_hex": "8d 14",
+            "cpu_address": "0xAD14"
+          },
+          {
+            "kind": "set_animation_flag",
+            "file_offset": "0x0141D7",
+            "raw_hex": "f9"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0141D8",
+            "raw_hex": "1e",
+            "frames": 60
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x0141D9",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x7D",
+      "prg_bank": 10,
+      "pointer_table_file_offset": "0x014030",
+      "cpu_address": "0xA1CA",
+      "file_offset": "0x0141DA",
+      "next_pointer": "0xA1FC",
+      "length_bytes": 50,
+      "raw_hex": "07 f1 06 4e ec f7 2f 00 00 8d 72 01 f7 00 00 00 8d 72 01 f0 e6 f7 00 01 ff 8d c2 01 92 58 01 92 97 01 92 da 01 f0 f7 00 01 ff 8d 9a 01 8d 9a 01 a1 f0",
+      "source_bin": "reference/rom_extract/intro/animation_7D.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x07",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0141DB",
+            "raw_hex": "f1 06 4e",
+            "y": 6,
+            "x": 78
+          },
+          {
+            "kind": "repeat_begin",
+            "file_offset": "0x0141DE",
+            "raw_hex": "ec",
+            "count": 12
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x0141DF",
+            "raw_hex": "f7 2f 00 00"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0141E3",
+            "raw_hex": "8d 72",
+            "cpu_address": "0xAD72"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0141E5",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x0141E6",
+            "raw_hex": "f7 00 00 00"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0141EA",
+            "raw_hex": "8d 72",
+            "cpu_address": "0xAD72"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0141EC",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "repeat_end",
+            "file_offset": "0x0141ED",
+            "raw_hex": "f0"
+          },
+          {
+            "kind": "repeat_begin",
+            "file_offset": "0x0141EE",
+            "raw_hex": "e6",
+            "count": 6
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x0141EF",
+            "raw_hex": "f7 00 01 ff"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0141F3",
+            "raw_hex": "8d c2",
+            "cpu_address": "0xADC2"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0141F5",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0141F6",
+            "raw_hex": "92 58",
+            "cpu_address": "0xB258"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0141F8",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0141F9",
+            "raw_hex": "92 97",
+            "cpu_address": "0xB297"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0141FB",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0141FC",
+            "raw_hex": "92 da",
+            "cpu_address": "0xB2DA"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0141FE",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "repeat_end",
+            "file_offset": "0x0141FF",
+            "raw_hex": "f0"
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x014200",
+            "raw_hex": "f7 00 01 ff"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x014204",
+            "raw_hex": "8d 9a",
+            "cpu_address": "0xAD9A"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x014206",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x014207",
+            "raw_hex": "8d 9a",
+            "cpu_address": "0xAD9A"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x014209",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "jump",
+            "file_offset": "0x01420A",
+            "raw_hex": "a1 f0",
+            "target_cpu_address": "0xA1F0"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x82",
+      "prg_bank": 10,
+      "pointer_table_file_offset": "0x01403A",
+      "cpu_address": "0xA25F",
+      "file_offset": "0x01426F",
+      "next_pointer": "0xA29E",
+      "length_bytes": 63,
+      "raw_hex": "02 e3 f1 0e fe 8d f0 f7 26 00 00 0a f0 f7 00 00 00 e6 8e 12 f7 e0 00 00 01 8e 29 f7 20 00 00 01 8e 38 f7 e0 00 00 01 8e 4c f7 20 00 00 01 f0 f7 f0 00 00 8e 08 01 f7 10 00 00 8e 08 01 a2 8e",
+      "source_bin": "reference/rom_extract/intro/animation_82.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x02",
+        "entry_commands": [
+          {
+            "kind": "repeat_begin",
+            "file_offset": "0x014270",
+            "raw_hex": "e3",
+            "count": 3
+          },
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x014271",
+            "raw_hex": "f1 0e fe",
+            "y": 14,
+            "x": 254
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x014274",
+            "raw_hex": "8d f0",
+            "cpu_address": "0xADF0"
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x014276",
+            "raw_hex": "f7 26 00 00"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x01427A",
+            "raw_hex": "0a",
+            "frames": 20
+          },
+          {
+            "kind": "repeat_end",
+            "file_offset": "0x01427B",
+            "raw_hex": "f0"
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x01427C",
+            "raw_hex": "f7 00 00 00"
+          },
+          {
+            "kind": "repeat_begin",
+            "file_offset": "0x014280",
+            "raw_hex": "e6",
+            "count": 6
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x014281",
+            "raw_hex": "8e 12",
+            "cpu_address": "0xAE12"
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x014283",
+            "raw_hex": "f7 e0 00 00"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x014287",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x014288",
+            "raw_hex": "8e 29",
+            "cpu_address": "0xAE29"
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x01428A",
+            "raw_hex": "f7 20 00 00"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x01428E",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x01428F",
+            "raw_hex": "8e 38",
+            "cpu_address": "0xAE38"
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x014291",
+            "raw_hex": "f7 e0 00 00"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x014295",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x014296",
+            "raw_hex": "8e 4c",
+            "cpu_address": "0xAE4C"
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x014298",
+            "raw_hex": "f7 20 00 00"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x01429C",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "repeat_end",
+            "file_offset": "0x01429D",
+            "raw_hex": "f0"
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x01429E",
+            "raw_hex": "f7 f0 00 00"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0142A2",
+            "raw_hex": "8e 08",
+            "cpu_address": "0xAE08"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0142A4",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x0142A5",
+            "raw_hex": "f7 10 00 00"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0142A9",
+            "raw_hex": "8e 08",
+            "cpu_address": "0xAE08"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0142AB",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "jump",
+            "file_offset": "0x0142AC",
+            "raw_hex": "a2 8e",
+            "target_cpu_address": "0xA28E"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x84",
+      "prg_bank": 10,
+      "pointer_table_file_offset": "0x01403E",
+      "cpu_address": "0xA2CB",
+      "file_offset": "0x0142DB",
+      "next_pointer": "0xA2F8",
+      "length_bytes": 45,
+      "raw_hex": "00 f1 22 38 f6 8e 9e 01 f1 22 3e f5 8e ae 01 f1 22 38 f6 93 11 01 f1 22 3e f5 93 25 01 f1 22 38 f6 93 39 01 f1 22 3e f5 8d b8 01 a2 cc",
+      "source_bin": "reference/rom_extract/intro/animation_84.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x00",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0142DC",
+            "raw_hex": "f1 22 38",
+            "y": 34,
+            "x": 56
+          },
+          {
+            "kind": "mirror_off",
+            "file_offset": "0x0142DF",
+            "raw_hex": "f6"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0142E0",
+            "raw_hex": "8e 9e",
+            "cpu_address": "0xAE9E"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0142E2",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0142E3",
+            "raw_hex": "f1 22 3e",
+            "y": 34,
+            "x": 62
+          },
+          {
+            "kind": "mirror_on",
+            "file_offset": "0x0142E6",
+            "raw_hex": "f5"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0142E7",
+            "raw_hex": "8e ae",
+            "cpu_address": "0xAEAE"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0142E9",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0142EA",
+            "raw_hex": "f1 22 38",
+            "y": 34,
+            "x": 56
+          },
+          {
+            "kind": "mirror_off",
+            "file_offset": "0x0142ED",
+            "raw_hex": "f6"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0142EE",
+            "raw_hex": "93 11",
+            "cpu_address": "0xB311"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0142F0",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0142F1",
+            "raw_hex": "f1 22 3e",
+            "y": 34,
+            "x": 62
+          },
+          {
+            "kind": "mirror_on",
+            "file_offset": "0x0142F4",
+            "raw_hex": "f5"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0142F5",
+            "raw_hex": "93 25",
+            "cpu_address": "0xB325"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0142F7",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0142F8",
+            "raw_hex": "f1 22 38",
+            "y": 34,
+            "x": 56
+          },
+          {
+            "kind": "mirror_off",
+            "file_offset": "0x0142FB",
+            "raw_hex": "f6"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0142FC",
+            "raw_hex": "93 39",
+            "cpu_address": "0xB339"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0142FE",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0142FF",
+            "raw_hex": "f1 22 3e",
+            "y": 34,
+            "x": 62
+          },
+          {
+            "kind": "mirror_on",
+            "file_offset": "0x014302",
+            "raw_hex": "f5"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x014303",
+            "raw_hex": "8d b8",
+            "cpu_address": "0xADB8"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x014305",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "jump",
+            "file_offset": "0x014306",
+            "raw_hex": "a2 cc",
+            "target_cpu_address": "0xA2CC"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x8D",
+      "prg_bank": 10,
+      "pointer_table_file_offset": "0x014050",
+      "cpu_address": "0xA3D3",
+      "file_offset": "0x0143E3",
+      "next_pointer": "0xA3DA",
+      "length_bytes": 7,
+      "raw_hex": "36 f1 30 28 91 5b ff",
+      "source_bin": "reference/rom_extract/intro/animation_8D.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x36",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0143E4",
+            "raw_hex": "f1 30 28",
+            "y": 48,
+            "x": 40
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0143E7",
+            "raw_hex": "91 5b",
+            "cpu_address": "0xB15B"
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x0143E9",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0xA2",
+      "prg_bank": 10,
+      "pointer_table_file_offset": "0x01407A",
+      "cpu_address": "0xA50E",
+      "file_offset": "0x01451E",
+      "next_pointer": "0xA52A",
+      "length_bytes": 28,
+      "raw_hex": "07 f1 12 8e ec f7 29 00 00 8d d6 01 f7 00 00 00 01 f0 f7 00 00 00 f1 3e be 8d d6 ff",
+      "source_bin": "reference/rom_extract/intro/animation_A2.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x07",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x01451F",
+            "raw_hex": "f1 12 8e",
+            "y": 18,
+            "x": 142
+          },
+          {
+            "kind": "repeat_begin",
+            "file_offset": "0x014522",
+            "raw_hex": "ec",
+            "count": 12
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x014523",
+            "raw_hex": "f7 29 00 00"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x014527",
+            "raw_hex": "8d d6",
+            "cpu_address": "0xADD6"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x014529",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x01452A",
+            "raw_hex": "f7 00 00 00"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x01452E",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "repeat_end",
+            "file_offset": "0x01452F",
+            "raw_hex": "f0"
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x014530",
+            "raw_hex": "f7 00 00 00"
+          },
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x014534",
+            "raw_hex": "f1 3e be",
+            "y": 62,
+            "x": 190
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x014537",
+            "raw_hex": "8d d6",
+            "cpu_address": "0xADD6"
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x014539",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0xC0",
+      "prg_bank": 10,
+      "pointer_table_file_offset": "0x0140B6",
+      "cpu_address": "0xA750",
+      "file_offset": "0x014760",
+      "next_pointer": "0xA757",
+      "length_bytes": 7,
+      "raw_hex": "07 f1 04 04 96 eb ff",
+      "source_bin": "reference/rom_extract/intro/animation_C0.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x07",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x014761",
+            "raw_hex": "f1 04 04",
+            "y": 4,
+            "x": 4
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x014764",
+            "raw_hex": "96 eb",
+            "cpu_address": "0xB6EB"
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x014766",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0xC1",
+      "prg_bank": 10,
+      "pointer_table_file_offset": "0x0140B8",
+      "cpu_address": "0xA757",
+      "file_offset": "0x014767",
+      "next_pointer": "0xA765",
+      "length_bytes": 14,
+      "raw_hex": "02 e3 f1 04 fc 97 11 f7 05 00 00 0a f0 ff",
+      "source_bin": "reference/rom_extract/intro/animation_C1.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x02",
+        "entry_commands": [
+          {
+            "kind": "repeat_begin",
+            "file_offset": "0x014768",
+            "raw_hex": "e3",
+            "count": 3
+          },
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x014769",
+            "raw_hex": "f1 04 fc",
+            "y": 4,
+            "x": 252
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x01476C",
+            "raw_hex": "97 11",
+            "cpu_address": "0xB711"
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x01476E",
+            "raw_hex": "f7 05 00 00"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x014772",
+            "raw_hex": "0a",
+            "frames": 20
+          },
+          {
+            "kind": "repeat_end",
+            "file_offset": "0x014773",
+            "raw_hex": "f0"
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x014774",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    }
+  ],
+  "decoded_animation_8D": {
+    "source_file_offset": "0x0143E3",
+    "sprite_palette_index": "0x36",
+    "position_y": 48,
+    "position_x": 40,
+    "sprite_frame_cpu_address": "0xB15B",
+    "sprite_frame_file_offset": "0x01516B",
+    "sprite_chr_bank_selectors_hex": "7c 71 52 53",
+    "sprite_chr_header_source_bin": "reference/rom_extract/intro/animation_8D_sprite_chr_header.bin",
+    "command_sequence": [
+      "F1 30 28: set initial Y,X",
+      "91 5B: load sprite frame at $B15B",
+      "FF: terminate animation"
+    ],
+    "limitation": "The remainder of the sprite-frame command stream and OAM composition still require decoding."
+  },
+  "observed_dispatch_trace": {
+    "path": "reference/rom_extract/intro/cold_start_observed_dispatch.json",
+    "capture": "reference/diagnostics/opening_dispatch_full_20261024_150016/opcode_flow.csv",
+    "status": "verified bounded live dispatch trace",
+    "dispatch_count": 585,
+    "verified_source_ranges": [
+      {
+        "first_pass": "$A020 through dispatched FE at $A29E; FE handler $8862 jumps to $A020."
+      },
+      {
+        "partial_loop_replay": "$A020 through $A050; Start/title handoff changes pointer to $00E8."
+      }
+    ],
+    "incomplete_gaps": [
+      "Capture ends during replay at title handoff; does not establish a terminal cutscene boundary.",
+      "Vector command side effects and variable operands are not fully modeled.",
+      "Frame-specific PPU visibility and transition raster timing are not established by opcode dispatch alone."
+    ]
+  }
+}

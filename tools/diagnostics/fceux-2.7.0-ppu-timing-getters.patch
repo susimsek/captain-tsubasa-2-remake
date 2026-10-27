@@ -1,0 +1,46 @@
+diff --git a/src/lua-engine.cpp b/src/lua-engine.cpp
+index b337513..2aa8ff8 100644
+--- a/src/lua-engine.cpp
++++ b/src/lua-engine.cpp
+@@ -1626,6 +1626,20 @@ static int ppu_readbyte(lua_State *L) {
+ 	return 1;
+ }
+ 
++// Diagnostic-only timing accessors for ROM-to-frame reconstruction.
++static int ppu_getscanline(lua_State *L) {
++	lua_pushinteger(L, newppu ? newppu_get_scanline() : scanline);
++	return 1;
++}
++
++static int ppu_getdot(lua_State *L) {
++	// New PPU reports hardware dot (0..340); legacy renderer reports its
++	// current visible raster pixel (g_rasterpos), which is sufficient for
++	// visible scanline writes but is not a full blanking-period dot count.
++	lua_pushinteger(L, newppu ? newppu_get_dot() : g_rasterpos);
++	return 1;
++}
++
+ static int ppu_readbyterange(lua_State *L) {
+ 	int range_start = luaL_checkinteger(L, 1);
+ 	int range_size = luaL_checkinteger(L, 2);
+@@ -6292,6 +6306,8 @@ static const struct luaL_reg memorylib [] = {
+ static const struct luaL_reg ppulib [] = {
+ 	{"readbyte", ppu_readbyte},
+ 	{"readbyterange", ppu_readbyterange},
++	{"getscanline", ppu_getscanline},
++	{"getdot", ppu_getdot},
+ 
+ 	{NULL,NULL}
+ };
+diff --git a/src/ppu.h b/src/ppu.h
+index 4555264..288648f 100644
+--- a/src/ppu.h
++++ b/src/ppu.h
+@@ -39,6 +39,7 @@ extern uint8 FASTCALL FFCEUX_PPURead_Default(uint32 A);
+ void FFCEUX_PPUWrite_Default(uint32 A, uint8 V);
+ 
+ extern int g_rasterpos;
++extern int scanline;
+ extern uint8 PPU[4];
+ extern bool DMC_7bit;
+ extern bool paldeemphswap;

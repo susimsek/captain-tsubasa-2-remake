@@ -1,0 +1,173 @@
+{
+  "background_id": "0x00",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "layout_kind": "validated_ppu_nametable_tile_mapping",
+  "tile_placements": [
+    {
+      "x": 13,
+      "y": 12,
+      "tile_id": 40,
+      "palette_id": 0
+    },
+    {
+      "x": 14,
+      "y": 12,
+      "tile_id": 41,
+      "palette_id": 0
+    },
+    {
+      "x": 15,
+      "y": 12,
+      "tile_id": 44,
+      "palette_id": 0
+    },
+    {
+      "x": 16,
+      "y": 12,
+      "tile_id": 45,
+      "palette_id": 0
+    },
+    {
+      "x": 17,
+      "y": 12,
+      "tile_id": 56,
+      "palette_id": 0
+    },
+    {
+      "x": 18,
+      "y": 12,
+      "tile_id": 55,
+      "palette_id": 0
+    },
+    {
+      "x": 19,
+      "y": 12,
+      "tile_id": 57,
+      "palette_id": 0
+    },
+    {
+      "x": 20,
+      "y": 12,
+      "tile_id": 60,
+      "palette_id": 0
+    },
+    {
+      "x": 21,
+      "y": 12,
+      "tile_id": 61,
+      "palette_id": 0
+    },
+    {
+      "x": 13,
+      "y": 13,
+      "tile_id": 42,
+      "palette_id": 0
+    },
+    {
+      "x": 14,
+      "y": 13,
+      "tile_id": 43,
+      "palette_id": 0
+    },
+    {
+      "x": 15,
+      "y": 13,
+      "tile_id": 46,
+      "palette_id": 0
+    },
+    {
+      "x": 16,
+      "y": 13,
+      "tile_id": 47,
+      "palette_id": 0
+    },
+    {
+      "x": 17,
+      "y": 13,
+      "tile_id": 58,
+      "palette_id": 0
+    },
+    {
+      "x": 18,
+      "y": 13,
+      "tile_id": 42,
+      "palette_id": 0
+    },
+    {
+      "x": 19,
+      "y": 13,
+      "tile_id": 59,
+      "palette_id": 0
+    },
+    {
+      "x": 20,
+      "y": 13,
+      "tile_id": 62,
+      "palette_id": 0
+    },
+    {
+      "x": 21,
+      "y": 13,
+      "tile_id": 63,
+      "palette_id": 0
+    },
+    {
+      "x": 14,
+      "y": 15,
+      "tile_id": 20,
+      "palette_id": 0
+    },
+    {
+      "x": 15,
+      "y": 15,
+      "tile_id": 10,
+      "palette_id": 0
+    },
+    {
+      "x": 16,
+      "y": 15,
+      "tile_id": 7,
+      "palette_id": 0
+    },
+    {
+      "x": 17,
+      "y": 15,
+      "tile_id": 3,
+      "palette_id": 0
+    },
+    {
+      "x": 18,
+      "y": 15,
+      "tile_id": 20,
+      "palette_id": 0
+    },
+    {
+      "x": 19,
+      "y": 15,
+      "tile_id": 7,
+      "palette_id": 0
+    },
+    {
+      "x": 20,
+      "y": 15,
+      "tile_id": 18,
+      "palette_id": 0
+    }
+  ],
+  "mapping_evidence": {
+    "capture_file": "reference/opening_reference_capture/ppu_states/ppu_000026.bin",
+    "capture_frame": 26,
+    "capture_usage": "Tile IDs and NES attribute subpalettes only; not a shipped raster image. Runtime pixels are decoded from extracted ROM CHR and palette bytes.",
+    "ppu_nametable": "nametable 0 at $2000-$23FF; 960 tile bytes followed by 64 attribute bytes",
+    "observed_ppu_write_capture": "reference/opening_timing_capture_20261024_131000/bus_events.csv",
+    "source_frames": [
+      10,
+      11
+    ],
+    "ppu_write_ranges": [
+      "$218C-$21F4"
+    ],
+    "write_detail": "The title tile IDs are emitted by the ROM PPU queue in row packets beginning at $218C, $21AC, $21CC, $21EC, then $2190, $21B0, $21D0, and continued at $2194, $21B4, $21F0, $21F4. The captured frame-26 nametable retains the resulting tile map.",
+    "rom_source_table": "Not yet identified. F9 background 00 record and blocks 0x22-0x24 are preserved separately; they do not account for these displayed title tile IDs. E8 preset 1 effect remains unresolved."
+  }
+}
