@@ -6,8 +6,8 @@
 
 <p align="left">
   <a href="https://github.com/susimsek/captain-tsubasa-2-remake/actions/workflows/ci.yml"><img src="https://github.com/susimsek/captain-tsubasa-2-remake/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI status"></a>
-  <img src="https://img.shields.io/badge/Engine-Godot%204.7.2-478cbf?logo=godotengine&logoColor=white" alt="Engine: Godot 4.7.2">
-  <img src="https://img.shields.io/badge/Language-GDScript-478cbf?logo=godotengine&logoColor=white" alt="Language: GDScript">
+  <img src="https://img.shields.io/badge/Engine-Godot%204.7.2-478cbf" alt="Engine: Godot 4.7.2">
+  <img src="https://img.shields.io/badge/Language-GDScript-478cbf" alt="Language: GDScript">
   <img src="https://img.shields.io/badge/Runtime-Standalone-2ea44f" alt="Standalone runtime">
   <img src="https://img.shields.io/badge/Milestone-Opening%20to%20Title-f0ad4e" alt="Milestone: opening to title">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-blue.svg" alt="Apache-2.0"></a>
@@ -19,7 +19,7 @@ An unofficial Godot reconstruction of the Turkish NES release. The current miles
 
 The game runs from the Godot project without loading the supplied ROM or starting an emulator. Runtime resources extracted from the ROM are kept in the project and their source information is documented under **reference/rom_extract/**.
 
-The poster above is the original promotional image supplied by the project owner and is stored at `assets/readme/captain-tsubasa-2-poster.jpg` for the README. Its source is [LaunchBox](https://images.launchbox-app.com/78127ee0-f18d-4a8d-87d1-eb8afdb3ca0a.jpg). It is not a runtime game asset, and its rights remain with its respective owners.
+The poster above is the original promotional image supplied by the project owner and is stored at `assets/readme/captain-tsubasa-2-poster.jpg`. The same artwork supplies the desktop application icons and the brief startup splash; it is kept separate from the ROM-derived game visuals. Its source is [LaunchBox](https://images.launchbox-app.com/78127ee0-f18d-4a8d-87d1-eb8afdb3ca0a.jpg), and its rights remain with its respective owners.
 
 ## Table of Contents
 

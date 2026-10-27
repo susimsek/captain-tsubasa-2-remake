@@ -828,7 +828,9 @@ func _dispatch_decoded_command(decoded: Dictionary) -> bool:
 				return false
 			if selected_background_id == 0x08:
 				_bg08_raster_model = BG08_RASTER_MODEL_SCRIPT.new()
-				if not _bg08_raster_model.configure(1048, previous_2k_chr_selectors):
+				# The ROM loops this opening. Derive each F5 10 stream edge from the
+				# corresponding loaded-pair commit instead of reusing frame 1048.
+				if not _bg08_raster_model.configure(-1, previous_2k_chr_selectors):
 					_fail_slice("Could not initialize the ROM BG08 raster model: " + _bg08_raster_model.last_error)
 					return false
 				state["bg08_pending_pair_source"] = previous_2k_chr_selectors.duplicate()
@@ -944,8 +946,9 @@ func _dispatch_decoded_command(decoded: Dictionary) -> bool:
 			elif f5_operand == 0xFF:
 				_stop_f5_palette_effect("F5 FF clears $4C")
 			if f5_operand == 0x10 and int(state.get("background_id", -1)) == 0x08:
-				if _bg08_raster_model == null:
-					_fail_slice("BG08 F5 10 stream started without its preset/raster model.")
+				if _bg08_raster_model == null \
+						or not _bg08_raster_model.background_pair_transition_is_ready(source_frame):
+					_fail_slice("BG08 F5 10 stream started before its ROM packet-load transition.")
 					return false
 				state["bg08_raster_model"] = _bg08_raster_model.debug_snapshot()
 			_script_cursor += int(decoded["consumed_length"])

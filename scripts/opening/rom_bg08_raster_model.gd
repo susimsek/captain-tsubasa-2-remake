@@ -64,13 +64,14 @@ var _frame_state: Dictionary = {}
 
 
 ## `stream_start_source_frame` is the source-frame edge for command `F5 10`.
-## Configure this on BG08's activation edge and pass the previous background's
-## live R0/R1 pair. The stream starts at 1048 in the observed opening.
+## Pass -1 when the BG08 packet load determines that edge dynamically; the
+## loaded-pair transition then supplies the exact stream start. The first
+## observed opening starts the stream at frame 1048.
 func configure(stream_start_source_frame: int, initial_2k_selectors: Array[int]) -> bool:
 	last_error = ""
 	_configured = false
-	if stream_start_source_frame < 0:
-		return _fail("BG08 selector-effect start frame cannot be negative.")
+	if stream_start_source_frame < -1:
+		return _fail("BG08 selector-effect start frame must be non-negative or pending.")
 	if initial_2k_selectors.size() != 2:
 		return _fail("BG08 needs the prior background's initial R0/R1 selector pair.")
 	for selector in initial_2k_selectors:
@@ -134,7 +135,7 @@ func set_background_pair_transition(new_selectors: Array[int], effective_source_
 			return _fail("BG08 transition selectors must be in the 7-bit CHR bank range.")
 	if new_selectors[0] != int(_bg08_record_pair[0]) or new_selectors[1] != int(_bg08_record_pair[1]):
 		return _fail("BG08 transition pair does not match the preserved ROM background record.")
-	if effective_source_frame != _stream_start_source_frame:
+	if _stream_start_source_frame >= 0 and effective_source_frame != _stream_start_source_frame:
 		return _fail("BG08 record transition must align with the decoded F5 10 stream start.")
 	if _active_window_started and effective_source_frame <= _last_source_frame:
 		return _fail("BG08 background transition must be queued before its effective source frame.")
@@ -146,7 +147,15 @@ func set_background_pair_transition(new_selectors: Array[int], effective_source_
 	_background_pair_transition_set = true
 	_background_pair_transition_selectors = new_selectors.duplicate()
 	_background_pair_transition_source_frame = effective_source_frame
+	if _stream_start_source_frame < 0:
+		_stream_start_source_frame = effective_source_frame
+		_next_selector_write_source_frame = effective_source_frame
 	return true
+
+
+func background_pair_transition_is_ready(stream_start_source_frame: int) -> bool:
+	return _background_pair_transition_set \
+			and _background_pair_transition_source_frame == stream_start_source_frame
 
 
 ## Advance monotonically through decoded source frames. Returns false on invalid
@@ -167,7 +176,9 @@ func advance_to_source_frame(frame: int) -> bool:
 		return _fail("BG08 raster model cannot run backwards.")
 	while _last_source_frame < frame:
 		_last_source_frame += 1
-		if _last_source_frame >= _stream_start_source_frame and not _background_pair_transition_set:
+		if _stream_start_source_frame >= 0 \
+				and _last_source_frame >= _stream_start_source_frame \
+				and not _background_pair_transition_set:
 			_last_source_frame -= 1
 			return _fail("BG08 packet-load transition must be supplied before the F5 10 frame.")
 		_frame_state = _build_frame_state(_last_source_frame)
