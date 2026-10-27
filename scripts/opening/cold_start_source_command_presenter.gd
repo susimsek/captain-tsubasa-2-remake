@@ -1551,12 +1551,16 @@ func _stage_f8_full_palette_rebuild(source_frame: int) -> bool:
 
 
 func _finish_f8_title_service(source_frame: int, consumed_length: int) -> void:
-	var helper_completion_frame := int(_f8_helper_return_event.get(
+	var helper_completion_phase_frame := int(_f8_helper_return_event.get(
 		"service_completion_source_frame", -1))
-	var dispatch_frame := int(_f8_helper_return_event.get("runtime_dispatch_frame", -1))
-	if source_frame != helper_completion_frame or dispatch_frame <= source_frame:
+	var dispatch_phase_frame := int(_f8_helper_return_event.get("runtime_dispatch_frame", -1))
+	var current_script_phase_frame := _source_script_phase_frame(source_frame)
+	var next_script_phase_frame := _source_script_phase_frame(source_frame + 1)
+	if current_script_phase_frame != helper_completion_phase_frame \
+			or next_script_phase_frame != dispatch_phase_frame:
 		_fail_slice("The F8 helper-return event reached an unexpected source frame.")
 		return
+	var dispatch_source_frame := source_frame + 1
 	# `$9B7F` fills the OAM shadow and its DMA image with hidden Y values.
 	state["oam_shadow_cleared"] = true
 	state["oam_y_shadow_fill"] = 0xF8
@@ -1593,11 +1597,14 @@ func _finish_f8_title_service(source_frame: int, consumed_length: int) -> void:
 	# The ROM-only source stepper traces the wrapper return through `$8879`, then
 	# the next script dispatch and `$9FA8` compact-wait call on this frame edge.
 	# Runtime consumes only the event's frame label, never modeled cycle offsets.
-	state["script_dispatch_not_before_frame"] = dispatch_frame
+	state["script_dispatch_not_before_frame"] = dispatch_source_frame
 	state["f8_helper_return_dispatch_event"] = {
 		"source": F8_HELPER_RETURN_EVENT_PATH,
-		"service_completion_source_frame": helper_completion_frame,
-		"dispatch_source_frame": dispatch_frame,
+		"service_completion_script_phase_frame": helper_completion_phase_frame,
+		"service_completion_source_frame": source_frame,
+		"dispatch_script_phase_frame": dispatch_phase_frame,
+		"dispatch_source_frame": dispatch_source_frame,
+		"script_loop_count": int(state.get("script_loop_count", 0)),
 		"script_cpu": "$A29D",
 		"next_opcode": "$DF",
 		"runtime_consumes_cycle_offsets": false,
@@ -1608,8 +1615,9 @@ func _finish_f8_title_service(source_frame: int, consumed_length: int) -> void:
 	# first-release phase instead of shortening the script command itself.
 	state["compact_pause_current_release_credit"] = true
 	state["compact_pause_release_credit_basis"] = {
-		"rom_helper_return_frame": helper_completion_frame,
-		"next_dispatch_frame": dispatch_frame,
+		"rom_helper_return_script_phase_frame": helper_completion_phase_frame,
+		"rom_helper_return_source_frame": source_frame,
+		"next_dispatch_frame": dispatch_source_frame,
 		"next_command_cpu": "$A29D",
 		"rom_wait_value": 240,
 		"observed_slot_0005_after_dispatch": "$EF",

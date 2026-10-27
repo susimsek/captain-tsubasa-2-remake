@@ -3,6 +3,7 @@ extends EditorExportPlugin
 
 const ROM_DATA_ROOT := "res://reference/rom_extract"
 const PALETTE_ROOT := "res://reference/palettes"
+const OPENING_LOGIC_ROOT := "res://assets/opening/rom_logic"
 const RAW_AUDIO_PATH := "res://assets/opening/audio/opening_timeline_rom_driver.wav"
 const EXPORTED_RUNTIME_EXTENSIONS := ["bin", "json", "2bpp", "pal"]
 
@@ -14,6 +15,9 @@ func _get_name() -> String:
 func _export_begin(_features: PackedStringArray, _is_debug: bool, _path: String, _flags: int) -> void:
 	_add_runtime_directory(ROM_DATA_ROOT)
 	_add_runtime_directory(PALETTE_ROOT)
+	# The presenter reads byte-preserved ROM tables and JSON manifests with
+	# FileAccess at runtime, so the standalone package must include them directly.
+	_add_runtime_directory(OPENING_LOGIC_ROOT)
 	_add_runtime_file(RAW_AUDIO_PATH, RAW_AUDIO_PATH)
 
 
