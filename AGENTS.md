@@ -365,22 +365,25 @@ For a gameplay feature, consider it complete when:
   spanning eight F2 groups match the 26 Oct full Godot capture pixel-for-pixel.
   That prior full capture had visible-frame parity with FCEUX; this focused run
   was a Godot regression check and did not add per-callsite CPU-cycle evidence.
-- **2026-10-27 opening timing follow-up:** a ROM-only replay now generates all
+- **2026-10-27 opening timing follow-up:** a ROM-only replay generates all
   4,653 `$802C` Start-poll cycle offsets and compares them with the muted FCEUX
-  trace only after execution. 3,678 are exact and 4,647 are within ±3 cycles;
-  the captured handoff poll at frame 4661 matches at cycle offset 4,288. Two
-  unexplained local residuals remain at frames 3598 (+259) and 3601 (+263), so
-  this diagnostic schedule is not promoted to runtime. Godot's saved frame
-  4691 is black and frame 4692's first visible nonblack pixel is `(117,39)`,
-  matching the FCEUX image coordinate and color. A muted pinned-FCEUX NewPPU
-  replay maps line39/dot118 to model beam cycle 139,707,186 (6,858 cycles after
-  that frame boundary); the scanline compositor writes its pixel 32/48 CPU
-  cycles later. This resolves the FCEUX-model beam coordinate time only, not
-  Godot host scanout or a physical 2C02 output edge. Physical 2A03/2C02 timing
-  remains open without console-level capture. See
+  trace only after execution. A source-backed IRQ-mask bookkeeping correction
+  in the diagnostics stepper resolves the former frame-3598/3601 residuals:
+  3,680 polls are exact, 4,649 are within ±3 cycles, and the maximum residual
+  is 7 cycles. The frame-4661 handoff poll remains exact at offset 4,288.
+  This diagnostic schedule is not promoted to Godot runtime. The corrected
+  stepper also regenerates the title handoff events without changing their 330
+  `(kind, cycle_offset, frame, pc, ordinal)` entries or `$8048` anchor. Its
+  frame-4691→4692 phase remains `cpu_credit=-64`; the source-only title raster
+  verifier passes at cycle 139,707,186 with zero-cycle delta against the
+  pinned-FCEUX model. Godot still presents a complete texture, so this does not
+  control host scanout or prove a physical 2C02 output edge. Physical
+  2A03/2C02 timing remains open without console-level capture. See
   `reference/diagnostics/timing_gap_followup_20261027.md`,
   `reference/diagnostics/physical_console_timing_capture_protocol_20261027.md`, and
-  `reference/diagnostics/start_poll_rom_source_timing_20261027/`.
+  `reference/diagnostics/start_poll_rom_source_timing_20261027/`; the four small
+  frame-relative residuals and their absolute-cycle interpretation are in
+  `irq_mask_corrected_full_audit/remaining_poll_residual_audit.md`.
 - **2026-10-27 source-only title raster:** `tools/diagnostics/verify_source_only_title_virtual_raster.gd`
   derives the first ROM-rendered title pixel's frame-4692 timestamp as CPU
   cycle 139,707,186 from the ROM-stepper's prior-frame `cpu_credit=-64`, the

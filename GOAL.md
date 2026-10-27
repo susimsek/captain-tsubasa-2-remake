@@ -2543,22 +2543,31 @@ eşliğini doğrulamak. FCEUX çevrim/piksel izleri yalnızca sonradan doğrulam
 referansıdır; Godot runtime'a yakalama zamanlaması kopyalanmayacak. Fiziksel
 2A03/2C02 silikon eşliği gerçek konsol kaydı olmadan iddia edilmeyecek.
 
-- [ ] Frame 3598 ve 3601 yoklama kalıntılarının kaynaklı nedenini bul; ROM-only
-  üretici düzeltilebiliyorsa düzelt ve 4.653 karelik tüm ölçümü yeniden çalıştır.
+- [x] Frame 3598 ve 3601 yoklama kalıntılarının kaynaklı nedeni bulundu:
+  adımlayıcı IRQ kabulünden sonra kredi erken dönüşünde `prev_p` durumunu
+  eşitlemiyordu ve aynı MMC3 IRQ'yu tekrar kabul ediyordu. ROM-only adımlayıcıda
+  tanılama düzeltmesi yapıldı ve 4.653 yoklamanın tamamı yeniden ölçüldü.
 - [x] Frame 4692 ilk pikselinin ROM/PPU durumundan sanal raster zamanını türet;
   bunun Godot masaüstü taramasını denetlemediğini doğrulayarak doğrulama saati
   olarak tut.
-- [ ] Değişiklik varsa açılış ve title endpoint aynı-girdi doğrulamasını çalıştır;
+- [x] Değişiklikten sonra açılış ve title endpoint aynı-girdi doğrulamasını çalıştır;
   `KICK OFF` seçimini koru ve hiçbir seçeneği onaylama.
-- [ ] Fiziksel konsol ölçümü yoksa sınırı ve gerekli ölçüm düzenini belgede açık
+- [x] Fiziksel konsol ölçümü yoksa sınırı ve gerekli ölçüm düzenini belgede açık
   tut; fiziksel zamanlama için tahminî bir runtime değeri üretme.
 
 ROM-only adımlayıcı, aynı ROM/input rotasında 4.653 `$802C` Start yoklamasının
 kare-içi çevrimlerini üretti; FCEUX zamanları yalnızca sonradan doğrulamada
-kullanıldı. 3.678/4.653 tam eşleşme, 4.647/4.653 ise ±3 CPU çevrim içinde.
-Frame 4661'deki hedef Start yoklaması tam eşleşiyor (offset 4.288, mutlak
-138.781.421). Frame 3598 (+259) ve 3601 (+263) kalıntıları açıklanmadı; kaynak
-model kısmi olduğu için bu tablo runtime'a alınmadı.
+kullanıldı. IRQ maskesi düzeltmesinden sonra 3.680/4.653 yoklama tam eşleşiyor,
+4.649/4.653 ise ±3 CPU çevrim içinde; en büyük artık 7 çevrim. Frame 3598 ve
+3601 artık tam eşleşiyor. Frame 4661'deki hedef Start yoklaması da tam eşleşiyor
+(offset 4.288, mutlak 138.781.421). Bu yalnızca tanılama adımlayıcısındaki
+kaynak yürütme düzeltmesidir; Godot runtime'a yakalama zamanı aktarılmadı.
+Kalan dört karede göreli offset farkları −7/−6/+5/+4; bunların mutlak yoklama
+farkı −3/−3/+3/+3 çevrim ve kare başlangıçlarının 1–4 çevrim kaymasıyla
+açıklanıyor. Tüm 4.653 yoklamanın mutlak zamanı 4.652 karede ±3 çevrim içinde,
+frame 473'te en büyük fark 7 çevrim. Yeni bir kaynaklı kod düzeltmesi için kanıt
+yok; ölçümler `reference/diagnostics/start_poll_rom_source_timing_20261027/irq_mask_corrected_full_audit/remaining_poll_residual_audit.md` içinde.
+Fiziksel NES zamanlaması ve adımlayıcının DMA/PPU sınırlamaları açık kalıyor.
 
 Godot'un kaydedilmiş frame 4691'i 61.440/61.440 siyah RGB pikseli içeriyor;
 frame 4692'deki ilk görünür nonblack piksel `(117,39)`, beyaz ve FCEUX'ün
@@ -2576,8 +2585,18 @@ denetimde değiştirilmedi. Ayrıntılar:
 ROM-only doğrulayıcı frame-4691 son CPU/PPU fazından (`cpu_credit=-64`, −4 PPU
 noktası), ROM kaynaklı başlık görüntüsündeki ilk beyaz pikselden `(117,39)` ve
 NTSC satır geometrisinden frame 4692 için `139.707.186` sanal çevrimini türetiyor;
-bağımsız FCEUX NewPPU koordinat zamanı da aynı çevrim. Godot bunu alt-karede
-ekrana basmıyor; bütün dokuyu kare olarak sunduğu için bu değeri runtime
-zamanlamasına bağlamak doğru değil. Doğrulayıcı ve ayrıntılı hesap:
+bağımsız FCEUX NewPPU koordinat zamanı da aynı çevrim. IRQ maskesi düzeltmesinden
+sonra başlık aktarım olayları yeniden üretildi: 330 olayın sırası/çevrimleri ve
+`$8048` ankrajı değişmedi; sanal raster doğrulayıcısı tekrar PASS verdi. Godot
+bunu alt-karede ekrana basmıyor; bütün dokuyu kare olarak sunduğu için bu değeri
+runtime zamanlamasına bağlamak doğru değil. Doğrulayıcı ve ayrıntılı hesap:
 `tools/diagnostics/verify_source_only_title_virtual_raster.gd` ve
 `reference/diagnostics/source_only_title_virtual_raster_20261027.md`.
+
+Güncellenmiş ROM-only kaynak olay tablosunun 330 başlık olayı, sırası, çevrim
+offsetleri ve `$8048` başlangıç ankrajı önceki tabloyla aynı. Düzeltilmiş
+adımlayıcıdan yeniden üretildikten sonra sanal raster doğrulayıcısı Godot 4.7.2'de
+tekrar PASS verdi. `godot --headless --audio-driver Dummy --path . --script
+tools/diagnostics/verify_main_opening_title_handoff.gd` da geçti: `KICK OFF`
+görünüyor, geçiş çalışmıyor, seçenek onaylanmıyor. Fiziksel konsol ölçüm
+protokolü ve donanım yokluğu `reference/diagnostics/physical_console_timing_capture_protocol_20261027.md` içinde.
