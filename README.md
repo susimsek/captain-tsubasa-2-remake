@@ -40,6 +40,7 @@ The poster above is the original promotional image supplied by the project owner
 - Original CHR, palette, background, sprite, and audio-derived project resources.
 - ROM-derived opening music with an offline Godot audio resource.
 - Title handoff to the initial **KICK OFF** / **CONTINUE** menu.
+- Native macOS **About** menu command with project and release information; F1 opens the same dialog on other desktop platforms.
 - No ROM file or emulator dependency at runtime.
 
 ## Current milestone
