@@ -19,7 +19,7 @@ An unofficial Godot reconstruction of the Turkish NES release. The current miles
 
 The game runs from the Godot project without loading the supplied ROM or starting an emulator. Runtime resources extracted from the ROM are kept in the project and their source information is documented under **reference/rom_extract/**.
 
-The poster above is the original promotional image supplied by the project owner and is stored at `assets/readme/captain-tsubasa-2-poster.jpg`. The same artwork supplies the desktop application icons and the brief startup splash; it is kept separate from the ROM-derived game visuals. Its source is [LaunchBox](https://images.launchbox-app.com/78127ee0-f18d-4a8d-87d1-eb8afdb3ca0a.jpg), and its rights remain with its respective owners.
+The poster above is the original promotional image supplied by the project owner and is stored at `assets/readme/captain-tsubasa-2-poster.jpg`. The same artwork supplies the desktop application icons; it is kept separate from the ROM-derived game visuals. Its source is [LaunchBox](https://images.launchbox-app.com/78127ee0-f18d-4a8d-87d1-eb8afdb3ca0a.jpg), and its rights remain with its respective owners.
 
 ## Table of Contents
 
@@ -83,7 +83,7 @@ The active soundtrack is generated from ROM-derived CPU/APU/DMC events and the p
 
 ## CI and releases
 
-Every branch push and pull request targeting **main** runs a clean Godot import and a short headless main-scene launch. Version tags use the release workflow, which checks the project, exports Linux x86_64, Windows x86_64, and macOS Universal desktop packages, and publishes those with source ZIP/TAR.GZ archives, a SHA-256 manifest, and a verified Sigstore signature bundle. The macOS app has a valid built-in ad-hoc signature but is not notarized, so Gatekeeper may still require a one-time approval; a Developer ID signature and notarization are needed to avoid that prompt. The Windows executable is not Authenticode-signed and may show a SmartScreen unknown-publisher warning. The Linux archive preserves the executable permission. If the RELEASE_GPG_PRIVATE_KEY Actions secret is configured, the manifest also receives a detached GPG signature; RELEASE_GPG_PASSPHRASE is optional for an unencrypted key.
+Every branch push and pull request targeting **main** runs a clean Godot import and a short headless main-scene launch. Version tags use the release workflow, which checks the project, exports Linux x86_64, Windows x86_64, and macOS Universal desktop packages, and publishes those with source ZIP/TAR.GZ archives, a SHA-256 manifest, and a verified Sigstore signature bundle. Desktop packages include `THIRD_PARTY_NOTICES.txt` for required engine notices; this does not add engine branding to the game's menus. The macOS app has a valid built-in ad-hoc signature but is not notarized, so Gatekeeper may still require a one-time approval; a Developer ID signature and notarization are needed to avoid that prompt. The Windows executable is not Authenticode-signed and may show a SmartScreen unknown-publisher warning. The Linux archive preserves the executable permission. If the RELEASE_GPG_PRIVATE_KEY Actions secret is configured, the manifest also receives a detached GPG signature; RELEASE_GPG_PASSPHRASE is optional for an unencrypted key.
 
 Sonar badges and quality gates are intentionally absent: Sonar's documented supported-language list does not include GDScript, so it would not analyze the game's main code.
 

@@ -116,6 +116,7 @@ jobs:
 
           "$GODOT_BIN" --headless --path . --export-release \
             "Linux Desktop" "$linux_dir/captain-tsubasa-2-remake.x86_64"
+          cp THIRD_PARTY_NOTICES.txt "$linux_dir/THIRD_PARTY_NOTICES.txt"
           chmod +x "$linux_dir/captain-tsubasa-2-remake.x86_64"
           linux_smoke_log="$RUNNER_TEMP/linux-export-smoke.log"
           "$linux_dir/captain-tsubasa-2-remake.x86_64" --headless --quit-after 2 >"$linux_smoke_log" 2>&1
@@ -125,25 +126,32 @@ jobs:
             exit 1
           fi
           tar --sort=name --mtime='@0' --owner=0 --group=0 --numeric-owner \
-            -C "$linux_dir" -cf - captain-tsubasa-2-remake.x86_64 \
+            -C "$linux_dir" -cf - captain-tsubasa-2-remake.x86_64 THIRD_PARTY_NOTICES.txt \
             | gzip --no-name > "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz"
 
+          windows_dir="$RUNNER_TEMP/windows-package"
+          mkdir -p "$windows_dir"
           "$GODOT_BIN" --headless --path . --export-release \
-            "Windows Desktop" "$asset_dir/captain-tsubasa-2-remake.exe"
-          (cd "$asset_dir" && zip -X -q "captain-tsubasa-2-remake-${RELEASE_TAG}-windows-x86_64.zip" \
-            captain-tsubasa-2-remake.exe)
+            "Windows Desktop" "$windows_dir/captain-tsubasa-2-remake.exe"
+          cp THIRD_PARTY_NOTICES.txt "$windows_dir/THIRD_PARTY_NOTICES.txt"
+          (cd "$windows_dir" && zip -X -q "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-windows-x86_64.zip" \
+            captain-tsubasa-2-remake.exe THIRD_PARTY_NOTICES.txt)
 
+          macos_asset="$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-macos-universal.zip"
           "$GODOT_BIN" --headless --path . --export-release \
-            "macOS Universal" "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-macos-universal.zip"
+            "macOS Universal" "$macos_asset"
+          zip -X -q -j "$macos_asset" "$GITHUB_WORKSPACE/THIRD_PARTY_NOTICES.txt"
 
           test -s "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz"
-          test -s "$asset_dir/captain-tsubasa-2-remake.exe"
+          test -s "$windows_dir/captain-tsubasa-2-remake.exe"
           test -s "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-windows-x86_64.zip"
           test -s "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-macos-universal.zip"
           tar -tzf "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz" >/dev/null
           unzip -tq "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-windows-x86_64.zip"
           unzip -tq "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-macos-universal.zip"
-          rm "$asset_dir/captain-tsubasa-2-remake.exe"
+          unzip -Z1 "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-windows-x86_64.zip" | grep -Fxq THIRD_PARTY_NOTICES.txt
+          unzip -Z1 "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-macos-universal.zip" | grep -Fxq THIRD_PARTY_NOTICES.txt
+          tar -tzf "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz" | grep -Fxq THIRD_PARTY_NOTICES.txt
 
       - name: Create source archives and SHA-256 manifest
         shell: bash
