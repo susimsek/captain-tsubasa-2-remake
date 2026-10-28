@@ -528,16 +528,17 @@ jobs:
           gh release view "$RELEASE_TAG" --repo "$GH_REPO" --json body --jq '.body' > "$notes_file"
           cat >> "$notes_file" <<'EOF'
 
-          ## Download
+          ## Downloads
 
           | Platform | File | First launch |
           | --- | --- | --- |
-          | Windows | Setup `.exe` or portable `.zip` | Setup: follow the installer. ZIP: extract and run `captain-tsubasa-2-remake.exe`. Unsigned build: SmartScreen → **More info** → **Run anyway**. |
-          | Linux | `.AppImage` or `.tar.gz` | AppImage: run `chmod +x <file>`, then launch it. Tarball: extract and run `./captain-tsubasa-2-remake.x86_64`. |
-          | macOS | Universal `.zip` | Extract and move `Captain Tsubasa 2 Remake.app` to Applications. Not notarized: Control-click → **Open** → **Open**. |
+          | Windows | `captain-tsubasa-2-remake-RELEASE_TAG-windows-x86_64-setup.exe` (installer), or portable `captain-tsubasa-2-remake-RELEASE_TAG-windows-x86_64.zip` | Setup: run the installer. ZIP: extract and run `captain-tsubasa-2-remake.exe`. The build is unsigned, so SmartScreen may warn: *More info → Run anyway*. |
+          | Linux | `captain-tsubasa-2-remake-RELEASE_TAG-x86_64.AppImage`, or `captain-tsubasa-2-remake-RELEASE_TAG-linux-x86_64.tar.gz` | `chmod +x captain-tsubasa-2-remake-RELEASE_TAG-x86_64.AppImage && ./captain-tsubasa-2-remake-RELEASE_TAG-x86_64.AppImage`, or use the tarball. |
+          | macOS | `captain-tsubasa-2-remake-RELEASE_TAG-macos-universal.zip` → `Captain Tsubasa 2 Remake.app` | The app is ad-hoc signed, not notarised: right-click `Captain Tsubasa 2 Remake.app` → *Open*, or run `xattr -dr com.apple.quarantine "Captain Tsubasa 2 Remake.app"`. |
 
-          Optional: verify downloaded files against `SHA256SUMS` in the release.
+          Verify downloads against `SHA256SUMS` in the release.
           EOF
+          sed -i "s/RELEASE_TAG/$RELEASE_TAG/g" "$notes_file"
           gh release edit "$RELEASE_TAG" --notes-file "$notes_file" --repo "$GH_REPO"
 
   linux-release-smoke:

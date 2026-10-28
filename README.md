@@ -27,7 +27,7 @@ A Godot remake of *Captain Tsubasa 2: Super Striker* for Windows, macOS, and Lin
 1. [Current build](#current-build)
 2. [About the original game](#about-the-original-game)
 3. [Highlights](#highlights)
-4. [Download](#download)
+4. [Downloads](#downloads)
 5. [System requirements](#system-requirements)
 6. [Run from source](#run-from-source)
 7. [Controls](#controls)
@@ -54,17 +54,17 @@ The current release recreates the opening sequence and soundtrack, then presents
 - The built-in updater verifies the matching platform package before offering **Install and Relaunch**. Windows uses the per-user setup package for protected or temporary installs and the portable ZIP for writable installs.
 - Windows and Linux provide separate **Help → About…** and **Help → Check for Updates…** commands. macOS keeps both in its native application menu. **F1** opens About; **F2** checks for updates. About shows the installed version and original release date; the update check uses a separate dialog.
 
-## Download
+## Downloads
 
 Download the latest version from [GitHub Releases](https://github.com/susimsek/captain-tsubasa-2-remake/releases/latest). Choose the asset for your platform:
 
 | Platform | File | First launch |
 | --- | --- | --- |
-| Windows | `captain-tsubasa-2-remake-vX.Y.Z-windows-x86_64-setup.exe` or portable `captain-tsubasa-2-remake-vX.Y.Z-windows-x86_64.zip` | Setup: follow the installer. ZIP: extract and run `captain-tsubasa-2-remake.exe`. Unsigned build: SmartScreen → **More info** → **Run anyway**. |
-| Linux | `captain-tsubasa-2-remake-vX.Y.Z-x86_64.AppImage` or `captain-tsubasa-2-remake-vX.Y.Z-linux-x86_64.tar.gz` | AppImage: run `chmod +x <file>`, then launch it. Tarball: extract and run `./captain-tsubasa-2-remake.x86_64`. |
-| macOS | Universal `captain-tsubasa-2-remake-vX.Y.Z-macos-universal.zip` | Extract and move `Captain Tsubasa 2 Remake.app` to Applications. Not notarized: Control-click → **Open** → **Open**. |
+| Windows | `captain-tsubasa-2-remake-vX.Y.Z-windows-x86_64-setup.exe` (installer), or portable `captain-tsubasa-2-remake-vX.Y.Z-windows-x86_64.zip` | Setup: run the installer. ZIP: extract and run `captain-tsubasa-2-remake.exe`. The build is unsigned, so SmartScreen may warn: *More info → Run anyway*. |
+| Linux | `captain-tsubasa-2-remake-vX.Y.Z-x86_64.AppImage`, or `captain-tsubasa-2-remake-vX.Y.Z-linux-x86_64.tar.gz` | `chmod +x captain-tsubasa-2-remake-vX.Y.Z-x86_64.AppImage && ./captain-tsubasa-2-remake-vX.Y.Z-x86_64.AppImage`, or use the tarball. |
+| macOS | `captain-tsubasa-2-remake-vX.Y.Z-macos-universal.zip` → `Captain Tsubasa 2 Remake.app` | The app is ad-hoc signed, not notarised: right-click `Captain Tsubasa 2 Remake.app` → *Open*, or run `xattr -dr com.apple.quarantine "Captain Tsubasa 2 Remake.app"`. |
 
-Optional: verify downloaded files against `SHA256SUMS` in the release.
+Verify downloads against `SHA256SUMS` in the release.
 
 ## System requirements
 
@@ -83,9 +83,17 @@ Open the project in Godot 4.7.2 and run the main scene, or launch it from a term
 
 ## Controls
 
-- Up / Down: move the title cursor.
-- Tab / controller Back: switch the title selection.
-- Enter / controller Start: trigger the opening's Start handoff. This does not select a title option.
+Keyboard controls follow the virtual NES layout:
+
+| Keyboard | NES input | Use |
+| --- | --- | --- |
+| Arrow keys | D-pad | Move the title cursor and navigate menus. |
+| Z | A | Advance dialogue and confirm menu choices. |
+| X | B | Send B during the match setup flow. |
+| Enter | Start | Trigger the title handoff; during the route it also advances as A. |
+| Shift (Tab also works) | Select | Switch the title cursor between KICK OFF and CONTINUE, or send Select in the route. |
+
+Space is also accepted as A in route menus. Gamepads use the D-pad, A, B, Start, and Back/Select buttons. At the title, Enter/Start starts KICK OFF when it is selected; CONTINUE remains outside this slice.
 
 ## Project structure
 
