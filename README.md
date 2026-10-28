@@ -64,9 +64,7 @@ Download the latest version from [GitHub Releases](https://github.com/susimsek/c
 | Linux | `captain-tsubasa-2-remake-vX.Y.Z-x86_64.AppImage` or `captain-tsubasa-2-remake-vX.Y.Z-linux-x86_64.tar.gz` | AppImage: run `chmod +x <file>`, then launch it. Tarball: extract and run `./captain-tsubasa-2-remake.x86_64`. |
 | macOS | Universal `captain-tsubasa-2-remake-vX.Y.Z-macos-universal.zip` | Extract and move `Captain Tsubasa 2 Remake.app` to Applications. Not notarized: Control-click → **Open** → **Open**. |
 
-Optional: check downloaded files against `SHA256SUMS` in the release. This checks file integrity; it does not change SmartScreen or Gatekeeper prompts.
-
-The in-game updater uses the Windows ZIP for writable portable installs and the per-user setup package when the current copy is in a protected or temporary folder. Linux updates use the package format matching the running install (AppImage or tarball); macOS updates replace the app bundle in place. Automatic checks never download or install an update on their own. If FUSE is unavailable, launch the AppImage with `--appimage-extract-and-run` or use the tarball instead. The game runs without Godot, a ROM file, or an emulator. Release assets include a SHA-256 manifest and Sigstore signature bundle.
+Optional: verify downloaded files against `SHA256SUMS` in the release.
 
 ## System requirements
 
