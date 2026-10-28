@@ -27,7 +27,7 @@ A Godot remake of *Captain Tsubasa 2: Super Striker* for Windows, macOS, and Lin
 1. [Current build](#current-build)
 2. [About the original game](#about-the-original-game)
 3. [Highlights](#highlights)
-4. [Download](#download)
+4. [Downloads](#downloads)
 5. [System requirements](#system-requirements)
 6. [Run from source](#run-from-source)
 7. [Controls](#controls)
@@ -54,17 +54,17 @@ The current release recreates the opening sequence and soundtrack, then presents
 - The built-in updater verifies the matching platform package before offering **Install and Relaunch**. Windows uses the per-user setup package for protected or temporary installs and the portable ZIP for writable installs.
 - Windows and Linux provide separate **Help → About…** and **Help → Check for Updates…** commands. macOS keeps both in its native application menu. **F1** opens About; **F2** checks for updates. About shows the installed version and original release date; the update check uses a separate dialog.
 
-## Download
+## Downloads
 
-Download the latest version from [GitHub Releases](https://github.com/susimsek/captain-tsubasa-2-remake/releases/latest). Choose the asset for your platform:
+Get the [latest release](https://github.com/susimsek/captain-tsubasa-2-remake/releases/latest):
 
 | Platform | File | First launch |
 | --- | --- | --- |
-| Windows | `captain-tsubasa-2-remake-vX.Y.Z-windows-x86_64-setup.exe` or portable `captain-tsubasa-2-remake-vX.Y.Z-windows-x86_64.zip` | Setup: follow the installer. ZIP: extract and run `captain-tsubasa-2-remake.exe`. Unsigned build: SmartScreen → **More info** → **Run anyway**. |
-| Linux | `captain-tsubasa-2-remake-vX.Y.Z-x86_64.AppImage` or `captain-tsubasa-2-remake-vX.Y.Z-linux-x86_64.tar.gz` | AppImage: run `chmod +x <file>`, then launch it. Tarball: extract and run `./captain-tsubasa-2-remake.x86_64`. |
-| macOS | Universal `captain-tsubasa-2-remake-vX.Y.Z-macos-universal.zip` | Extract and move `Captain Tsubasa 2 Remake.app` to Applications. Not notarized: Control-click → **Open** → **Open**. |
+| Windows 10/11 | `captain-tsubasa-2-remake-vX.Y.Z-windows-x86_64-setup.exe` (installer), or portable `captain-tsubasa-2-remake-vX.Y.Z-windows-x86_64.zip` | Setup: run the installer. ZIP: extract and run `captain-tsubasa-2-remake.exe`. The build is unsigned, so SmartScreen may warn: *More info → Run anyway*. |
+| macOS 11+ (Intel), 13+ (Apple silicon) | `captain-tsubasa-2-remake-vX.Y.Z-macos-universal.zip` → `Captain Tsubasa 2 Remake.app` | The app is ad-hoc signed, not notarised: right-click `Captain Tsubasa 2 Remake.app` → *Open*, or run `xattr -dr com.apple.quarantine "Captain Tsubasa 2 Remake.app"`. |
+| Linux / Steam Deck (x86_64) | `captain-tsubasa-2-remake-vX.Y.Z-x86_64.AppImage`, or `captain-tsubasa-2-remake-vX.Y.Z-linux-x86_64.tar.gz` | `chmod +x <AppImage> && ./<AppImage>`, or use the tarball. |
 
-Optional: verify downloaded files against `SHA256SUMS` in the release.
+Verify downloads against `SHA256SUMS` in the release.
 
 ## System requirements
 
