@@ -533,7 +533,7 @@ jobs:
           | Platform | File | First launch |
           | --- | --- | --- |
           | Windows | `captain-tsubasa-2-remake-RELEASE_TAG-windows-x86_64-setup.exe` (installer), or portable `captain-tsubasa-2-remake-RELEASE_TAG-windows-x86_64.zip` | Setup: run the installer. ZIP: extract and run `captain-tsubasa-2-remake.exe`. The build is unsigned, so SmartScreen may warn: *More info → Run anyway*. |
-          | Linux | `captain-tsubasa-2-remake-RELEASE_TAG-x86_64.AppImage`, or `captain-tsubasa-2-remake-RELEASE_TAG-linux-x86_64.tar.gz` | `chmod +x <AppImage> && ./<AppImage>`, or use the tarball. |
+          | Linux | `captain-tsubasa-2-remake-RELEASE_TAG-x86_64.AppImage`, or `captain-tsubasa-2-remake-RELEASE_TAG-linux-x86_64.tar.gz` | `chmod +x captain-tsubasa-2-remake-RELEASE_TAG-x86_64.AppImage && ./captain-tsubasa-2-remake-RELEASE_TAG-x86_64.AppImage`, or use the tarball. |
           | macOS | `captain-tsubasa-2-remake-RELEASE_TAG-macos-universal.zip` → `Captain Tsubasa 2 Remake.app` | The app is ad-hoc signed, not notarised: right-click `Captain Tsubasa 2 Remake.app` → *Open*, or run `xattr -dr com.apple.quarantine "Captain Tsubasa 2 Remake.app"`. |
 
           Verify downloads against `SHA256SUMS` in the release.
