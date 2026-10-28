@@ -181,15 +181,20 @@ jobs:
           test -s "$windows_dir/captain-tsubasa-2-remake.exe"
           test -s "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-windows-x86_64.zip"
           test -s "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-macos-universal.zip"
-          tar -tzf "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz" >/dev/null
+          windows_entries="$RUNNER_TEMP/windows-package-entries.txt"
+          macos_entries="$RUNNER_TEMP/macos-package-entries.txt"
+          linux_entries="$RUNNER_TEMP/linux-package-entries.txt"
           unzip -tq "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-windows-x86_64.zip"
           unzip -tq "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-macos-universal.zip"
-          unzip -Z1 "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-windows-x86_64.zip" | grep -Fxq THIRD_PARTY_NOTICES.txt
-          unzip -Z1 "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-macos-universal.zip" | grep -Fxq THIRD_PARTY_NOTICES.txt
-          tar -tzf "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz" | grep -Fxq THIRD_PARTY_NOTICES.txt
-          tar -tzf "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz" | grep -Fxq captain-tsubasa-2-icon.png
-          tar -tzf "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz" | grep -Fxq install-desktop-entry.sh
-          tar -tzf "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz" | grep -Fxq uninstall-desktop-entry.sh
+          unzip -Z1 "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-windows-x86_64.zip" > "$windows_entries"
+          unzip -Z1 "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-macos-universal.zip" > "$macos_entries"
+          tar -tzf "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz" > "$linux_entries"
+          grep -Fxq THIRD_PARTY_NOTICES.txt "$windows_entries"
+          grep -Fxq THIRD_PARTY_NOTICES.txt "$macos_entries"
+          grep -Fxq THIRD_PARTY_NOTICES.txt "$linux_entries"
+          grep -Fxq captain-tsubasa-2-icon.png "$linux_entries"
+          grep -Fxq install-desktop-entry.sh "$linux_entries"
+          grep -Fxq uninstall-desktop-entry.sh "$linux_entries"
 
       - name: Create source archives
         shell: bash
