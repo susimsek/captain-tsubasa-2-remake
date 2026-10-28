@@ -528,7 +528,7 @@ jobs:
           gh release view "$RELEASE_TAG" --repo "$GH_REPO" --json body --jq '.body' > "$notes_file"
           cat >> "$notes_file" <<'EOF'
 
-          ## First launch
+          ## Download
 
           | Platform | File | First launch |
           | --- | --- | --- |
@@ -536,7 +536,7 @@ jobs:
           | Linux | `.AppImage` or `.tar.gz` | AppImage: run `chmod +x <file>`, then launch it. Tarball: extract and run `./captain-tsubasa-2-remake.x86_64`. |
           | macOS | Universal `.zip` | Extract and move `Captain Tsubasa 2 Remake.app` to Applications. Not notarized: Control-click → **Open** → **Open**. |
 
-          Optional: check downloaded files against `SHA256SUMS` in the release. This checks file integrity; it does not change SmartScreen or Gatekeeper prompts.
+          Optional: verify downloaded files against `SHA256SUMS` in the release.
           EOF
           gh release edit "$RELEASE_TAG" --notes-file "$notes_file" --repo "$GH_REPO"
 
