@@ -10,6 +10,10 @@ on:
 permissions:
   contents: read
 
+env:
+  GODOT_VERSION: "4.7.2"
+  GODOT_EDITOR_ARCHIVE_SHA256: cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4
+
 concurrency:
   group: godot-ci-${{ github.ref }}
   cancel-in-progress: true
@@ -23,20 +27,39 @@ jobs:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
+      - name: Cache verified Godot editor archive
+        id: godot-archive-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/Godot_v4.7.2-stable_linux.x86_64.zip
+          key: godot-editor-${{ runner.os }}-${{ env.GODOT_VERSION }}-linux-x86_64-${{ env.GODOT_EDITOR_ARCHIVE_SHA256 }}
+
       - name: Install and verify Godot 4.7.2
+        id: godot-install
         shell: bash
         run: |
           set -euo pipefail
+          SECONDS=0
           archive="$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64.zip"
           godot_dir="$RUNNER_TEMP/godot"
-          curl --fail --silent --show-error --location \
-            "https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip" \
-            --output "$archive"
-          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $archive" | sha256sum --check -
+          if [[ ! -f "$archive" ]] || ! printf '%s  %s\n' "$GODOT_EDITOR_ARCHIVE_SHA256" "$archive" | sha256sum --check --status; then
+            rm -f "$archive"
+            curl --fail --silent --show-error --location \
+              "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip" \
+              --output "$archive"
+            printf '%s  %s\n' "$GODOT_EDITOR_ARCHIVE_SHA256" "$archive" | sha256sum --check -
+            echo "archive_source=download" >> "$GITHUB_OUTPUT"
+          else
+            echo "archive_source=cache" >> "$GITHUB_OUTPUT"
+          fi
           mkdir -p "$godot_dir"
           unzip -q "$archive" -d "$godot_dir"
-          echo "GODOT_BIN=$godot_dir/Godot_v4.7.2-stable_linux.x86_64" >> "$GITHUB_ENV"
-          chmod +x "$godot_dir/Godot_v4.7.2-stable_linux.x86_64"
+          godot_bin="$godot_dir/Godot_v${GODOT_VERSION}-stable_linux.x86_64"
+          chmod +x "$godot_bin"
+          godot_version="$("$godot_bin" --headless --version)"
+          [[ "$godot_version" == "$GODOT_VERSION"* ]]
+          echo "GODOT_BIN=$godot_bin" >> "$GITHUB_ENV"
+          echo "duration_seconds=$SECONDS" >> "$GITHUB_OUTPUT"
 
       - name: Check tracked files exclude ROMs and capture dumps
         shell: bash
@@ -47,13 +70,30 @@ jobs:
             exit 1
           fi
 
-      - name: Import project resources
-        run: '"$GODOT_BIN" --headless --editor --path . --import'
+      - name: Cache imported Godot resources
+        id: godot-import-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .godot/imported
+          key: godot-import-${{ runner.os }}-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', 'export_presets.cfg', '**/*.import', 'assets/**/*') }}
+          restore-keys: |
+            godot-import-${{ runner.os }}-${{ env.GODOT_VERSION }}-
 
-      - name: Export and launch the runtime pack
+      - name: Import project resources
+        id: import-assets
         shell: bash
         run: |
           set -euo pipefail
+          SECONDS=0
+          "$GODOT_BIN" --headless --editor --path . --import
+          echo "duration_seconds=$SECONDS" >> "$GITHUB_OUTPUT"
+
+      - name: Export and launch the runtime pack
+        id: runtime-export
+        shell: bash
+        run: |
+          set -euo pipefail
+          SECONDS=0
           pack="$RUNNER_TEMP/captain-tsubasa-runtime-smoke.pck"
           log="$RUNNER_TEMP/captain-tsubasa-runtime-smoke.log"
           "$GODOT_BIN" --headless --path . --export-pack "Linux Desktop" "$pack"
@@ -63,6 +103,29 @@ jobs:
             echo "The exported runtime pack reported an error." >&2
             exit 1
           fi
+          echo "duration_seconds=$SECONDS" >> "$GITHUB_OUTPUT"
 
       - name: Launch main scene briefly
         run: '"$GODOT_BIN" --headless --path . --quit-after 2'
+
+      - name: Write build performance summary
+        if: always()
+        env:
+          ENGINE_CACHE_HIT: ${{ steps.godot-archive-cache.outputs.cache-hit }}
+          ENGINE_ARCHIVE_SOURCE: ${{ steps.godot-install.outputs.archive_source }}
+          ENGINE_SECONDS: ${{ steps.godot-install.outputs.duration_seconds }}
+          IMPORT_CACHE_HIT: ${{ steps.godot-import-cache.outputs.cache-hit }}
+          IMPORT_SECONDS: ${{ steps.import-assets.outputs.duration_seconds }}
+          EXPORT_SECONDS: ${{ steps.runtime-export.outputs.duration_seconds }}
+        shell: bash
+        run: |
+          value() { [[ -n "$1" ]] && printf '%ss' "$1" || printf 'not reached'; }
+          {
+            echo "## Build performance"
+            echo
+            echo "| Stage | Cache | Duration |"
+            echo "| --- | --- | ---: |"
+            echo "| Godot 4.7.2 archive | exact hit: ${ENGINE_CACHE_HIT:-unknown}; source: ${ENGINE_ARCHIVE_SOURCE:-unknown} | $(value "${ENGINE_SECONDS:-}") |"
+            echo "| Imported Godot resources | exact hit: ${IMPORT_CACHE_HIT:-unknown} | $(value "${IMPORT_SECONDS:-}") |"
+            echo "| Runtime pack export and launch | — | $(value "${EXPORT_SECONDS:-}") |"
+          } >> "$GITHUB_STEP_SUMMARY"

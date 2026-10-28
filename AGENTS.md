@@ -72,6 +72,7 @@ For gameplay engineering tasks, also follow the project skill at `.agents/skills
 - Follow Godot 4.7.2 and the project's existing GDScript conventions.
 - Keep runtime logic typed and focused; use explicit state, clear names, and small functions.
 - Keep factual claims in documentation aligned with current evidence and CI configuration.
+- CI and release may cache the pinned Godot editor archive, export templates, and `.godot/imported` data. Key caches by runner OS, Godot version, verified archive checksum, and relevant import inputs. Caches are performance-only: keep checksum verification and the CI/release resource-import command so a cache cannot replace the quality gate. Record cache hit/miss and timed build stages in each GitHub Actions run summary; compare warm-cache timings with the uncached baseline before claiming a speedup.
 - CI imports Godot resources, briefly launches the main scene, and checks that ROMs and observation-only/generated capture data are not tracked. The release workflow builds the Windows per-user setup, Windows portable ZIP, Linux AppImage and tarball, and macOS universal archive before signing the release manifest. Do not claim a Sonar, coverage, lint, or other quality gate unless it is configured and has run.
 
 ## Testing Guidelines
