@@ -1,0 +1,192 @@
+{
+  "schema": "first-action-menu-dynamic-source-audit-v1",
+  "source_rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "extractor": "python3 tools/gameplay/extract_first_action_menu_dynamic_tables.py",
+  "rom_resources": {
+    "player_name_pointer_table_00_ef.bin": {
+      "size_bytes": 480,
+      "sha256": "9009e3d6f66a170b0f1d6405894645d119f36caf100552581b4d5faba51b1dd7"
+    },
+    "player_name_streams_f509_fd14.bin": {
+      "size_bytes": 2060,
+      "sha256": "391afd3e6077ebba2f5e211d6d1baec33a70a4989937e6c231cdb83e26778e90"
+    },
+    "player_record_pointer_table_22.bin": {
+      "size_bytes": 44,
+      "sha256": "b09fe4a47e9910198fc6b2599caebe85071c4292d6f07f089d8dd7848b2e7185"
+    },
+    "player_position_table_11.bin": {
+      "size_bytes": 22,
+      "sha256": "59b7c4f0b0547e653a067cd2736c0118db1ec4b12cef3a260f952d0ad1027252"
+    },
+    "guest_player_name_tiles_11x4.bin": {
+      "size_bytes": 44,
+      "sha256": "e1dbb6d11eae6e821f31e2f5d664da38ef2c95797b357a38c2cb1a42b99d3e76"
+    },
+    "player_stat_profile_map_00_22.bin": {
+      "size_bytes": 140,
+      "sha256": "a16ef4a351fe79c6465741d75e3700b1bfe84f6a28ddee5e837aba226cb4ff48"
+    },
+    "player_stat_profile_map_23_ef.bin": {
+      "size_bytes": 820,
+      "sha256": "1462cd0ec2b9c92890e8ec90835be5075cbb78d2998ff34a03ccb91526b7372d"
+    },
+    "player_stat_profiles_00_8c.bin": {
+      "size_bytes": 3384,
+      "sha256": "3236a005cc380c17351cf6ebac20f3f090be2a0a67ba6d8849cd8e6bcaf95fff"
+    },
+    "player_stat_value_curve_00_bf.bin": {
+      "size_bytes": 192,
+      "sha256": "2fceb02fec4ccf3bf8b9bade56d96aa16e20a1e690da4564fce45ed9c8cf1170"
+    }
+  },
+  "verified_code_windows": [
+    {
+      "cpu_start": "0xF30F",
+      "cpu_end_exclusive": "0xF329",
+      "file_offset": "0x03F31F",
+      "sha256": "f9dc5864adabc5db33189a020b140fc4ecaad375427c97fe23b3be1b65771b92"
+    },
+    {
+      "cpu_start": "0x8000",
+      "cpu_end_exclusive": "0x818E",
+      "bank": "0x1C",
+      "file_offset": "0x038010",
+      "sha256": "47b5f687f314188e91d93b755e8fb9edfaacb6959af2e654fe49622d4dca164c"
+    },
+    {
+      "cpu_start": "0xCD89",
+      "cpu_end_exclusive": "0xCDB5",
+      "file_offset": "0x03CD99",
+      "sha256": "b09fe4a47e9910198fc6b2599caebe85071c4292d6f07f089d8dd7848b2e7185"
+    }
+  ],
+  "name_lookup": {
+    "entry_point": {
+      "cpu": "0xF30F",
+      "file_offset": "0x03F31F"
+    },
+    "pointer_table": {
+      "cpu_start": "0xF329",
+      "entries": 240,
+      "last_entry_id": "0xEF",
+      "entry_zero_bytes": "eb 05"
+    },
+    "name_stream_bytes": {
+      "cpu_start": "0xF509",
+      "cpu_end_exclusive": "0xFD15",
+      "all_nonzero_ids_terminate_with_fc": true
+    },
+    "position_table": {
+      "cpu_start": "0x8D04",
+      "entry_count": 11,
+      "entry_for_slot_6_hex": "86 92"
+    },
+    "known_id_8": {
+      "pointer_table_entry_cpu": "0xF339",
+      "pointer_bytes_hex": "2b f5",
+      "name_stream_cpu": "0xF52B",
+      "name_tiles_hex": "10 11 08 10",
+      "padded_player_line_tiles_hex": "86 92 00 10 11 08 10 00"
+    },
+    "zero_id_fallback": {
+      "table_cpu": "0x8D40",
+      "entries": 11,
+      "tiles_per_entry": 4,
+      "requires_guest_slot_11_to_21": true
+    }
+  },
+  "stat_lookup": {
+    "fixed_wrapper": {
+      "cpu": "0xC527",
+      "target": "0xCE08",
+      "switches_prg_banks": [
+        "0x1C",
+        "0x1D"
+      ],
+      "calls_bank_1c_8000": true
+    },
+    "evaluator": {
+      "bank_cpu_entry": "0x8000",
+      "internal_routine": "0x802D",
+      "player_profile_helper": "0x803A",
+      "stat_value_table_cpu": "0x9E4E",
+      "profile_selector_table_low_cpu": "0x95D6",
+      "profile_selector_table_high_cpu": "0x9662",
+      "profile_values_base_cpu": "0x9FCE",
+      "profile_record_size": 24,
+      "level_increment": 2,
+      "curve_index_clamp": "0xBF"
+    },
+    "energy_selector_0": "read current player record bytes +1/+2 as little-endian 16-bit energy; this is caller match state, not the ROM stat profile.",
+    "known_id_8_level_0": {
+      "player_id": 8,
+      "profile_id": 6,
+      "profile_record_cpu": "0xA05E",
+      "profile_record_first_four_hex": "00 01 02 03",
+      "selector_values": {
+        "1": 8,
+        "2": 8,
+        "3": 9
+      },
+      "value_curve_indices": {
+        "1": 1,
+        "2": 2,
+        "3": 3
+      },
+      "uses_captured_level": 0
+    },
+    "capture_only_energy_validation": {
+      "player_record_energy_bytes": "8d 01",
+      "observed_energy": 397,
+      "emitted_tile_ids_hex": "36 3c 3a"
+    },
+    "capture_only_stat_validations": [
+      {
+        "selector": 1,
+        "source_base_index": 1,
+        "rom_value_at_captured_level": 8,
+        "captured_ppu_address": "0x235B",
+        "captured_tile_hex": "3b",
+        "matches": true
+      },
+      {
+        "selector": 2,
+        "source_base_index": 2,
+        "rom_value_at_captured_level": 8,
+        "captured_ppu_address": "0x231B",
+        "captured_tile_hex": "3b",
+        "matches": true
+      },
+      {
+        "selector": 3,
+        "source_base_index": 3,
+        "rom_value_at_captured_level": 9,
+        "captured_ppu_address": "0x22DB",
+        "captured_tile_hex": "3c",
+        "matches": true
+      }
+    ]
+  },
+  "validation_only": {
+    "ram_capture": "reference/diagnostics/kickoff_select_test_20261027/ram/route_frame_008953.bin",
+    "ppu_capture": "reference/diagnostics/kickoff_select_test_20261027/ppu/route_frame_008953.bin",
+    "observed_slot_index": 6,
+    "observed_player_id": 8,
+    "observed_level": 0,
+    "e0_ppu_line_address": "0x2254",
+    "e0_capture_match": true,
+    "e1_energy_address": "0x2299",
+    "e1_energy_capture_match": true
+  },
+  "runtime_limits": [
+    "The runtime receives slot index, player ID, level, and current energy from the match model; no captured value is embedded.",
+    "For player IDs $01\u2013$22, the normal profile ID comes from the ROM low profile map. IDs $23\u2013$EF require the caller to provide the effective profile ID selected by the ROM's record-flag/alternate-ID path.",
+    "Slots 0, 11, 30, and 31 use a special bank-$1C stat branch not handled by the regular profile formula. The first observed slot is 6.",
+    "Player ID 0 is supported for the E0 fallback name only when the slot is 11\u201321; it requires the ROM's guest-name record. IDs above $EF and custom ID-0 home-player names require explicit caller override tiles.",
+    "Energy selector 0 is always supplied from current match state. The ROM name and stat table exports do not establish an energy value independent of the live record."
+  ]
+}

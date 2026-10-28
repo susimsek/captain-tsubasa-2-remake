@@ -1,7 +1,7 @@
 -- Muted FCEUX replay: cycle-tag the ROM Start poll/stop path in the saved input.
 -- Launch in a separate FCEUX process with --sound 0 --volume 0 and SDL_AUDIODRIVER=dummy.
 
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local INPUT_CSV = PROJECT_ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local EXPECTED_INPUT_SHA256 = "195743d71b36da01b5148e46e14733988d3e5d21cf308ab09eaa735daf83d2d3"
 local LAST_SOURCE_FRAME = tonumber(os.getenv("CT2_LAST_SOURCE_FRAME")) or 4692

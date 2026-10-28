@@ -1,0 +1,33 @@
+{
+  "name": "supplied_turkish_rom_scene_44_execution_spans",
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "execution_stream_sha256": "f1c60b3e4f92dee044189bc94e89197439decab3881bb946f483e7899faa861b",
+  "runtime_stream_resource": "reference/rom_extract/gameplay/meeting_menu/scene_44_execution.bin",
+  "runtime_stream_is_flattened": true,
+  "segments": [
+    {
+      "execution_stream_offset_range": [
+        0,
+        28
+      ],
+      "source_resource": "reference/rom_extract/gameplay/meeting_menu/bank5_meeting_scene_44_entry_with_jump_operand.bin",
+      "cpu_start": "0xBE84",
+      "file_start": "0x00BE94",
+      "length_bytes": 28,
+      "sha256": "44289f074e1d0f028e924126e3dc82235b27a5249fbd24e1ffe84c390c4d627e"
+    },
+    {
+      "execution_stream_offset_range": [
+        28,
+        33
+      ],
+      "source_resource": "reference/rom_extract/gameplay/meeting_menu/bank5_meeting_advice_scene_44_jump_target.bin",
+      "cpu_start": "0xBED6",
+      "file_start": "0x00BEE6",
+      "length_bytes": 5,
+      "sha256": "72797e153acd7e8b1a357c22b1be41ec02fff14d40592175ee50b2706aa33abe"
+    }
+  ],
+  "note": "The $FE operands at $BE9E-$BE9F are also the first two bytes of the next pointer span; they are included in segment 0, not inferred or synthesized."
+}

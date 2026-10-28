@@ -1,0 +1,88 @@
+{
+  "schema": "first-command-callback-dispatch-sources-v1",
+  "resource_kind": "preserved ROM bytes; no emulator capture data",
+  "rom_filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "bank_mapping": {
+    "bank_0b_cpu_8000_file_base": "0x016010"
+  },
+  "source_behavior": {
+    "scenario_event": "bank-$10 scenario $44 record: 02 70 5C F0, followed by caller-owned $FB continuation",
+    "callback_pointer_table": "bank-$0B $87F6 plus 2*$70 stores pointer $8B38; next valid entry $72 points to $8B3E",
+    "dispatch_vector": "bank-$0B $81A7 inline target entry 0 is $8327",
+    "shared_placement_state": "bank-$0B $8327 reads global RAM $05CD, writes $05CE, then updates $05CD",
+    "first_fresh_callback": "Scenario $35 selects callback $3A, pointer $89F3, bounded by $3B at $89F6; first operation is 02 00 42."
+  },
+  "entries": [
+    {
+      "path": "bank_0b_dispatcher_814c_81a6.bin",
+      "file_offset": "0x01615C",
+      "size_bytes": 91,
+      "cpu_address": "0x814C",
+      "prg_bank": "0x0B",
+      "source": "Scenario callback setup, pointer lookup, $0525 storage, and indirect-call entry up to $81A7.",
+      "sha256": "c648a228e5e90247ce604220a2aff2bb4b1c58af30546e71b543fec874b28df6",
+      "raw_hex": "A9 F6 85 52 A9 87 85 53 AD 24 05 C9 FF F0 41 0A 90 02 E6 53 A8 B1 52 AA C8 B1 52 85 53 86 52 A9 00 8D D1 05 85 3A A4 3A B1 52 C9 F0 90 0E 20 BC 81 A9 02 8D D0 05 8D 25 05 4C 9C 81 8D 25 05 98 18 65 52 85 52 90 02 E6 53 A0 01 B1 52 20 A7 81 AD 16 05 09 10 8D 16 05 4C 12 C5"
+    },
+    {
+      "path": "bank_0b_dispatch_vector_81a7.bin",
+      "file_offset": "0x0161B7",
+      "size_bytes": 21,
+      "cpu_address": "0x81A7",
+      "prg_bank": "0x0B",
+      "source": "JSR $C509 plus its inline callback-target table; index $00 resolves to $8327.",
+      "sha256": "663e41116c23b455e418b531b39024bdc5a0c71fc022009926e8cf541f1d35c9",
+      "raw_hex": "20 09 C5 27 83 E7 83 FF 83 58 83 77 83 64 83 D2 83 E7 83 EE 83"
+    },
+    {
+      "path": "bank_0b_event_70_pointer.bin",
+      "file_offset": "0x0168E6",
+      "size_bytes": 2,
+      "cpu_address": "0x87F6",
+      "prg_bank": "0x0B",
+      "source": "Scenario callback pointer-table entry $70: little-endian target $8B38.",
+      "sha256": "bc885b8008d1b96fcf6d97162721b5a11856643ad80359e925298b87765e39cb",
+      "raw_hex": "38 8B"
+    },
+    {
+      "path": "bank_0b_event_72_pointer.bin",
+      "file_offset": "0x0168EA",
+      "size_bytes": 2,
+      "cpu_address": "0x87F6",
+      "prg_bank": "0x0B",
+      "source": "Following valid scenario callback pointer-table entry $72: little-endian target $8B3E, bounding callback-$70's source span.",
+      "sha256": "97cff6d36c832c828115df1ffd59b87b00aa1a1bcbe5d81a65bad438687ea59a",
+      "raw_hex": "3E 8B"
+    },
+    {
+      "path": "bank_0b_event_70_stream.bin",
+      "file_offset": "0x016B48",
+      "size_bytes": 6,
+      "cpu_address": "0x8B38",
+      "prg_bank": "0x0B",
+      "source": "Pointer-bounded callback-$70 bytes through the next valid callback target $8B3E.",
+      "sha256": "0356c29ad2d677b4aa64102937c1b3cefc4212f0fe6f4bce0c3fc53ef184f9e5",
+      "raw_hex": "06 00 56 02 00 80"
+    },
+    {
+      "path": "bank_0b_event_3a_pointer_boundary.bin",
+      "file_offset": "0x01687A",
+      "size_bytes": 4,
+      "cpu_address": "0x886A",
+      "prg_bank": "0x0B",
+      "source": "Callback $3A pointer and next valid boundary pointer $3B.",
+      "sha256": "c4bf5bc239937e437da70f6a20ffa3eee46ef5694b7f1fd38115a5d693e209a0",
+      "raw_hex": "F3 89 F6 89"
+    },
+    {
+      "path": "bank_0b_event_3a_stream.bin",
+      "file_offset": "0x016A03",
+      "size_bytes": 3,
+      "cpu_address": "0x89F3",
+      "prg_bank": "0x0B",
+      "source": "Pointer-bounded first operation for callback $3A.",
+      "sha256": "f619833b71e98ee35083a2777d7d6ef697470576a132939ea610025f7d7b32d8",
+      "raw_hex": "02 00 42"
+    }
+  ]
+}

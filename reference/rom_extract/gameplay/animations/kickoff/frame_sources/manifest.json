@@ -1,0 +1,283 @@
+{
+  "schema": 1,
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "method": "Exact discontiguous source spans selected by the bank-0 sprite-frame parser; no OAM or pixels copied.",
+  "frames": [
+    {
+      "prg_bank": 9,
+      "frame_cpu_address": "0xA9CA",
+      "frame_file_offset": "0x0129DA",
+      "referenced_by_dialog_branches": [
+        {
+          "animation_id": "0x3C",
+          "opcode_cpu_address": "0xA484",
+          "opcode_file_offset": "0x012494",
+          "state_bit0": 1
+        }
+      ],
+      "spans": [
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xA9CA",
+          "cpu_end_address_exclusive": "0xA9E2",
+          "file_offset": "0x0129DA",
+          "length_bytes": 24,
+          "sha256": "027253db47f437f6f3ce9364afba45a144a9371051102e755744f3beef183e4c",
+          "source_bin": "frame_sources/bank_09_A9CA.bin"
+        },
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xB88D",
+          "cpu_end_address_exclusive": "0xB8DC",
+          "file_offset": "0x01389D",
+          "length_bytes": 79,
+          "sha256": "38152016f0d3d9d3a55c4613c45701e45f05a5277904df1f1d6e76a61838fa55",
+          "source_bin": "frame_sources/bank_09_B88D.bin"
+        }
+      ]
+    },
+    {
+      "prg_bank": 9,
+      "frame_cpu_address": "0xABC6",
+      "frame_file_offset": "0x012BD6",
+      "referenced_by_dialog_branches": [
+        {
+          "animation_id": "0x2A",
+          "opcode_cpu_address": "0xA3C8",
+          "opcode_file_offset": "0x0123D8",
+          "state_bit0": 1
+        }
+      ],
+      "spans": [
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xABC6",
+          "cpu_end_address_exclusive": "0xABDE",
+          "file_offset": "0x012BD6",
+          "length_bytes": 24,
+          "sha256": "42df3ccdea413d8cd84cb7bdf5019cf1e161cd746a85e7b2ede7411fe3df8433",
+          "source_bin": "frame_sources/bank_09_ABC6.bin"
+        },
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xB6C9",
+          "cpu_end_address_exclusive": "0xB724",
+          "file_offset": "0x0136D9",
+          "length_bytes": 91,
+          "sha256": "7c50e68a90a0f43c815a4510c1db8de8526975393a980e99bd7efd14468d5be3",
+          "source_bin": "frame_sources/bank_09_B6C9.bin"
+        }
+      ]
+    },
+    {
+      "prg_bank": 9,
+      "frame_cpu_address": "0xABDE",
+      "frame_file_offset": "0x012BEE",
+      "referenced_by_dialog_branches": [
+        {
+          "animation_id": "0x2B",
+          "opcode_cpu_address": "0xA3D2",
+          "opcode_file_offset": "0x0123E2",
+          "state_bit0": 0
+        }
+      ],
+      "spans": [
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xABDE",
+          "cpu_end_address_exclusive": "0xABF4",
+          "file_offset": "0x012BEE",
+          "length_bytes": 22,
+          "sha256": "bf31c470ac97dbe014d2c37c2224c4da42bccf40ef30338fb98765c6bfb4e01e",
+          "source_bin": "frame_sources/bank_09_ABDE.bin"
+        },
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xB6C9",
+          "cpu_end_address_exclusive": "0xB724",
+          "file_offset": "0x0136D9",
+          "length_bytes": 91,
+          "sha256": "7c50e68a90a0f43c815a4510c1db8de8526975393a980e99bd7efd14468d5be3",
+          "source_bin": "frame_sources/bank_09_B6C9.bin"
+        }
+      ]
+    },
+    {
+      "prg_bank": 9,
+      "frame_cpu_address": "0xAD8A",
+      "frame_file_offset": "0x012D9A",
+      "referenced_by_dialog_branches": [
+        {
+          "animation_id": "0x0B",
+          "opcode_cpu_address": "0xA281",
+          "opcode_file_offset": "0x012291",
+          "state_bit0": 1
+        },
+        {
+          "animation_id": "0x3B",
+          "opcode_cpu_address": "0xA47A",
+          "opcode_file_offset": "0x01248A",
+          "state_bit0": 1
+        }
+      ],
+      "spans": [
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xAD8A",
+          "cpu_end_address_exclusive": "0xADA2",
+          "file_offset": "0x012D9A",
+          "length_bytes": 24,
+          "sha256": "f062f481553f78bd875db8fd85b8e3fcfc6f1c0f6392f5bddb4b1528ceacc524",
+          "source_bin": "frame_sources/bank_09_AD8A.bin"
+        },
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xB88D",
+          "cpu_end_address_exclusive": "0xB8DC",
+          "file_offset": "0x01389D",
+          "length_bytes": 79,
+          "sha256": "38152016f0d3d9d3a55c4613c45701e45f05a5277904df1f1d6e76a61838fa55",
+          "source_bin": "frame_sources/bank_09_B88D.bin"
+        }
+      ]
+    },
+    {
+      "prg_bank": 9,
+      "frame_cpu_address": "0xADA2",
+      "frame_file_offset": "0x012DB2",
+      "referenced_by_dialog_branches": [
+        {
+          "animation_id": "0x3C",
+          "opcode_cpu_address": "0xA484",
+          "opcode_file_offset": "0x012494",
+          "state_bit0": 0
+        }
+      ],
+      "spans": [
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xADA2",
+          "cpu_end_address_exclusive": "0xADBA",
+          "file_offset": "0x012DB2",
+          "length_bytes": 24,
+          "sha256": "87c910b46d85eef472d341eaf63f0ec238275f2e58506b367889b82a192c0f90",
+          "source_bin": "frame_sources/bank_09_ADA2.bin"
+        },
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xB88D",
+          "cpu_end_address_exclusive": "0xB8DC",
+          "file_offset": "0x01389D",
+          "length_bytes": 79,
+          "sha256": "38152016f0d3d9d3a55c4613c45701e45f05a5277904df1f1d6e76a61838fa55",
+          "source_bin": "frame_sources/bank_09_B88D.bin"
+        }
+      ]
+    },
+    {
+      "prg_bank": 9,
+      "frame_cpu_address": "0xB264",
+      "frame_file_offset": "0x013274",
+      "referenced_by_dialog_branches": [
+        {
+          "animation_id": "0x2B",
+          "opcode_cpu_address": "0xA3D2",
+          "opcode_file_offset": "0x0123E2",
+          "state_bit0": 1
+        }
+      ],
+      "spans": [
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xB264",
+          "cpu_end_address_exclusive": "0xB27A",
+          "file_offset": "0x013274",
+          "length_bytes": 22,
+          "sha256": "ebf13d511e90f7fd130b2e5ca87ea4d391f56b8ad2f08bcace0d84b651e9ca70",
+          "source_bin": "frame_sources/bank_09_B264.bin"
+        },
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xB6C9",
+          "cpu_end_address_exclusive": "0xB724",
+          "file_offset": "0x0136D9",
+          "length_bytes": 91,
+          "sha256": "7c50e68a90a0f43c815a4510c1db8de8526975393a980e99bd7efd14468d5be3",
+          "source_bin": "frame_sources/bank_09_B6C9.bin"
+        }
+      ]
+    },
+    {
+      "prg_bank": 9,
+      "frame_cpu_address": "0xB310",
+      "frame_file_offset": "0x013320",
+      "referenced_by_dialog_branches": [
+        {
+          "animation_id": "0x0B",
+          "opcode_cpu_address": "0xA281",
+          "opcode_file_offset": "0x012291",
+          "state_bit0": 0
+        },
+        {
+          "animation_id": "0x3B",
+          "opcode_cpu_address": "0xA47A",
+          "opcode_file_offset": "0x01248A",
+          "state_bit0": 0
+        }
+      ],
+      "spans": [
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xB310",
+          "cpu_end_address_exclusive": "0xB328",
+          "file_offset": "0x013320",
+          "length_bytes": 24,
+          "sha256": "f8f3d4d149752fbd2c2928d0c02d035fe382039c9c3f27ef75b46eeb5908f684",
+          "source_bin": "frame_sources/bank_09_B310.bin"
+        },
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xB88D",
+          "cpu_end_address_exclusive": "0xB8DC",
+          "file_offset": "0x01389D",
+          "length_bytes": 79,
+          "sha256": "38152016f0d3d9d3a55c4613c45701e45f05a5277904df1f1d6e76a61838fa55",
+          "source_bin": "frame_sources/bank_09_B88D.bin"
+        }
+      ]
+    },
+    {
+      "prg_bank": 9,
+      "frame_cpu_address": "0xB3D9",
+      "frame_file_offset": "0x0133E9",
+      "referenced_by_dialog_branches": [
+        {
+          "animation_id": "0x2A",
+          "opcode_cpu_address": "0xA3C8",
+          "opcode_file_offset": "0x0123D8",
+          "state_bit0": 0
+        }
+      ],
+      "spans": [
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xB3D9",
+          "cpu_end_address_exclusive": "0xB3F1",
+          "file_offset": "0x0133E9",
+          "length_bytes": 24,
+          "sha256": "6f917951ebdf0174d660b86d06821f2c8482c389d9eef0e03ceb960e9f4a8314",
+          "source_bin": "frame_sources/bank_09_B3D9.bin"
+        },
+        {
+          "prg_bank": 9,
+          "cpu_start_address": "0xB6C9",
+          "cpu_end_address_exclusive": "0xB724",
+          "file_offset": "0x0136D9",
+          "length_bytes": 91,
+          "sha256": "7c50e68a90a0f43c815a4510c1db8de8526975393a980e99bd7efd14468d5be3",
+          "source_bin": "frame_sources/bank_09_B6C9.bin"
+        }
+      ]
+    }
+  ]
+}

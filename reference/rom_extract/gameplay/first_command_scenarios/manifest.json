@@ -1,0 +1,214 @@
+{
+  "schema": "first-command-bank10-scenario-sources-v1",
+  "source_rom_filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_rom_size_bytes": 393232,
+  "runtime_rom_dependency": false,
+  "capture_or_screenshot_bytes_included": false,
+  "scenario_pointer_table": {
+    "cpu_address": "0x89BF",
+    "file_offset": "0x0209CF",
+    "prg_bank": "$10",
+    "cpu_window": "0x8000-0xBFFF",
+    "file_window_base": "0x020010",
+    "entry_width_bytes": 2,
+    "entry_count_scanned": 256,
+    "span_boundary_rule": "Pointer values are not monotonic by scenario ID. Each selected stream ends at the smallest greater valid CPU pointer among all table entries; end is exclusive.",
+    "preserved_entry_ids": [
+      "$1E",
+      "$35",
+      "$36",
+      "$44",
+      "$15"
+    ]
+  },
+  "scenario_streams": [
+    {
+      "scenario_id": "$1E",
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/scenario_1E.bin",
+      "prg_bank": "$10",
+      "start_pointer_entry_id": "$1E",
+      "start_cpu_address": "0xB7DA",
+      "end_boundary_pointer_entry_id": "$36",
+      "end_cpu_address_exclusive": "0xB7E4",
+      "file_offset": "0x0237EA",
+      "end_file_offset_exclusive": "0x0237F4",
+      "length_bytes": 10,
+      "sha256": "383f2248d753ef12b325c98238ee1c0eaa96c693ca427a5885536e1c16f1a496",
+      "source_span_method": "scenario pointer root through the smallest greater valid pointer in the same 256-entry table, exclusive",
+      "event_record_index_basis": "Zero-based ordinal among the documented four-byte records in this stream; byte offsets and bytes are separately recorded. No timing or runtime semantics are implied.",
+      "event_records": [
+        {
+          "record_index_zero_based": 0,
+          "stream_byte_offset": "0x0005",
+          "file_offset": "0x0237EF",
+          "bytes_hex": "07 45 90 F0"
+        }
+      ]
+    },
+    {
+      "scenario_id": "$35",
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/scenario_35.bin",
+      "prg_bank": "$10",
+      "start_pointer_entry_id": "$35",
+      "start_cpu_address": "0xB7CD",
+      "end_boundary_pointer_entry_id": "$44",
+      "end_cpu_address_exclusive": "0xB7D5",
+      "file_offset": "0x0237DD",
+      "end_file_offset_exclusive": "0x0237E5",
+      "length_bytes": 8,
+      "sha256": "02848b8b324fe6c120e6eb26bca5d0c08cab23baa91cf7820db454a3f78544df",
+      "source_span_method": "scenario pointer root through the smallest greater valid pointer in the same 256-entry table, exclusive",
+      "event_record_index_basis": "Zero-based ordinal among the documented four-byte records in this stream; byte offsets and bytes are separately recorded. No timing or runtime semantics are implied.",
+      "event_records": [
+        {
+          "record_index_zero_based": 0,
+          "stream_byte_offset": "0x0003",
+          "file_offset": "0x0237E0",
+          "bytes_hex": "02 3A 8F 73"
+        }
+      ]
+    },
+    {
+      "scenario_id": "$36",
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/scenario_36.bin",
+      "prg_bank": "$10",
+      "start_pointer_entry_id": "$36",
+      "start_cpu_address": "0xB7E4",
+      "end_boundary_pointer_entry_id": "$15",
+      "end_cpu_address_exclusive": "0xB80A",
+      "file_offset": "0x0237F4",
+      "end_file_offset_exclusive": "0x02381A",
+      "length_bytes": 38,
+      "sha256": "948f05adfcd95e7fe76759534449f31f4194aed3521389934ee793e8f22e367f",
+      "source_span_method": "scenario pointer root through the smallest greater valid pointer in the same 256-entry table, exclusive",
+      "event_record_index_basis": "Zero-based ordinal among the documented four-byte records in this stream; byte offsets and bytes are separately recorded. No timing or runtime semantics are implied.",
+      "event_records": [
+        {
+          "record_index_zero_based": 0,
+          "stream_byte_offset": "0x0004",
+          "file_offset": "0x0237F8",
+          "bytes_hex": "10 3A 8F F0"
+        },
+        {
+          "record_index_zero_based": 1,
+          "stream_byte_offset": "0x000B",
+          "file_offset": "0x0237FF",
+          "bytes_hex": "20 0C 4E 74"
+        },
+        {
+          "record_index_zero_based": 2,
+          "stream_byte_offset": "0x0014",
+          "file_offset": "0x023808",
+          "bytes_hex": "32 72 66 F0"
+        },
+        {
+          "record_index_zero_based": 3,
+          "stream_byte_offset": "0x001A",
+          "file_offset": "0x02380E",
+          "bytes_hex": "32 1F 4C F0"
+        },
+        {
+          "record_index_zero_based": 4,
+          "stream_byte_offset": "0x0021",
+          "file_offset": "0x023815",
+          "bytes_hex": "3E 01 E6 75"
+        }
+      ]
+    },
+    {
+      "scenario_id": "$44",
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/scenario_44.bin",
+      "prg_bank": "$10",
+      "start_pointer_entry_id": "$44",
+      "start_cpu_address": "0xB7D5",
+      "end_boundary_pointer_entry_id": "$1E",
+      "end_cpu_address_exclusive": "0xB7DA",
+      "file_offset": "0x0237E5",
+      "end_file_offset_exclusive": "0x0237EA",
+      "length_bytes": 5,
+      "sha256": "22c0290ec8b82bd06eb69bd51a8d8617181cf2c5bbf52b790ea62102e0c71e0f",
+      "source_span_method": "scenario pointer root through the smallest greater valid pointer in the same 256-entry table, exclusive",
+      "event_record_index_basis": "Zero-based ordinal among the documented four-byte records in this stream; byte offsets and bytes are separately recorded. No timing or runtime semantics are implied.",
+      "event_records": [
+        {
+          "record_index_zero_based": 0,
+          "stream_byte_offset": "0x0000",
+          "file_offset": "0x0237E5",
+          "bytes_hex": "02 70 5C F0"
+        }
+      ]
+    }
+  ],
+  "pointer_table_entries": [
+    {
+      "scenario_id": "$1E",
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/scenario_pointer_1E.bin",
+      "cpu_address": "0xB7DA",
+      "table_cpu_address": "0x89BF",
+      "table_file_offset": "0x020A0B",
+      "length_bytes": 2,
+      "bytes_hex": "DA B7",
+      "sha256": "72ac1108e6817858f37ce9d95f78b8d0c5dfc6e01041261f2684e0d47c2ecd1f"
+    },
+    {
+      "scenario_id": "$35",
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/scenario_pointer_35.bin",
+      "cpu_address": "0xB7CD",
+      "table_cpu_address": "0x89BF",
+      "table_file_offset": "0x020A39",
+      "length_bytes": 2,
+      "bytes_hex": "CD B7",
+      "sha256": "751bb4c1d1d35f0a3f3c86304dffe714c0c1a6483af6e233ecff031004a22bc3"
+    },
+    {
+      "scenario_id": "$36",
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/scenario_pointer_36.bin",
+      "cpu_address": "0xB7E4",
+      "table_cpu_address": "0x89BF",
+      "table_file_offset": "0x020A3B",
+      "length_bytes": 2,
+      "bytes_hex": "E4 B7",
+      "sha256": "5d2bc0e444947ba22ee06b40139852b88e24eb157d3175e1c6ef1c315d4d6a7a"
+    },
+    {
+      "scenario_id": "$44",
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/scenario_pointer_44.bin",
+      "cpu_address": "0xB7D5",
+      "table_cpu_address": "0x89BF",
+      "table_file_offset": "0x020A57",
+      "length_bytes": 2,
+      "bytes_hex": "D5 B7",
+      "sha256": "dc9cfca9f5d0360d2026365799680a485504e2a2d4fc29281a1e27d18371f768"
+    },
+    {
+      "scenario_id": "$15",
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/scenario_pointer_15.bin",
+      "cpu_address": "0xB80A",
+      "table_cpu_address": "0x89BF",
+      "table_file_offset": "0x0209F9",
+      "length_bytes": 2,
+      "bytes_hex": "0A B8",
+      "sha256": "12851a5798e54f254300620b5930a4683743e340d83460d10cd7e2992bbe4248"
+    }
+  ],
+  "entry_roots": [
+    {
+      "name": "scenario_1E",
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/entry_root_scenario_1E.bin",
+      "prg_bank_listing": "$FF",
+      "cpu_address": "0xE233",
+      "file_offset": "0x03E243",
+      "scenario_id": "$1E",
+      "length_bytes": 5,
+      "bytes_hex": "A9 1E 20 B0 CB",
+      "sha256": "c555582aed5266d64dff580f1eba839b61b132d49e110feed0abf0c1babfdc74",
+      "description": "Immediate scenario ID $1E followed by JSR $CBB0."
+    }
+  ],
+  "format_notes": [
+    "The extracted scenario bytes are preserved without interpretation or rewriting.",
+    "The listed event-record anchors are source byte indexes only; they do not encode frame timing or establish runtime semantics.",
+    "Scenario $1E is rooted by the byte sequence A9 1E 20 B0 CB at fixed-bank CPU $E233 / file 0x03E243."
+  ]
+}

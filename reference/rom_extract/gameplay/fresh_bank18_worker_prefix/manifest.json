@@ -1,0 +1,49 @@
+{
+  "schema": "ct2-fresh-bank18-worker-prefix-source-v1",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "mapping": "iNES PRG starts at 0x0010; fixed $C000-$DFFF is bank $1E; switchable $8000 and $A000 windows use the source MMC3 low/high bank pair.",
+  "scope": "ROM-byte execution from bank-$18:$800C through the JSR target $C515. Stops at $C515 before executing the $CB0F yield handler.",
+  "spans": [
+    {
+      "file": "bank18_worker_entry_to_yield_call_800C_8889.bin",
+      "bank": "0x18",
+      "window": "low",
+      "cpu_start": "0x800C",
+      "cpu_end_exclusive": "0x8889",
+      "file_offset": "0x03001C",
+      "length": 2173,
+      "sha256": "3b6cea5d679e0a5aab87d7bd5a721658448463cec6062ad006c3d5d869aeb49e",
+      "description": "Source bytes for the first fresh match-zero bank-$18 worker, ending at its $C515 yield trampoline.",
+      "bytes": "4c 51 88 2c 3f 06 10 03 4c 12 c5 a9 20 85 5f a9 92 85 60 ad ea 05 0a 90 02 e6 60 a8 b1 5f aa c8 b1 5f 85 60 86 5f a9 00 8d e9 05 8d e5 05 8d e4 05 8d f4 05 a9 01 8d e3 05 a9 01 20 15 c5 20 53 80 20 60 c5 4c 45 80 ad e3 05 d0 01 60 ad e9 05 f0 04 ce e9 05 60 ad e4 05 20 09 c5 6e 80 18 82 f2 82 ac e5 05 ee e5 05 b1 5f c9 f0 90 06 20 87 80 4c 6e 80 8d e9 05 ee e4 05 60 29 0f 20 09 c5 98 80 a0 80 b5 80 b8 80 cb 80 fd 81 a9 00 8d e3 05 68 68 60 a9 01 20 15 c5 ad 1c 00 10 f6 a9 00 8d e9 05 ee e4 05 68 68 60 4c 2d c5 ac e5 05 b1 5f aa c8 b1 5f 85 60 86 5f a9 00 8d e5 05 60 ac e5 05 b1 5f 20 ea 80 8a 0a 38 6d e5 05 a8 b1 5f aa c8 b1 5f 86 5f 85 60 a9 00 8d e5 05 60 20 09 c5 fd 80 06 81 0e 81 1e 81 22 81 38 81 ce 81 e4 81 a2 00 2c 3c 04 10 01 e8 60 ae fb 05 f0 02 a2 01 60 ae 00 06 f0 08 ca e0 03 90 02 a2 02 60 a2 03 60 ae 29 06 60 a2 00 a5 26 dd 31 81 90 05 f0 03 e8 d0 f6 60 05 0b 0f 15 16 1a 21 a5 27 20 09 c5 47 81 56 81 47 81 56 81 56 81 a2 02 ad 28 00 cd 29 00 f0 04 ca 90 01 ca 60 a4 26 b9 ac 81 85 49 ad 28 00 cd 29 00 d0 26 a2 0d ad 27 00 c9 01 f0 10 24 49 50 02 e8 60 ad 2b 00 c9 23 d0 02 a2 0f 60 a2 0c 24 49 30 06 e8 24 49 50 01 e8 60 b0 0a a2 0a a5 27 c9 04 d0 01 e8 60 a5 49 29 07 18 69 03 aa e0 03 d0 08 a5 27 c9 03 d0 02 a2 09 60 c0 c0 c0 c0 c1 c2 40 40 40 40 41 c2 c0 c0 c1 c3 c0 c0 c0 c0 c1 c2 00 c0 c0 c0 c0 c0 c0 c0 c4 c5 86 c6 ad 16 06 4a a2 00 c9 01 90 0b e8 c9 05 90 06 e8 c9 06 90 01 e8 60 ad fb 05 49 0b 20 0c c5 a2 00 a0 07 b1 34 c9 19 90 06 e8 c9 36 90 01 e8 60 20 2d c5 a9 0d 8d f3 05 a9 80 8d f4 05 ac e5 05 b1 5f 8d e9 05 ee e5 05 68 68 60 ac e5 05 b1 5f c9 90 b0 0d 29 0f 8d f3 05 a9 80 8d f4 05 4c 34 82 20 2d c5 ac e5 05 b1 5f 4a 4a 4a 4a aa bd b8 86 8d e6 05 8a 0a 48 aa bd c2 8d 85 61 bd c3 8d 85 62 a0 00 b1 61 48 c8 b1 61 48 c8 b1 61 8d e7 05 c8 a9 06 8d e8 05 a9 01 20 15 c5 ad 15 05 d0 f6 a9 01 8d 15 05 a9 02 85 3b a2 00 ad e7 05 9d a5 04 68 9d a7 04 68 9d a6 04 18 69 20 48 bd a7 04 69 00 48 e8 e8 e8 b1 61 10 11 29 7f 85 3a c8 a9 00 9d a5 04 e8 c6 3a d0 f8 f0 0e 85 3a c8 b1 61 9d a5 04 c8 e8 c6 3a d0 f5 8a 38 e9 03 cd a5 04 f0 b9 90 d2 ed a5 04 e9 03 cd a5 04 90 c8 a9 00 9d a5 04 a9 80 8d 15 05 ce e8 05 d0 89 68 68 68 aa bd c8 86 8d e7 05 bd c9 86 8d e8 05 ee e5 05 ee e4 05 60 a9 01 20 15 c5 ad 15 05 d0 f6 a9 01 8d 15 05 ad e6 05 0a 18 69 06 a8 c8 a2 00 8a 9d a5 04 e8 88 10 f9 ad e6 05 18 69 03 85 3a aa ad e6 05 8d a5 04 9d a5 04 ad e7 05 0a a8 b9 e8 86 8d a6 04 18 69 20 9d a6 04 b9 e9 86 8d a7 04 69 00 9d a7 04 a9 00 85 3b ac e5 05 ee e5 05 b1 5f c9 e0 90 06 20 5e 83 4c 46 83 20 29 86 4c 46 83 38 e9 e0 20 09 c5 a4 83 ca 83 e2 83 43 84 67 84 6d 84 75 84 8d 84 93 84 99 84 9f 84 a5 84 ab 84 ce 84 d6 84 dc 84 dc 84 e6 84 ec 84 fb 84 07 85 b1 85 b6 85 bb 85 d0 85 d5 85 d5 85 d5 85 d6 85 fd 85 fe 85 21 86 ad 3b 04 c9 01 d0 07 2c 28 06 10 02 a9 0a aa ad 3c 04 29 7f 18 7d bf 83 4c 3c 86 9a c4 bd c8 d9 da db ec ec ec eb ad 3d 04 29 1f aa ad 3e 04 29 7f 18 7d dc 83 4c 3c 86 cd d1 d7 db dd df ad 3c 04 10 2c 29 7f f0 10 ae 3b 04 d0 0b c9 03 b0 1f aa bd 40 84 4c 10 84 ae 3b 04 e0 01 d0 07 2c 28 06 10 02 a2 0a bd 35 84 c9 ff f0 03 20 3c 86 ad 3b 04 c9 01 d0 07 2c 28 06 10 02 a9 0a aa 08 bd bf 83 28 d0 09 ad 3c 04 29 03 18 7d bf 83 4c 3c 86 e8 e6 ff e6 e9 e9 e7 00 00 00 e9 e8 ea e8 2c 3e 04 10 0d ae 3d 04 bd 61 84 c9 ff f0 03 20 3c 86 ad 3d 04 29 3f aa bd dc 83 4c 3c 86 e6 e6 ff e7 ff ff ad 41 04 4c 53 86 ad fb 05 49 0b 4c 78 84 ad fb 05 ac 2a 00 aa f0 08 ac 2b 00 c0 24 d0 01 88 98 18 69 76 4c 3c 86 ad 00 06 4c b2 86 ad 01 06 4c 53 86 ad 02 06 4c 53 86 ad 03 06 4c 53 86 ad fc 05 4c 53 86 ae 3d 04 bd c7 84 f0 13 2c 3e 04 10 05 a9 e6 20 3c 86 ae 3d 04 bd c7 84 4c 3c 86 60 e0 e4 00 00 00 e0 e0 ad fb 05 49 0b 4c 53 86 ad 42 04 4c 53 86 ad 16 06 4a 18 69 34 4c 29 86 ad 2a 00 4c ef 84 ad 2b 00 c9 24 d0 02 a9 23 18 69 76 4c 3c 86 ad 41 04 20 13 85 ad 42 04 4c 34 85 ad 42 04 20 13 85 ad 41 04 4c 34 85 20 0c c5 a0 00 b1 34 a2 00 dd 2c 85 f0 07 e8 e0 08 d0 f6 18 60 86 3d 38 60 01 11 44 34 45 15 42 38 08 20 0c c5 28 90 37 a5 3d 0a aa bd 89 85 85 3e bd 8a 85 85 3f a0 00 b1 34 aa a0 00 b1 3e f0 1e 8a d1 3e f0 03 c8 d0 f4 8a 20 3c 86 a5 3d 0a aa bd 7a 85 48 bd 79 85 20 29 86 68 4c 29 86 a0 00 b1 34 4c 3c 86 21 21 21 21 21 21 21 21 21 21 21 21 21 21 21 21 99 85 9f 85 9f 85 a2 85 a2 85 a5 85 a5 85 ae 85 44 41 45 4b 49 00 01 34 00 01 11 00 01 36 34 35 32 2e 30 31 00 11 15 00 a9 ed 4c 3c 86 a9 ee 4c 3c 86 ac e5 05 ee e5 05 b1 5f 48 a9 7c 20 29 86 68 38 e9 01 d0 f4 60 a9 ef 4c 3c 86 60 a9 80 8d 15 05 ad e7 05 cd e8 05 d0 09 a9 00 8d e4 05 a9 01 d0 0b ee e7 05 ac e5 05 ee e5 05 a9 01 8d e9 05 68 68 60 60 a9 80 8d 15 05 ad e3 05 29 bf 8d e3 05 a9 01 20 15 c5 20 60 c5 2c e3 05 50 f3 ad e3 05 29 bf 8d e3 05 60 a9 00 8d e3 05 68 68 60 20 24 c5 a6 3a 9d a8 04 a6 3b 98 9d a8 04 e6 3a e6 3b 60 20 3c c5 a9 00 85 3c a4 3c b1 30 c9 e0 b0 07 20 29 86 e6 3c d0 f1 60 85 3d 20 0c c5 a0 00 b1 34 f0 0d 20 3c 86 a9 27 20 29 86 a9 73 4c 29 86 a5 3d 38 e9 0b 0a 0a aa a0 00 bd 86 86 99 ee 05 e8 c8 c0 04 d0 f4 a9 00 4c 3c 86 47 4b 20 20 00 35 20 20 00 36 20 20 00 37 20 20 00 38 20 20 00 39 20 20 00 3a 20 20 00 3b 20 20 00 3c 20 20 34 33 20 20 34 34 20 20 18 69 33 4c 29 86 0e 0e 0e 0e 0e 0e 0e 0e 0e 12 12 12 12 12 12 12 01 01 01 02 00 02 00 03 01 01 01 02 00 02 00 03 01 02 05 05 05 06 04 06 05 05 05 06 04 06 04 07 70 22 b0 22 f0 22 30 23 6b 22 ab 22 eb 22 2b 23 ad 32 05 f0 25 10 1b 29 7f 8d 32 05 f0 1c 38 e9 01 0a aa bd 6e ad 85 79 bd 6f ad 85 7a a9 00 8d 33 05 ad 33 05 f0 04 ce 33 05 60 a0 00 b1 79 29 07 aa b1 79 4a 4a 4a d0 0b e0 00 f0 30 e0 01 f0 32 c8 d0 e9 8d 33 05 b1 79 29 07 85 3a c8 b1 79 aa c8 b1 79 9d 6f 04 c8 c6 3a d0 f2 98 18 65 79 85 79 90 02 e6 7a 20 33 c5 00 6c 04 60 a9 00 8d 32 05 60 c8 b1 79 aa c8 b1 79 85 7a 86 79 4c 23 87 ad 34 05 f0 25 10 1b 29 7f 8d 34 05 f0 1c 38 e9 01 0a aa bd 1c ad 85 7b bd 1d ad 85 7c a9 00 8d 35 05 ad 35 05 f0 04 ce 35 05 60 a0 00 b1 7b c9 f0 90 0b c9 f0 f0 22 c9 f1 f0 24 c8 d0 ef 8d 35 05 c8 b1 7b 8d 90 04 c8 b1 7b 8d 91 04 c8 98 18 65 7b 85 7b 90 02 e6 7c 60 a9 00 8d 34 05 60 c8 b1 7b aa c8 b1 7b 85 7c 86 7b 4c a4 87 ad 36 05 f0 26 10 1b 29 7f 8d 36 05 f0 1d 38 e9 01 0a aa bd 54 ad 85 7d bd 55 ad 85 7e a9 00 8d 37 05 ad 37 05 f0 08 ce 37 05 60 8d 38 05 60 a0 00 b1 7d c9 f0 90 0b c9 f0 f0 1c c9 f1 f0 1e c8 d0 ef 8d 37 05 c8 b1 7d 8d 38 05 c8 98 18 65 7d 85 7d 90 02 e6 7e 60 a9 00 8d 36 05 60 c8 b1 7d aa c8 b1 7d 85 7e 86 7d 4c 15 88 a8 0a aa bd cf b3 85 50 bd d0 b3 85 51 98 29 03 aa 98 4a 4a a8 b9 bd b3 ca 30 05 4a 4a 4c 69 88 29 03 8d c6 05 0a 0a 0a 6d c6 05 8d c6 05 a9 00 8d c5 05 a9 01 20 15 c5"
+    },
+    {
+      "file": "bank19_worker_lookup_B3BD_B3D1.bin",
+      "bank": "0x19",
+      "window": "high",
+      "cpu_start": "0xB3BD",
+      "cpu_end_exclusive": "0xB3D1",
+      "file_offset": "0x0333CD",
+      "length": 20,
+      "sha256": "9d62b21fb0b04c587bc5d9a06fe1700945dbc0553d39bcca57004babb285f947",
+      "description": "Source bytes for the first fresh match-zero bank-$18 worker, ending at its $C515 yield trampoline.",
+      "bytes": "00 00 00 00 00 00 00 02 00 00 00 00 3f 00 00 a0 01 00 53 b4"
+    },
+    {
+      "file": "fixed_task_yield_trampoline_C515_C518.bin",
+      "bank": "0x1E",
+      "window": "fixed",
+      "cpu_start": "0xC515",
+      "cpu_end_exclusive": "0xC518",
+      "file_offset": "0x03C525",
+      "length": 3,
+      "sha256": "86545169e2c9775f9eb73d63e59343ec9fff70a55fb97b17b22b39ab2fcd1d1e",
+      "description": "Source bytes for the first fresh match-zero bank-$18 worker, ending at its $C515 yield trampoline.",
+      "bytes": "4c 0f cb"
+    }
+  ],
+  "limitations": [
+    "CPU/RAM/stack/mapper entry state must be produced by the preceding ROM-source component; this package does not consume trace snapshots.",
+    "This component does not execute $C515/$CB0F, task save/resume, scheduler scans, or NMI-ready cadence.",
+    "Trace artifacts are validation evidence only and are not packaged as runtime inputs."
+  ]
+}

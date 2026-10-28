@@ -1,0 +1,141 @@
+{
+  "target_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "target_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "parser_method": "Fixed-bank CPU addresses map to file offset 0x03C010 + (CPU-$C000). Context-0 action IDs index $D6DE. That render variant indexes the little-endian pointer table at $E9DA. Each selected stream begins with PPU low/high and a packed shape byte (low two bits row count, upper six bits row payload width). $FE fills the rest of that row with zero tiles. The high-bit suppression path in $E93D emits zero tiles for every cell; it does not change PPU attributes.",
+  "source": {
+    "input_handler_cpu_range": [
+      "$D638",
+      "$D679"
+    ],
+    "input_handler_file_range": [
+      "0x03D648",
+      "0x03D689"
+    ],
+    "input_handler_sha256": "fb6fc43412cb51eeddad178cadd694abd293d1034c94afcc4fac57fa261643ca",
+    "action_renderer_cpu_range": [
+      "$E93D",
+      "$E9D9"
+    ],
+    "action_renderer_file_range": [
+      "0x03E94D",
+      "0x03E9E9"
+    ],
+    "action_renderer_sha256": "b2044af0dd910252ca0884ef835c15b9755febf4147f7fb105d03745faad5b33",
+    "receiver_formula_cpu_range": [
+      "$DAF2",
+      "$DB19"
+    ],
+    "receiver_formula_file_range": [
+      "0x03DB02",
+      "0x03DB29"
+    ],
+    "receiver_formula_sha256": "cba0358e8d969f35dde2d4a3f8707ce96490e39a3530e41966b3bc5932e913fe",
+    "action_map_cpu": "$D6DE",
+    "action_map_file_offset": "0x03D6EE",
+    "pointer_table_cpu": "$E9DA",
+    "pointer_table_file_offset": "0x03E9EA",
+    "stream_cpu_range": [
+      "$EA1C",
+      "$EA45"
+    ],
+    "stream_file_range": [
+      "0x03EA2C",
+      "0x03EA55"
+    ],
+    "receiver_offsets_cpu": "$DC82",
+    "receiver_offsets_file_offset": "0x03DC92",
+    "rng_update_bank": "$02",
+    "rng_update_cpu_range": [
+      "$8117",
+      "$8137"
+    ],
+    "rng_update_file_range": [
+      "0x004127",
+      "0x004147"
+    ],
+    "rng_update_sha256": "e6c675380915dc6ec586fccb4e33ba84fa3b92e55ee0828929207430ff775ba3"
+  },
+  "runtime_exports": {
+    "action_id_to_render_variant_context_00.bin": {
+      "cpu_start": "$D6DE",
+      "file_start": "0x03D6EE",
+      "length": 4,
+      "sha256": "9d154b311f10f5a25ae835854853e99223ec66f254251a5e1ff366fc334a740e",
+      "bytes_hex": "02 01 00 03"
+    },
+    "action_render_variant_pointer_table_00_03.bin": {
+      "cpu_start": "$E9DA",
+      "file_start": "0x03E9EA",
+      "length": 8,
+      "sha256": "41f429b2ca2e143fb59e023bc886350b20135197e1bcfe7c5b837127fa662f42",
+      "bytes_hex": "1C EA 29 EA 34 EA 3D EA"
+    },
+    "action_label_render_streams_EA1C_EA45.bin": {
+      "cpu_start": "$EA1C",
+      "file_start": "0x03EA2C",
+      "length": 42,
+      "sha256": "97ad1d49bafb4111180337fc8378ce31a3ac80bca6dccee238c08da423c34b11",
+      "bytes_hex": "AC 22 16 00 00 00 00 00 43 61 6C 69 6D AC 22 16 00 20 FE 50 61 73 20 00 AC 22 16 FE 53 75 74 20 00 AC 22 16 FE 60 72 1A 63 00"
+    },
+    "first_match_receiver_offsets_DC82.bin": {
+      "cpu_start": "$DC82",
+      "file_start": "0x03DC92",
+      "length": 5,
+      "sha256": "2784104ad143ec88dc701b76946cf13dfe9bbe799d90e5f4cb00bf97cf5abcb8",
+      "bytes_hex": "05 06 07 09 0A"
+    }
+  },
+  "action_id_to_variant": [
+    2,
+    1,
+    0,
+    3
+  ],
+  "records": [
+    {
+      "action_id": 0,
+      "action": "shoot",
+      "render_variant": 2,
+      "stream_cpu_address": "$EA34",
+      "stream_offset": 24,
+      "stream_bytes_hex": "AC 22 16 FE 53 75 74 20 00",
+      "ppu_address": "$22AC",
+      "row_count": 2,
+      "payload_width": 5
+    },
+    {
+      "action_id": 1,
+      "action": "pass",
+      "render_variant": 1,
+      "stream_cpu_address": "$EA29",
+      "stream_offset": 13,
+      "stream_bytes_hex": "AC 22 16 00 20 FE 50 61 73 20 00",
+      "ppu_address": "$22AC",
+      "row_count": 2,
+      "payload_width": 5
+    },
+    {
+      "action_id": 2,
+      "action": "dribble",
+      "render_variant": 0,
+      "stream_cpu_address": "$EA1C",
+      "stream_offset": 0,
+      "stream_bytes_hex": "AC 22 16 00 00 00 00 00 43 61 6C 69 6D",
+      "ppu_address": "$22AC",
+      "row_count": 2,
+      "payload_width": 5
+    },
+    {
+      "action_id": 3,
+      "action": "one_two_pass",
+      "render_variant": 3,
+      "stream_cpu_address": "$EA3D",
+      "stream_offset": 33,
+      "stream_bytes_hex": "AC 22 16 FE 60 72 1A 63 00",
+      "ppu_address": "$22AC",
+      "row_count": 2,
+      "payload_width": 5
+    }
+  ],
+  "validation_boundary": "The captured unselected state is consistent with no selection overlay, but no same-input selected-action FCEUX probe was captured. These ROM packets are source-derived candidates, not a same-input visual proof. The capture observes the receiver transition to slot 6 at frame 8782 with $E2=$11, which maps through $DC82 to 6; the cold-start-to-write $E2 state/count is not reconstructed here."
+}

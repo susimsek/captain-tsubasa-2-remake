@@ -1,0 +1,58 @@
+{
+  "schema": "bank10-scenario-continuation-sources-v1",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_rom_size_bytes": 393232,
+  "runtime_rom_dependency": false,
+  "entries": [
+    {
+      "path": "bank10_fa_handler_881a_8836.bin",
+      "size_bytes": 29,
+      "sha256": "25c007a559b5f85da1cd991874f85c2c9fa77d68a3b0647cfc347bc0f147aa68",
+      "prg_bank": "$10",
+      "cpu_start": "0x881A",
+      "cpu_end_exclusive": "0x8837",
+      "file_offset": "0x02082A",
+      "role": "FA nested-call handler; saves return pointer then enters $80F6"
+    },
+    {
+      "path": "bank10_fa_target_loader_80f6_8104.bin",
+      "size_bytes": 15,
+      "sha256": "6b735a94e9738de7eebcad8d843c80f5149dac71a2fd846060adbebcd9dea089",
+      "prg_bank": "$10",
+      "cpu_start": "0x80F6",
+      "cpu_end_exclusive": "0x8105",
+      "file_offset": "0x020106",
+      "role": "Reads FA target operand, sets $5D/$5E, resets $3A"
+    },
+    {
+      "path": "bank10_fb_handler_8837_8852.bin",
+      "size_bytes": 28,
+      "sha256": "34e0466b33439d4de66876bdb757e2fb8600498f1cc3cf0968d612266af02866",
+      "prg_bank": "$10",
+      "cpu_start": "0x8837",
+      "cpu_end_exclusive": "0x8853",
+      "file_offset": "0x020847",
+      "role": "FB pop or underflow jump to $80CF"
+    },
+    {
+      "path": "bank10_f0_terminal_80cf_80f5.bin",
+      "size_bytes": 39,
+      "sha256": "f94d098b6341f36b79782f12a2e090196443f13bea8bf09e13f1d29d2a07fb44",
+      "prg_bank": "$10",
+      "cpu_start": "0x80CF",
+      "cpu_end_exclusive": "0x80F6",
+      "file_offset": "0x0200DF",
+      "role": "Scenario termination path reached when FB underflows; clears $0522"
+    },
+    {
+      "path": "fixed_scenario_start_ec08_ec33.bin",
+      "size_bytes": 44,
+      "sha256": "c5283a9bd23ff473de0b43cfa8d98d8d5f3b78255fa75d5b66d649174218c21f",
+      "prg_bank": "fixed bank",
+      "cpu_start": "0xEC08",
+      "cpu_end_exclusive": "0xEC34",
+      "file_offset": "0x03EC18",
+      "role": "Fixed scenario-start path; calls bank-10 reader then clears $0522 at $EC2E"
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "schema": "bank10-scenario-task-runtime-sources-v1",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "runtime_rom_dependency": false,
+  "entries": [
+    {
+      "path": "reference/rom_extract/gameplay/scenario_task_runtime/fixed_kickoff_scenario35_caller_DAD8_DADC.bin",
+      "cpu_address": "$DAD8",
+      "file_offset": "0x03DAE8",
+      "length_bytes": 5,
+      "sha256": "334e25e61f3fa69e4c51961948c06c802993d03dbf9dc2c77b1cb471d857afd5",
+      "bytes_hex": "A9 35 20 B0 CB",
+      "meaning": "Kickoff caller loads scenario ID $35 and calls fixed-bank $CBB0."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/scenario_task_runtime/fixed_scenario_queue_CBB0_CBC1.bin",
+      "cpu_address": "$CBB0",
+      "file_offset": "0x03CBC0",
+      "length_bytes": 18,
+      "sha256": "bda16c7ced2834027dd6039a6c079a701dc8abd9c89179ba2d3c568aa0a16a32",
+      "bytes_hex": "8D 18 05 A9 80 8D 16 05 A9 00 85 05 A9 00 20 0F CB 60",
+      "meaning": "Stores the caller's scenario ID to $0518, enables scenario mode, clears $0005, and yields through $CB0F."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/scenario_task_runtime/bank10_reader_entry_8000_803E.bin",
+      "cpu_address": "$8000",
+      "file_offset": "0x020010",
+      "length_bytes": 63,
+      "sha256": "8f7bdba702bda2bc20e19776e2496f96f7c1c8fad07f424e555726fb4ccc3ca5",
+      "bytes_hex": "4C 06 80 4C 21 80 A2 89 AD 18 05 0A A8 90 01 E8 A9 BF 85 5D 86 5E B1 5D AA C8 B1 5D 85 5E 86 5D 60 AD 17 05 8D 2A 05 AD 16 05 29 FB 8D 16 05 A9 00 8D 2B 05 8D 2D 05 8D 2C 05 8D 30 05 85 3A",
+      "meaning": "Bank-$10 entry $8000 resolves the scenario pointer from $0518 and $89BF; entry $8003 initializes scenario state and clears byte index $3A."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/scenario_task_runtime/fixed_scenario_wait_load_EC94_EC99.bin",
+      "cpu_address": "$EC94",
+      "file_offset": "0x03ECA4",
+      "length_bytes": 6,
+      "sha256": "4ce0089b233f2b5f9f6ada859a28f5513fcb5b83d86b83d7eb223cd0cf22ead5",
+      "bytes_hex": "AD 23 05 8D 19 05",
+      "meaning": "Loads the decoded scenario wait field $0523 into countdown RAM $0519."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/scenario_task_runtime/fixed_scenario_wait_decrement_ED5B_ED5E.bin",
+      "cpu_address": "$ED5B",
+      "file_offset": "0x03ED6B",
+      "length_bytes": 4,
+      "sha256": "2c0b8598b6c79e3a686048c2acd50df9daa86671c464b557ea17429a663ac02d",
+      "bytes_hex": "CA 8E 19 05",
+      "meaning": "Decrements the source countdown once at this field-loop callsite; no frame cadence is synthesized by the scenario runtime."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/scenario_pointer_35.bin",
+      "cpu_address": "$B7CD",
+      "file_offset": "0x020A39",
+      "length_bytes": 2,
+      "sha256": "751bb4c1d1d35f0a3f3c86304dffe714c0c1a6483af6e233ecff031004a22bc3",
+      "bytes_hex": "CD B7",
+      "meaning": "Scenario pointer-table value for ID $35; the selected stream begins at CPU $B7CD."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/scenario_continuation/fixed_scenario_start_ec08_ec33.bin",
+      "cpu_address": "$EC08",
+      "file_offset": "0x03EC18",
+      "length_bytes": 44,
+      "sha256": "c5283a9bd23ff473de0b43cfa8d98d8d5f3b78255fa75d5b66d649174218c21f",
+      "bytes_hex": "AD 16 05 29 81 D0 01 60 2C 16 05 10 1F A9 01 8D 16 05 48 A5 22 A9 10 85 24 A9 11 85 25 20 2D CE 68 20 00 80 A9 00 8D 22 05 8D 39 05",
+      "meaning": "Maps bank $10, calls the bank-$10 root entry, then sets continuation depth $0522 to zero without clearing stale stack payload."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/scenario_35.bin",
+      "cpu_address": "$B7CD",
+      "file_offset": "0x0237DD",
+      "length_bytes": 8,
+      "sha256": "02848b8b324fe6c120e6eb26bca5d0c08cab23baa91cf7820db454a3f78544df",
+      "bytes_hex": "F9 EB 44 02 3A 8F 73 FB",
+      "meaning": "Hash-checked fresh-kickoff scenario $35 root stream."
+    }
+  ],
+  "task_seed_sources_manifest": "reference/rom_extract/gameplay/task_context/manifest.json",
+  "task_seed_sources": [
+    "bank10_callback_task_setup_8097_80a8.bin",
+    "fixed_task_create_C50F.bin",
+    "fixed_task_seed_CAE7.bin",
+    "bank0b_callback_entry_8009.bin"
+  ],
+  "source_order": [
+    "kickoff callsite $DAD8 loads $35 and calls $CBB0",
+    "$CBB0 writes $0518 and yields via $CB0F",
+    "$EC08 maps bank $10, calls $8000, then clears $0522",
+    "$8000 resolves pointer-table entry $35; $8003 initializes $3A to zero",
+    "scenario $35 processes $F9, then record 02 3A 8F 73, then root $FB",
+    "record setup at $8097 calls $C50F; the callback task source contract resumes at $8009->$814C",
+    "$EC94 copies $0523 into $0519; $ED5B is the source countdown decrement, but this slice does not synthesize its field-loop cadence"
+  ],
+  "limits": [
+    "Source order is modeled without emulator frame IDs or capture RAM.",
+    "The callback task seed is emitted as a typed request; the scheduler, callback body, $8327 placement worker, and actor workers are not executed.",
+    "The root $FB result does not model the outer CPU/task return or terminal cleanup beyond the verified $0522 depth-zero branch."
+  ]
+}

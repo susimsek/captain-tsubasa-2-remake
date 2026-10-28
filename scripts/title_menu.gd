@@ -1,7 +1,10 @@
 extends Node2D
 class_name RomTitleMenu
 ## Displays the ROM-CHR title reconstruction. The original Select/Up/Down
-## cursor behavior is preserved, while Start confirmation stops at this milestone.
+## cursor behavior is preserved. KICK OFF confirmation hands control to the
+## fresh-start route; Continue is outside the current slice.
+
+signal kickoff_requested
 
 const NES_FPS := 60.0988
 const HANDOFF_QUEUE_SCRIPT := preload("res://scripts/title_rom_handoff_queue.gd")
@@ -68,7 +71,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("opening_select"):
 		_selected = 1 - _selected
 	elif event.is_action_pressed("opening_start"):
-		# The ROM confirms this choice; the requested slice ends at this screen.
+		if _selected == 0:
+			kickoff_requested.emit()
 		get_viewport().set_input_as_handled()
 		return
 	else:
@@ -95,7 +99,7 @@ func _install_select_action() -> void:
 		return
 	InputMap.add_action("opening_select")
 	var key := InputEventKey.new()
-	key.keycode = KEY_TAB
+	key.keycode = KEY_SHIFT
 	InputMap.action_add_event("opening_select", key)
 	var gamepad := InputEventJoypadButton.new()
 	gamepad.button_index = JOY_BUTTON_BACK

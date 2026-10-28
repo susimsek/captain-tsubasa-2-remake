@@ -1,0 +1,32 @@
+{
+  "name": "supplied_turkish_rom_cutscene_02",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_rom_size_bytes": 393232,
+  "prg_bank": 3,
+  "pointer_table_file_offset": "0x006014",
+  "pointer_table_cpu_address": "0xA004",
+  "start_cpu_address": "0xA626",
+  "next_pointer_cpu_address": "0xA6B4",
+  "source_file_range": [
+    "0x006636",
+    "0x0066C4"
+  ],
+  "length_bytes": 142,
+  "source_sha256": "2909bce2e1ef5f25c383b9fe7de8b2b226acf4f50e83b85d9a30d83d7de5affe",
+  "preserved_resource": "reference/rom_extract/gameplay/kickoff_cutscene_02.bin",
+  "pointer_span_only": false,
+  "execution_stream_cpu_range": [
+    "0xA626",
+    "0xA6B3"
+  ],
+  "execution_stream_file_range": [
+    "0x006636",
+    "0x0066C4"
+  ],
+  "execution_stream_length_bytes": 142,
+  "execution_stream_sha256": "2909bce2e1ef5f25c383b9fe7de8b2b226acf4f50e83b85d9a30d83d7de5affe",
+  "execution_stream_resource": "reference/rom_extract/gameplay/kickoff_cutscene_02_execution.bin",
+  "execution_boundary_method": "first linear FF using the supplied ROM interpreter widths; FC is a one-byte handler at bank-0 $8837; no reachable FE branch in these streams",
+  "runtime_logic_decoded": false,
+  "notes": "Pointer span and linear execution span both end at the first reachable FF. Command byte boundaries are ROM-interpreter verified; per-command runtime timing, graphics and audio still require separate reconstruction."
+}

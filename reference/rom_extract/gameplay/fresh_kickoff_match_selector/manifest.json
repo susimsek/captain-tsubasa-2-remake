@@ -1,0 +1,130 @@
+{
+  "schema": "ct2-fresh-kickoff-match-selector-executable-v1",
+  "rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "mapping": "Bank $02 at CPU $A000 maps file 0x004010 + (CPU-$A000); offsets include the 16-byte iNES header.",
+  "scope": "Hash-checked source spans for the fresh match-index-zero caller path, selector/normalization branches, ROM-to-PRG-RAM copy routine/data, and roster tables.",
+  "spans": [
+    {
+      "id": "title_caller",
+      "path": "reference/rom_extract/gameplay/fresh_kickoff_caller/bank00_title_to_first_match_setup_80DF_815C.bin",
+      "cpu_start": "$80DF",
+      "cpu_end_exclusive": "$815D",
+      "file_offset": "0x0000EF",
+      "length": 126,
+      "sha256": "a4b5afda1800eb4b500c95748497e22cb6467d90d1e99c56d4578b98db996a7b",
+      "bytes": "24ed50034c6a8220a09ba90120648420b582a9c085e0a20220b9c4200fa2a900852885298527a9018d0007a20220b9c4200ca2a900202089a20120b9c42006a02072c5a255a526c9209002a24c8e0007a9008d50048d51048d52048d5304a20120b9c42009a024e03006a5e4c526b014ae2600bddc83f00c20648420b582"
+    },
+    {
+      "id": "selector_trampoline",
+      "path": "reference/rom_extract/gameplay/fresh_kickoff_entry_context/match_selector_trampoline_A20F.bin",
+      "cpu_start": "$A20F",
+      "cpu_end_exclusive": "$A212",
+      "file_offset": "0x00421F",
+      "length": 3,
+      "sha256": "51244f9af68e818db390d67b69d822597a021d99bb35339132f4ce2dfde5430d",
+      "bytes": "4c6ea8"
+    },
+    {
+      "id": "selector_code",
+      "path": "reference/rom_extract/gameplay/fresh_kickoff_entry_context/match_selector_A86E_A8CD.bin",
+      "cpu_start": "$A86E",
+      "cpu_end_exclusive": "$A8CE",
+      "file_offset": "0x00487E",
+      "length": 96,
+      "sha256": "f9b27195e6d6c9163d55ee6161fbf8d4d795537df2f2347d3e4c406765033123",
+      "bytes": "a526c9069008c90c900cc910b010a20020b7a84ca3a8a20c20b7a84ca3a8a21820b7a8a000bd47aa990804e898186904a8c92890f0bd47aa852ca626bd75aa852aa526186903852b604c38a1eda000bd47aa990003e89818690ca8c98490f060"
+    },
+    {
+      "id": "home_roster_match_00",
+      "path": "reference/rom_extract/gameplay/fresh_kickoff_position_context/bank_02_match_00_home_roster_AA47.bin",
+      "cpu_start": "$AA47",
+      "cpu_end_exclusive": "$AA53",
+      "file_offset": "0x004A57",
+      "length": 12,
+      "sha256": "dcb5f0103eaecbc9785e947085b02cd6b56f7d31e6671a699d82b22d80a3b123",
+      "bytes": "02030405060708090a010b00"
+    },
+    {
+      "id": "home_team_match_table",
+      "path": "reference/rom_extract/gameplay/fresh_kickoff_position_context/bank_02_match_00_home_team_id_AA75.bin",
+      "cpu_start": "$AA75",
+      "cpu_end_exclusive": "$AA76",
+      "file_offset": "0x004A85",
+      "length": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "bytes": "00"
+    },
+    {
+      "id": "selector_copy_scan_code",
+      "path": "reference/rom_extract/gameplay/fresh_kickoff_match_selector/selector_copy_scan_code_A138_A15D.bin",
+      "cpu_start": "$A138",
+      "cpu_end_exclusive": "$A15E",
+      "file_offset": "0x004148",
+      "length": 38,
+      "sha256": "b804ba6ac3153232ebaaee331380502f3b117a140a56d5f6d16d0c0fe15ca558",
+      "bytes": "a9b085d0a9ac85d1a90085d2a96085d3b1d091d2a5d0c9ffd009a5d1c9bfd0034ce4a14ceba1"
+    },
+    {
+      "id": "selector_copy_finish_code",
+      "path": "reference/rom_extract/gameplay/fresh_kickoff_match_selector/selector_copy_finish_code_A1E4_A1EA.bin",
+      "cpu_start": "$A1E4",
+      "cpu_end_exclusive": "$A1EB",
+      "file_offset": "0x0041F4",
+      "length": 7,
+      "sha256": "1716d9bfa1de42ac3cf63f561a3d19e7702b16caf606337c984f6f94f0effc6f",
+      "bytes": "a90b85ed4cbba8"
+    },
+    {
+      "id": "selector_copy_increment_code",
+      "path": "reference/rom_extract/gameplay/fresh_kickoff_match_selector/selector_copy_increment_code_A1EB_A1F9.bin",
+      "cpu_start": "$A1EB",
+      "cpu_end_exclusive": "$A1FA",
+      "file_offset": "0x0041FB",
+      "length": 15,
+      "sha256": "73b6baf63eff25c7e38d9c496e2d925fab95a3f2001945fb37fbcc9708cb1f02",
+      "bytes": "e6d0d002e6d1e6d2d002e6d34c48a1"
+    },
+    {
+      "id": "selector_normalize_trampoline",
+      "path": "reference/rom_extract/gameplay/fresh_kickoff_match_selector/selector_normalize_trampoline_A20C_A20E.bin",
+      "cpu_start": "$A20C",
+      "cpu_end_exclusive": "$A20F",
+      "file_offset": "0x00421C",
+      "length": 3,
+      "sha256": "fd63c4efff31a65f750b91006a64e730ba7c8bb4e2a3ca1ab612762808d7b433",
+      "bytes": "4c55a8"
+    },
+    {
+      "id": "selector_normalize_branch",
+      "path": "reference/rom_extract/gameplay/fresh_kickoff_match_selector/selector_normalize_branch_A855_A86D.bin",
+      "cpu_start": "$A855",
+      "cpu_end_exclusive": "$A86E",
+      "file_offset": "0x004865",
+      "length": 25,
+      "sha256": "f43346f767ca9308764322a418899da490fca7537eb40096fcac8529a7c917e3",
+      "bytes": "a5e4c526b04da526f01dc906f021c90cf015c910f0214ca8a8"
+    },
+    {
+      "id": "selector_copy_source",
+      "path": "reference/rom_extract/gameplay/fresh_kickoff_match_selector/selector_prg_ram_copy_source_ACB0_BFFF.bin",
+      "cpu_start": "$ACB0",
+      "cpu_end_exclusive": "$C000",
+      "file_offset": "0x004CC0",
+      "length": 4944,
+      "sha256": "e1288622a02fa918c7793d7e3d6415c6edd94929d020fa7e56187c9d0d764415",
+      "bytes": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffceafec1bef102f200e140755f756e20305e6a690409200d65200273166efc6f79191b6e2079756b0e6b200e7669796507fc7e2010166d6469722e466f72607474652068697a07fc0376756e0818207475741a6c201e3d0472eb64696b1a7407206f6c756eebfec1bef102f200e1ffffffffffffffffffffffffffffffffffffffebfec1bef102f200e1401c73207465716c07206f79756e1409fc602061106b200e166c0409207b1e731f73207b1e6cfc260c6b2c2b79046e74697965205c05eb785e0527696e2079650a207e2074656b0a1efc2a72201e3dfc4d4620785e0527692008723e20656412ebfec1bef102f200e1ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffeafec1bef102f200e1404d462045731c192071723e7a07fc74656b0a6b207e2010166d646972fc257c6c2061106b140919201a04fc13756e7b200273147214722eebfec1bef102f200e1ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffebfec1bef102f200e140474b20485e196e7b7a2c2370131b270a6efc032a73636920727568756e752061746573047930fc7e201a0463692e5c6c206174086bfc636f6b207a6f7220260c6beb6c757466302065070a7a7b6e2025040a201b70122eebfec1bef102f200e1ffffffffffffebfec1bef102f200e1404346200f14732022200e7a1320610a7b6efc6f72101b2063691a6e207e206f79756e6375fc6f6c7570201868691b7c20667574626f6cfc0e7a69040920690420755f2064757a6579eb7e2074656b0a2520036869707469722efc444620072210206904207e076b7465fc417672751c2718205363687c697b72206904fc61790a2079756b0e6b207b257204052003686970eb6f7a656c076b042064696b1a742065640d7158fc25053e6e207e206f79756e63756475722eebfec1bef102f200e1ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffebfec1bef102f200e1401363657b6e204469617a27122074656bfc1658076b2010161f79646920260c6b20586d6469fc1c730c6c27186e2002731a20286c2a6efc023d6e677413206020037472755f65677569202a72eb0b16702061106b140919201a7258fc64696b1a7407206f6c756e2eebfec1bef102f200e1ffffffffffffffffffffffffffffffffffffffffffebfec1bef102f200e140027469207f086e1b206904200d1e07fc3d6c1e04092057611a021b17fc2b7904796563656bebfb0134f7f3c6e1400376756e08205363687c697b7227692008723efc65646970201a042013756e7b20746f7014fc226c757308581920697a1220607271586eeb4f7210031120690e201a70656c7d086e200d65fc1a6c747a27122011053e7404090afc6b1374316c207f741218207475016eebe14013656d07206f6c2620222074656d706f1816fc086369201d726475053d6c716bfc226e756e20696312200102032060fc1f0316270a6e206b6f6d3d0409200d65eb6f72100311182065741607206f6c756efc10086d201f201f6c047421ebfec1bef102f200e1ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffebfb0142f7f300fec1bef102f200e14042057a0d1b206904200d1e07203d6c1e0409fc010203202b7904796563656bebfb0147f7f300e140136365076b04206f721003110a6e20077b09fc036e100809612779692008723e2065646970eb0c727d732c29286c7d2c4e65792060fc541312686f271b2061740d610c6bfc1c731409203e73696eebe140474b202572740f27652075296b207103666507fc1d74147220690e201b0b1f5172201e3deb1a042013756e7b2065741607fc646f677275186e201d7414722063656b716b7430fc02731a20516c20516bebfb014be1404865781f7a2067756375247a75fc7e045f697269720e6b203e586e076b04fc5c6c2061103d6c711f7a2025056bfc74756d2067756375247a0420240c7b0420657b076d2eebfec1bef102f200e1ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    }
+  ],
+  "selector_call_path": [
+    "$80FA JSR $A20F",
+    "$A20F JMP $A86E",
+    "$A86E CMP #$06; match index zero takes BCC to $A87C",
+    "$A87E JSR $A8B7; $A8B7 JMP $A138",
+    "$A138 copies $ACB0-$BFFF to $6000-$734F, then $A1E4 JMP $A8BB",
+    "$A8BB-$A8CD copies eleven roster IDs and reaches RTS $A8CD to $A881",
+    "$A8A3-$A8B6 derives formation/team/opponent and reaches RTS $A8B6 to $80FD"
+  ]
+}

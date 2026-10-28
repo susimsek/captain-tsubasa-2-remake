@@ -1,0 +1,43 @@
+{
+  "schema": "ct2-rom-cue-route-source-timing-v1",
+  "purpose": "ROM-only queue-to-first-pulse timing; runtime removes only verified leading silence and prefixes the source-derived delay.",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "cue": "$55",
+  "source_timing_path": "reference/rom_extract/gameplay/first_match_cue_timing_rom_stepper_20261027.json",
+  "source_timing_sha256": "31190aaebb79298383e72234ca128c0c28b257557d17daa0dbb0c5eecb700510",
+  "source_input_timeline_sha256": "6cae92ff2b6a77fcc05c34c57c734bbff47930ada172633cb4a4b830cc3e77dc",
+  "source_audio_path": "assets/gameplay/audio/match_track_55_rom_generated.wav",
+  "source_audio_sha256": "aa297e4dd8f9bde1b6202f6075c63b28ca49eb3a93227f4c4a5a4190bf9e4f95",
+  "sample_rate_hz": 44100,
+  "channels": 1,
+  "bits_per_sample": 16,
+  "source_sample_count": 3969000,
+  "leading_zero_samples_removed": 3065,
+  "ntsc_cpu_hz": 1789773,
+  "occurrences": [
+    {
+      "occurrence_index": 0,
+      "queue_source_frame": 4816,
+      "queue_source_cycle": 143396526,
+      "first_pulse1_source_frame": 4817,
+      "first_pulse1_source_cycle": 143429288,
+      "first_pulse1_cpu_address": "$4000",
+      "delay_cycles": 32762,
+      "delay_samples": 807
+    },
+    {
+      "occurrence_index": 1,
+      "queue_source_frame": 7409,
+      "queue_source_cycle": 220630517,
+      "first_pulse1_source_frame": 7411,
+      "first_pulse1_source_cycle": 220680808,
+      "first_pulse1_cpu_address": "$4000",
+      "delay_cycles": 50291,
+      "delay_samples": 1239
+    }
+  ],
+  "captured_pcm_used": false,
+  "capture_used_as_event_input": false,
+  "runtime_needs_rom_or_emulator": false,
+  "validation_note": "A diagnostics-only trim-plus-delay comparison against same-input FCEUX PCM lowers RMSE in both windows; it does not establish PCM identity. See reference/diagnostics/audio/route_cue55_asset_onset_audit_20261027.md."
+}

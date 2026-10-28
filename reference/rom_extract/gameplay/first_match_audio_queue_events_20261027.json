@@ -1,0 +1,140 @@
+{
+  "schema": "ct2-first-match-audio-source-queue-events-v1",
+  "purpose": "Diagnostic-only ROM-source queue event table for parity checks; not consumed by runtime playback.",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_stepper_report_sha256": "4038d7e170634c614ef7028c7bd1bd5f6033336ca53a77101a04e0b869eb8fe9",
+  "source_input_timeline_sha256": "6cae92ff2b6a77fcc05c34c57c734bbff47930ada172633cb4a4b830cc3e77dc",
+  "source_queue_csv_sha256": "96cfdba5086bc1dfd5b3314cbc1928075f7770aa5bbf5046478bf70b457fd62f",
+  "source_apu_csv_sha256": "0431f07fac824ddff396482f694fcf027a1df54ae84b3058d598b5f6987d0130",
+  "source_report_file_name": "source_stepper_report.json",
+  "source_queue_file_name": "source_sound_queue_nonzero_writes.csv",
+  "event_source": "ROM-only source CPU stepper output source_sound_queue_nonzero_writes.csv; the APU capture was validation only and no captured PCM was used.",
+  "post_title_input_validation": {
+    "path": "reference/diagnostics/kickoff_select_test_20261027/post_title_inputs.csv",
+    "sha256": "87c204c5e513d1aa4b60fa348350a15a4be006d84ef885b7f1b95c4e3a9f229e"
+  },
+  "first_command_menu_endpoint_frame": 8953,
+  "captured_pcm_used": false,
+  "captured_wav_used": false,
+  "runtime_needs_rom_or_emulator": false,
+  "runtime_consumes_this_file": false,
+  "events": [
+    {
+      "source_frame": 4816,
+      "source_cycle": 143396526,
+      "queue_id": 85,
+      "queue_hex": "$55",
+      "post_store_pc": "$85FF",
+      "playback_effect": "start_bgm",
+      "source_note": "Cutscene $ED $55 queue handler."
+    },
+    {
+      "source_frame": 7243,
+      "source_cycle": 215674689,
+      "queue_id": 1,
+      "queue_hex": "$01",
+      "post_store_pc": "$82DF",
+      "playback_effect": "stop_all",
+      "source_note": "Direct bank-0 stop/control store."
+    },
+    {
+      "source_frame": 7266,
+      "source_cycle": 216367134,
+      "queue_id": 1,
+      "queue_hex": "$01",
+      "post_store_pc": "$810A",
+      "playback_effect": "stop_all",
+      "source_note": "Direct bank-0 stop/control store."
+    },
+    {
+      "source_frame": 7409,
+      "source_cycle": 220630517,
+      "queue_id": 85,
+      "queue_hex": "$55",
+      "post_store_pc": "$812F",
+      "playback_effect": "start_bgm",
+      "source_note": "Fresh-match setup at bank-0 $812C; this is the source-owned restart event."
+    },
+    {
+      "source_frame": 8027,
+      "source_cycle": 239028028,
+      "queue_id": 49,
+      "queue_hex": "$31",
+      "post_store_pc": "$85FF",
+      "playback_effect": "empty_sequence",
+      "source_note": "ROM sound queue entry is an empty sequence (header $FF)."
+    },
+    {
+      "source_frame": 8108,
+      "source_cycle": 241434503,
+      "queue_id": 1,
+      "queue_hex": "$01",
+      "post_store_pc": "$85FF",
+      "playback_effect": "stop_all",
+      "source_note": "Cutscene $ED stop/control queue event."
+    },
+    {
+      "source_frame": 8271,
+      "source_cycle": 246288156,
+      "queue_id": 83,
+      "queue_hex": "$53",
+      "post_store_pc": "$85FF",
+      "playback_effect": "start_bgm",
+      "source_note": "Cutscene $ED queue event; the live script pointer was not captured."
+    },
+    {
+      "source_frame": 8443,
+      "source_cycle": 251410847,
+      "queue_id": 1,
+      "queue_hex": "$01",
+      "post_store_pc": "$82DF",
+      "playback_effect": "stop_all",
+      "source_note": "Direct bank-0 stop/control store on the Select transition."
+    },
+    {
+      "source_frame": 8460,
+      "source_cycle": 251937843,
+      "queue_id": 1,
+      "queue_hex": "$01",
+      "post_store_pc": "$CC01",
+      "playback_effect": "stop_all",
+      "source_note": "Fixed-bank stop/control queue event; caller meaning not assigned."
+    },
+    {
+      "source_frame": 8607,
+      "source_cycle": 256313339,
+      "queue_id": 60,
+      "queue_hex": "$3C",
+      "post_store_pc": "$CC01",
+      "playback_effect": "start_bgm",
+      "source_note": "Fixed-bank route queue event; semantic label not assigned."
+    },
+    {
+      "source_frame": 8624,
+      "source_cycle": 256809146,
+      "queue_id": 102,
+      "queue_hex": "$66",
+      "post_store_pc": "$CC01",
+      "playback_effect": "start_sfx",
+      "source_note": "Fixed-bank route queue event; catalog ordinal 91."
+    },
+    {
+      "source_frame": 8664,
+      "source_cycle": 257998379,
+      "queue_id": 43,
+      "queue_hex": "$2B",
+      "post_store_pc": "$CC01",
+      "playback_effect": "start_sfx",
+      "source_note": "Fixed-bank route queue event; catalog ordinal 78."
+    },
+    {
+      "source_frame": 8786,
+      "source_cycle": 261637820,
+      "queue_id": 44,
+      "queue_hex": "$2C",
+      "post_store_pc": "$CC01",
+      "playback_effect": "start_sfx",
+      "source_note": "Fixed-bank route queue event; catalog ordinal 79."
+    }
+  ]
+}

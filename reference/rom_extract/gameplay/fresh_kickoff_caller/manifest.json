@@ -1,0 +1,70 @@
+{
+  "schema": "ct2-fresh-kickoff-caller-source-v1",
+  "rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "mapping": "Offsets include the 16-byte iNES header. Bank $00 at CPU $8000 maps to 0x000010 + (CPU-$8000); fixed CPU $C000 maps to 0x03C010 + (CPU-$C000).",
+  "scope": "Hash-checked source spans for title KICK OFF caller, Select-aware cutscene wait, fresh setup/audio write, and ID-2 table dispatch. Runtime/model inputs are explicit; trace files are validation only. Includes the fresh match setup `$8938->$C4B9` callsite.",
+  "spans": [
+    {
+      "file": "bank00_title_to_first_match_setup_80DF_815C.bin",
+      "cpu_start": "$80DF",
+      "cpu_end_exclusive": "$815D",
+      "file_offset": "0x0000EF",
+      "length": 126,
+      "sha256": "a4b5afda1800eb4b500c95748497e22cb6467d90d1e99c56d4578b98db996a7b",
+      "bank_mapping": "bank $00 at CPU $8000",
+      "bytes": "24 ed 50 03 4c 6a 82 20 a0 9b a9 01 20 64 84 20 b5 82 a9 c0 85 e0 a2 02 20 b9 c4 20 0f a2 a9 00 85 28 85 29 85 27 a9 01 8d 00 07 a2 02 20 b9 c4 20 0c a2 a9 00 20 20 89 a2 01 20 b9 c4 20 06 a0 20 72 c5 a2 55 a5 26 c9 20 90 02 a2 4c 8e 00 07 a9 00 8d 50 04 8d 51 04 8d 52 04 8d 53 04 a2 01 20 b9 c4 20 09 a0 24 e0 30 06 a5 e4 c5 26 b0 14 ae 26 00 bd dc 83 f0 0c 20 64 84 20 b5 82"
+    },
+    {
+      "file": "bank00_select_wait_82B5_82EC.bin",
+      "cpu_start": "$82B5",
+      "cpu_end_exclusive": "$82ED",
+      "file_offset": "0x0002C5",
+      "length": 56,
+      "sha256": "6b894cd9f7a0b4e6927ce98c739672b5d79627b5e138a0257898f94793a75b5c",
+      "bank_mapping": "bank $00 at CPU $8000",
+      "bytes": "a9 01 20 a8 9f a5 4d 05 4e f0 06 a5 1e 29 20 f0 ef a9 00 85 05 85 06 85 09 85 0a 85 11 85 12 85 0d 85 0e 85 4c a9 01 8d 00 07 20 a0 9b a9 00 85 44 85 45 85 7a 85 7b 60"
+    },
+    {
+      "file": "bank00_pre_match_cutscene_ids_83DC_83FC.bin",
+      "cpu_start": "$83DC",
+      "cpu_end_exclusive": "$83FD",
+      "file_offset": "0x0003EC",
+      "length": 33,
+      "sha256": "c0e1023552ed03cbf1e741956f76bdef150143848197a8da5e5000508bad2051",
+      "bank_mapping": "bank $00 at CPU $8000",
+      "bytes": "02 00 00 00 00 07 00 00 00 00 0c 0e 00 00 10 12 00 00 00 00 00 00 00 00 00 00 18 00 00 00 00 1e 20"
+    },
+    {
+      "file": "fixed_mapper_select_C4B9_C4C7.bin",
+      "cpu_start": "$C4B9",
+      "cpu_end_exclusive": "$C4C8",
+      "file_offset": "0x03C4C9",
+      "length": 15,
+      "sha256": "a87676276fdbfa7feeb8e1279d6e9cb220b436dd1edb788813801b2be1c48f12",
+      "bank_mapping": "fixed PRG at CPU $C000",
+      "bytes": "86 25 a9 07 05 22 85 23 8d 00 80 8e 01 80 60"
+    },
+    {
+      "file": "bank00_match_setup_preset_8920_893F.bin",
+      "cpu_start": "$8920",
+      "cpu_end_exclusive": "$893F",
+      "file_offset": "0x000930",
+      "length": 31,
+      "sha256": "6f4f250519c608d82a9a58aa154e87070a7e6563341a4ec32ae78aa23ee51b12",
+      "bank_mapping": "bank $00 at CPU $8000",
+      "bytes": "a2 13 20 ee 9d a5 ec 18 69 00 85 ec a5 ed 69 bf 85 ed a5 25 85 ea a2 06 20 b9 c4 a5 78 d0 fc"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "../fresh_kickoff_entry_context/reset_ram_clear_C64E_C679.bin",
+      "cpu_start": "$C64E",
+      "file_offset": "0x03C65E",
+      "length": 44,
+      "sha256": "8315e93ae660d302632f7bfeffc9db002b3f1c1643ae2b6936d3ce5703e6f75a"
+    }
+  ]
+}

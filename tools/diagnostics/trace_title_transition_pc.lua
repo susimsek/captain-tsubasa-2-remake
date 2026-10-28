@@ -1,7 +1,7 @@
 -- Silent bounded CPU-PC trace around the captured Start-to-title handoff.
 -- Replays original captured inputs from power-on; PC hooks are installed only
 -- after source frame 4660 to keep the instrumentation window small.
-local ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local INPUT_CSV = ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local LAST_FRAME = 4692
 local TRACE_START = 4661

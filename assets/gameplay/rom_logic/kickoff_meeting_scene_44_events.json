@@ -1,0 +1,270 @@
+{
+  "schema": 1,
+  "name": "kickoff_meeting_scene_44",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_execution_stream_sha256": "f1c60b3e4f92dee044189bc94e89197439decab3881bb946f483e7899faa861b",
+  "source_resource": "reference/rom_extract/gameplay/meeting_menu/scene_44_execution.bin",
+  "execution_stream_cpu_range": [
+    "0xBE84",
+    "0xBEDA"
+  ],
+  "execution_stream_file_range": [
+    "0x00BE94",
+    "0x00BEEB"
+  ],
+  "execution_stream_length_bytes": 33,
+  "execution_segments": [
+    {
+      "execution_stream_offset_range": [
+        0,
+        28
+      ],
+      "source_resource": "reference/rom_extract/gameplay/meeting_menu/bank5_meeting_scene_44_entry_with_jump_operand.bin",
+      "cpu_start": "0xBE84",
+      "file_start": "0x00BE94",
+      "length_bytes": 28,
+      "sha256": "44289f074e1d0f028e924126e3dc82235b27a5249fbd24e1ffe84c390c4d627e"
+    },
+    {
+      "execution_stream_offset_range": [
+        28,
+        33
+      ],
+      "source_resource": "reference/rom_extract/gameplay/meeting_menu/bank5_meeting_advice_scene_44_jump_target.bin",
+      "cpu_start": "0xBED6",
+      "file_start": "0x00BEE6",
+      "length_bytes": 5,
+      "sha256": "72797e153acd7e8b1a357c22b1be41ec02fff14d40592175ee50b2706aa33abe"
+    }
+  ],
+  "event_count": 12,
+  "event_boundaries_byte_verified": true,
+  "frame_timing_decoded": false,
+  "asset_producers_decoded": false,
+  "events": [
+    {
+      "kind": "background_1",
+      "opcode": 249,
+      "arguments": [
+        95
+      ],
+      "id": 95,
+      "event_index": 0,
+      "script_offset": 0,
+      "cpu_address": 48772,
+      "file_offset": 48788,
+      "raw_bytes": [
+        249,
+        95
+      ],
+      "raw_hex": "f9 5f",
+      "source_segment_index": 0
+    },
+    {
+      "kind": "animations",
+      "opcode": 251,
+      "arguments": [
+        1,
+        59
+      ],
+      "animation_ids": [
+        59
+      ],
+      "event_index": 1,
+      "script_offset": 2,
+      "cpu_address": 48774,
+      "file_offset": 48790,
+      "raw_bytes": [
+        251,
+        1,
+        59
+      ],
+      "raw_hex": "fb 01 3b",
+      "source_segment_index": 0
+    },
+    {
+      "kind": "dialog_window",
+      "opcode": 241,
+      "arguments": [
+        3
+      ],
+      "event_index": 2,
+      "script_offset": 5,
+      "cpu_address": 48777,
+      "file_offset": 48793,
+      "raw_bytes": [
+        241,
+        3
+      ],
+      "raw_hex": "f1 03",
+      "source_segment_index": 0
+    },
+    {
+      "kind": "text_speed",
+      "opcode": 242,
+      "arguments": [
+        0
+      ],
+      "event_index": 3,
+      "script_offset": 7,
+      "cpu_address": 48779,
+      "file_offset": 48795,
+      "raw_bytes": [
+        242,
+        0
+      ],
+      "raw_hex": "f2 00",
+      "source_segment_index": 0
+    },
+    {
+      "kind": "text_base_ppu_address",
+      "opcode": 240,
+      "arguments": [
+        76,
+        34
+      ],
+      "event_index": 4,
+      "script_offset": 9,
+      "cpu_address": 48781,
+      "file_offset": 48797,
+      "raw_bytes": [
+        240,
+        76,
+        34
+      ],
+      "raw_hex": "f0 4c 22",
+      "source_segment_index": 0
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids": [
+        64,
+        69,
+        96,
+        116,
+        44,
+        68,
+        18,
+        4,
+        121,
+        18,
+        32
+      ],
+      "event_index": 5,
+      "script_offset": 12,
+      "cpu_address": 48784,
+      "file_offset": 48800,
+      "raw_bytes": [
+        64,
+        69,
+        96,
+        116,
+        44,
+        68,
+        18,
+        4,
+        121,
+        18,
+        32
+      ],
+      "raw_hex": "40 45 60 74 2c 44 12 04 79 12 20",
+      "source_segment_index": 0
+    },
+    {
+      "kind": "fc_handler",
+      "opcode": 252,
+      "arguments": [],
+      "event_index": 6,
+      "script_offset": 23,
+      "cpu_address": 48795,
+      "file_offset": 48811,
+      "raw_bytes": [
+        252
+      ],
+      "raw_hex": "fc",
+      "source_segment_index": 0
+    },
+    {
+      "kind": "fc_handler",
+      "opcode": 252,
+      "arguments": [],
+      "event_index": 7,
+      "script_offset": 24,
+      "cpu_address": 48796,
+      "file_offset": 48812,
+      "raw_bytes": [
+        252
+      ],
+      "raw_hex": "fc",
+      "source_segment_index": 0
+    },
+    {
+      "kind": "jump",
+      "opcode": 254,
+      "arguments": [
+        214,
+        190
+      ],
+      "target_cpu_address": 48854,
+      "event_index": 8,
+      "script_offset": 25,
+      "cpu_address": 48797,
+      "file_offset": 48813,
+      "raw_bytes": [
+        254,
+        214,
+        190
+      ],
+      "raw_hex": "fe d6 be",
+      "source_segment_index": 0
+    },
+    {
+      "kind": "visual_preset",
+      "opcode": 232,
+      "arguments": [
+        1
+      ],
+      "event_index": 9,
+      "script_offset": 28,
+      "cpu_address": 48854,
+      "file_offset": 48870,
+      "raw_bytes": [
+        232,
+        1
+      ],
+      "raw_hex": "e8 01",
+      "source_segment_index": 1
+    },
+    {
+      "kind": "palette_command",
+      "opcode": 243,
+      "arguments": [
+        0
+      ],
+      "event_index": 10,
+      "script_offset": 30,
+      "cpu_address": 48856,
+      "file_offset": 48872,
+      "raw_bytes": [
+        243,
+        0
+      ],
+      "raw_hex": "f3 00",
+      "source_segment_index": 1
+    },
+    {
+      "kind": "exit",
+      "opcode": 255,
+      "arguments": [],
+      "event_index": 11,
+      "script_offset": 32,
+      "cpu_address": 48858,
+      "file_offset": 48874,
+      "raw_bytes": [
+        255
+      ],
+      "raw_hex": "ff",
+      "source_segment_index": 1
+    }
+  ]
+}

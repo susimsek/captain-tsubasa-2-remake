@@ -91,7 +91,9 @@ func _run() -> void:
 		"selector_copy_source_frame": SELECTOR_COPY_FRAME,
 		"selector_copy_ram": "$0075/$0076 -> $008E/$008F -> $0090/$0091",
 		"profile_switch_source_frame": SELECTOR_COPY_FRAME + 1,
-		"cycle_timing_verified_against_fceux_pc_trace": false,
+		"cycle_timing_verified_against_fceux_pc_trace": true,
+		"fceux_cycle_report": "reference/diagnostics/f8_selector_fceux_cycles_20261027_100342/f8_selector_cycle_comparison.json",
+		"fceux_trace_script": "tools/diagnostics/trace_f8_selector_fceux_cycles.lua",
 		"runtime_reads_rom_file": false,
 	}
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT_PATH.get_base_dir()))

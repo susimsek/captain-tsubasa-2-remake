@@ -1,7 +1,7 @@
 -- Trace the cold-start NMI-to-sound-driver path in a silent FCEUX replay.
 -- Evidence only: no captured audio or emulator image is read or exported.
 
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local ROM_MD5_EXPECTED = "eaf2b3745263efa4b1afd2b400f68dae" -- PRG+CHR payload, excluding iNES header
 local ROM_SHA256_EXPECTED = "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
 local INPUT_CSV = PROJECT_ROOT .. "/reference/opening_reference_capture/input_timeline.csv"

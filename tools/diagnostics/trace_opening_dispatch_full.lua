@@ -1,6 +1,6 @@
 -- Full silent dispatcher trace for the cold-start opening through title endpoint.
 -- Replays the established per-frame input capture; records execution evidence only.
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local ROM_PATH = PROJECT_ROOT .. "/Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes"
 local INPUT_CSV = PROJECT_ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local LAST_SOURCE_FRAME = 4692

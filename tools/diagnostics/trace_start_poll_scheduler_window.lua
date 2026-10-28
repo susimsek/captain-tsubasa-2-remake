@@ -1,7 +1,7 @@
 -- Muted same-input FCEUX capture of scheduler/NMI edges around the two Start-poll outliers.
 -- FCEUX is only a post-run validation oracle; this script does not feed the ROM-only model.
 
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local INPUT_CSV = PROJECT_ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local INPUT_SHA256_EXPECTED = "195743d71b36da01b5148e46e14733988d3e5d21cf308ab09eaa735daf83d2d3"
 local FIRST_SOURCE_FRAME = 3596

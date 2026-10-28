@@ -1,0 +1,17 @@
+{
+  "schema": "root-slot01-continuation-v1",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "mapping": "iNES PRG begins at file offset 0x0010; fixed bank CPU $C000-$FFFF maps to file 0x03C010+.",
+  "spans": [
+    {
+      "file": "fixed_root_slot01_continuation_CA4D_CA5A.bin",
+      "cpu_address": "0xCA4D",
+      "cpu_end_exclusive": "0xCA5B",
+      "file_offset": "0x03CA5D",
+      "length": 14,
+      "sha256": "e57b4fe7ceb639050a5d21b6a8d4ea958c181137f63ded21388b9ad9715a094a",
+      "bytes": "A9 01 20 0F CB 20 9F EE 20 CA E3 4C 4D CA",
+      "description": "fixed-bank slot-$01 continuation caller: LDA #$01 / JSR $CB0F, JSR $EE9F, JSR $E3CA, JMP $CA4D"
+    }
+  ]
+}

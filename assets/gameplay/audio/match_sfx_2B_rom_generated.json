@@ -1,0 +1,57 @@
+{
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "cue": "0x2B",
+  "cue_kind": "sound_effect",
+  "runtime_pointer_table_file_offset": "0x018C3E",
+  "runtime_pointer_cpu_address": "0x9453",
+  "sequence_file_offset": "0x019463",
+  "sound_test_ordinal": 78,
+  "empty_sequence": false,
+  "observed_route_queue": true,
+  "sequence_prg_bank": "0x0C",
+  "sequence_bank_file_offset": "0x018010",
+  "source_nsf": "tools/audio/build/first_match_sfx_2B.nsf",
+  "source_nsf_sha256": "0bd987b8c6f8455cb083316ebcdf9497ae913332d504708c1729687296c08e1c",
+  "wav": "assets/gameplay/audio/match_sfx_2B_rom_generated.wav",
+  "wav_sha256": "08eaad04828da91ce865746816eb7234b637400c719c51b9fb3e0d42a13d6ad0",
+  "sample_rate": 44100,
+  "channels": 1,
+  "seconds": 3,
+  "renderer": "libgme 0.6.5, offline NSF execution of supplied ROM sound driver and cue data",
+  "captured_pcm_used": false,
+  "capture_used": false,
+  "runtime_needs_rom_or_emulator": false,
+  "driver_mmc3_write_patches": [
+    {
+      "cpu_address": "0x8011",
+      "rom_file_offset": "0x018021",
+      "original": "8c0180",
+      "nsf": "eaeaea"
+    },
+    {
+      "cpu_address": "0x8022",
+      "rom_file_offset": "0x018032",
+      "original": "8c0180",
+      "nsf": "eaeaea"
+    },
+    {
+      "cpu_address": "0x8036",
+      "rom_file_offset": "0x018046",
+      "original": "8c0180",
+      "nsf": "eaeaea"
+    },
+    {
+      "cpu_address": "0x804A",
+      "rom_file_offset": "0x01805A",
+      "original": "8c0180",
+      "nsf": "eaeaea"
+    },
+    {
+      "cpu_address": "0x805B",
+      "rom_file_offset": "0x01806B",
+      "original": "8c0180",
+      "nsf": "eaeaea"
+    }
+  ],
+  "validation_status": "ROM-only source render; not compared against reference PCM or independently verified for timing/timbre."
+}

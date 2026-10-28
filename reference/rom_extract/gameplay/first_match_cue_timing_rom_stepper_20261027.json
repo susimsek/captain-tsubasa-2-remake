@@ -1,0 +1,86 @@
+{
+  "schema": "ct2-first-match-cue-source-timing-v1",
+  "purpose": "Reference-only source timing for ROM queue and APU events; not a runtime schedule or audible-onset claim.",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_stepper_report_sha256": "4038d7e170634c614ef7028c7bd1bd5f6033336ca53a77101a04e0b869eb8fe9",
+  "source_input_timeline_sha256": "6cae92ff2b6a77fcc05c34c57c734bbff47930ada172633cb4a4b830cc3e77dc",
+  "source_frames_advanced": 9042,
+  "source_cpu_cycles": 269275286,
+  "source_event_inputs": {
+    "sound_queue_csv_sha256": "96cfdba5086bc1dfd5b3314cbc1928075f7770aa5bbf5046478bf70b457fd62f",
+    "apu_writes_csv_sha256": "0431f07fac824ddff396482f694fcf027a1df54ae84b3058d598b5f6987d0130",
+    "cue_manifest_sha256": "dd2cc15ccbc97bb5ce4651362338d392a56b66c624a8cc25d739aeb194e9d1ea",
+    "cue_wav_sha256": "aa297e4dd8f9bde1b6202f6075c63b28ca49eb3a93227f4c4a5a4190bf9e4f95"
+  },
+  "cue_rom_source": {
+    "queue_id": "$55",
+    "runtime_pointer_table_file_offset": "0x018C92",
+    "runtime_pointer_cpu_address": "0xA30F",
+    "sequence_file_offset": "0x01E31F",
+    "sequence_prg_bank": "0x0F"
+  },
+  "clock": {
+    "ntsc_cpu_hz": 1789773
+  },
+  "capture_used_as_event_input": false,
+  "captured_pcm_used": false,
+  "runtime_consumes_this_file": false,
+  "occurrences": [
+    {
+      "queue_event": {
+        "source_frame": 4816,
+        "source_cycle": 143396526,
+        "pc_after_store": "$85FF",
+        "queue_address": "$0700",
+        "queue_id": "$55"
+      },
+      "next_queue_event_cycle_exclusive": 215674689,
+      "first_apu_register_write": {
+        "source_frame": 4817,
+        "source_cycle": 143425372,
+        "pc": "$8369",
+        "address": "$4015",
+        "value": "$0F",
+        "cycles_after_queue_write": 28846,
+        "milliseconds_after_queue_write": 16.117128
+      },
+      "first_pulse1_register_write": {
+        "source_frame": 4817,
+        "source_cycle": 143429288,
+        "pc": "$818F",
+        "address": "$4000",
+        "value": "$37",
+        "cycles_after_queue_write": 32762,
+        "milliseconds_after_queue_write": 18.305115
+      }
+    },
+    {
+      "queue_event": {
+        "source_frame": 7409,
+        "source_cycle": 220630517,
+        "pc_after_store": "$812F",
+        "queue_address": "$0700",
+        "queue_id": "$55"
+      },
+      "next_queue_event_cycle_exclusive": 239028028,
+      "first_apu_register_write": {
+        "source_frame": 7411,
+        "source_cycle": 220676888,
+        "pc": "$8369",
+        "address": "$4015",
+        "value": "$0F",
+        "cycles_after_queue_write": 46371,
+        "milliseconds_after_queue_write": 25.908872
+      },
+      "first_pulse1_register_write": {
+        "source_frame": 7411,
+        "source_cycle": 220680808,
+        "pc": "$818F",
+        "address": "$4000",
+        "value": "$37",
+        "cycles_after_queue_write": 50291,
+        "milliseconds_after_queue_write": 28.099094
+      }
+    }
+  ]
+}

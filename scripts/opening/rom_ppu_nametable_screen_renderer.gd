@@ -57,6 +57,7 @@ var _nes_rgba32_colors := PackedInt64Array()
 var _scroll_x := 0
 var _scroll_y := 0
 var _active_background_id := 0x01
+var _active_data_root := INTRO_DATA_ROOT
 var _sprites_behind_background := false
 var _source_raster_events: Array[Dictionary] = []
 ## Select the legacy dictionary path only for paired renderer profiling.
@@ -90,6 +91,7 @@ var _tile_row_chunk_byte_cache: Dictionary = {}
 var _row_chunk_cache_hits := 0
 var _row_chunk_cache_misses := 0
 var _texture: ImageTexture
+var _last_software_render_image: Image
 
 
 func _ready() -> void:
@@ -136,6 +138,14 @@ func get_gpu_background_image() -> Image:
 	if _gpu_background_renderer == null:
 		return null
 	return _gpu_background_renderer.get_image()
+
+
+## Diagnostic background readback for headless frame comparisons. This omits
+## CanvasItem sprites, which are composed by the scene viewport separately.
+func get_rendered_background_image() -> Image:
+	if use_gpu_background_renderer:
+		return get_gpu_background_image()
+	return _last_software_render_image
 
 
 func _ensure_gpu_background_renderer() -> bool:
@@ -255,6 +265,13 @@ func set_background_palette_bytes(palette_bytes: PackedByteArray) -> void:
 	_request_redraw()
 
 
+## Return the active raw 16-byte background palette for source-derived sprite
+## setup. Callers may use the universal color at index zero, which gameplay's
+## normal-player palette writer intentionally leaves untouched.
+func get_background_palette_bytes() -> PackedByteArray:
+	return _background_palette.duplicate()
+
+
 ## In the NES, a sprite with OAM priority bit 5 set is visible only through
 ## transparent background pixels. The caller draws its sprite layer below this
 ## node; this mode makes color-index-zero background pixels transparent.
@@ -276,12 +293,20 @@ func get_source_2k_chr_selectors() -> Array[int]:
 
 ## Change the static ROM background profile and its four 1 KiB CHR selectors.
 ## Palette overrides may be supplied by a source-command palette operation.
-func set_background_profile(background_id: int, palette_override: PackedByteArray = PackedByteArray()) -> bool:
+func set_background_profile(background_id: int,
+		palette_override: PackedByteArray = PackedByteArray(),
+		data_root: String = INTRO_DATA_ROOT) -> bool:
 	if background_id < 0 or background_id > 0xFF:
 		push_error("Background ID must fit in one ROM byte.")
 		return false
+	var normalized_data_root := data_root.trim_prefix("res://").trim_suffix("/")
+	if normalized_data_root != "reference/rom_extract/intro" \
+			and normalized_data_root != "reference/rom_extract/gameplay/backgrounds":
+		push_error("Background data root is outside the supported ROM-extract folders.")
+		return false
+	var project_data_root := "res://" + normalized_data_root
 	var id_hex := "%02X" % background_id
-	var layout_path := "%s/background_%s_layout.json" % [INTRO_DATA_ROOT, id_hex]
+	var layout_path := "%s/background_%s_layout.json" % [project_data_root, id_hex]
 	var layout := _read_json(layout_path)
 	if layout.is_empty() or str(layout.get("rom_sha256", "")) != SOURCE_ROM_SHA256:
 		push_error("PPU renderer has no matching ROM layout for background $%s." % id_hex)
@@ -318,6 +343,7 @@ func set_background_profile(background_id: int, palette_override: PackedByteArra
 		push_error("PPU renderer background $%s needs a 16-byte palette." % id_hex)
 		return false
 	_active_background_id = background_id
+	_active_data_root = project_data_root
 	_chr_banks = selected_banks
 	_background_palette = selected_palette
 	_tile_row_blit_cache.clear()
@@ -869,6 +895,7 @@ func _redraw_screen() -> void:
 	if use_pixel_loop_diagnostics or packed_row_copy_active:
 		image = Image.create(SCREEN_WIDTH, SCREEN_HEIGHT, false, Image.FORMAT_RGBA8)
 		image.set_data(SCREEN_WIDTH, SCREEN_HEIGHT, false, Image.FORMAT_RGBA8, image_data)
+	_last_software_render_image = image
 	_texture = ImageTexture.create_from_image(image)
 	queue_redraw()
 

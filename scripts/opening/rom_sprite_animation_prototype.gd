@@ -22,6 +22,7 @@ static var _shared_chr: PackedByteArray = PackedByteArray()
 static var _shared_nes_rgb_palette: PackedByteArray = PackedByteArray()
 static var _shared_json_by_path: Dictionary = {}
 static var _shared_frames_by_address: Dictionary = {}
+static var _shared_frames_by_path: Dictionary = {}
 # Lazy ROM-derived tile variants are shared across animation nodes. The cache
 # is bounded; an uncached miss at capacity uses the per-pixel renderer below.
 static var _shared_sprite_tile_images: Dictionary = {}
@@ -33,6 +34,8 @@ static var _diagnostic_source_frame := -1
 ## Selects any decoded intro animation. Tracks with waits use their ROM beats;
 ## zero-wait entries hold their final frame as a static pose.
 @export var animation_id := "0x84"
+@export_file("*.json") var timing_resource_path := TIMING_PATH
+@export_file("*.json") var frame_resource_path := FRAMES_PATH
 ## Optionally override the animation-specific ROM palette with 16 RGB colors.
 ## An empty override loads the project palette resource for this animation;
 ## grayscale is only the geometry fallback when no resource can be loaded.
@@ -43,6 +46,7 @@ var _beats: Array[Dictionary] = []
 var _frames_by_address: Dictionary = {}
 var _duration_ticks := 0
 var _static_pose: Dictionary = {}
+var _state_branch_frame_addresses: Dictionary = {}
 var _elapsed := 0.0
 var _manual_source_clock := false
 var _manual_source_tick := 0
@@ -113,6 +117,18 @@ func set_origin_override(screen_x: int, screen_y: int) -> void:
 	_origin_override_enabled = true
 	_origin_override = Vector2i(screen_x, screen_y)
 	_request_pose_render()
+
+
+## Switch a ROM `$FA` animation frame using its decoded selector bit. This is
+## used by scene `$44`'s speaker animation; the caller supplies the traced
+## `$0099` bit-0 state, while frame bytes remain ROM-derived.
+func set_rom_state_branch(selector_value: int) -> bool:
+	if not _state_branch_frame_addresses.has(selector_value):
+		return false
+	_static_pose["sprite_frame_cpu_address"] = str(_state_branch_frame_addresses[selector_value])
+	_last_rendered_pose_key = ""
+	_request_pose_render()
+	return true
 
 
 ## Set the accumulated source-derived motion offset in 8-bit OAM space.
@@ -215,8 +231,8 @@ func _load_rom_derived_data() -> bool:
 		push_error("External FCEUX RGB palette is missing or has an unexpected size.")
 		return false
 
-	var timing_data := _read_json(TIMING_PATH)
-	var frame_data := _read_json(FRAMES_PATH)
+	var timing_data := _read_json(timing_resource_path)
+	var frame_data := _read_json(frame_resource_path)
 	if timing_data.is_empty() or frame_data.is_empty():
 		return false
 	if str(timing_data.get("rom_sha256", "")) != SOURCE_ROM_SHA256:
@@ -228,12 +244,15 @@ func _load_rom_derived_data() -> bool:
 	if sprite_palette_rgb.is_empty():
 		_load_original_palette()
 
-	if _shared_frames_by_address.is_empty():
+	if not _shared_frames_by_path.has(frame_resource_path):
+		var frames_for_path: Dictionary = {}
 		for frame_variant: Variant in frame_data.get("frames", []):
 			if frame_variant is Dictionary:
 				var frame: Dictionary = frame_variant
-				_shared_frames_by_address[str(frame.get("cpu_address", ""))] = frame
-	_frames_by_address = _shared_frames_by_address
+				frames_for_path[str(frame.get("cpu_address", ""))] = frame
+		_shared_frames_by_path[frame_resource_path] = frames_for_path
+	_frames_by_address = _shared_frames_by_path[frame_resource_path]
+	_shared_frames_by_address = _frames_by_address
 
 	for animation_variant: Variant in timing_data.get("animations", []):
 		if not animation_variant is Dictionary:
@@ -241,12 +260,20 @@ func _load_rom_derived_data() -> bool:
 		var animation: Dictionary = animation_variant
 		if str(animation.get("animation_id", "")) != animation_id:
 			continue
+		var state_branch_initial_value := 0
 		var terminal_variant: Variant = animation.get("terminal", {})
 		if terminal_variant is Dictionary:
 			var terminal: Dictionary = terminal_variant
 			if str(terminal.get("kind", "")) == "repeat_cycle":
 				_repeat_cycle_start_tick = int(terminal.get("cycle_start_tick", -1))
 				_repeat_cycle_length_ticks = int(terminal.get("cycle_length_ticks", 0))
+			elif str(terminal.get("kind", "")) == "state_branch":
+				state_branch_initial_value = int(terminal.get("initial_selector_value", 0))
+				for branch_variant in terminal.get("cases", []):
+					if not branch_variant is Dictionary:
+						continue
+					var branch: Dictionary = branch_variant
+					_state_branch_frame_addresses[int(branch.get("selector_value", -1))] = str(branch.get("frame_cpu_address", ""))
 		for beat_variant: Variant in animation.get("beats", []):
 			if beat_variant is Dictionary:
 				var beat: Dictionary = beat_variant
@@ -255,6 +282,9 @@ func _load_rom_derived_data() -> bool:
 					int(beat.get("start_tick", 0)) + int(beat.get("hold_ticks", 0)))
 		if _beats.is_empty():
 			_static_pose = _static_pose_from_commands(animation.get("commands", []))
+			if not _state_branch_frame_addresses.is_empty():
+				_static_pose["sprite_frame_cpu_address"] = str(_state_branch_frame_addresses.get(
+					state_branch_initial_value, ""))
 		break
 
 	if _beats.is_empty() and _static_pose.is_empty():
@@ -270,19 +300,40 @@ func _load_original_palette() -> void:
 	var palette_path := "res://assets/opening/rom_logic/animation_%s_sprite_palette.json" % animation_id.trim_prefix("0x").to_lower()
 	# Some animations select palette index 00 from the global PPU palette packet;
 	# those receive the source palette bytes from the scene presenter at runtime.
-	if not FileAccess.file_exists(palette_path):
+	if FileAccess.file_exists(palette_path):
+		var palette_data := _read_json(palette_path)
+		var rgb_mapping: Variant = palette_data.get("rgb_mapping", {})
+		if not rgb_mapping is Dictionary:
+			return
+		var rows: Variant = rgb_mapping.get("rows", [])
+		if not rows is Array or rows.size() != 16:
+			push_error("Animation %s sprite palette resource must contain 16 entries." % animation_id)
+			return
+		for row_variant: Variant in rows:
+			if row_variant is Dictionary:
+				sprite_palette_rgb.append(Color.html(str(row_variant.get("rgb_hex", "#000000"))))
 		return
-	var palette_data := _read_json(palette_path)
-	var rgb_mapping: Variant = palette_data.get("rgb_mapping", {})
-	if not rgb_mapping is Dictionary:
+
+	# KICK OFF route animations share the ROM's indexed sprite-palette table.
+	# Their animation records live under gameplay/animations/kickoff, separate
+	# from the cold-start extract, so derive the palette from that byte-preserved
+	# record and the original nine-entry table rather than falling back to gray.
+	if not timing_resource_path.contains("gameplay/animations/kickoff"):
 		return
-	var rows: Variant = rgb_mapping.get("rows", [])
-	if not rows is Array or rows.size() != 16:
-		push_error("Animation %s sprite palette resource must contain 16 entries." % animation_id)
+	var palette_id := animation_id.trim_prefix("0x").hex_to_int()
+	var record_path := "res://reference/rom_extract/gameplay/animations/kickoff/animation_%02X.bin" % palette_id
+	var record := FileAccess.get_file_as_bytes(record_path)
+	var palette_table := FileAccess.get_file_as_bytes("res://reference/rom_extract/intro/sprite_palette_table_00_3F.bin")
+	if record.is_empty() or palette_table.size() != 0x40 * 16 or record[0] >= 0x40:
 		return
-	for row_variant: Variant in rows:
-		if row_variant is Dictionary:
-			sprite_palette_rgb.append(Color.html(str(row_variant.get("rgb_hex", "#000000"))))
+	for palette_index in 16:
+		var nes_color := int(palette_table[int(record[0]) * 16 + palette_index]) & 0x3F
+		var color_offset := nes_color * 3
+		sprite_palette_rgb.append(Color(
+			float(_nes_rgb_palette[color_offset]) / 255.0,
+			float(_nes_rgb_palette[color_offset + 1]) / 255.0,
+			float(_nes_rgb_palette[color_offset + 2]) / 255.0,
+			1.0))
 
 
 func set_fade_palette_bytes(palette_bytes: PackedByteArray) -> void:

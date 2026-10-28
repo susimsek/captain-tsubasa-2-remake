@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/kickoff_cutscene_visuals.gd" id="1_visuals"]
+[ext_resource type="Script" path="res://scripts/opening/rom_ppu_nametable_screen_renderer.gd" id="2_screen"]
+
+[node name="KickoffCutsceneVisuals" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_visuals")
+
+[node name="Screen" type="Node2D" parent="."]
+script = ExtResource("2_screen")
+
+[node name="Sprites" type="Node2D" parent="."]

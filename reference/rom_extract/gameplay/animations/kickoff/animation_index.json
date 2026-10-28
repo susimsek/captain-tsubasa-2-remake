@@ -1,0 +1,1114 @@
+{
+  "schema": 1,
+  "rom_file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_manifests": [
+    {
+      "path": "assets/gameplay/rom_logic/kickoff_cutscene_01_events.json",
+      "sha256": "e596286e60d4ccfd01dcc3c03f5c48f911f236978b4896f68bff62e28a56765d",
+      "cutscene_id": 1,
+      "event_count": 222
+    },
+    {
+      "path": "assets/gameplay/rom_logic/kickoff_cutscene_02_events.json",
+      "sha256": "fc943538831c90103b6fe91b2244de6a003489e254b95c5e8980234e895a5ebc",
+      "cutscene_id": 2,
+      "event_count": 45
+    }
+  ],
+  "animation_id_lookup": {
+    "bank_9_ids": "0x00-0x6C; pointer-table index equals ID",
+    "bank_10_ids": "0x6D+; pointer-table index equals ID minus 0x6D",
+    "pointer_table_cpu_address": "0xA000 in the selected PRG bank"
+  },
+  "animation_count": 16,
+  "invocations": [
+    {
+      "cutscene_id": 1,
+      "event_index": 2,
+      "script_offset": 4,
+      "cpu_address": "0xA2A5",
+      "file_offset": "0x0062B5",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x6D"
+      ],
+      "raw_hex": "01 6d"
+    },
+    {
+      "cutscene_id": 1,
+      "event_index": 21,
+      "script_offset": 91,
+      "cpu_address": "0xA2FC",
+      "file_offset": "0x00630C",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x17"
+      ],
+      "raw_hex": "01 17"
+    },
+    {
+      "cutscene_id": 1,
+      "event_index": 37,
+      "script_offset": 166,
+      "cpu_address": "0xA347",
+      "file_offset": "0x006357",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x50"
+      ],
+      "raw_hex": "01 50"
+    },
+    {
+      "cutscene_id": 1,
+      "event_index": 51,
+      "script_offset": 231,
+      "cpu_address": "0xA388",
+      "file_offset": "0x006398",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x51"
+      ],
+      "raw_hex": "01 51"
+    },
+    {
+      "cutscene_id": 1,
+      "event_index": 80,
+      "script_offset": 329,
+      "cpu_address": "0xA3EA",
+      "file_offset": "0x0063FA",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x0B"
+      ],
+      "raw_hex": "01 0b"
+    },
+    {
+      "cutscene_id": 1,
+      "event_index": 106,
+      "script_offset": 453,
+      "cpu_address": "0xA466",
+      "file_offset": "0x006476",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x3C"
+      ],
+      "raw_hex": "01 3c"
+    },
+    {
+      "cutscene_id": 1,
+      "event_index": 130,
+      "script_offset": 608,
+      "cpu_address": "0xA501",
+      "file_offset": "0x006511",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x3B"
+      ],
+      "raw_hex": "01 3b"
+    },
+    {
+      "cutscene_id": 1,
+      "event_index": 141,
+      "script_offset": 646,
+      "cpu_address": "0xA527",
+      "file_offset": "0x006537",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x2A"
+      ],
+      "raw_hex": "01 2a"
+    },
+    {
+      "cutscene_id": 1,
+      "event_index": 156,
+      "script_offset": 728,
+      "cpu_address": "0xA579",
+      "file_offset": "0x006589",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x12"
+      ],
+      "raw_hex": "01 12"
+    },
+    {
+      "cutscene_id": 1,
+      "event_index": 164,
+      "script_offset": 743,
+      "cpu_address": "0xA588",
+      "file_offset": "0x006598",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x2B"
+      ],
+      "raw_hex": "01 2b"
+    },
+    {
+      "cutscene_id": 1,
+      "event_index": 178,
+      "script_offset": 780,
+      "cpu_address": "0xA5AD",
+      "file_offset": "0x0065BD",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x2C"
+      ],
+      "raw_hex": "01 2c"
+    },
+    {
+      "cutscene_id": 1,
+      "event_index": 180,
+      "script_offset": 785,
+      "cpu_address": "0xA5B2",
+      "file_offset": "0x0065C2",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x2C"
+      ],
+      "raw_hex": "01 2c"
+    },
+    {
+      "cutscene_id": 1,
+      "event_index": 188,
+      "script_offset": 804,
+      "cpu_address": "0xA5C5",
+      "file_offset": "0x0065D5",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x2B"
+      ],
+      "raw_hex": "01 2b"
+    },
+    {
+      "cutscene_id": 1,
+      "event_index": 211,
+      "script_offset": 880,
+      "cpu_address": "0xA611",
+      "file_offset": "0x006621",
+      "requested_instance_count": 2,
+      "animation_ids": [
+        "0xC7",
+        "0xC6"
+      ],
+      "raw_hex": "02 c7 c6"
+    },
+    {
+      "cutscene_id": 1,
+      "event_index": 215,
+      "script_offset": 889,
+      "cpu_address": "0xA61A",
+      "file_offset": "0x00662A",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0xCB"
+      ],
+      "raw_hex": "01 cb"
+    },
+    {
+      "cutscene_id": 2,
+      "event_index": 2,
+      "script_offset": 4,
+      "cpu_address": "0xA62A",
+      "file_offset": "0x00663A",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x15"
+      ],
+      "raw_hex": "01 15"
+    },
+    {
+      "cutscene_id": 2,
+      "event_index": 33,
+      "script_offset": 118,
+      "cpu_address": "0xA69C",
+      "file_offset": "0x0066AC",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x14"
+      ],
+      "raw_hex": "01 14"
+    }
+  ],
+  "animations": [
+    {
+      "id": "0x0B",
+      "prg_bank": 9,
+      "animation_pointer_table_file_offset": "0x012026",
+      "animation_pointer_table_index": 11,
+      "start_cpu_address": "0xA270",
+      "start_file_offset": "0x012280",
+      "following_table_word": "0xA287",
+      "end_cpu_address_exclusive": "0xA287",
+      "end_file_offset_exclusive": "0x012297",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 23,
+      "sha256": "cd22bc2090ed3ce73823e2fb15f8290630c0f9702a81ef92f52621c8beb304d0",
+      "source_bin": "animation_0B.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x0A",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x012281",
+            "raw_hex": "f1 30 be",
+            "y": 48,
+            "x": 190
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x012284",
+            "raw_hex": "93 10",
+            "cpu_address": "0xB310"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x012286",
+            "raw_hex": "7f",
+            "frames": 254
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x012287",
+            "raw_hex": "7f",
+            "frames": 254
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x012288",
+            "raw_hex": "f7 0f 00 00"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x01228C",
+            "raw_hex": "7a",
+            "frames": 244
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x01228D",
+            "raw_hex": "f7 00 00 00"
+          },
+          {
+            "kind": "dialog_branch",
+            "file_offset": "0x012291",
+            "raw_hex": "fa"
+          }
+        ],
+        "unparsed_tail_hex": "10 b3 8a ad ff",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x12",
+      "prg_bank": 9,
+      "animation_pointer_table_file_offset": "0x012034",
+      "animation_pointer_table_index": 18,
+      "start_cpu_address": "0xA2B8",
+      "start_file_offset": "0x0122C8",
+      "following_table_word": "0xA2C3",
+      "end_cpu_address_exclusive": "0xA2C3",
+      "end_file_offset_exclusive": "0x0122D3",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 11,
+      "sha256": "d377a669eafbc9d7abc627cc80b994406b5e85e7059d74c02dc49b1acd7eb68f",
+      "source_bin": "animation_12.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x17",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0122C9",
+            "raw_hex": "f1 30 2e",
+            "y": 48,
+            "x": 46
+          },
+          {
+            "kind": "mirror_on",
+            "file_offset": "0x0122CC",
+            "raw_hex": "f5"
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0122CD",
+            "raw_hex": "93 64",
+            "cpu_address": "0xB364"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0122CF",
+            "raw_hex": "0a",
+            "frames": 20
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0122D0",
+            "raw_hex": "88 fe",
+            "cpu_address": "0xA8FE"
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x0122D2",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x14",
+      "prg_bank": 9,
+      "animation_pointer_table_file_offset": "0x012038",
+      "animation_pointer_table_index": 20,
+      "start_cpu_address": "0xA2CD",
+      "start_file_offset": "0x0122DD",
+      "following_table_word": "0xA2DA",
+      "end_cpu_address_exclusive": "0xA2DA",
+      "end_file_offset_exclusive": "0x0122EA",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 13,
+      "sha256": "22e71fcf7938709434ba11a516c67eba13e46dda47830ac58af9ff2e054e7be1",
+      "source_bin": "animation_14.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x17",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0122DE",
+            "raw_hex": "f1 30 ee",
+            "y": 48,
+            "x": 238
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0122E1",
+            "raw_hex": "89 6d",
+            "cpu_address": "0xA96D"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0122E3",
+            "raw_hex": "41",
+            "frames": 130
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x0122E4",
+            "raw_hex": "f7 02 00 ff"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x0122E8",
+            "raw_hex": "40",
+            "frames": 128
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x0122E9",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x15",
+      "prg_bank": 9,
+      "animation_pointer_table_file_offset": "0x01203A",
+      "animation_pointer_table_index": 21,
+      "start_cpu_address": "0xA2DA",
+      "start_file_offset": "0x0122EA",
+      "following_table_word": "0xA2E1",
+      "end_cpu_address_exclusive": "0xA2E1",
+      "end_file_offset_exclusive": "0x0122F1",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 7,
+      "sha256": "d4a3ff41f6b720fca5fca6c327827825fd62076909106ed4a24b73f059a44040",
+      "source_bin": "animation_15.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x0E",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0122EB",
+            "raw_hex": "f1 30 46",
+            "y": 48,
+            "x": 70
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0122EE",
+            "raw_hex": "91 d0",
+            "cpu_address": "0xB1D0"
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x0122F0",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x17",
+      "prg_bank": 9,
+      "animation_pointer_table_file_offset": "0x01203E",
+      "animation_pointer_table_index": 23,
+      "start_cpu_address": "0xA2EB",
+      "start_file_offset": "0x0122FB",
+      "following_table_word": "0xA2F2",
+      "end_cpu_address_exclusive": "0xA2F2",
+      "end_file_offset_exclusive": "0x012302",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 7,
+      "sha256": "3b52ee0141e2db728d7033f6f1b86d092d561143835e4be61568709d20adfe08",
+      "source_bin": "animation_17.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x3E",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0122FC",
+            "raw_hex": "f1 30 46",
+            "y": 48,
+            "x": 70
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0122FF",
+            "raw_hex": "88 52",
+            "cpu_address": "0xA852"
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x012301",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x2A",
+      "prg_bank": 9,
+      "animation_pointer_table_file_offset": "0x012064",
+      "animation_pointer_table_index": 42,
+      "start_cpu_address": "0xA3C4",
+      "start_file_offset": "0x0123D4",
+      "following_table_word": "0xA3CE",
+      "end_cpu_address_exclusive": "0xA3CE",
+      "end_file_offset_exclusive": "0x0123DE",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 10,
+      "sha256": "f09aad0e30d9d01c5971284c586177226dbf51c8c10ed16f0bf01b35b8f74d57",
+      "source_bin": "animation_2A.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x18",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0123D5",
+            "raw_hex": "f1 30 40",
+            "y": 48,
+            "x": 64
+          },
+          {
+            "kind": "dialog_branch",
+            "file_offset": "0x0123D8",
+            "raw_hex": "fa"
+          }
+        ],
+        "unparsed_tail_hex": "d9 b3 c6 ab ff",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x2B",
+      "prg_bank": 9,
+      "animation_pointer_table_file_offset": "0x012066",
+      "animation_pointer_table_index": 43,
+      "start_cpu_address": "0xA3CE",
+      "start_file_offset": "0x0123DE",
+      "following_table_word": "0xA3D8",
+      "end_cpu_address_exclusive": "0xA3D8",
+      "end_file_offset_exclusive": "0x0123E8",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 10,
+      "sha256": "4834922b05bc90d4da661bfbb818854830b6095657fd5ec596b98dbf29b3813d",
+      "source_bin": "animation_2B.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x18",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0123DF",
+            "raw_hex": "f1 30 40",
+            "y": 48,
+            "x": 64
+          },
+          {
+            "kind": "dialog_branch",
+            "file_offset": "0x0123E2",
+            "raw_hex": "fa"
+          }
+        ],
+        "unparsed_tail_hex": "de ab 64 b2 ff",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x2C",
+      "prg_bank": 9,
+      "animation_pointer_table_file_offset": "0x012068",
+      "animation_pointer_table_index": 44,
+      "start_cpu_address": "0xA3D8",
+      "start_file_offset": "0x0123E8",
+      "following_table_word": "0xA3DF",
+      "end_cpu_address_exclusive": "0xA3DF",
+      "end_file_offset_exclusive": "0x0123EF",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 7,
+      "sha256": "0e926ad273fdc493f94dbaa31012d762b08cb5a92f62414e1324ad3f671cc4a3",
+      "source_bin": "animation_2C.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x18",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0123E9",
+            "raw_hex": "f1 30 40",
+            "y": 48,
+            "x": 64
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0123EC",
+            "raw_hex": "8b f4",
+            "cpu_address": "0xABF4"
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x0123EE",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x3B",
+      "prg_bank": 9,
+      "animation_pointer_table_file_offset": "0x012086",
+      "animation_pointer_table_index": 59,
+      "start_cpu_address": "0xA476",
+      "start_file_offset": "0x012486",
+      "following_table_word": "0xA480",
+      "end_cpu_address_exclusive": "0xA480",
+      "end_file_offset_exclusive": "0x012490",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 10,
+      "sha256": "e48ac121e3ef549ac8be743827d733fef3ce4ef98a490d69f10f918556f03796",
+      "source_bin": "animation_3B.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x0A",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x012487",
+            "raw_hex": "f1 30 44",
+            "y": 48,
+            "x": 68
+          },
+          {
+            "kind": "dialog_branch",
+            "file_offset": "0x01248A",
+            "raw_hex": "fa"
+          }
+        ],
+        "unparsed_tail_hex": "10 b3 8a ad ff",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x3C",
+      "prg_bank": 9,
+      "animation_pointer_table_file_offset": "0x012088",
+      "animation_pointer_table_index": 60,
+      "start_cpu_address": "0xA480",
+      "start_file_offset": "0x012490",
+      "following_table_word": "0xA48A",
+      "end_cpu_address_exclusive": "0xA48A",
+      "end_file_offset_exclusive": "0x01249A",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 10,
+      "sha256": "7cb17dbfc2bf79ae0ecd28692438e95ca490ad51aa3d67ea12e8f45498e77bc7",
+      "source_bin": "animation_3C.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x0A",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x012491",
+            "raw_hex": "f1 30 44",
+            "y": 48,
+            "x": 68
+          },
+          {
+            "kind": "dialog_branch",
+            "file_offset": "0x012494",
+            "raw_hex": "fa"
+          }
+        ],
+        "unparsed_tail_hex": "a2 ad ca a9 ff",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x50",
+      "prg_bank": 9,
+      "animation_pointer_table_file_offset": "0x0120B0",
+      "animation_pointer_table_index": 80,
+      "start_cpu_address": "0xA546",
+      "start_file_offset": "0x012556",
+      "following_table_word": "0xA54E",
+      "end_cpu_address_exclusive": "0xA54E",
+      "end_file_offset_exclusive": "0x01255E",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 8,
+      "sha256": "a8cd4cc9e815bc1a1c2968f3dd4d31e1cdd4160d8b8c63493a423f0d342c63dd",
+      "source_bin": "animation_50.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x3F",
+        "entry_commands": [
+          {
+            "kind": "mirror_on",
+            "file_offset": "0x012557",
+            "raw_hex": "f5"
+          },
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x012558",
+            "raw_hex": "f1 30 2e",
+            "y": 48,
+            "x": 46
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x01255B",
+            "raw_hex": "93 10",
+            "cpu_address": "0xB310"
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x01255D",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x51",
+      "prg_bank": 9,
+      "animation_pointer_table_file_offset": "0x0120B2",
+      "animation_pointer_table_index": 81,
+      "start_cpu_address": "0xA54E",
+      "start_file_offset": "0x01255E",
+      "following_table_word": "0xA555",
+      "end_cpu_address_exclusive": "0xA555",
+      "end_file_offset_exclusive": "0x012565",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 7,
+      "sha256": "40a828d78a96db8be8436c90c732e0f7579a0b7e0675034576c77173c409fb4f",
+      "source_bin": "animation_51.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x3F",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x01255F",
+            "raw_hex": "f1 30 46",
+            "y": 48,
+            "x": 70
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x012562",
+            "raw_hex": "93 64",
+            "cpu_address": "0xB364"
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x012564",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x6D",
+      "prg_bank": 10,
+      "animation_pointer_table_file_offset": "0x014010",
+      "animation_pointer_table_index": 0,
+      "start_cpu_address": "0xA0BE",
+      "start_file_offset": "0x0140CE",
+      "following_table_word": "0xA0C6",
+      "end_cpu_address_exclusive": "0xA0C6",
+      "end_file_offset_exclusive": "0x0140D6",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 8,
+      "sha256": "071c478a6c00a4c1a42512b310c459601b0c7146dbd434f5fd39a57feb2f9e3a",
+      "source_bin": "animation_6D.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x3D",
+        "entry_commands": [
+          {
+            "kind": "mirror_on",
+            "file_offset": "0x0140CF",
+            "raw_hex": "f5"
+          },
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0140D0",
+            "raw_hex": "f1 1e 36",
+            "y": 30,
+            "x": 54
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x0140D3",
+            "raw_hex": "88 37",
+            "cpu_address": "0xA837"
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x0140D5",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0xC6",
+      "prg_bank": 10,
+      "animation_pointer_table_file_offset": "0x0140C2",
+      "animation_pointer_table_index": 89,
+      "start_cpu_address": "0xA7ED",
+      "start_file_offset": "0x0147FD",
+      "following_table_word": "0xA7FA",
+      "end_cpu_address_exclusive": "0xA7FA",
+      "end_file_offset_exclusive": "0x01480A",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 13,
+      "sha256": "98443f460e6e05da6f8c4f9107332907c67b5b2761db711683dfb6d0f4d6c7e0",
+      "source_bin": "animation_C6.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x00",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x0147FE",
+            "raw_hex": "f1 44 80",
+            "y": 68,
+            "x": 128
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x014801",
+            "raw_hex": "97 80",
+            "cpu_address": "0xB780"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x014803",
+            "raw_hex": "45",
+            "frames": 138
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x014804",
+            "raw_hex": "f7 07 00 07"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x014808",
+            "raw_hex": "1d",
+            "frames": 58
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x014809",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0xC7",
+      "prg_bank": 10,
+      "animation_pointer_table_file_offset": "0x0140C4",
+      "animation_pointer_table_index": 90,
+      "start_cpu_address": "0xA7FA",
+      "start_file_offset": "0x01480A",
+      "following_table_word": "0xA811",
+      "end_cpu_address_exclusive": "0xA811",
+      "end_file_offset_exclusive": "0x014821",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 23,
+      "sha256": "72c12f1073c03abc32e1ad562095f7c0e6ccb8a236fcadc24cdb35ff2f2b8081",
+      "source_bin": "animation_C7.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x00",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x01480B",
+            "raw_hex": "f1 44 be",
+            "y": 68,
+            "x": 190
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x01480E",
+            "raw_hex": "5a",
+            "frames": 180
+          },
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x01480F",
+            "raw_hex": "f1 44 3c",
+            "y": 68,
+            "x": 60
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x014812",
+            "raw_hex": "97 97",
+            "cpu_address": "0xB797"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x014814",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x014815",
+            "raw_hex": "97 a6",
+            "cpu_address": "0xB7A6"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x014817",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x014818",
+            "raw_hex": "97 97",
+            "cpu_address": "0xB797"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x01481A",
+            "raw_hex": "01",
+            "frames": 2
+          },
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x01481B",
+            "raw_hex": "f1 44 be",
+            "y": 68,
+            "x": 190
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x01481E",
+            "raw_hex": "97 97",
+            "cpu_address": "0xB797"
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x014820",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0xCB",
+      "prg_bank": 10,
+      "animation_pointer_table_file_offset": "0x0140CC",
+      "animation_pointer_table_index": 94,
+      "start_cpu_address": "0xA82B",
+      "start_file_offset": "0x01483B",
+      "following_table_word": "0xF53D",
+      "end_cpu_address_exclusive": "0xA837",
+      "end_file_offset_exclusive": "0x014847",
+      "source_span_method": "linear entry parser through first FF; following table word is unmapped",
+      "length_bytes": 12,
+      "sha256": "92379a54ba5b362837e2cf975248266e15d63fcb9e3f0654f2694a3fb8224e8c",
+      "source_bin": "animation_CB.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x36",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x01483C",
+            "raw_hex": "f1 48 86",
+            "y": 72,
+            "x": 134
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x01483F",
+            "raw_hex": "97 bb",
+            "cpu_address": "0xB7BB"
+          },
+          {
+            "kind": "physics",
+            "file_offset": "0x014841",
+            "raw_hex": "f7 09 00 07"
+          },
+          {
+            "kind": "duration",
+            "file_offset": "0x014845",
+            "raw_hex": "0e",
+            "frames": 28
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x014846",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "08 09 0a 0b fa 10 b9 bf 34 2c 38 28 3c 2a a0 34 2d 38 29 3c 2b a1 38 2e fb cf b7 08 09 0a 0b fa 10 b9 bf 34 2f 38 38 3c 3a a0 34 39 38 3b 3c 2b a1 34 3c 38 3e fb cf b7 08 09 0a 0b fa 1b b9 bf 9d ce 3c 2c c6 3c 2d ce 1c 28 c6 1c 29 9f ce 3c 2a c6 3c 2b a1 9e ce 3c 2e fb 21 b8 08 09 0a 0b fa 1b b9 bf 9d ce 3c 2f c6 3c 39 ce 1c 38 c6 1c 3b 9f ce 3c 3a c6 3c 2b a1 9d ce 3c 3c ce 1c 3e fb 21 b8 08 09 0a 0b fa 30 b9 bf 9d ce 00 2c c6 00 2d 9e ce 00 28 c6 00 29 9f ce 00 2a c6 00 2b a1 9e ce 00 2e fb 6d b8 08 09 0a 0b fa 30 b9 bf 9d ce 00 2f c6 00 39 9e ce 00 38 c6 00 3b 9f ce 00 3a c6 00 2b a1 9d ce 00 3c 9e ce 00 3e fb 6d b8 08 09 0a 0b fa 3b b9 bf 9d c0 3c 2c c0 1c 28 9f c0 3c 2a a0 9d c0 3c 2d c0 1c 29 9f c0 3c 2b a1 9e c0 3c 2e fb c3 b8 08 09 0a 0b fa 3b b9 bf 9d c0 3c 2f c0 1c 38 9f c0 3c 3a a0 9d c0 3c 39 c0 1c 3b 9f c0 3c 2b a1 9d c0 3c 3c c0 1c 3e fb c3 b8 10 11 12 5f be 38 11 3c 13 bf 38 14 3c 16 00 19 a0 38 15 3c 17 00 1c fb 4c b9 10 11 12 5f be 08 86 bf 04 84 08 87 a0 00 82 04 85 a1 3d 88 01 83 a2 39 8c 3d 89 ff 6a 6b 7a 7b bf 03 52 07 58 0b 5a a0 03 5c 03 53 07 5e 07 59 0b 74 0b 5b a1 43 5c 43 53 47 5e 47 59 4b 74 4b 5b a2 43 52 47 58 4b 5a fb 90 bc 6a 6b 7a 7b bf 3f 54 a0 3b 5f 3f 55 03 57 07 5d a1 7b 5f 7f 55 43 57 47 5d a2 7f 54 fb aa b9 06 07 5e 5f bf 39 4f 3d 65 01 67 05 6d 09 6f a0 39 5a 3d 70 01 72 05 78 09 7a a1 39 5b 3d 71 01 73 05 79 09 7b a2 39 5e 3d 74 01 76 05 7c 09 7e a3 39 5f 3d 75 01 77 05 7d 09 7f ff 06 07 5e 5f bf 38 42 a0 38 43 9f cc 00 44 c4 00 45 01 47 05 51 09 53 a1 38 41 3d 50 00 46 01 52 05 54 09 56 ff 06 07 5e 5f bf 39 4a 3d 60 01 62 05 68 09 6a a0 39 4b 3d 61 01 63 05 69 09 6b a1 3d 64 01 66 05 6c 09 6e a2 01 4d 05 4c 09 4e a3 01 58 05 59 09 5c a1 38 55 3c 57 0d 53 a2 38 48 3c 49 00 40 0d 56 ff 06 07 5e 5f a0 39 58 3d 59 01 5c ff 33 5d 5e 5f bd 3c 28 be 38 02 3c 08 00 0a 04 20 08 22 bf 38 01 3c 01 00 0b 04 21 09 23 0c 29 a0 38 01 3c 01 00 01 06 24 09 26 0c 2c a1 38 01 3c 01 00 01 06 25 09 27 0c 2d a2 38 01 3c 01 00 01 04 30 08 32 0c 38 a3 38 0e 3c 01 00 01 04 31 08 33 a4 38 0f 3c 03 00 09 04 39 ff 30 31 32 5f bd 38 81 be 38 80 3c 82 00 88 04 8a 08 22 bf 38 01 3c 01 02 89 04 8b 05 83 09 a1 0c 46 a0 38 01 3c 01 00 01 04 8c 09 8e 0c a4 a1 38 01 3c 01 00 01 04 8d 08 8f 0c 2d a2 38 01 3c 01 00 01 04 98 08 9a 0c 53 a3 38 84 3c 01 00 90 04 92 08 86 a4 38 85 3c 87 00 91 04 93 a5 0c a5 a6 0c b0 ff 36 37 5e 5f be 39 04 3d 02 01 08 04 0a 08 20 bf 39 33 3d 03 01 09 02 05 04 0b 06 07 0a 21 0c 23 a0 39 33 3d 06 01 0c 05 0e 0a 24 0c 26 a1 39 33 3d 33 01 0d 05 0f 08 25 0a 22 0c 27 a2 39 33 3d 33 01 33 05 1a 09 30 0c 32 a3 39 11 3d 33 01 10 05 12 09 18 a4 39 13 3d 19 01 1b 05 31 ff 30 31 32 5f be 39 3c 3d 3e 01 04 04 06 08 22 bf 39 3d 3d 3f 01 05 04 07 0a 1d 0c 1f a0 39 02 3d 02 01 10 04 12 05 14 0a 35 0c 37 a1 39 02 3d 02 01 11 05 13 0a 2e 0c 3b a2 39 2b 3d 02 01 02 05 16 09 2f 0f 1b a3 39 28 3d 2a 01 15 05 17 09 3a ff 30 31 32 5f be 39 09 3d 08 01 0a 04 20 08 22 bf 39 0c 3d 02 01 0b 04 21 0a 23 0c 29 a0 39 02 3d 02 01 0e 05 24 0a 26 0c 2c a1 39 02 3d 02 01 02 05 25 07 18 0a 27 0b 1a 0c 2d a2 39 02 3d 02 01 02 05 30 09 32 0c 38 a3 39 19 3d 02 01 31 05 33 09 39 a4 39 1c 3d 1e 01 34 05 36 a5 39 0d 3d 0f ff 30 31 32 5f bd 39 40 3d 42 01 48 be 39 41 3d 43 01 49 04 4b 08 22 bf 39 02 01 4c 04 4e 0a 44 0c 46 a0 01 4d 04 4f 0a 45 0c 47 a1 07 5a 08 50 0a 4a 0c 2d a2 39 02 05 5b 09 51 0c 53 a3 39 02 3d 02 01 02 05 5e 09 54 a4 39 02 3d 56 01 02 05 5f 09 55 a5 39 02 3d 5c 01 52 05 58 a6 39 57 3d 5d 01 59 ff 30 31 32 5f bc 39 a0 bd 39 a2 3d a8 be 39 a3 3d a9 01 a6 04 ac 08 22 bf 39 02 3d 02 01 a7 04 ad 0a af 0c b1 a0 39 02 3d 02 01 b2 04 b8 0a ba 0c 9b a1 39 02 3d 02 01 b3 04 b9 07 ae 08 bb 0c 2d a2 39 02 3d 02 01 94 05 96 09 99 0c 53 a3 39 aa 3d ab 01 95 05 97 ff 38 39 3a 3b bd 81 c0 0e 20 0e 04 be 3a 02 3e 08 02 0a 05 21 0e 05 bf 3a 03 3e 09 02 0b 05 24 08 26 0c 2c 0e 10 a0 3a 06 3e 0c 01 0e 05 25 0b 27 0c 2d a1 3a 07 3e 0d 01 0f 05 30 0b 32 0c 38 a2 3a 12 3e 18 01 1a 05 1e 04 31 08 33 0c 39 a3 3a 13 3c 19 3e 1c 00 1b 04 34 08 36 0c 3c ff 18 19 1a 1b fa 88 bb fb fc ba 18 19 1a 1b fa 88 bb fb 14 bb 18 19 1a 1b fa 88 bb fb 56 bb 18 19 1a 1b fa 88 bb fb 6e bb 18 19 1a 1b fa 9c bb fb fc ba 18 19 1a 1b fa 9c bb fb 14 bb 18 19 1a 1b fa 9c bb fb 56 bb 16 17 2d 5f fa 03 bc fb 3d bc 18 19 1a 1b fa a2 bb fb fc ba 18 19 1a 1b fa a2 bb fb 14 bb 18 19 1a 1b bf 3f 48 03 4a 07 60 a0 3f 49 03 4b 07 61 a1 3f fd 03 ff 07 fe ff 28 29 2a 2b bf 07 50 0b 52 a0 07 51 0b 53 a1 07 54 09 56 0b 2e fb 06 ba 28 29 2a 2b fa 65 ba fb 71 ba 28 29 2a 2b a1 03 70 a2 03 75 07 77 0b 4f a0 03 65 fa 65 ba fb 7c ba 28 29 2a 2b a1 03 67 a2 03 72 07 73 fb 1e ae 28 29 2a 2b bf 07 76 0b 6d 0f 6f a0 0f 7a a1 0f 74 fb 71 ba 28 29 2a 2b bf 07 78 0b 79 0f 7b a0 0f 7c fb 46 ae 74 75 76 77 bd 30 1f 34 08 38 0a be 34 09 38 0b 3c 13 bf 34 0c 38 0e 3c 04 00 06 a0 34 0d 38 0f 3c 05 00 07 a1 34 18 38 1a 3c 10 00 12 a2 34 19 38 1b 3c 11 a3 34 14 38 16 a4 30 03 34 5b 38 17 ff 16 17 2d 5f fa d4 bb ff 16 17 2d 5f fa e8 bb ff 16 17 2d 5f fa 03 bc ff 16 17 2d 5f fa 1a bc ff 3b 47 5e 5f a0 30 04 34 06 38 12 3c 0a 00 20 04 1c 08 05 0c 02 a1 34 07 38 09 3c 0b 00 21 04 1d 08 10 0c 03 a2 34 12 38 0c 3c 0e 00 24 04 1e 08 11 a3 34 13 38 0d 3c 0f 00 25 04 1f 08 14 a4 34 16 38 18 3c 1a 00 30 04 35 08 15 a5 38 19 3c 1b 00 31 04 22 a6 38 17 3c 08 00 34 04 36 ff 3b 47 5e 5f a0 30 04 34 06 38 12 3c 28 00 2a 04 1c 08 05 0c 02 a1 34 07 38 23 3c 29 00 2b 04 37 08 10 0c 03 a2 34 12 38 26 3c 2c 00 2e 04 3d 08 11 a3 34 13 38 27 3c 2d 00 2f 04 3f 08 14 a4 34 16 38 32 3c 38 00 3a 04 58 08 15 a5 38 33 3c 39 00 3b 04 59 a6 38 17 3c 3c 00 3e 04 36 ff 3b 47 5e 5f a0 30 04 34 06 38 4e 04 53 08 05 0c 02 a1 34 07 38 4f 3c 64 00 66 04 56 08 10 0c 03 a2 34 12 38 5a 3c 65 00 67 04 57 08 11 a3 34 13 38 5b 3c 51 04 5c 08 14 a4 34 16 38 5e 3c 54 04 5d 08 15 a5 38 5f 3c 55 ff 06 26 21 5f bf 03 08 07 0a a0 3f 02 03 09 07 0b 0b 20 a1 3f 03 03 0c 07 0e 0b 21 a2 03 0d 07 0f ff 06 26 21 5f bf 03 22 07 28 a0 3f 24 03 23 07 29 a1 3f 25 03 26 07 2c a2 03 27 ff 06 26 21 5f bf 03 06 07 28 a0 3f 04 03 07 07 18 a1 3f 05 03 12 07 19 ff 06 26 21 5f a0 03 10 07 2d a1 03 11 07 13 ff 06 26 21 5f a0 03 1a 07 30 a1 03 1b 07 31 ff 06 26 21 5f a0 03 32 07 38 a1 03 33 07 39 ff 06 26 21 5f a0 03 2a 07 2e a1 03 2b 07 2f ff 06 26 21 5f a0 03 3a ff 06 26 21 5f a0 03 3b ff 06 26 21 5f a0 03 14 ff 06 26 21 5f bf 01 7c a0 3f b4 01 7d 05 7e a1 05 7f ff 10 11 12 5f a0 3b b8 7f bb 03 bc 47 bf a1 3b b9 3f bb 43 bc 07 bf ff 10 11 12 5f a0 9e c0 73 b6 9f c0 73 bb c0 13 bc 80 c0 53 bf a1 9e c0 33 b6 9f c0 33 bb c0 53 bc 80 c0 13 bf ff 74 75 76 77 be 3b 20 3f 22 03 24 bf 38 1c 3b 21 3c 1e 3f 23 03 25 07 27 a0 38 18 3c 1a 00 1d 03 26 07 28 a1 38 19 3c 1b 00 11 a2 38 14 3c 16 a3 34 03 38 5b 3c 17 ff 2c 2d 5e 5f bc 08 22 0c 28 bd 04 24 08 23 0c 29 be 39 02 9f cc 01 08 c4 01 09 00 0a 04 20 08 26 bf 39 03 9f c4 01 0c 00 0b 04 21 a0 00 0e a1 00 2a 04 2f a2 3c 2c 00 2b 04 3a a3 38 27 3c 2d 00 2e a4 38 32 3c 38 ff 04 05 1e 1f bf 3c 82 02 88 06 8a 0a a0 a0 3c b9 02 84 01 89 06 85 05 8b 0a a1 a1 3c 86 02 8c 06 8e 0a a4 ff 7c 71 52 53 bf 34 50 0a f6 0e fc 11 ea 12 fe a0 9d ce 01 e6 9e ce 00 52 ce 01 fa c6 00 53 c6 01 fb 3c 58 3d e5 00 5a 01 e7 81 cc 00 56 c4 00 57 05 ed 82 cc 00 5c c4 00 5d ca 01 ee c2 01 ef 83 cc 00 5e c4 00 5f ca 01 e8 c2 01 e9 10 55 11 eb 12 ff a1 3c 59 3d f0 00 5b 01 f2 81 c4 00 54 05 f8 a2 02 f7 00 51 01 f3 05 f9 06 fd bf 05 ec ff 70 71 72 73 a0 02 ed 06 ef a1 42 ed 46 ef ff 6c 6d 6e 6f bc 38 f3 bd 38 f6 be 38 f6 bf 38 f6 83 c0 32 5d c0 12 5f a0 38 f6 00 f6 04 f7 83 c0 72 5d c0 52 5f a1 38 f6 00 f6 a2 38 f6 00 f6 a3 3c f7 00 f3 a4 00 f6 a5 00 f6 a6 04 f7 ff 60 61 62 63 bf fa ed ba a0 fa ed ba a1 fa ed ba a2 fa ed ba ff 18 19 1a 1b fa a2 bb fb 56 bb 6c 6d 6e 6f bf 3f 01 03 01 07 01 a0 3f 4f 03 4f 07 4f a1 3f 58 03 58 07 58 a2 3f 03 03 03 07 03 ff 18 19 1a 1b fa b0 bb fb fc ba 18 19 1a 1b fa b0 bb fb 14 bb 18 19 1a 1b fa b0 bb fb 56 bb 6c 6d 6e 6f bf 3e 01 02 02 06 03 a0 3e 01 02 02 06 03 a1 3e 01 02 02 06 03 a2 3e 01 02 02 06 03 ff 18 19 1a 1b fa be bb fb fc ba 18 19 1a 1b fa be bb fb 14 bb 18 19 1a 1b fa be bb fb 56 bb 6c 6d 6e 6f bf 3d 01 41 fe 05 01 a0 7d d8 80 c4 00 51 41 b4 45 fc a1 3d d8 01 b4 05 fc a2 3d 01 01 fe 05 01 ff 18 19 1a 1b fa c9 bb fb fc ba 18 19 1a 1b fa c9 bb fb 14 bb 18 19 1a 1b fa c9 bb fb 56 bb 70 71 72 73 b7 03 de 07 f4 b8 03 df 07 f5 ba 43 f8 47 fa aa 01 f8 05 fa ff 16 17 2d 5f fa d4 bb fb 2c bc 16 17 2d 5f fa e8 bb fb 2c bc 16 17 2d 5f fa 03 bc fb 2c bc 16 17 2d 5f fa 1a bc fb 2c bc 16 17 2d 5f fa d4 bb fb 3d bc 16 17 2d 5f fa e8 bb fb 3d bc 70 71 72 73 bf 3a e0 3e e2 02 e8 06 ea 0a e5 0e e7 a0 3a e1 3e e3 02 e9 06 eb 0a f0 0e f2 a1 3a e4 3e e6 02 ec 06 ee 0a f1 0e f3 a2 0e dd ff 16 17 2d 5f fa 1a bc fb 3d bc 06 07 5e 5f bf 38 42 a0 38 43 9f cc 00 44 c4 00 45 01 47 05 51 09 53 a1 38 41 3d 50 00 46 01 52 05 54 09 56 ff 10 11 12 5f bf 1b 7c 1f 7e a0 1b 7d 1f 7f ff 60 61 62 63 bf 3a f9 3e fb 81 c0 38 ef c0 18 fa a0 36 74 3a 76 3f 7c 02 7e 07 72 0b 78 0f 7a a1 36 75 3a 77 3f 7d 00 7f 07 73 0b 79 0f 7b ff 6a 6b 7a 7b bd 02 f1 06 f3 be 02 f4 06 f6 bf 3e df 02 f5 06 f7 a0 02 f8 06 fa a1 02 f9 06 fb a2 02 fc 06 fe ff 6a 6b 7a 7b bf 03 5c 03 56 07 5e 07 70 0b 74 0b 5a a0 03 53 07 71 0b 5b a1 43 53 47 71 4b 5b a2 43 5c 43 56 47 5e 47 70 4b 74 4b 5a fb 90 bc 6c 6d 6e 6f bf 3c 02 00 03 04 02 a0 3c 02 40 fd 04 02 a1 3c 02 00 fd 04 02 a2 3c 02 00 03 04 02 ff 74 75 7b 67 bf 3e e0 02 e2 06 e8 0a ea a0 3e e1 02 e3 06 e9 0a eb a1 3e e4 02 e6 06 ec 0a ee a2 3e e5 02 e7 06 ed 0a ef ff 74 75 7b 67 bf 81 c4 01 ae 09 af a0 39 a4 3d a6 03 ac a1 3d a7 03 ad 05 a5 a2 05 b0 09 b2 ff 70 71 72 73 bc 3f 40 bd 3f 41 03 43 be 3f 44 03 46 bf 3f 45 03 47 a0 3f 48 03 4a 07 70 a1 3f 49 03 4b 07 71 a2 3f 4c 03 4e 07 74 a3 3b 72 3f 4d 03 4f 07 75 0b 76 a4 3b 73 03 42 07 14 0b 77 ff 74 75 76 77 a0 30 01 34 01 38 01 3c 01 00 01 04 01 ff 74 75 7b 67 be 3c 2d 0f 3e bf 35 30 3b 32 3a 44 3c 38 00 3a 05 34 09 36 0f 3f 0d 45 a0 9c ca 03 2e c2 03 2f 37 31 35 46 39 33 3b 02 3c 39 00 3b 05 35 a1 35 40 3a 42 3c 41 00 43 05 37 82 cf 01 3d 0f 3c c1 01 45 a0 9f cc 03 02 c4 03 02 ff 60 61 62 63 b9 3d 1a ba 3d 1b 01 30 05 32 bb 3d 1e 01 31 05 33 bc 3d 1f 05 36 a0 3d 18 01 34 a1 3d 19 01 35 05 2b a2 3d 1c 01 37 05 2e a3 3d 1d 01 22 05 2f ff 60 61 62 63 b9 01 20 ba 01 21 05 23 bb 01 24 05 26 bc 01 25 05 36 bf 01 28 a0 01 29 a1 3d 2a 01 2c 05 2b a2 3d 14 01 2d 05 2e a3 3d 15 05 2f ff 60 61 62 63 be 04 08 08 0a bf 00 27 04 09 08 0b a0 3c 04 00 06 04 0c 08 0e a1 38 16 3c 05 00 07 04 0d 08 0f a2 38 17 3c 10 00 12 04 11 08 13 ff 36 37 5e 5f fb 4e bc 36 37 5e 5f fb 5a bc 36 37 5e 5f fa 70 bc fb 4e bc 36 37 5e 5f fa 70 bc fb 5a bc 36 37 5e 5f fa 70 bc a0 02 7f a2 36 7f 3e 7f 02 7f 06 7f a3 36 7f 3e 7f 06 7f a5 9e c4 02 7f 80 c4 02 7f a7 02 7f a9 3a 7f ab 02 7f ff 68 69 6a 6b bc 2b c0 2f fe bd 2b c1 2f e0 be 2b c4 2f e1 bf 2b c5 a0 9f c4 01 f9 a0 80 c4 01 fb a2 2b c6 2f e4 a3 2b c7 2f e5 fb 74 bc 68 69 6a 6b bc 2b c8 2f ca bd 2b c9 2f cb be 27 c2 2b cc 2f ce bf 27 c3 a0 3e bc 02 be 03 03 a1 3e bd 02 bf 03 03 a2 2b cd 2f cf a3 2b f8 2f fa fb 74 bc 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 68 69 6a 6b bc 2b c0 2f fe bd 2b c1 2f e0 be 2b c4 2f e1 bf 2b c5 a0 3e bc 02 be 03 03 a1 3e bd 02 bf 03 03 a2 2b c6 2f e4 a3 2b c7 2f e5 fb 74 bc 68 69 6a 6b bf 3f 71 03 73 07 79 a0 3f 74 03 76 07 7c a1 3f 75 03 77 07 7d ff 18 19 1a 1b a0 3c 00 3c 00 3c 00 3c 00 3c 00 3c 00 3c 00 3c 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 28 29 2a 2b a0 3c 01 00 01 a1 3c 01 00 01 a2 3c 01 00 01 a3 3c 01 00 01 a4 3c 01 00 01 a5 3c 01 00 01 a6 3c 01 00 01 ff 6f 69 67 7b a0 01 bb a1 01 be fb a1 bc 6f 69 67 7b a0 01 7e a1 01 7f fb a1 bc 6f 69 67 7b a0 3d c0 01 c2 a1 7d c0 41 c2 ff 6f 69 67 7b a0 3d c1 01 c3 a1 7d c1 41 c3 ff 6f 69 67 7b a0 3d 28 01 2a a1 7d 28 41 2a ff 60 61 62 63 a0 03 4f a1 03 4f a2 03 4f a3 03 4f a4 03 4f a5 03 4f ff 60 61 76 77 a0 03 44 07 48 a1 03 47 07 49 ff 60 61 76 77 a0 03 f8 a1 03 f9 07 fc ff 70 71 72 73 a0 03 08 ff 7c 71 52 53 a0 03 16 a1 03 10 a2 03 0d a3 03 30 a4 03 31 ff bd 9d c0 11 04 11 1a 15 30 1b 32 be 9e c0 35 05 c0 15 02 09 20 83 cf 01 22 c7 01 23 11 1b 15 31 bf 39 10 3d 03 01 09 02 0a 81 cd 02 0b c5 02 0e 09 21 a0 3d 06 01 0c 09 24 0d 26 a1 3d 07 01 0d 81 cd 02 0f 09 25 0d 27 0f 0a 11 08 a2 3d 12 01 18 ff bd 7d 47 41 4d be 7d 46 41 4c 06 11 bf 7d 43 41 49 06 44 82 ce 01 34 c6 01 35 83 ce 01 36 c6 01 37 c7 3b 0a 09 60 0d 62 11 1c 1b 1e a0 79 40 7d 42 01 64 02 41 06 45 0d 63 11 1d 85 ce 01 48 1b 1f a1 79 15 7d 17 a2 79 14 7d 16 ff bd 7d 12 41 18 be 7d 07 41 0d 06 11 84 cc 01 1a c4 01 1b 85 cc 01 30 c4 01 31 86 cc 03 32 bf 7d 06 41 0c 06 13 82 cc 01 20 c4 01 21 83 cb 01 22 c3 01 23 0d 26 a0 79 10 7d 03 41 09 42 0a 06 19 09 25 0d 27 0f 0a 11 08 a1 9e c0 75 05 c0 55 02 a2 9d c0 51 04 ff bd 39 14 3d 16 be 39 15 3d 17 09 34 0d 36 bf 39 40 3d 42 01 09 02 0a 09 35 0d 37 81 ca 02 4a c2 02 4b a0 3d 43 01 49 81 c2 02 4e 09 60 0d 62 c9 3b 0a 11 1c 1b 1e a1 3d 46 01 4c 09 61 0d 63 11 1d 85 ce 01 48 1b 1f a2 3d 47 01 4d ff bc 17 5c 1b 5e bd 17 5d 1b 5f fe bb 85 c0 3b f2 c0 1b f4 bc 85 c0 3b f3 c0 1b f5 86 cc 03 66 fe bc 17 5c 1b 5e bd 17 5d 1b 5f fe bd 85 cc 3b f2 cc 1b f4 c4 3b f3 c4 1b f5 1b 66 fe bd 86 cc 03 0e c4 01 0f 87 cc 03 25 c4 03 30 be 9c c0 10 2a 11 0c 85 cc 01 12 c4 01 18 86 c4 00 1a bf 33 02 37 08 39 0a 3d 20 01 22 05 28 06 03 0a 04 83 cd 01 06 c5 00 07 11 0d a0 34 09 39 0b 3d 21 01 23 05 29 0a 05 a1 3d 24 01 26 05 2c 0a 10 a2 00 27 07 2d 0b 2b a3 08 2e 0c 2f ff bf 03 5c 03 56 07 5e 07 70 0b 74 0b 5a a0 0b 5b a1 4b 5b a2 43 5c 43 56 47 5e 47 70 4b 74 4b 5a ff 3a 03 a0 36 04 3a 06 3e 0c 01 0e 05 24 09 26 0a 2a 0e 2c a1 36 05 3a 07 02 0f 06 25 a2 37 10 02 1a a3 03 1b ff bd 13 b1 0f 9b 0a 99 be 0b 9c 0f 4b 13 b4 bf 0b 9d 09 02 0f 9f fe bd 17 29 be 15 2b 19 0e bf 0e 04 12 06 15 0c 19 0f a0 2f 02 30 08 34 0a 38 20 3d 22 01 28 0e 05 13 07 17 0d 18 1a a1 2f 03 33 09 37 0b 38 41 3d 43 01 49 0e 10 13 12 17 18 a2 38 44 3c 46 3d 27 01 4c 05 2f 07 2e 09 2a 0f 23 a3 38 30 3c 32 00 4b 04 61 08 11 0f 21 a4 3c 13 00 19 04 1b ff bf 07 58 0b 5a a1 0f 74 a0 0f 71 fe a2 07 5d 0b 5f a1 03 57 a0 03 55 07 59 0b 5b a1 07 5c 0b 5e fb 06 ba a0 0f 37 13 3d 17 3f a1 0f 62 13 68 17 6a a2 09 61 0d 63 13 69 a3 05 1d 09 1f 0d 35 a4 05 48 09 4a a5 2f 66 03 43 07 49 a6 2e 67 33 6d 37 6f 3e 44 02 46 07 4c a7 33 78 35 40 39 42 3d 45 01 47 02 50 06 4d 0b 4f 0f 65 a8 35 41 3d 50 01 52 06 58 0b 5a a9 3d 51 01 53 06 59 aa 3d 54 03 56 ab 3f 55 03 57 fe 37 02 3b 02 3f 02 03 02 07 02 0b 02 0f 02 fe bd 03 22 06 28 be 3f 08 03 0a 07 20 bf 3f 09 3e 02 03 0b 07 21 fb cb b9 bd 38 30 3c 32 00 38 06 3a be 38 31 3c 01 00 3c 07 3b bf 3a 34 3c 01 00 3c 07 3e a0 37 1f 3a 35 3e 37 01 3d 05 3f 09 26 0a 2a 0e 2c a1 37 27 3b 2d 03 33 02 1e 07 39 06 2f a2 37 10 03 36 a3 03 1b ff bd 00 15 04 44 be 3c 11 00 29 04 2b bf 3c 14 3e 02 00 23 07 2e fb cb b9 bd 00 15 04 17 06 1d be 3c 11 00 29 04 46 bf 3c 14 3e 02 00 45 07 3e fb cb b9 bd 0a 90 0e 92 12 98 be 09 91 0a 02 0e 93 bf 09 94 0e 96 fe fa f0 b9 13 b5 fe bc 0f 8d 13 8f bd 13 9a fa f3 b9 13 b5 fe bc 0f ac 13 ae bd 13 af fa f3 b9 13 b5 fe be 17 a5 fa f0 b9 13 b0 17 b2 fe be 17 aa fa f0 b9 13 b8 17 ab fe a7 38 0c a8 34 07 38 0d 3f 0f a9 34 12 38 18 3c 1a fb 88 ba a7 38 0c a8 34 11 38 13 3f 19 a9 34 14 38 16 3c 1c aa 30 10 34 15 38 17 fb 88 ba a7 38 0e a8 34 20 38 22 3f 0f a9 34 21 38 23 3c 1a aa 38 26 fb 88 ba a7 38 38 a8 34 3a 38 2c 3f 2e a9 38 2d 3c 2f fb 88 ba bf 13 7d 17 be a0 17 bf a1 17 6b a2 13 6c 17 6e ff bf 13 7c 17 7e a0 17 7f a1 17 7a a2 13 79 17 7b ff a5 9e c4 02 7f 80 c4 02 7f fb 63 bc a5 9e c4 02 7d 80 c4 02 7d a0 02 7f a4 02 7f a8 3e 7f ac 3e 7f ff ad 3a 7f fe 33 e7 37 ed 3b ef bd 33 e2 37 e8 3b ea be 33 e3 37 e9 3b eb a2 33 e6 37 ec 3b ee ff bf 3f 50 a0 3b 75 3f 51 a1 7b 75 7f 51 a2 7f 50 ff a0 3d b9 a1 3d bc ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    }
+  ],
+  "dialog_branch_frames": [
+    {
+      "animation_id": "0x0B",
+      "prg_bank": 9,
+      "opcode_cpu_address": "0xA281",
+      "opcode_file_offset": "0x012291",
+      "raw_hex": "fa 10 b3 8a ad",
+      "selector": "dialog flag $0099 bit 0; the source handler loads offset 1/2 for 0 and 3/4 for 1",
+      "choices": [
+        {
+          "state_bit0": 0,
+          "frame_cpu_address": "0xB310",
+          "frame_file_offset": "0x013320"
+        },
+        {
+          "state_bit0": 1,
+          "frame_cpu_address": "0xAD8A",
+          "frame_file_offset": "0x012D9A"
+        }
+      ]
+    },
+    {
+      "animation_id": "0x2A",
+      "prg_bank": 9,
+      "opcode_cpu_address": "0xA3C8",
+      "opcode_file_offset": "0x0123D8",
+      "raw_hex": "fa d9 b3 c6 ab",
+      "selector": "dialog flag $0099 bit 0; the source handler loads offset 1/2 for 0 and 3/4 for 1",
+      "choices": [
+        {
+          "state_bit0": 0,
+          "frame_cpu_address": "0xB3D9",
+          "frame_file_offset": "0x0133E9"
+        },
+        {
+          "state_bit0": 1,
+          "frame_cpu_address": "0xABC6",
+          "frame_file_offset": "0x012BD6"
+        }
+      ]
+    },
+    {
+      "animation_id": "0x2B",
+      "prg_bank": 9,
+      "opcode_cpu_address": "0xA3D2",
+      "opcode_file_offset": "0x0123E2",
+      "raw_hex": "fa de ab 64 b2",
+      "selector": "dialog flag $0099 bit 0; the source handler loads offset 1/2 for 0 and 3/4 for 1",
+      "choices": [
+        {
+          "state_bit0": 0,
+          "frame_cpu_address": "0xABDE",
+          "frame_file_offset": "0x012BEE"
+        },
+        {
+          "state_bit0": 1,
+          "frame_cpu_address": "0xB264",
+          "frame_file_offset": "0x013274"
+        }
+      ]
+    },
+    {
+      "animation_id": "0x3B",
+      "prg_bank": 9,
+      "opcode_cpu_address": "0xA47A",
+      "opcode_file_offset": "0x01248A",
+      "raw_hex": "fa 10 b3 8a ad",
+      "selector": "dialog flag $0099 bit 0; the source handler loads offset 1/2 for 0 and 3/4 for 1",
+      "choices": [
+        {
+          "state_bit0": 0,
+          "frame_cpu_address": "0xB310",
+          "frame_file_offset": "0x013320"
+        },
+        {
+          "state_bit0": 1,
+          "frame_cpu_address": "0xAD8A",
+          "frame_file_offset": "0x012D9A"
+        }
+      ]
+    },
+    {
+      "animation_id": "0x3C",
+      "prg_bank": 9,
+      "opcode_cpu_address": "0xA484",
+      "opcode_file_offset": "0x012494",
+      "raw_hex": "fa a2 ad ca a9",
+      "selector": "dialog flag $0099 bit 0; the source handler loads offset 1/2 for 0 and 3/4 for 1",
+      "choices": [
+        {
+          "state_bit0": 0,
+          "frame_cpu_address": "0xADA2",
+          "frame_file_offset": "0x012DB2"
+        },
+        {
+          "state_bit0": 1,
+          "frame_cpu_address": "0xA9CA",
+          "frame_file_offset": "0x0129DA"
+        }
+      ]
+    }
+  ],
+  "output_files": {
+    "timing": "animation_timing.json",
+    "sprite_frames": "sprite_frames.json",
+    "frame_source_manifest": "frame_sources/manifest.json"
+  },
+  "caution": "This is source-byte extraction and static command decoding. It does not implement the cutscene scheduler, physical motion integration, palette effects, MMC3 CHR banking, OAM allocation/order, NES clipping, or rendered pixels."
+}

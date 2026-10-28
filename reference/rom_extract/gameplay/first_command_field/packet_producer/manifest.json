@@ -1,0 +1,99 @@
+{
+  "schema": "first-command-field-packet-producer-sources-v1",
+  "resource_kind": "preserved ROM bytes; no emulator capture data",
+  "rom_filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "bank_mapping": {
+    "bank_1f_cpu_e000_file_base": "0x03E010",
+    "bank_0b_cpu_8000_file_base": "0x016010"
+  },
+  "source_logic": {
+    "packet_producer": "bank-$1F $F015; six A values 00-05; descriptor from RAM $063D",
+    "packet_stream_reader": "bank-$1F $F114; stream pointers from $F182 and scripts from $F18E",
+    "placement_operand": "absolute operand bytes AD CE 05 read RAM $05CE; this is not RAM $06CE",
+    "map_placement_writer": "bank-$0B $8327 handler stores $05CE at $8342 from the prior $05CD state and then toggles $05CD",
+    "special_holder_writer": "bank-$1F $F0B5 reads $05CE and coordinates $0635/$0637; it is kept separate from static F015 packets"
+  },
+  "entries": [
+    {
+      "path": "bank_1f_f015_f159_code.bin",
+      "file_offset": "0x03F025",
+      "size_bytes": 325,
+      "cpu_address": "0xF015",
+      "prg_bank": "0x1F",
+      "source": "ROM instructions F015-F158: descriptor loop, special F0B5 coordinate writer, and F114 stream copier",
+      "sha256": "df7c650c952fb5dfc9a8a10de43f739c9fc4cbdef343bae7ba70c4921a281dc9",
+      "raw_hex": "48 A9 01 20 0F CB AD 15 05 D0 F6 A9 01 8D 15 05 AD 3D 06 0A 0A A8 B9 5A F1 85 3C B9 5B F1 85 3D 68 48 AA 18 B9 5C F1 7D 0E F1 8D A6 04 AD 3D 06 C9 03 F0 18 AD CE 05 29 20 0D A6 04 8D A6 04 AD CE 05 4A 4A 4A 4A 19 5D F1 4C 64 F0 B9 5D F1 8D A7 04 A9 01 8D A5 04 AD 3D 06 0A 85 3B 0A 65 3B 85 3B 8A 65 3B AA BD 6A F1 8D A8 04 68 48 0A AA BD 82 F1 85 3A BD 83 F1 85 3B A2 04 20 14 F1 68 18 69 01 C9 06 F0 03 4C 15 F0 AD 3D 06 C9 03 F0 67 A9 01 20 0F CB AD 15 05 D0 F6 A9 01 8D 15 05 A9 01 8D A5 04 A9 A2 8D A8 04 A9 00 85 3B 8D A9 04 AD 3D 06 0A 0A AA AD 37 06 38 E9 50 29 F0 0A 85 3A 26 3B AD 35 06 38 E9 30 4A 4A 4A 4A 18 65 3A 85 3A 90 02 E6 3B 18 7D 5A F1 8D A6 04 BD 5B F1 65 3B 8D A7 04 AD CE 05 4A 4A 4A 4A 0D A7 04 8D A7 04 A9 80 8D 15 05 60 00 01 02 08 09 0A A0 00 B1 3A 9D A5 04 F0 37 85 3E C8 B1 3A 18 65 3C 9D A6 04 08 C8 A5 3D C9 22 90 04 A9 00 F0 07 AD CE 05 4A 4A 4A 4A 11 3A 28 65 3D 9D A7 04 C8 E8 E8 E8 B1 3A 9D A5 04 C8 E8 C6 3E D0 F5 F0 C2 A9 80 8D 15 05 60"
+    },
+    {
+      "path": "bank_1f_f10e_column_offsets.bin",
+      "file_offset": "0x03F11E",
+      "size_bytes": 6,
+      "cpu_address": "0xF10E",
+      "prg_bank": "0x1F",
+      "source": "F015 low-byte offsets indexed by A: 00,01,02,08,09,0A",
+      "sha256": "1c846bd6348a9804749036a00066f0ed14056c3460e99b3db213fb29495d3428",
+      "raw_hex": "00 01 02 08 09 0A"
+    },
+    {
+      "path": "bank_1f_f15a_descriptor_addresses.bin",
+      "file_offset": "0x03F16A",
+      "size_bytes": 16,
+      "cpu_address": "0xF15A",
+      "prg_bank": "0x1F",
+      "source": "four 4-byte descriptor address/attribute bases read by F015 and F0B5",
+      "sha256": "d765b599dadfd6746f01ca5b98b7da7a1f805567f273a47f3c75fe27f15df95e",
+      "raw_hex": "42 20 C0 23 42 20 C0 23 42 20 C0 23 B4 22 ED 23"
+    },
+    {
+      "path": "bank_1f_f16a_descriptor_tiles.bin",
+      "file_offset": "0x03F17A",
+      "size_bytes": 24,
+      "cpu_address": "0xF16A",
+      "prg_bank": "0x1F",
+      "source": "four six-byte descriptor tile-ID rows read by F015",
+      "sha256": "2f6df5e795164038a6a2e2880eb60163a05ddebdfec1bd08e572d05e786afdae",
+      "raw_hex": "3A 0A 0A 03 00 00 3F 0F 0F 03 00 00 2A 0A 0A 22 00 00 00 00 00 00 00 00"
+    },
+    {
+      "path": "bank_1f_f182_packet_pointers.bin",
+      "file_offset": "0x03F192",
+      "size_bytes": 12,
+      "cpu_address": "0xF182",
+      "prg_bank": "0x1F",
+      "source": "six little-endian packet-stream pointers indexed by F015 input A",
+      "sha256": "2ae69763add6f9e22f4ae522b3b325c406270612d77551c8a39a74c754532359",
+      "raw_hex": "8E F1 99 F1 A8 F1 B7 F1 CC F1 E9 F1"
+    },
+    {
+      "path": "bank_1f_f18e_packet_streams.bin",
+      "file_offset": "0x03F19E",
+      "size_bytes": 120,
+      "cpu_address": "0xF18E",
+      "prg_bank": "0x1F",
+      "source": "six F114 packet streams, each terminated by 00",
+      "sha256": "af16320fffdd68422d11c2d198a93b84abba67e2d2e07e1d26441da0d1e50fc0",
+      "raw_hex": "02 00 00 98 AC 02 20 00 98 99 00 04 02 00 AC AC 99 AC 04 22 00 A0 A0 AF A0 00 04 06 00 AC AC AC 99 04 26 00 A0 A0 98 99 00 02 40 00 A1 AF 02 60 00 A3 AF 02 80 00 9A 9B 02 A0 00 9A AD 00 04 42 00 A0 A0 A4 A5 04 62 00 A0 A0 A6 A7 04 82 00 A0 A0 AF A0 04 A2 00 AD AD 9B AD 00 04 46 00 A0 A0 AE A1 04 66 00 A0 A0 AE A3 04 86 00 A0 A0 9A 9B 04 A6 00 AD AD AD 9B 00"
+    },
+    {
+      "path": "bank_0b_8327_8360_map_placement_writer.bin",
+      "file_offset": "0x016337",
+      "size_bytes": 57,
+      "cpu_address": "0x8327",
+      "prg_bank": "0x0B",
+      "source": "map opcode-$00 handler; includes the $05CE/$05CD placement update at CPU $8342",
+      "sha256": "e3ed67bcd4a760f0f8324b4d46ca08100ef6d1b578af495da8475b7e66096853",
+      "raw_hex": "A0 02 B1 52 8D CC 05 AC CD 05 20 25 85 A9 01 8D CB 05 AD CD 05 F0 04 29 20 09 80 8D CE 05 09 80 49 20 8D CD 05 A9 00 8D DB 05 8D DC 05 8D DD 05 60 20 D9 84 A9 80 8D D1 05"
+    },
+    {
+      "path": "bank_0b_animation_70_route_prefix.bin",
+      "file_offset": "0x016B48",
+      "size_bytes": 8,
+      "cpu_address": "0x8B38",
+      "prg_bank": "0x0B",
+      "source": "ROM background animation-$70 route prefix selecting block $56 and subsequent command bytes",
+      "sha256": "cde9952f184fd4cebc101a1a51f1286f417e7412c58ad66e1118c99bc97c9219",
+      "raw_hex": "06 00 56 02 00 80 F2 19"
+    }
+  ]
+}

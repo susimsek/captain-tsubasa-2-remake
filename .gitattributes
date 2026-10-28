@@ -4,3 +4,4 @@
 *.png binary
 *.pal binary
 *.wav binary
+*.bin binary

@@ -1,0 +1,103 @@
+{
+  "schema": "ct2-match-player-position-sources-v1",
+  "resource_kind": "preserved supplied-ROM bytes; no emulator capture data",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "bank_mapping": {
+    "fixed_bank_1f_cpu_e000_file_base": "0x03E010",
+    "fixed_bank_1f_cpu_c000_file_base": "0x03C010"
+  },
+  "supported_scope": {
+    "match_indices": [
+      0
+    ],
+    "formation_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "formation_row_stride_slots": 11,
+    "team_player_slots": 11,
+    "global_record_slots": 22,
+    "possession_side_values": [
+      0,
+      11
+    ]
+  },
+  "algorithm": [
+    "$DC07 forms home and away table bases as 11*formation (ASL; save; add formation; restore; ASL twice; add 3*formation).",
+    "Global slots 0..10 use home formation; slots 11..21 use away formation with local slot = global slot - 11.",
+    "The slot team uses $DC87 when its team base equals $05FB; otherwise it uses $DCB3. $05FB is 0 (home) or 11 (away).",
+    "$CDC9 returns x=$34+8*floor(encoded/12), y=$54+8*(encoded mod 12); nonzero $05FB mirrors each coordinate with 8-bit two's complement.",
+    "$CD7C resolves global slot through the preserved 22-word table. $DC07 stores X at record +6 and Y at record +8."
+  ],
+  "algorithm_inputs": {
+    "match_index": "caller-owned route context; helper supports only match 0",
+    "home_formation_002c": "caller-owned formation index 0..3",
+    "away_formation_002e": "caller-owned formation index 0..3",
+    "possession_side_05fb": "caller-owned side byte: 0 for home or 11 for away",
+    "source_context": "caller-owned decoded-game-logic context label; never a RAM/PPU capture"
+  },
+  "entries": [
+    {
+      "path": "bank_1f_dc07_position_initializer_code.bin",
+      "file_offset": "0x03DC17",
+      "cpu_address": "$DC07",
+      "prg_bank": "0x1F",
+      "size_bytes": 123,
+      "sha256": "34e88c6568d39179f68bf31176222e1daa62d94a8beb0da107614b6fda725990",
+      "raw_hex": "AD 2C 00 0A 48 6D 2C 00 85 3A 68 0A 0A 65 3A 85 3A AD 2E 00 0A 48 6D 2E 00 85 3B 68 0A 0A 65 3B 85 3B A9 00 48 20 7C CD A6 3A E6 3A 68 48 C9 0B AD FB 05 90 06 A6 3B 49 0B E6 3B A8 BD 87 DC 88 30 03 BD B3 DC 20 C9 CD AD FB 05 F0 0A 98 49 FF A8 8A 49 FF AA C8 E8 98 A0 08 91 34 8A A0 06 91 34 68 48 F0 04 C9 0B D0 06 A9 00 A0 07 91 34 68 18 69 01 C9 16 F0 03 4C 2B DC 60",
+      "source_role": "$DC07 initializes player record positions, iterating record slots 0..21; formation bases use 11-entry rows; selects primary/secondary table and writes X/Y to offsets +6/+8."
+    },
+    {
+      "path": "bank_1f_dc87_primary_position_table.bin",
+      "file_offset": "0x03DC97",
+      "cpu_address": "$DC87",
+      "prg_bank": "0x1F",
+      "size_bytes": 44,
+      "sha256": "8bfe91dc257f57a3f59172e1f658ee1d0860b9f52f0a37321a88c92b4f18506f",
+      "raw_hex": "05 3D 46 41 2A 57 77 5C 71 72 6C 05 3D 46 41 2A 63 68 5A 72 59 71 05 3D 46 35 4C 63 68 4F 72 5A 71 05 3D 46 35 37 59 77 68 72 71 63",
+      "source_role": "Primary encoded position table: four formation rows of 11 player slots."
+    },
+    {
+      "path": "bank_1f_dcb3_secondary_position_table.bin",
+      "file_offset": "0x03DCC3",
+      "cpu_address": "$DCB3",
+      "prg_bank": "0x1F",
+      "size_bytes": 44,
+      "sha256": "5b9c57152a7855e2410309d9e2d0b5d1ff2adfb7a83329b0c0b0c8eadf32ce63",
+      "raw_hex": "EA BE B5 AE C5 A4 79 9F 97 94 82 EA BE B5 AE C5 99 92 95 7B 96 80 EA B2 A9 BA 96 99 92 94 7B 95 80 EA B2 A9 BB B9 A2 79 9F 95 97 A4",
+      "source_role": "Secondary encoded position table: four formation rows of 11 player slots; excludes the following adjacent byte."
+    },
+    {
+      "path": "bank_1f_cd7c_record_pointer_lookup_code.bin",
+      "file_offset": "0x03CD8C",
+      "cpu_address": "$CD7C",
+      "prg_bank": "0x1F",
+      "size_bytes": 13,
+      "sha256": "8d7d8153252420175055aa5ef041e0e9dd85f99bb9dae8e24200e9549487ed24",
+      "raw_hex": "0A A8 B9 89 CD 85 34 B9 8A CD 85 35 60",
+      "source_role": "$CD7C doubles a player slot and reads the corresponding little-endian record pointer at $CD89."
+    },
+    {
+      "path": "bank_1f_cd89_record_pointer_table_22.bin",
+      "file_offset": "0x03CD99",
+      "cpu_address": "$CD89",
+      "prg_bank": "0x1F",
+      "size_bytes": 44,
+      "sha256": "b09fe4a47e9910198fc6b2599caebe85071c4292d6f07f089d8dd7848b2e7185",
+      "raw_hex": "00 03 0C 03 18 03 24 03 30 03 3C 03 48 03 54 03 60 03 6C 03 78 03 84 03 90 03 9C 03 A8 03 B4 03 C0 03 CC 03 D8 03 E4 03 F0 03 FC 03",
+      "source_role": "First 22 record pointers, mapping each global player slot to its 12-byte record in $0300..$03FC."
+    },
+    {
+      "path": "bank_1f_cdc9_coordinate_transform_code.bin",
+      "file_offset": "0x03CDD9",
+      "cpu_address": "$CDC9",
+      "prg_bank": "0x1F",
+      "size_bytes": 25,
+      "sha256": "45eb9e048e38d5655178886e5c61d4245720493c9044e2acc2f180f8c76eba7c",
+      "raw_hex": "A2 00 C9 0C 90 05 E9 0C E8 D0 F7 0A 0A 0A 69 54 A8 8A 0A 0A 0A 69 34 AA 60",
+      "source_role": "$CDC9 divides encoded position by $0C and returns X=$34+8*quotient, Y=$54+8*remainder."
+    }
+  ]
+}

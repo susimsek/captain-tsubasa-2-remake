@@ -1,0 +1,836 @@
+{
+  "schema": 1,
+  "name": "kickoff_cutscene_02",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_execution_stream_sha256": "2909bce2e1ef5f25c383b9fe7de8b2b226acf4f50e83b85d9a30d83d7de5affe",
+  "source_resource": "reference/rom_extract/gameplay/kickoff_cutscene_02_execution.bin",
+  "execution_stream_cpu_range": [
+    "0xA626",
+    "0xA6B3"
+  ],
+  "execution_stream_file_range": [
+    "0x006636",
+    "0x0066C4"
+  ],
+  "event_count": 45,
+  "event_boundaries_byte_verified": true,
+  "frame_timing_decoded": false,
+  "asset_producers_decoded": false,
+  "events": [
+    {
+      "kind": "visual_preset",
+      "opcode": 232,
+      "arguments": [
+        1
+      ],
+      "event_index": 0,
+      "script_offset": 0,
+      "cpu_address": 42534,
+      "file_offset": 26166,
+      "raw_bytes": [
+        232,
+        1
+      ],
+      "raw_hex": "e8 01"
+    },
+    {
+      "kind": "background_1",
+      "opcode": 249,
+      "arguments": [
+        2
+      ],
+      "id": 2,
+      "event_index": 1,
+      "script_offset": 2,
+      "cpu_address": 42536,
+      "file_offset": 26168,
+      "raw_bytes": [
+        249,
+        2
+      ],
+      "raw_hex": "f9 02"
+    },
+    {
+      "kind": "animations",
+      "opcode": 251,
+      "arguments": [
+        1,
+        21
+      ],
+      "animation_ids": [
+        21
+      ],
+      "event_index": 2,
+      "script_offset": 4,
+      "cpu_address": 42538,
+      "file_offset": 26170,
+      "raw_bytes": [
+        251,
+        1,
+        21
+      ],
+      "raw_hex": "fb 01 15"
+    },
+    {
+      "kind": "compact_pause",
+      "ticks": 120,
+      "event_index": 3,
+      "script_offset": 7,
+      "cpu_address": 42541,
+      "file_offset": 26173,
+      "raw_bytes": [
+        222
+      ],
+      "raw_hex": "de"
+    },
+    {
+      "kind": "screen_on",
+      "opcode": 233,
+      "arguments": [],
+      "event_index": 4,
+      "script_offset": 8,
+      "cpu_address": 42542,
+      "file_offset": 26174,
+      "raw_bytes": [
+        233
+      ],
+      "raw_hex": "e9"
+    },
+    {
+      "kind": "sound_command",
+      "opcode": 237,
+      "arguments": [
+        83
+      ],
+      "id": 83,
+      "event_index": 5,
+      "script_offset": 9,
+      "cpu_address": 42543,
+      "file_offset": 26175,
+      "raw_bytes": [
+        237,
+        83
+      ],
+      "raw_hex": "ed 53"
+    },
+    {
+      "kind": "text_speed",
+      "opcode": 242,
+      "arguments": [
+        2
+      ],
+      "event_index": 6,
+      "script_offset": 11,
+      "cpu_address": 42545,
+      "file_offset": 26177,
+      "raw_bytes": [
+        242,
+        2
+      ],
+      "raw_hex": "f2 02"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": 244,
+      "arguments": [
+        5
+      ],
+      "event_index": 7,
+      "script_offset": 13,
+      "cpu_address": 42547,
+      "file_offset": 26179,
+      "raw_bytes": [
+        244,
+        5
+      ],
+      "raw_hex": "f4 05"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids": [
+        70,
+        20,
+        109,
+        101,
+        110,
+        103,
+        111,
+        32,
+        26,
+        112,
+        16,
+        10
+      ],
+      "event_index": 8,
+      "script_offset": 15,
+      "cpu_address": 42549,
+      "file_offset": 26181,
+      "raw_bytes": [
+        70,
+        20,
+        109,
+        101,
+        110,
+        103,
+        111,
+        32,
+        26,
+        112,
+        16,
+        10
+      ],
+      "raw_hex": "46 14 6d 65 6e 67 6f 20 1a 70 10 0a"
+    },
+    {
+      "kind": "fc_handler",
+      "opcode": 252,
+      "arguments": [],
+      "event_index": 9,
+      "script_offset": 27,
+      "cpu_address": 42561,
+      "file_offset": 26193,
+      "raw_bytes": [
+        252
+      ],
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids": [
+        67,
+        6,
+        125,
+        115,
+        32,
+        3,
+        110,
+        16,
+        25
+      ],
+      "event_index": 10,
+      "script_offset": 28,
+      "cpu_address": 42562,
+      "file_offset": 26194,
+      "raw_bytes": [
+        67,
+        6,
+        125,
+        115,
+        32,
+        3,
+        110,
+        16,
+        25
+      ],
+      "raw_hex": "43 06 7d 73 20 03 6e 10 19"
+    },
+    {
+      "kind": "fc_handler",
+      "opcode": 252,
+      "arguments": [],
+      "event_index": 11,
+      "script_offset": 37,
+      "cpu_address": 42571,
+      "file_offset": 26203,
+      "raw_bytes": [
+        252
+      ],
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": 244,
+      "arguments": [
+        4
+      ],
+      "event_index": 12,
+      "script_offset": 38,
+      "cpu_address": 42572,
+      "file_offset": 26204,
+      "raw_bytes": [
+        244,
+        4
+      ],
+      "raw_hex": "f4 04"
+    },
+    {
+      "kind": "pause_frames",
+      "opcode": 246,
+      "arguments": [
+        180
+      ],
+      "frame_count_operand": 180,
+      "event_index": 13,
+      "script_offset": 40,
+      "cpu_address": 42574,
+      "file_offset": 26206,
+      "raw_bytes": [
+        246,
+        180
+      ],
+      "raw_hex": "f6 b4"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": 244,
+      "arguments": [
+        5
+      ],
+      "event_index": 14,
+      "script_offset": 42,
+      "cpu_address": 42576,
+      "file_offset": 26208,
+      "raw_bytes": [
+        244,
+        5
+      ],
+      "raw_hex": "f4 05"
+    },
+    {
+      "kind": "clear_text",
+      "opcode": 253,
+      "arguments": [],
+      "event_index": 15,
+      "script_offset": 44,
+      "cpu_address": 42578,
+      "file_offset": 26210,
+      "raw_bytes": [
+        253
+      ],
+      "raw_hex": "fd"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": 244,
+      "arguments": [
+        4
+      ],
+      "event_index": 16,
+      "script_offset": 45,
+      "cpu_address": 42579,
+      "file_offset": 26211,
+      "raw_bytes": [
+        244,
+        4
+      ],
+      "raw_hex": "f4 04"
+    },
+    {
+      "kind": "text_speed",
+      "opcode": 242,
+      "arguments": [
+        8
+      ],
+      "event_index": 17,
+      "script_offset": 47,
+      "cpu_address": 42581,
+      "file_offset": 26213,
+      "raw_bytes": [
+        242,
+        8
+      ],
+      "raw_hex": "f2 08"
+    },
+    {
+      "kind": "text_cursor_back",
+      "tile_count": 1,
+      "event_index": 18,
+      "script_offset": 49,
+      "cpu_address": 42583,
+      "file_offset": 26215,
+      "raw_bytes": [
+        225
+      ],
+      "raw_hex": "e1"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids": [
+        64,
+        3,
+        111,
+        32,
+        28,
+        117,
+        125,
+        32,
+        70,
+        67,
+        39,
+        123
+      ],
+      "event_index": 19,
+      "script_offset": 50,
+      "cpu_address": 42584,
+      "file_offset": 26216,
+      "raw_bytes": [
+        64,
+        3,
+        111,
+        32,
+        28,
+        117,
+        125,
+        32,
+        70,
+        67,
+        39,
+        123
+      ],
+      "raw_hex": "40 03 6f 20 1c 75 7d 20 46 43 27 7b"
+    },
+    {
+      "kind": "fc_handler",
+      "opcode": 252,
+      "arguments": [],
+      "event_index": 20,
+      "script_offset": 62,
+      "cpu_address": 42596,
+      "file_offset": 26228,
+      "raw_bytes": [
+        252
+      ],
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids": [
+        26,
+        121,
+        24,
+        123,
+        103,
+        94,
+        32,
+        123,
+        10,
+        4,
+        110
+      ],
+      "event_index": 21,
+      "script_offset": 63,
+      "cpu_address": 42597,
+      "file_offset": 26229,
+      "raw_bytes": [
+        26,
+        121,
+        24,
+        123,
+        103,
+        94,
+        32,
+        123,
+        10,
+        4,
+        110
+      ],
+      "raw_hex": "1a 79 18 7b 67 5e 20 7b 0a 04 6e"
+    },
+    {
+      "kind": "fc_handler",
+      "opcode": 252,
+      "arguments": [],
+      "event_index": 22,
+      "script_offset": 74,
+      "cpu_address": 42608,
+      "file_offset": 26240,
+      "raw_bytes": [
+        252
+      ],
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids": [
+        111,
+        121,
+        117,
+        110,
+        99,
+        117,
+        32,
+        34,
+        32,
+        36,
+        63
+      ],
+      "event_index": 23,
+      "script_offset": 75,
+      "cpu_address": 42609,
+      "file_offset": 26241,
+      "raw_bytes": [
+        111,
+        121,
+        117,
+        110,
+        99,
+        117,
+        32,
+        34,
+        32,
+        36,
+        63
+      ],
+      "raw_hex": "6f 79 75 6e 63 75 20 22 20 24 3f"
+    },
+    {
+      "kind": "wait_for_input",
+      "opcode": 235,
+      "arguments": [],
+      "event_index": 24,
+      "script_offset": 86,
+      "cpu_address": 42620,
+      "file_offset": 26252,
+      "raw_bytes": [
+        235
+      ],
+      "raw_hex": "eb"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids": [
+        124,
+        32,
+        26,
+        24,
+        114,
+        32,
+        121,
+        101,
+        116,
+        101,
+        124,
+        107,
+        7,
+        115,
+        18
+      ],
+      "event_index": 25,
+      "script_offset": 87,
+      "cpu_address": 42621,
+      "file_offset": 26253,
+      "raw_bytes": [
+        124,
+        32,
+        26,
+        24,
+        114,
+        32,
+        121,
+        101,
+        116,
+        101,
+        124,
+        107,
+        7,
+        115,
+        18
+      ],
+      "raw_hex": "7c 20 1a 18 72 20 79 65 74 65 7c 6b 07 73 12"
+    },
+    {
+      "kind": "fc_handler",
+      "opcode": 252,
+      "arguments": [],
+      "event_index": 26,
+      "script_offset": 102,
+      "cpu_address": 42636,
+      "file_offset": 26268,
+      "raw_bytes": [
+        252
+      ],
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids": [
+        92,
+        5,
+        7,
+        109,
+        32,
+        2,
+        26,
+        7,
+        109
+      ],
+      "event_index": 27,
+      "script_offset": 103,
+      "cpu_address": 42637,
+      "file_offset": 26269,
+      "raw_bytes": [
+        92,
+        5,
+        7,
+        109,
+        32,
+        2,
+        26,
+        7,
+        109
+      ],
+      "raw_hex": "5c 05 07 6d 20 02 1a 07 6d"
+    },
+    {
+      "kind": "fc_handler",
+      "opcode": 252,
+      "arguments": [],
+      "event_index": 28,
+      "script_offset": 112,
+      "cpu_address": 42646,
+      "file_offset": 26278,
+      "raw_bytes": [
+        252
+      ],
+      "raw_hex": "fc"
+    },
+    {
+      "kind": "compact_pause",
+      "ticks": 120,
+      "event_index": 29,
+      "script_offset": 113,
+      "cpu_address": 42647,
+      "file_offset": 26279,
+      "raw_bytes": [
+        222
+      ],
+      "raw_hex": "de"
+    },
+    {
+      "kind": "screen_off_clear",
+      "opcode": 234,
+      "arguments": [],
+      "event_index": 30,
+      "script_offset": 114,
+      "cpu_address": 42648,
+      "file_offset": 26280,
+      "raw_bytes": [
+        234
+      ],
+      "raw_hex": "ea"
+    },
+    {
+      "kind": "clear_text",
+      "opcode": 253,
+      "arguments": [],
+      "event_index": 31,
+      "script_offset": 115,
+      "cpu_address": 42649,
+      "file_offset": 26281,
+      "raw_bytes": [
+        253
+      ],
+      "raw_hex": "fd"
+    },
+    {
+      "kind": "background_1",
+      "opcode": 249,
+      "arguments": [
+        25
+      ],
+      "id": 25,
+      "event_index": 32,
+      "script_offset": 116,
+      "cpu_address": 42650,
+      "file_offset": 26282,
+      "raw_bytes": [
+        249,
+        25
+      ],
+      "raw_hex": "f9 19"
+    },
+    {
+      "kind": "animations",
+      "opcode": 251,
+      "arguments": [
+        1,
+        20
+      ],
+      "animation_ids": [
+        20
+      ],
+      "event_index": 33,
+      "script_offset": 118,
+      "cpu_address": 42652,
+      "file_offset": 26284,
+      "raw_bytes": [
+        251,
+        1,
+        20
+      ],
+      "raw_hex": "fb 01 14"
+    },
+    {
+      "kind": "sound_command",
+      "opcode": 237,
+      "arguments": [
+        105
+      ],
+      "id": 105,
+      "event_index": 34,
+      "script_offset": 121,
+      "cpu_address": 42655,
+      "file_offset": 26287,
+      "raw_bytes": [
+        237,
+        105
+      ],
+      "raw_hex": "ed 69"
+    },
+    {
+      "kind": "screen_on",
+      "opcode": 233,
+      "arguments": [],
+      "event_index": 35,
+      "script_offset": 123,
+      "cpu_address": 42657,
+      "file_offset": 26289,
+      "raw_bytes": [
+        233
+      ],
+      "raw_hex": "e9"
+    },
+    {
+      "kind": "visual_flag",
+      "opcode": 245,
+      "arguments": [
+        4
+      ],
+      "event_index": 36,
+      "script_offset": 124,
+      "cpu_address": 42658,
+      "file_offset": 26290,
+      "raw_bytes": [
+        245,
+        4
+      ],
+      "raw_hex": "f5 04"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": 244,
+      "arguments": [
+        5
+      ],
+      "event_index": 37,
+      "script_offset": 126,
+      "cpu_address": 42660,
+      "file_offset": 26292,
+      "raw_bytes": [
+        244,
+        5
+      ],
+      "raw_hex": "f4 05"
+    },
+    {
+      "kind": "text_tile_ids",
+      "tile_ids": [
+        79,
+        46,
+        1,
+        2,
+        3
+      ],
+      "event_index": 38,
+      "script_offset": 128,
+      "cpu_address": 42662,
+      "file_offset": 26294,
+      "raw_bytes": [
+        79,
+        46,
+        1,
+        2,
+        3
+      ],
+      "raw_hex": "4f 2e 01 02 03"
+    },
+    {
+      "kind": "text_brightness_command",
+      "opcode": 244,
+      "arguments": [
+        4
+      ],
+      "event_index": 39,
+      "script_offset": 133,
+      "cpu_address": 42667,
+      "file_offset": 26299,
+      "raw_bytes": [
+        244,
+        4
+      ],
+      "raw_hex": "f4 04"
+    },
+    {
+      "kind": "pause_frames",
+      "opcode": 246,
+      "arguments": [
+        180
+      ],
+      "frame_count_operand": 180,
+      "event_index": 40,
+      "script_offset": 135,
+      "cpu_address": 42669,
+      "file_offset": 26301,
+      "raw_bytes": [
+        246,
+        180
+      ],
+      "raw_hex": "f6 b4"
+    },
+    {
+      "kind": "sound_command",
+      "opcode": 237,
+      "arguments": [
+        49
+      ],
+      "id": 49,
+      "event_index": 41,
+      "script_offset": 137,
+      "cpu_address": 42671,
+      "file_offset": 26303,
+      "raw_bytes": [
+        237,
+        49
+      ],
+      "raw_hex": "ed 31"
+    },
+    {
+      "kind": "compact_pause",
+      "ticks": 120,
+      "event_index": 42,
+      "script_offset": 139,
+      "cpu_address": 42673,
+      "file_offset": 26305,
+      "raw_bytes": [
+        222
+      ],
+      "raw_hex": "de"
+    },
+    {
+      "kind": "screen_off_clear",
+      "opcode": 234,
+      "arguments": [],
+      "event_index": 43,
+      "script_offset": 140,
+      "cpu_address": 42674,
+      "file_offset": 26306,
+      "raw_bytes": [
+        234
+      ],
+      "raw_hex": "ea"
+    },
+    {
+      "kind": "exit",
+      "opcode": 255,
+      "arguments": [],
+      "event_index": 44,
+      "script_offset": 141,
+      "cpu_address": 42675,
+      "file_offset": 26307,
+      "raw_bytes": [
+        255
+      ],
+      "raw_hex": "ff"
+    }
+  ]
+}

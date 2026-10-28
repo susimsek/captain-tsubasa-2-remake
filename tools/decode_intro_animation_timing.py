@@ -127,9 +127,28 @@ def decode(rom: bytes, animation: dict) -> dict:
         elif op == 0xF9:
             item.update({"kind": "set_flag_bit4"})
         elif op == 0xFA:
-            terminal = {"kind": "unresolved_fa_branch", "at_relative_tick": tick,
-                        "cpu_address": f"0x{pc:04X}", "file_offset": f"0x{at:06X}"}
-            item.update({"kind": "unresolved_fa_branch"})
+            raw_size = 5
+            branch_words = [
+                int.from_bytes(rom[at + 1:at + 3], "little"),
+                int.from_bytes(rom[at + 3:at + 5], "little"),
+            ]
+            terminal = {
+                "kind": "state_branch",
+                "at_relative_tick": tick,
+                "cpu_address": f"0x{pc:04X}",
+                "file_offset": f"0x{at:06X}",
+                "selector_ram_address": "0x0099",
+                "selector_bit": 0,
+                "initial_selector_value": 0,
+                "cases": [
+                    {"selector_value": 0, "frame_cpu_address": f"0x{branch_words[0]:04X}"},
+                    {"selector_value": 1, "frame_cpu_address": f"0x{branch_words[1]:04X}"},
+                ],
+            }
+            item.update({"kind": "state_branch", "cases": terminal["cases"],
+                         "selector_ram_address": terminal["selector_ram_address"],
+                         "selector_bit": terminal["selector_bit"]})
+            next_pc = pc + raw_size
         elif op == 0xFE:
             if not stack or stack[-1][0] != "call":
                 raise ValueError(f"Call return without call at {pc:04X}")

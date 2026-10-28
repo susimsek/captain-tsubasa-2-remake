@@ -1,0 +1,250 @@
+{
+  "schema": "first-action-menu-renderer-audit-v1",
+  "source": {
+    "rom_file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "bank": "0x18",
+    "file_offset_formula": "0x030010 + (CPU - 0x8000)",
+    "parser": "target-byte-checked bank-$18 6502 control flow; independent packet arithmetic audit"
+  },
+  "verified_windows": [
+    {
+      "cpu_start": "0x800C",
+      "cpu_end_exclusive": "0x800F",
+      "file_start": "0x03001C",
+      "bank_mapping": "bank-$18 CPU window",
+      "sha256": "bfd10ca38c56f461f9d3a718da2b94402304fd864ca2c9976e33a34df2d20c9a"
+    },
+    {
+      "cpu_start": "0x8852",
+      "cpu_end_exclusive": "0x88B9",
+      "file_start": "0x030862",
+      "bank_mapping": "bank-$18 CPU window",
+      "sha256": "8d11372278149ca95c4915e95a8e1121b938348cf73ec83408d03f825b62b070"
+    },
+    {
+      "cpu_start": "0x88B9",
+      "cpu_end_exclusive": "0x8986",
+      "file_start": "0x0308C9",
+      "bank_mapping": "bank-$18 CPU window",
+      "sha256": "e9d2b95c91c49f329f0d9ffb45483c9ad19868c96cbf7e6161665e982ac24570"
+    },
+    {
+      "cpu_start": "0x8986",
+      "cpu_end_exclusive": "0x89BA",
+      "file_start": "0x030996",
+      "bank_mapping": "bank-$18 CPU window",
+      "sha256": "46ac5f0183f5e0d90c90f248768b6df75bae9c5300a679cc83dfc21efb53888e"
+    },
+    {
+      "cpu_start": "0x89FA",
+      "cpu_end_exclusive": "0x8A04",
+      "file_start": "0x030A0A",
+      "bank_mapping": "bank-$18 CPU window",
+      "sha256": "c88664c6bbf923a189ee6e8de8e34e39896f763451ec25a4de0dafbd8d7a14a4"
+    },
+    {
+      "cpu_start": "0x8CA5",
+      "cpu_end_exclusive": "0x8CDC",
+      "file_start": "0x030CB5",
+      "bank_mapping": "bank-$18 CPU window",
+      "sha256": "4a73cad95d37036f5679b38bcb90952dd8496e5fdeb84da134ce9888762c7f3a"
+    },
+    {
+      "cpu_start": "0x8CDC",
+      "cpu_end_exclusive": "0x8D9E",
+      "file_start": "0x030CEC",
+      "bank_mapping": "bank-$18 CPU window",
+      "sha256": "c403f2f776d73968bcb401a9362959cfbe51715cb56dc411ceab281afe0f0b1e"
+    },
+    {
+      "cpu_start": "0xB3BD",
+      "cpu_end_exclusive": "0xB3C1",
+      "file_start": "0x0333CD",
+      "bank_mapping": "bank-$18 CPU window",
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+    },
+    {
+      "cpu_start": "0x8D9E",
+      "cpu_end_exclusive": "0x8DA7",
+      "file_start": "0x030DAE",
+      "bank_mapping": "bank-$18 CPU window",
+      "sha256": "dcb1f10d1a9a0fa616fa2e065790ce038722b09968d265e7901770b3bf9133e0"
+    },
+    {
+      "cpu_start": "0xC50C",
+      "cpu_end_exclusive": "0xC50F",
+      "file_start": "0x03C51C",
+      "bank_mapping": "fixed CPU $C000-$FFFF window",
+      "sha256": "71f4bb6ccdc5573bcfceef2422fe8636bc1dd1068675da3d860282d577e78b44"
+    },
+    {
+      "cpu_start": "0xC524",
+      "cpu_end_exclusive": "0xC52A",
+      "file_start": "0x03C534",
+      "bank_mapping": "fixed CPU $C000-$FFFF window",
+      "sha256": "88599e3243cba4f91251f7646e9d6656f4ab61751cbdd7cc31c03d8a7fcfc7c3"
+    },
+    {
+      "cpu_start": "0xC53C",
+      "cpu_end_exclusive": "0xC53F",
+      "file_start": "0x03C54C",
+      "bank_mapping": "fixed CPU $C000-$FFFF window",
+      "sha256": "6419d5a470082bb95466023cfc1b7b935f42415f3a318be99c4c612ea9bfd9e5"
+    },
+    {
+      "cpu_start": "0xCE08",
+      "cpu_end_exclusive": "0xCE2D",
+      "file_start": "0x03CE18",
+      "bank_mapping": "fixed CPU $C000-$FFFF window",
+      "sha256": "aa0e7dbc45c7a808cc93aa3c3e0bc301f7bc78e51678a3221c1b1ae6ed5bab26"
+    },
+    {
+      "cpu_start": "0xCD7C",
+      "cpu_end_exclusive": "0xCD89",
+      "file_start": "0x03CD8C",
+      "bank_mapping": "fixed CPU $C000-$FFFF window",
+      "sha256": "8d7d8153252420175055aa5ef041e0e9dd85f99bb9dae8e24200e9549487ed24"
+    },
+    {
+      "cpu_start": "0xEF7F",
+      "cpu_end_exclusive": "0xEFA0",
+      "file_start": "0x03EF8F",
+      "bank_mapping": "fixed CPU $C000-$FFFF window",
+      "sha256": "2b58982f5d1dd906d58eb693148f3a9ff511064fce6163432f7ff30b8512dca2"
+    }
+  ],
+  "descriptor": {
+    "id": "0x03",
+    "cpu_address": "0xB48A",
+    "file_offset": "0x03349A",
+    "raw_hex": "32 22 0c 0a 00 01 0c 09 05 01 02 21 bc 03 01 23 bc 05 01 2e bc 07 01 39 bc 09 01 44 bc",
+    "style_family": 0,
+    "header_semantics": {
+      "base_ppu_address": "0x2232",
+      "packet_width_and_payload_length_tiles": 12,
+      "last_progress_row_inclusive": 10,
+      "frame_data_column_offset": 0,
+      "top_edge_progress_row": 1,
+      "border_width_tiles": 12,
+      "bottom_edge_relative_offset": 9,
+      "text_record_count": 5
+    },
+    "row_coordinates": [
+      {
+        "relative_row": 1,
+        "column": 2,
+        "text_cpu": "0xBC21"
+      },
+      {
+        "relative_row": 3,
+        "column": 1,
+        "text_cpu": "0xBC23"
+      },
+      {
+        "relative_row": 5,
+        "column": 1,
+        "text_cpu": "0xBC2E"
+      },
+      {
+        "relative_row": 7,
+        "column": 1,
+        "text_cpu": "0xBC39"
+      },
+      {
+        "relative_row": 9,
+        "column": 1,
+        "text_cpu": "0xBC44"
+      }
+    ]
+  },
+  "packet_candidate": {
+    "progress_sequence": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "ram_04a5_final_progress": 10,
+    "ram_05c5_after_completion": 11,
+    "final_packet_hex": "0c 72 23 9e a9 a9 a9 a9 a9 a9 a9 a9 a9 a9 9f",
+    "source_derived_without_capture_inputs": true
+  },
+  "validation_only": {
+    "ram_capture": "reference/diagnostics/kickoff_select_test_20261027/ram/route_frame_008953.bin",
+    "ram_04a5_hex": "0c 72 23 9e a9 a9 a9 a9 a9 a9 a9 a9 a9 a9 9f",
+    "ram_packet_exact_match": true,
+    "ppu_capture": "reference/diagnostics/kickoff_select_test_20261027/ppu/route_frame_008953.bin",
+    "ppu_row_address": "0x2372",
+    "ppu_row_hex": "9e a9 a9 a9 a9 a9 a9 a9 a9 a9 a9 9f",
+    "ppu_row_exact_match": true,
+    "static_text_rows": [
+      {
+        "record": 0,
+        "relative_row": 1,
+        "nametable_row": 18,
+        "column": 2,
+        "ppu_address": "0x2254",
+        "rom_static_prefix_hex": "",
+        "capture_static_prefix_match": true,
+        "dynamic_token_bytes_hex": "e0"
+      },
+      {
+        "record": 1,
+        "relative_row": 3,
+        "nametable_row": 20,
+        "column": 1,
+        "ppu_address": "0x2293",
+        "rom_static_prefix_hex": "45 6e 65 72 6a 69",
+        "capture_static_prefix_match": true,
+        "dynamic_token_bytes_hex": "e1 00"
+      },
+      {
+        "record": 2,
+        "relative_row": 5,
+        "nametable_row": 22,
+        "column": 1,
+        "ppu_address": "0x22D3",
+        "rom_static_prefix_hex": "43 61 6c 69 6d 20 20",
+        "capture_static_prefix_match": true,
+        "dynamic_token_bytes_hex": "e1 03"
+      },
+      {
+        "record": 3,
+        "relative_row": 7,
+        "nametable_row": 24,
+        "column": 1,
+        "ppu_address": "0x2313",
+        "rom_static_prefix_hex": "50 61 73 20",
+        "capture_static_prefix_match": true,
+        "dynamic_token_bytes_hex": "e1 02"
+      },
+      {
+        "record": 4,
+        "relative_row": 9,
+        "nametable_row": 26,
+        "column": 1,
+        "ppu_address": "0x2353",
+        "rom_static_prefix_hex": "53 75 74 20",
+        "capture_static_prefix_match": true,
+        "dynamic_token_bytes_hex": "e1 01"
+      }
+    ]
+  },
+  "dynamic_substitutions": {
+    "E0": "reads RAM $0441; emits two position tiles from $8D04+$index*2, a blank tile, then the selected player's ROM-backed name, padded to at least five name tiles. Current player selection/name data remain caller state.",
+    "E1": "consumes the next stream byte as stat selector. Selector 0 reads current-player 16-bit energy at record offsets +1/+2. Selectors 1..3 call the stat evaluator; selectors 7..23 add 8 when ball-height RAM $044E is not 1. Decimal digits use tile ID $33+digit, are emitted least-significant-first while the destination index decrements (thus right-aligned), and omit leading zeroes. Stat computation/player state remain caller inputs."
+  },
+  "unresolved": [
+    "The descriptor and packet source mapping is recovered; the full fixed-bank player-name lookup and bank-$1C stat evaluator are not included in this small renderer audit.",
+    "The RGB palette and CHR bank selection are not proved by this nametable-packet audit; use the separately documented frame-8953 capture mapping for validation only.",
+    "The packet consumer/NMI phase and first-visible-pixel timing are not measured by this audit."
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "schema": "ct2-fresh-kickoff-position-context-source-v1",
+  "rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "scope": "ROM-source inputs for fresh-start match-zero formation and kickoff side context; diagnostic captures are not inputs.",
+  "entries": [
+    {
+      "path": "bank_02_home_match_selector_code_A86E_A8CD.bin",
+      "file_offset": "0x00487E",
+      "size_bytes": 96,
+      "prg_bank": "bank $02",
+      "cpu_start": "$A86E",
+      "cpu_end_inclusive": "$A8CD",
+      "sha256": "f9b27195e6d6c9163d55ee6161fbf8d4d795537df2f2347d3e4c406765033123",
+      "raw_hex": "A5 26 C9 06 90 08 C9 0C 90 0C C9 10 B0 10 A2 00 20 B7 A8 4C A3 A8 A2 0C 20 B7 A8 4C A3 A8 A2 18 20 B7 A8 A0 00 BD 47 AA 99 08 04 E8 98 18 69 04 A8 C9 28 90 F0 BD 47 AA 85 2C A6 26 BD 75 AA 85 2A A5 26 18 69 03 85 2B 60 4C 38 A1 ED A0 00 BD 47 AA 99 00 03 E8 98 18 69 0C A8 C9 84 90 F0 60",
+      "meaning": "Match-index branch, eleven-byte roster copy call, twelfth-byte home formation load at $A8A3, team index and opponent ID=$26+3 at $A8AF-$A8B4."
+    },
+    {
+      "path": "bank_02_match_00_home_roster_AA47.bin",
+      "file_offset": "0x004A57",
+      "size_bytes": 12,
+      "prg_bank": "bank $02",
+      "cpu_start": "$AA47",
+      "cpu_end_inclusive": "$AA52",
+      "sha256": "dcb5f0103eaecbc9785e947085b02cd6b56f7d31e6671a699d82b22d80a3b123",
+      "raw_hex": "02 03 04 05 06 07 08 09 0A 01 0B 00",
+      "meaning": "Match-zero home roster bytes; byte 11 is the formation selector loaded into $002C."
+    },
+    {
+      "path": "bank_02_match_00_home_team_id_AA75.bin",
+      "file_offset": "0x004A85",
+      "size_bytes": 1,
+      "prg_bank": "bank $02",
+      "cpu_start": "$AA75",
+      "cpu_end_inclusive": "$AA75",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "raw_hex": "00",
+      "meaning": "Match-zero home team ID table entry."
+    },
+    {
+      "path": "bank_1c_away_formation_decode_8B39_8B62.bin",
+      "file_offset": "0x038B49",
+      "size_bytes": 41,
+      "prg_bank": "bank $1C",
+      "cpu_start": "$8B39",
+      "cpu_end_inclusive": "$8B61",
+      "sha256": "0a98b9de6c875ca85a0044356bf951de9a2ec5e4c7b4ea21d03f5711a9a4f890",
+      "raw_hex": "AD 2B 00 38 E9 03 0A AA BD B2 BA 85 38 BD B3 BA 85 39 A0 00 B1 38 29 0F 8D 2E 00 B1 38 4A 4A 4A 4A 8D 2F 00 A0 09 84 3A A4",
+      "meaning": "Opponent ID to pointer index and low-nibble away formation decode into $002E."
+    },
+    {
+      "path": "bank_1d_opponent_pointer_table_entry_0_BAB2.bin",
+      "file_offset": "0x03BAC2",
+      "size_bytes": 2,
+      "prg_bank": "bank $1D",
+      "cpu_start": "$BAB2",
+      "cpu_end_inclusive": "$BAB3",
+      "sha256": "1d22ca41334213a0048e0f2dea829d998839cca5d882e25b42d46505e1f61afc",
+      "raw_hex": "F6 BA",
+      "meaning": "Pointer-table entry 0 for opponent ID 3; points to $BAF6."
+    },
+    {
+      "path": "bank_1d_opponent_3_record_header_BAF6.bin",
+      "file_offset": "0x03BB06",
+      "size_bytes": 1,
+      "prg_bank": "bank $1D",
+      "cpu_start": "$BAF6",
+      "cpu_end_inclusive": "$BAF6",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "raw_hex": "00",
+      "meaning": "Opponent 3 setup header; low nibble selects $002E."
+    },
+    {
+      "path": "fixed_kickoff_dispatch_and_branch_DB20_DB62.bin",
+      "file_offset": "0x03DB30",
+      "size_bytes": 66,
+      "prg_bank": "fixed $1E",
+      "cpu_start": "$DB20",
+      "cpu_end_inclusive": "$DB61",
+      "sha256": "b573548c1d45d901effe7e870f7af992179d5276c1e6278e7636a2443783b4f9",
+      "raw_hex": "9A 4C DF E0 AD 29 06 20 99 CB 34 DB 9E DB FC DB F3 DB 03 DC 48 A5 22 A9 1C 85 24 A9 1D 85 25 20 2D CE 68 20 03 80 A9 00 8D 47 04 A2 00 AD 2B 00 C9 03 F0 07 2C E2 00 10 02 A2 0B 8E 4F 04 8E FB 05 60",
+      "meaning": "Reads $0629, dispatches through $CB99, and includes branch target $DB34 that writes the side to $05FB when opponent ID is 3."
+    },
+    {
+      "path": "fixed_branch_table_dispatch_helper_CB99_CBAF.bin",
+      "file_offset": "0x03CBA9",
+      "size_bytes": 23,
+      "prg_bank": "fixed $1E",
+      "cpu_start": "$CB99",
+      "cpu_end_inclusive": "$CBAF",
+      "sha256": "1f8058f9fd70aeec319a32433feb0c102c72e0f5131571a0da8bf89ef84a2d54",
+      "raw_hex": "0A A8 68 85 36 68 85 37 C8 B1 36 48 C8 B1 36 85 37 68 85 36 6C 36 00",
+      "meaning": "Computes the pointer-table lookup using A as selector and the JSR return address as table base."
+    },
+    {
+      "path": "fixed_reset_jump_C503.bin",
+      "file_offset": "0x03C513",
+      "size_bytes": 3,
+      "prg_bank": "fixed $1E",
+      "cpu_start": "$C503",
+      "cpu_end_inclusive": "$C505",
+      "sha256": "1af2205ae6c5e64cd5a956e38ab915e5f3049b2c6e40ed85803c3c8b6abbdf3d",
+      "raw_hex": "4C 4E C6",
+      "meaning": "Reset jump stub into $C64E."
+    },
+    {
+      "path": "fixed_reset_ram_clear_C64E_C679.bin",
+      "file_offset": "0x03C65E",
+      "size_bytes": 44,
+      "prg_bank": "fixed $1E",
+      "cpu_start": "$C64E",
+      "cpu_end_inclusive": "$C679",
+      "sha256": "8315e93ae660d302632f7bfeffc9db002b3f1c1643ae2b6936d3ce5703e6f75a",
+      "raw_hex": "A9 08 8D 00 20 78 D8 A2 FF 9A AD 02 20 10 FB AD 02 20 10 FB A9 C0 8D 01 A0 A9 00 85 00 85 01 A8 A2 08 91 00 C8 D0 FB E6 01 CA D0 F6",
+      "meaning": "Reset routine, including zero-page $00/$01 pointer setup and eight-page RAM clear for $0000-$07FF."
+    },
+    {
+      "path": "fixed_reset_entry_FFF0.bin",
+      "file_offset": "0x040000",
+      "size_bytes": 8,
+      "prg_bank": "fixed $1F",
+      "cpu_start": "$FFF0",
+      "cpu_end_inclusive": "$FFF7",
+      "sha256": "95925881564c84710f0f280e12ddf5913882b5d9cf59cd89eabdf47442f9b122",
+      "raw_hex": "A9 00 8D 00 80 4C 03 C5",
+      "meaning": "Reset entry code: LDA #$00; STA $8000; JMP $C503."
+    },
+    {
+      "path": "fixed_reset_vector_FFFC.bin",
+      "file_offset": "0x04000C",
+      "size_bytes": 2,
+      "prg_bank": "fixed $1F",
+      "cpu_start": "$FFFC",
+      "cpu_end_inclusive": "$FFFD",
+      "sha256": "def1e0885184cca73afc582c50470a0c10851a849027a1dd1d2aacc482b2516a",
+      "raw_hex": "F0 FF",
+      "meaning": "Reset vector points to $FFF0."
+    }
+  ],
+  "boundary_notes": [
+    "$26 and $0629 are cleared by cold reset, but $0629 is reused by the opening PPU queue; its value at kickoff must be supplied by caller-owned decoded route state.",
+    "Only match index 0 and kickoff selector 0 ($DB34) are supported by the resolver.",
+    "Home formation is the twelfth byte of the match-zero home roster record, not a terminator.",
+    "The selector table begins at $DB2A; selector 0 resolves to $DB34 through the $CB99 helper."
+  ]
+}

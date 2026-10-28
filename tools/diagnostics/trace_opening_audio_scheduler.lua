@@ -1,6 +1,6 @@
 -- Silent diagnostic: trace the supplied ROM's cutscene scheduler and Start poll.
 -- Requires FCEUX 2.7.0 Lua memory.registerexec and a muted/dummy-audio launch.
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local INPUT_CSV = PROJECT_ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local LAST_SOURCE_FRAME = 4692
 local run_id = os.date("%Y%m%d_%H%M%S")

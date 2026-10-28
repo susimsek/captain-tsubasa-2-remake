@@ -1,0 +1,87 @@
+{
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "mapping": "iNES PRG begins at file offset 0x0010; bank $00 CPU $8000-$BFFF maps to 0x000010+; bank $82 CPU $A000-$BFFF maps to 0x004010+; fixed bank CPU $C000-$FFFF maps to 0x03C010+.",
+  "spans": [
+    {
+      "file": "bank00_cutscene2_common_cleanup_82C6_82EC.bin",
+      "cpu_address": "0x82C6",
+      "cpu_end_exclusive": "0x82ED",
+      "file_offset": "0x0002D6",
+      "length": 39,
+      "sha256": "85b5b1d400f0de2b0a31edc631a8768b18d3db8bc1ef92ab59beb8167dfca0ab",
+      "bank_mapping": "bank $00 in CPU window $8000",
+      "bytes": "a9 00 85 05 85 06 85 09 85 0a 85 11 85 12 85 0d 85 0e 85 4c a9 01 8d 00 07 20 a0 9b a9 00 85 44 85 45 85 7a 85 7b 60"
+    },
+    {
+      "file": "bank00_cutscene2_return_caller_815D_8165.bin",
+      "cpu_address": "0x815D",
+      "cpu_end_exclusive": "0x8166",
+      "file_offset": "0x00016D",
+      "length": 9,
+      "sha256": "b8a1c1302e0f9c290d7fb6202291e84bafc5d0184e75a5eb32ab45ec9b1a236d",
+      "bank_mapping": "bank $00 in CPU window $8000",
+      "bytes": "a5 e0 29 7f 85 e0 4c 17 80"
+    },
+    {
+      "file": "bank00_fresh_match_entry_8017_801E.bin",
+      "cpu_address": "0x8017",
+      "cpu_end_exclusive": "0x801F",
+      "file_offset": "0x000027",
+      "length": 8,
+      "sha256": "59dd0892f96bec849bd29a0a9cbce56298383463b36a04bbd47a9a1f82b4d1c2",
+      "bank_mapping": "bank $00 in CPU window $8000",
+      "bytes": "a2 02 20 b9 c4 4c 03 a2"
+    },
+    {
+      "file": "fixed_mapper_bank_select_C4B9_C4C7.bin",
+      "cpu_address": "0xC4B9",
+      "cpu_end_exclusive": "0xC4C8",
+      "file_offset": "0x03C4C9",
+      "length": 15,
+      "sha256": "a87676276fdbfa7feeb8e1279d6e9cb220b436dd1edb788813801b2be1c48f12",
+      "bank_mapping": "fixed in CPU window $C000",
+      "bytes": "86 25 a9 07 05 22 85 23 8d 00 80 8e 01 80 60"
+    },
+    {
+      "file": "bank82_fresh_match_trampoline_A203_A205.bin",
+      "cpu_address": "0xA203",
+      "cpu_end_exclusive": "0xA206",
+      "file_offset": "0x004213",
+      "length": 3,
+      "sha256": "de965b3756cc66c3d63e12d7ac3ae0fb8ea0587d692a9c43fb58919cab462abd",
+      "bank_mapping": "bank $82 in CPU window $A000",
+      "bytes": "4c af a2"
+    },
+    {
+      "file": "bank82_fresh_match_setup_A2AF_A2E7.bin",
+      "cpu_address": "0xA2AF",
+      "cpu_end_exclusive": "0xA2E8",
+      "file_offset": "0x0042BF",
+      "length": 57,
+      "sha256": "cf3001b1d6b6413c2b69aa9c00b8383ccaa8a034cfd61ca1e6ebbfd97da03f45",
+      "bank_mapping": "bank $82 in CPU window $A000",
+      "bytes": "20 f0 99 20 a0 98 20 7f 9b a5 20 29 7f 8d 00 20 85 20 8d 00 e0 a9 00 a0 e8 99 19 ff c8 d0 fa a9 00 a0 5a 99 e0 ff c8 d0 fa a9 98 a2 02 a0 68 84 ec a0 04 20 06 aa 4c 57 c5"
+    },
+    {
+      "file": "bank82_zero_fill_AA06_AA1E.bin",
+      "cpu_address": "0xAA06",
+      "cpu_end_exclusive": "0xAA1F",
+      "file_offset": "0x004A16",
+      "length": 25,
+      "sha256": "b4087f492a7a3ffb3737c7a42fd1b7fe5cf82147eab7c80eddc331740b6c38fd",
+      "bank_mapping": "bank $82 in CPU window $A000",
+      "bytes": "84 ed e8 a0 00 48 a9 00 91 ec e6 ec d0 02 e6 ed 68 38 e9 01 d0 ef ca d0 ec"
+    },
+    {
+      "file": "fixed_scheduler_handoff_C557_C559.bin",
+      "cpu_address": "0xC557",
+      "cpu_end_exclusive": "0xC55A",
+      "file_offset": "0x03C567",
+      "length": 3,
+      "sha256": "1db275461fac8ba20e31cc6e9fe2941b8f41e31db43f7f6d1d44d594b19df6ca",
+      "bank_mapping": "fixed in CPU window $C000",
+      "bytes": "4c be c6"
+    }
+  ]
+}

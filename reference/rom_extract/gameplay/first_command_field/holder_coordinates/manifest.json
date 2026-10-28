@@ -1,0 +1,42 @@
+{
+  "schema": "ct2-first-command-holder-coordinate-copy-v1",
+  "resource_kind": "preserved supplied-ROM instruction bytes; no emulator capture data",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "bank_mapping": {
+    "fixed_bank_1f_cpu_c000_file_base": "0x03C010"
+  },
+  "coordinate_chain": [
+    "E0F6 calls E6EC during field setup; call return-address convention is checked only as trace validation.",
+    "E6EC reads the current holder slot from $0441 and calls $CD7C, which writes its record pointer to $0034/$0035 from the $CD89 table.",
+    "E6F2 loads Y=6 and reads ($34),Y into $0635; E6FA loads Y=8 and reads ($34),Y into $0637.",
+    "For fresh match-0 route context, the existing ROM position initializer derives these record fields from $DC87/$DCB3 and $CDC9. This resolver accepts an explicit holder slot and never selects it."
+  ],
+  "runtime_boundary": {
+    "holder_slot": "caller-owned source-derived live $0441 value; not derived by this helper",
+    "dynamic_movement": "not modeled; coordinates are from the match-0 initial formation records",
+    "callback_state": "$05CD/$05CE callback placement and the scheduling of $F0B5 remain separate caller-owned route state",
+    "captures_used_as_runtime_inputs": false
+  },
+  "entries": [
+    {
+      "path": "bank_1f_e0f6_coordinate_copy_call.bin",
+      "prg_bank": "$1F",
+      "cpu_address": "$E0F6",
+      "file_offset": "0x03E106",
+      "size_bytes": 3,
+      "sha256": "a755646aa4700379e0fbfdaf1fc58a9c63c250abe2a49c654a6cda3299b56392",
+      "raw_hex": "20 EC E6",
+      "source_role": "Fixed-bank callsite: JSR $E6EC from the first-command field setup path."
+    },
+    {
+      "path": "bank_1f_e6ec_holder_coordinate_copy.bin",
+      "prg_bank": "$1F",
+      "cpu_address": "$E6EC",
+      "file_offset": "0x03E6FC",
+      "size_bytes": 29,
+      "sha256": "3bf0cf8593e6eccf77d32044c666a39713134e8120a2e3e7deba3541bb6fbf8c",
+      "raw_hex": "AD 41 04 20 7C CD A0 06 B1 34 8D 35 06 AA A0 08 B1 34 8D 37 06 A8 20 E2 CD 8D FE 05 60",
+      "source_role": "Loads current holder index $0441, resolves record via $CD7C, copies record +6/+8 into $0635/$0637."
+    }
+  ]
+}
