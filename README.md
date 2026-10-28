@@ -20,7 +20,7 @@
 
 # Captain Tsubasa 2 Remake
 
-A fan-made remake of *Captain Tsubasa 2: Super Striker*, built with Godot for Windows, macOS, and Linux. The current build recreates the original opening and music, ending at the initial title screen with **KICK OFF** and **CONTINUE** visible. Match and story modes are not included in this build. Multilingual support is planned for a later stage of development.
+A Godot remake of *Captain Tsubasa 2: Super Striker* for Windows, macOS, and Linux. The current build recreates the original opening and music, ending at the initial title screen with **KICK OFF** and **CONTINUE** visible. Match and story modes are not included in this build. Multilingual support is planned for a later stage of development.
 
 The game runs without an external ROM or emulator. Project resources derived from the supplied ROM, along with their provenance, are documented under **reference/rom_extract/**.
 
