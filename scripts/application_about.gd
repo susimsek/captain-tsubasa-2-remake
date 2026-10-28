@@ -233,7 +233,7 @@ func _check_for_updates_in_background() -> void:
 		return
 	if _checking_for_updates or _update_state in ["downloading", "ready", "installing"]:
 		return
-	if not _get_update_permission_message().is_empty() and OS.get_name() != "Windows":
+	if not _get_update_permission_message().is_empty():
 		return
 	_interactive_update_check = false
 	_checking_for_updates = true
@@ -283,15 +283,52 @@ func _is_directory_writable(directory_path: String) -> bool:
 	return DirAccess.remove_absolute(probe_path) == OK
 
 
-func _get_update_permission_message() -> String:
-	if OS.get_name() == "Windows":
-		return ""
+func _get_update_permission_message(package_kind: String = "") -> String:
 	var target_directory := _get_update_target_path()
-	if target_directory.is_empty():
+	if OS.get_name() == "Windows":
+		var selected_package := package_kind
+		if selected_package.is_empty():
+			selected_package = "setup" if _windows_should_use_setup() else "archive"
+		if selected_package == "setup":
+			var per_user_directory := _get_windows_per_user_install_path()
+			if per_user_directory.is_empty() or not _is_directory_writable_or_nearest_existing(per_user_directory):
+				return "The per-user install folder can't be written to. Check your Windows account's folder permissions, then try again."
+		elif target_directory.is_empty():
+			return "The game installation could not be located. Reinstall the game, then try again."
+		elif not _is_directory_writable(target_directory):
+			return "This portable install folder can't be updated. Move the game to a folder you can write to, then try again."
+	elif target_directory.is_empty():
 		return "The game installation could not be located. Reinstall the game, then try again."
-	if not _is_directory_writable(target_directory):
+	elif not _is_directory_writable(target_directory):
 		return "This install folder can't be updated. Move the game to a folder you can write to, then try again."
+
+	if not _is_update_staging_path_writable():
+		return "The update folder can't be written to. Check your account's folder permissions, then try again."
 	return ""
+
+
+func _get_windows_per_user_install_path() -> String:
+	var local_app_data := OS.get_environment("LOCALAPPDATA").strip_edges()
+	if local_app_data.is_empty():
+		return ""
+	return local_app_data.path_join("Programs").path_join(APPLICATION_NAME)
+
+
+func _is_directory_writable_or_nearest_existing(directory_path: String) -> bool:
+	var candidate := directory_path.simplify_path()
+	while not candidate.is_empty():
+		if DirAccess.dir_exists_absolute(candidate):
+			return _is_directory_writable(candidate)
+		var parent := candidate.get_base_dir()
+		if parent == candidate:
+			break
+		candidate = parent
+	return false
+
+
+func _is_update_staging_path_writable() -> bool:
+	var update_directory := ProjectSettings.globalize_path("user://update_staging")
+	return _is_directory_writable_or_nearest_existing(update_directory)
 
 
 func _windows_should_use_setup() -> bool:
@@ -644,6 +681,10 @@ func _on_update_request_completed(result: int, response_code: int, _headers: Pac
 		if update_asset.is_empty():
 			_show_update_unavailable("A download package for this platform is not available yet.")
 			return
+		var permission_message := _get_update_permission_message(_update_package_kind)
+		if not permission_message.is_empty():
+			_show_update_unavailable(permission_message)
+			return
 		var digest := str(update_asset.get("digest", ""))
 		if not digest.begins_with("sha256:") or digest.length() != 71:
 			_show_update_unavailable("The update package cannot be verified right now. Try again later.")
@@ -748,9 +789,13 @@ func _find_platform_download_asset(release: Dictionary, latest_tag: String) -> D
 func _format_update_message(latest_version: String, current_version: String) -> String:
 	var message := "Version %s is available. You're using version %s." % [latest_version, current_version]
 	if _update_package_kind == "setup":
-		message += " It will install a copy in your user account."
-	if OS.get_name() == "macOS":
-		message += " After updating, macOS may ask you to approve opening the app."
+		message += " It will install in your Windows user account."
+	elif OS.get_name() == "macOS":
+		message += " It will update this app in place; macOS may ask you to approve opening it."
+	elif OS.get_name() == "Linux" and _is_running_as_appimage():
+		message += " It will replace this AppImage."
+	else:
+		message += " It will update this game folder."
 	return message
 
 
@@ -759,9 +804,17 @@ func _is_running_as_appimage() -> bool:
 
 
 func _start_update_download() -> void:
+	var permission_message := _get_update_permission_message(_update_package_kind)
+	if not permission_message.is_empty():
+		_show_update_unavailable(permission_message)
+		return
+
 	var update_directory := ProjectSettings.globalize_path("user://update_staging")
 	if DirAccess.make_dir_recursive_absolute(update_directory) != OK and not DirAccess.dir_exists_absolute(update_directory):
 		_show_update_error("A local folder for the update could not be created. Check folder permissions and try again.", "Download Could Not Start")
+		return
+	if not _is_directory_writable(update_directory):
+		_show_update_error("The update folder can't be written to. Check your account's folder permissions, then try again.", "Download Could Not Start")
 		return
 
 	_update_download_path = update_directory.path_join(_update_asset_name)
