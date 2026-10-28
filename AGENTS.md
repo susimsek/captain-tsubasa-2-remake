@@ -42,6 +42,13 @@ Runtime graphics, text, music, sound effects, and game data must derive from ver
 
 Follow the Godot skill and the project's existing architecture. For About/update UI or release workflow changes, also follow `.agents/skills/godot/references/desktop-ui-and-release.md`. Keep gameplay state and rules separate from input and presentation; use typed, focused scripts and named data instead of unexplained gameplay constants. Preserve pixel-art filtering and the current project structure unless a change has a clear purpose. Add dependencies only for a concrete need.
 
+## Documentation language
+
+Write all repository Markdown documentation in English. Preserve original
+non-English game strings and source titles only when they are evidence; explain
+their meaning and context in English. Do not add new Turkish prose to project
+documentation.
+
 ## Verification and quality
 
 - Do not add or run tests or validation commands unless the user requests verification.

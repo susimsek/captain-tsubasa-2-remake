@@ -1,55 +1,117 @@
-# Açılış yakalaması: gözlenen akış ve sınırlar
+# Opening Capture: Observed Flow and Limitations
 
-## Kaydın kapsamı
+## Capture scope
 
-- Kaynak oturum `reference/opening_capture/capture.log` içinde 2.400 emülatör karesi (yaklaşık 40 saniye) olarak kayıtlı; ekran görüntüsü karşılaştırma kopyaları `reference/opening_capture/frames_png/` altında.
-- `input_timeline.csv` kaydında yalnızca A düğmesi basışları var: kare 89, 239, 389, 539, 689, 839, 989, 1139, 1289, 1439, 1589, 1739, 1889, 2039, 2189 ve 2339. Her biri tek karelik; yön, B, Start ve Select basışı yok.
-- `emulator_ppu/index.csv` 759 değişen PPU durumunu listeliyor. Bunlar kare kare video değildir; her ham dosyada 8.192 bayt pattern-table, 4.128 bayt nametable/palet kaydı bulunur.
+- The source session in reference/opening_capture/capture.log contains 2,400 emulator frames (about 40 seconds). Screenshot comparison copies are under reference/opening_capture/frames_png/.
+- The input_timeline.csv recording contains only A-button presses: frames 89, 239, 389, 539, 689, 839, 989, 1139, 1289, 1439, 1589, 1739, 1889, 2039, 2189, and 2339. Each press lasts one frame. There are no direction, B, Start, or Select presses.
+- emulator_ppu/index.csv lists 759 changed PPU states. These are not frame-by-frame video; each raw file contains 8,192 bytes of pattern-table data and 4,128 bytes of nametable/palette data.
 
-## Seyrek PPU anlık görüntüsü zaman damgası
+## Sparse PPU snapshot timestamps
 
-`reference/opening_reference_capture/ppu_index.csv` değişen PPU bayt durumlarını indeksler; yakalama betiği bu baytları her emülatör karesinden sonra okur ve yalnızca önceki okumadan farklıysa dosya yazar. Bu nedenle bir kare için kullanılan `ppu_snapshot_frame`, ham dosyanın son değiştiği kareyi gösterir; daha sonraki karede yeni dosya bulunmaması tek başına baytların eksik veya eski olduğu anlamına gelmez. Paket metadata'sındaki `ppu_byte_state_valid_from_frame`, `ppu_byte_state_valid_through_frame` ve `ppu_byte_state_applicable_at_capture_frame` alanları bu sabit durum aralığını belirtir.
+reference/opening_reference_capture/ppu_index.csv indexes changed PPU byte
+states. The capture script reads these bytes after every emulator frame and
+writes a file only when the state differs from the previous reading.
+Consequently, ppu_snapshot_frame for a frame identifies the last frame on which
+the raw file changed. The absence of a new file on a later frame does not by
+itself mean the bytes are missing or stale. The package metadata fields
+ppu_byte_state_valid_from_frame, ppu_byte_state_valid_through_frame, and
+ppu_byte_state_applicable_at_capture_frame identify the interval during which
+that unchanged state applies.
 
-Bu aralık yalnızca örneklenen pattern/nametable/palet baytlarının uygulanabilirliğini doğrular. PPU yazımlarının kare içindeki raster zamanını, CHR bank geçişlerini, `$2002` latch durumunu veya fiziksel OAM'ın ekrana kopyalanma anını doğrulamaz. Bunlar çözülmeden kare kompozisyonu piksel-doğru kabul edilmemelidir. `ppu_snapshot_timestamp_mismatches` metriği yalnızca hedef kare ile son PPU dosyasının zaman damgasının farklı olduğu kayıtları sayar; `ppu_byte_state_inapplicable_frames` ise aralığa bağlanamayan kaynakları sayar.
+This interval validates only the applicability of the sampled
+pattern/nametable/palette bytes. It does not establish the raster timing of PPU
+writes within a frame, CHR bank changes, the $2002 latch state, or when physical
+OAM is copied for display. Until those are resolved, frame composition must not
+be treated as pixel-accurate. The ppu_snapshot_timestamp_mismatches metric
+counts records where the target-frame timestamp differs from the last PPU
+file's timestamp; ppu_byte_state_inapplicable_frames counts sources that
+cannot be assigned to a valid interval.
 
-OAM tarafında paketlenen kaynak RAM karesi hedef karenin bir öncesidir (`ram_source_frame_offset: -1`). Bu dosya OAM gölge belleği baytlarını verir; `oam_display_timing_verified_at_capture_frame: false` alanı, bunların ekranda kullanılan fiziksel OAM ile zamanlama bakımından eşitlenmediğini açıkça belirtir.
+For OAM, the packaged source RAM frame is one frame earlier than the target
+frame (ram_source_frame_offset: -1). The file provides OAM shadow-memory bytes;
+oam_display_timing_verified_at_capture_frame: false explicitly records that
+they have not been timing-aligned with the physical OAM used for display.
 
-## Gözlenen ekranlar
+## Observed screens
 
-Kare sınırları, `screen_timeline.csv` içindeki değişen ekran örnekleri ve PNG incelemesine göredir; aradaki karelerde ekran sabit kalabilir veya örnekleme aralığındaki animasyon kareleri atlanmış olabilir.
+Frame boundaries follow the changed screen samples listed in
+screen_timeline.csv and PNG inspection. The screen may remain unchanged between
+samples, or animation frames may be skipped by the sampling interval.
 
-| Yaklaşık kare aralığı | Görünen içerik | Kanıt / not |
+| Approximate frame range | Visible content | Evidence / note |
 |---|---|---|
-| 0–139 | Futbol sahası animasyonu ve alt diyalog kutusu; kare 0'da metin “Kosuu...” diye başlıyor | Kare 0, `FCEU.poweron()` öncesinden kalan eski görüntü olabilir; soğuk açılış kanıtı sayılmaz. |
-| 140–379 | Siyah zemin üzerinde yanıp sönen `TECMO THEATER` logosu | Kare 140'da FCEUX “Power on” ekran bildirimi de görünür; oyun grafiği değildir. |
-| 380–809 | Saha çizgileri ve top süren/vuran oyuncu; alt diyalog kutusundaki yazı kademeli beliriyor | Örnek kare 690'da birden fazla diyalog satırı görünür. |
-| 810–1025 | Siyah geçiş; ardından mavi portre alanı ve oyuncu bilgi yazıları | Kare 880 civarında `Oozora Tsubasa / Brezilya / Sao Paulo FC MF` okunuyor. |
-| 1026–1547 | Hyuga'nın topa vurma animasyonu, diyalog kutusu ve kademeli yazı | Örnek karelerde `Hyuga-kun'dan Ani bir Tiger Tackle` metni görülüyor. |
-| 1548–1779 | Hyuga portresi ve bilgi kartı, siyah fon | Kare 1610'da `Hyuga Kojiro` ve `Toho ... CF` okunuyor. |
-| 1780–2117 | Şut animasyonu, renkli arka plan geçişleri ve alt diyalog kutusu | Örnek karelerde “İste/altın kilidin bitirici Twin şutu...” metni kademeli ilerliyor. |
-| 2118–2399 | Taro Misaki portresi/bilgi kartına geçiş; oturum burada biter | `Taro Misaki / Nankatsu Lisesi MF` okunuyor. Başlık ya da seçim menüsü görünmüyor. |
+| 0–139 | Soccer-field animation and a dialogue box at the bottom; the text begins with “Kosuu...” on frame 0 | Frame 0 may be a stale image from before FCEU.poweron(); it is not evidence of a cold start. |
+| 140–379 | Flashing TECMO THEATER logo on a black background | The FCEUX “Power on” on-screen message also appears on frame 140; it is not game graphics. |
+| 380–809 | Field lines and a player dribbling/kicking the ball; dialogue text appears gradually in the lower box | Multiple dialogue lines are visible in the sample at frame 690. |
+| 810–1025 | Black transition, followed by a blue portrait area and player information text | Around frame 880, “Oozora Tsubasa / Brazil / Sao Paulo FC MF” is readable. |
+| 1026–1547 | Hyuga kicking animation, dialogue box, and gradually revealed text | Sample frames show a dialogue line about Hyuga-kun and a sudden Tiger Tackle. |
+| 1548–1779 | Hyuga portrait and information card on a black background | “Hyuga Kojiro” and “Toho ... CF” are readable at frame 1610. |
+| 1780–2117 | Shot animation, colored background transitions, and lower dialogue box | A dialogue line about the finishing Twin Shot appears progressively in the samples. |
+| 2118–2399 | Transition to Taro Misaki's portrait/information card; the session ends here | “Taro Misaki / Nankatsu High School MF” is readable. The title or selection menu does not appear. |
 
-## Sonuç
+## Conclusion
 
-Bu kayıtta açılış animasyonu ve devamındaki karakter/diyalog sekansı gözleniyor; **KICKOFF / CONTINUE başlık menüsü veya takım/seçim ekranı yakalanmamış**. A basışları her 150 karede bir otomatik verildiğinden, geçişlerin kullanıcı girdisine mi yoksa oyunun kendi zamanlamasına mı bağlı olduğu bu kayıttan kesinleştirilemez. Kare 0'ın önceki emülatör görüntüsü olma ihtimali ve FCEUX bildirim katmanı nedeniyle kayıt, temiz güç açılışının piksel-doğru referansı değildir.
+This capture shows the opening animation followed by character and dialogue
+sequences. It does **not** capture the KICK OFF / CONTINUE title menu or a
+team/selection screen. Because A is pressed automatically every 150 frames,
+this recording cannot establish whether transitions depend on user input or
+the game's own timing. The possible stale image on frame 0 and the FCEUX
+on-screen display mean this is not a pixel-accurate clean-power-on reference.
 
-Godot açılış/başlık/hedef seçim ekranlarının kesin akışını çıkarmak için gereken yeni referans: FCEUX'te ROM'u gerçekten güç döngüsünden başlatan, ilk görüntü karesi sıfırlama sonrasında alınan, tuşlar zaman damgasıyla elle/denetimli kaydedilen bir oturum; başlık menüsüne gelene kadar A'ya otomatik basılmamalı. Mevcut PNG'ler yalnızca gözlem malzemesidir; orijinal varlık yerine kullanılmamalıdır.
+To determine the exact flow for the Godot opening/title/target-selection
+screens, make a new FCEUX recording that genuinely power-cycles the ROM, starts
+capturing after reset, and records timestamped manual or controlled input. Do
+not press A automatically before reaching the title menu. Existing PNGs are
+observation material only; they must not replace original assets.
 
-## OAM gölge belleği değerlendirmesi
+## OAM shadow-memory assessment
 
-`ram_states/ram_NNNNN.bin` örnekleri CPU RAM `$0000–$07FF` alanıdır. İçlerindeki `$0200–$02FF` aralığı, NES OAM'ın beklenen 64 adet 4 baytlık (`Y, tile, attribute, X`) düzeniyle güçlü biçimde uyuşuyor: kayıtlarda çoğunlukla 39–64 görünür giriş var, tile/attribute değerleri sprite verisi gibi kümeleniyor ve değişen X/Y koordinatları görüntüdeki animasyonla eşleşiyor. Kare 803 civarında sahadaki oyuncu sprite'ları; 880 civarında Tsubasa portresi; 1290 civarında Hyuga vuruşu; 1610 ve 2190 civarında karakter bilgi portreleri buna örnek doğrulamalardır.
+The ram_states/ram_NNNNN.bin samples cover CPU RAM $0000–$07FF. Their
+$0200–$02FF region strongly resembles the NES OAM layout of 64 four-byte
+entries (Y, tile, attribute, X): samples usually contain 39–64 visible entries,
+tile/attribute values cluster like sprite data, and changing X/Y coordinates
+match the animation in the image. Examples include field-player sprites around
+frame 803, Tsubasa's portrait around frame 880, Hyuga's kick around frame 1290,
+and character portraits around frames 1610 and 2190.
 
-**Sonuç:** Emülatör yakalamasından OAM gölge belleğinin yeniden kurulması büyük olasılıkla mümkün; kare bazlı `$0200–$02FF` dökümleri sprite sıralaması, konum, tile ve attribute alanlarını veriyor. Bu, PPU'nun fiziksel OAM'ına doğrudan alınmış dump olarak henüz doğrulanmadı. Kesin doğrulama için aynı karelerde FCEUX OAM/Sprite Viewer veya emülatörün OAM belleği görünümüyle karşılaştırılmalı; eşlenen CHR pattern verisi ve palet de birlikte kullanılmalı. Ham RAM kaydı tek başına tam sprite görüntüsü değildir.
+**Conclusion:** Reconstructing OAM shadow memory from emulator captures is
+likely feasible. The per-frame $0200–$02FF dumps provide sprite order, position,
+tile, and attribute fields. They have not yet been verified as direct dumps of
+the PPU's physical OAM. For confirmation, compare the same frames with the
+FCEUX OAM/Sprite Viewer or the emulator's OAM memory view, and use the mapped
+CHR pattern data and palette as well. A raw RAM capture is not a complete
+sprite image by itself.
 
-İnceleme, `ram_states/ram_*.bin` içindeki 2.397 adet 2 KiB kayda dayanıyor (aralık 0–2399); `$0200–$02FF` sayfasında 318 farklı içerik görüldü. Bu inceleme sırasında ortak `ram_state_index.csv` yeni bir yakalama tarafından yeniden oluşturulmaya başlanmış ve yalnızca başlık satırına düşmüştü; bu nedenle kare eşlemesi dosya adlarındaki `NNNNN` değerinden yapıldı. Önceki yakalamanın index dosyası şu anda mevcut değil.
+This inspection covers 2,397 2 KiB records in ram_states/ram_*.bin (frames
+0–2399); 318 distinct contents were observed in page $0200–$02FF. During this
+inspection, the shared ram_state_index.csv had begun being regenerated by a
+new capture and contained only its header. Frame mapping was therefore taken
+from the NNNNN filenames. The previous capture's index file is not currently
+available.
 
-## Güncel intro → başlık gözlemi
+## Current intro-to-title observations
 
-- İki ayrı temiz güç döngüsü yakalaması vardır; kare numaraları her yakalamanın kendi başlangıcına göredir. `reference/cold_start_title_input_probe/` içindeki otomatik probda `Start` frame 4700–4711'de tutulur ve başlık frame 4731'de görünür. `reference/opening_reference_capture/input_timeline.csv` içindeki yakalamada `Start` frame 4661–4667'de tutulur; Godot manifestindeki geçiş bu girişten sonra bir intro karesi ve 30 siyah kare oynatıp menüyü frame 4692'de gösterir. Bu kare sayılarını farklı yakalamalar arasında birbirinin yerine kullanma.
-- Başlık ilk açıldığında seçim işareti `KICK OFF` yanındadır. 12 karelik `A` veya `B` denemeleri ekranı değiştirmedi; `Start` onayından sonra yaklaşık 15 kare içinde siyah geçiş başlar ve sonraki hikâye akışına geçilir.
-- KICK OFF'tan sonra uzun hikâye/diyalog akışı başlıyor. Bu milestone için akış başlık menüsünde biter; KICK OFF veya CONTINUE onaylanmaz ve sonraki ekranlar kapsam dışıdır.
-- Kayıt başlık karesinde PPU/RAM'ı ve girişleri eşlemek için kullanılır; PNG/GD/WAV dosyaları Godot runtime asset'i değildir.
+- Two clean power-cycle captures are available, and each uses its own frame
+  origin. In the automated probe under reference/cold_start_title_input_probe/,
+  Start is held on frames 4700–4711 and the title appears on frame 4731. In the
+  capture under reference/opening_reference_capture/input_timeline.csv, Start
+  is held on frames 4661–4667; the transition in the Godot manifest plays one
+  intro frame followed by 30 black frames, then shows the menu on frame 4692.
+  Do not treat frame numbers from these separate captures as interchangeable.
+- The selection marker is beside KICK OFF when the title first appears.
+  Twelve-frame A or B trials did not change the screen. About 15 frames after
+  confirming with Start, the black transition begins and the next story flow
+  follows.
+- A long story/dialogue sequence begins after KICK OFF. This milestone ends at
+  the title menu; neither KICK OFF nor CONTINUE is confirmed, and later screens
+  are out of scope.
+- The recording is useful for aligning PPU/RAM state and input on the title
+  frame. PNG/GD/WAV files are not Godot runtime assets.
 
-## Eksik PPU register/mapper geçmişi
+## Missing PPU register/mapper history
 
-Mevcut PPU snapshot'ları kare sonu belleği içerir, fakat kare içinde yazılan `PPUCTRL`, `PPUSCROLL` ve MMC3 CHR bank kayıtlarının zamanını içermez. `tools/capture_ppu_register_writes.lua` bu yazımları FCEUX'te ayrı CSV olarak yakalamak için eklendi. `cpu_cycles` sütunu kare içi raster etkilerini çözümlemeye yardımcı olur; tek başına tamamlanmış PPU raster kaydı sayılmaz.
+Current PPU snapshots contain end-of-frame memory, but not the timing of
+in-frame PPUCTRL, PPUSCROLL, or MMC3 CHR-bank register writes. The
+tools/capture_ppu_register_writes.lua tool was added to capture these writes in
+a separate FCEUX CSV. Its cpu_cycles column helps resolve in-frame raster
+effects, but it is not a complete PPU raster recording by itself.

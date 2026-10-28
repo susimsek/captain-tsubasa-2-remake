@@ -1,83 +1,293 @@
-# Açılış dilimi: ROM kaynakları ve çıkarım planı
+# Opening Slice: ROM Sources and Extraction Plan
 
-## Hedef
+## Goal
 
-Kullanıcının sağladığı ROM'daki orijinal grafik ve ses verilerini çözümleyip Godot'da soğuk açılıştan intro ve `KICK OFF` / `CONTINUE` seçeneklerinin göründüğü başlık menüsüne kadar yeniden kurmak. Başlık menüsünde durulur; bu milestone'da seçenekler onaylanıp hikâye veya devam akışına girilmez. Godot sürümü ROM veya emülatör gerektirmemelidir. ROM'dan çıkarılan/çözümlenen kaynaklar runtime'a dahil edilir; FCEUX ekran görüntüsü ve WAV kayıtları yalnız gözlem ve karşılaştırma içindir.
+Decode the original graphics and audio in the user-supplied ROM, then recreate
+the Godot 4 sequence from cold start through the title menu showing KICK OFF
+and CONTINUE. Stop at the title menu; this milestone must not confirm either
+option or enter the story/continue flow. The Godot build must not require the
+ROM or an emulator. ROM-extracted/decoded resources are included at runtime;
+FCEUX screenshots and WAV recordings are for observation and comparison only.
 
-“Birebir” hedefi için yalnızca aynı tile ve müzik melodisini bulmak yetmez: kare zamanlaması, tilemap, palet, sprite/OAM, kaydırma/PPU etkileri ve APU sürücüsünün sesi de eşlenmelidir. Her doğrulanmayan ayrıntı açıkça not edilir.
+Matching the original requires more than finding the same tiles and melody.
+Frame timing, tilemaps, palettes, sprites/OAM, scrolling/PPU effects, and APU
+driver audio must also be matched. Document every detail that has not been
+verified.
 
-## ROM biçimi
+## ROM format
 
-- Dosya: `Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes`
-- Biçim: iNES, mapper 4 (MMC3), trainer yok.
-- PRG: 256 KiB, dosya aralığı `0x10`–`0x4000F`.
-- CHR: 128 KiB, dosya aralığı `0x40010`–`0x6000F`.
-- CHR: 8.192 adet 8×8, 2bpp tile olarak çözülebilir.
-- Değiştirilmeden çıkarılan CHR: `reference/rom_extract/chr_rom.2bpp`.
-- Çıkarım/asset metadata'sına ROM SHA-256, ROM ofseti, bank/tile kimliği, decoder sürümü ve palet varsayımları eklenmeli.
+- File: Captain Tsubasa 2-Super Striker (By TsubasaTR.Net).nes
+- Format: iNES, mapper 4 (MMC3), no trainer.
+- PRG: 256 KiB, file range 0x10–0x4000F.
+- CHR: 128 KiB, file range 0x40010–0x6000F.
+- CHR can be decoded as 8,192 8×8, 2bpp tiles.
+- Unmodified CHR extraction: reference/rom_extract/chr_rom.2bpp.
+- Extraction/asset metadata should record the ROM SHA-256, file offset,
+  bank/tile ID, decoder version, and palette assumptions.
 
-### Başlık karesi için ilk doğrulanmış grafik çıkarımı
+### First verified graphics extraction for the title frame
 
-**Güncel runtime:** `scenes/title_menu.tscn`, `scripts/title_rom_background_renderer.gd` ve `scripts/title_rom_handoff_queue.gd` kullanır. Start'tan sonra `$17` ROM paketleri kaynak sırasıyla dokuzlu gruplar halinde sahnelenir, sonraki modellenmiş karede PPU belleğine commit edilir; ROM paleti ve başlangıç `KICK OFF` imleci aynı kuyruğa girer. Başlık ROM CHR, palet ve belgelenmiş PPU yerleşiminden çizilir; statik PNG dokuları runtime'da kullanılmaz. Sessiz Godot ana-sahne koşusunda 30 siyah kare ve 31. karede açılan başlık doğrulandı; frame 4692 `KICK OFF` ve frame 4694 `CONTINUE` görüntüleri karşılık gelen FCEUX kareleriyle 61.440/61.440 RGB pikselde eşleşti. Kuyruk grup/frame sınırları canlı yakalama zamanlamasına çapalıdır; CPU-cycle/NMI alt-kare fazı ve ilk görünür pikselin dot zamanı açık kalır. Seçim `KICK OFF` / `CONTINUE` arasında ROM-türevli PPU belleğinde güncellenir, onaylanmaz.
+**Current runtime:** Uses scenes/title_menu.tscn,
+scripts/title_rom_background_renderer.gd, and
+scripts/title_rom_handoff_queue.gd. After Start, the $17 ROM packets are staged
+in source order in groups of nine and committed to PPU memory on the next
+modeled frame; the ROM palette and initial KICK OFF cursor enter the same
+queue. The title is drawn from ROM CHR, palette, and documented PPU layout;
+static PNG textures are not used at runtime. A silent Godot main-scene run
+verified 30 black frames followed by the title on frame 31. The frame 4692
+KICK OFF and frame 4694 CONTINUE images matched their corresponding FCEUX
+frames at 61,440/61,440 RGB pixels. Queue group/frame boundaries are anchored
+to live capture timing; CPU-cycle/NMI subframe phase and the first visible
+pixel's dot time remain unresolved. The ROM-derived PPU memory changes the
+selection between KICK OFF and CONTINUE; neither option is confirmed.
 
-Aşağıdaki PNG kayıtları, görüntünün ROM baytlarından türetilebildiğini ve endpoint yerleşimini doğrulamak için kullanılan önceki/karşılaştırma çıktılarıdır; güncel title runtime kaynağı değillerdir.
+The PNG records below are earlier/comparison outputs used to verify that the
+image can be derived from ROM bytes and to check endpoint layout. They are not
+the current title runtime sources.
 
-- `assets/opening/title_menu.png`, `render_rom_frame.py` ile doğrudan ROM CHR baytlarından çizildi. PPU/RAM frame 4692 yalnız tilemap/attribute, PPU renk indeksleri ve OAM yerleşimini eşledi; FCEUX screenshot/Pixels PNG üretim adımına verilmedi.
-- Başlık PPU'sundaki sekiz 1 KiB pattern slotu ROM CHR bankaları `[124, 125, 126, 127, 124, 125, 126, 127]` ile bayt bayt eşleşiyor. ROM SHA-256 ve eşleme `assets/opening/title_menu.json` metadata dosyasında kayıtlı.
-- RGB renk karşılığı ROM içinden gelmez. Başlık PNG'si FCEUX 2.7.0'ın derlenmiş varsayılan paletinden üretildi (`reference/palettes/FCEUX_internal_default_2.7.0_rgb.pal`); kaynağı FCEUX `fceux-2.7.0` etiketi altındaki `src/palettes/palettes.h` palet dizisi ve `P64(x)=((x<<2)|((x>>4)&3))` dönüşümüdür. Eski `FCEUX.pal` dosyası aktif derlenmiş varsayılan palet değildir.
-- Başlık görüntüsü Godot'ta y=1'de kalır. Kaynak kare 4692'deki eksik y=0 satırı ayrı `assets/opening/title_menu_scanline0.png` kaynağı olarak çizilir ve `KICK OFF` ile `CONTINUE` durumlarının ikisine de ortak uygulanır. Bu 256×1 PNG, `tools/render_title_menu_scanline0.py` ile ROM CHR bankaları `[124,125,126,127,124,125,126,127]`, kare 4692 PPU nametable/attribute/palette kaydı, CPU RAM/OAM yerleşimi ve belgelenmiş FCEUX RGB paletinden üretildi. ROM SHA-256, PPU/RAM hash'leri, frame sayaçları, palet yolu ve çözümleme yöntemi `assets/opening/title_menu_scanline0.json` içindedir. Görüntü alıntısı üretim girdisi değildir.
-- `reference/opening_timing_capture_20261024_125300/` için yerel, sessiz FCEUX `--newppu 1` yakalaması frame 4692'deki PPU scanline/dot koordinatlarını kaydeder. `$2005` dikey kaydırması `$FF` olduğundan loopy `v` ilk görünür satıra coarseY=31/fineY=7 ile girer. İlk satırdaki tile kodları nametable `$3E0–$3FF` içindeki attribute baytlarından alınır; önceki line renderer bunu normal satıra sardığı için 178 pikseli kaçırıyordu. Yeni ROM-derived satır FCEUX referansına 256/256 RGB pikselle eşleşti. Satır eklendikten sonra `title_menu.png` + y=1 yerleşimi + scanline y=0 bileşimi `reference/opening_reference_capture/screens/frame_004692.gd` ile 61.440/61.440 RGB pikselde eşleşiyor. Bu doğrulama başlık endpoint karesine aittir; açılışın diğer kareleri için birebirlik anlamına gelmez. Tanı planı `reference/diagnostics/timing_capture_004692_ppu_plan.json`, ROM-derived kompozit önizlemesi `reference/diagnostics/timing_capture_004692_ppu.png` altındadır; yakalama ve tanı araçları runtime'a eklenmez. Intro'nun hareketli sahneleri için doğru raster/banka durumu hâlâ çözümlenmedi.
-`reference/diagnostics/title_godot_verification_20261024/comparison.json` bu güncel Godot karşılaştırmasını kaydeder. Godot görüntüleri runtime'daki ROM kaynaklı texture'ların çıktısıdır; `.gd` emulator kaydı yalnız doğrulama için okundu.
+- assets/opening/title_menu.png was drawn directly from ROM CHR bytes with
+  render_rom_frame.py. PPU/RAM frame 4692 was used only to identify the tilemap,
+  attributes, PPU color indices, and OAM layout; FCEUX screenshot/pixel PNGs
+  were not supplied to the image-generation step.
+- The eight 1 KiB pattern slots in title PPU memory match ROM CHR banks
+  [124, 125, 126, 127, 124, 125, 126, 127] byte for byte. The ROM SHA-256 and
+  mapping are recorded in assets/opening/title_menu.json.
+- RGB color values do not come from the ROM. The title PNG was generated with
+  the compiled default palette from FCEUX 2.7.0
+  (reference/palettes/FCEUX_internal_default_2.7.0_rgb.pal). The source is the
+  palette array in src/palettes/palettes.h under the FCEUX fceux-2.7.0 tag and
+  the conversion P64(x)=((x<<2)|((x>>4)&3)). The old FCEUX.pal file is not the
+  active compiled default palette.
+- The title image remains at y=1 in Godot. The missing y=0 row in source frame
+  4692 is drawn as assets/opening/title_menu_scanline0.png and shared by both
+  KICK OFF and CONTINUE states. This 256×1 PNG was generated by
+  tools/render_title_menu_scanline0.py from ROM CHR banks
+  [124,125,126,127,124,125,126,127], frame-4692 PPU
+  nametable/attribute/palette data, CPU RAM/OAM layout, and the documented
+  FCEUX RGB palette. The ROM SHA-256, PPU/RAM hashes, frame counters, palette
+  path, and decoding method are in assets/opening/title_menu_scanline0.json.
+  Screenshot pixels were not generation inputs.
+- The local, silent FCEUX --newppu 1 capture under
+  reference/opening_timing_capture_20261024_125300/ records PPU scanline/dot
+  coordinates at frame 4692. Because the $2005 vertical scroll is $FF, loopy v
+  enters the first visible line with coarseY=31/fineY=7. Tile codes on that
+  line come from attribute bytes at nametable $3E0–$3FF; the previous line
+  renderer wrapped this into a normal line and missed 178 pixels. The new
+  ROM-derived row matches the FCEUX reference at 256/256 RGB pixels. With the
+  row added, title_menu.png at y=1 plus scanline y=0 matches
+  reference/opening_reference_capture/screens/frame_004692.gd at
+  61,440/61,440 RGB pixels. This verifies the title endpoint frame only; it
+  does not establish a perfect match for the rest of the opening. The
+  diagnostic plan is reference/diagnostics/timing_capture_004692_ppu_plan.json,
+  and the ROM-derived composite preview is
+  reference/diagnostics/timing_capture_004692_ppu.png. Capture and diagnostic
+  tools are not runtime dependencies. Correct raster/bank state for moving
+  intro scenes remains unresolved.
 
-### Intro PPU zamanlama tanısı
+reference/diagnostics/title_godot_verification_20261024/comparison.json records
+the current Godot comparison. Godot images are outputs from ROM-derived runtime
+textures; the .gd emulator recording was read only for validation.
 
-#### Soğuk açılış logo görünümü (kare 13–25)
+### Intro PPU timing diagnostics
 
-Yeni sessiz güç-açılış yakalamasında kare sonu paleti 0–8'de `$00`, 9–12'de siyah `$0F`, kare 13'te ise ilk kez renkli indeksler içeriyor. Bu yüzden Godot manifesti artık 0–12 için siyahı, 13–25 için ROM CHR + kareye özgü PPU/RAM snapshot'larından üretilen 13 ayrı geçiş karesini gösteriyor; ardından mevcut kare 26'dan devam ediyor. Görseller FCEUX ekran piksellerinden üretilmedi.
+#### Cold-start logo appearance (frames 13–25)
 
-13–25 adaylarında kare 14 için başka yakalamada doğrulanmış iki bantlı raster/banka planı kullanıldı. Frame-14 PPU/nametable/palette/OAM kaynak durumu yeni yakalamadaki aynı kareyle byte-identical; bu doğrulama kare 13–25'in tüm scanline/banka zamanlamasının aynı olduğunu kanıtlamaz. Yeni `assets/opening/intro/ppu_timing/frame_000013.png`–`frame_000025.png` dosyalarının her `.json` sidecar'ı ROM hash'ini, PPU/RAM snapshot'ını, dış RGB paletini ve bu plan varsayımını kaydeder. Artık kaynak frame 13 Godot/FCEUX ekran karşılaştırmasıyla doğrulandı; ilk logo pikseli `(79,77)` bu karede görünür. Kare içindeki kesin dot/scanline başlangıç kenarı ve kare 13–25 boyunca her raster banka geçişi hâlâ çözülmedi. Bu yüzden `fidelity_verified` ve `complete` kapalı kalır.
+In a new silent power-on capture, the end-of-frame palette is $00 on frames
+0–8, black $0F on frames 9–12, and first contains color indices on frame 13.
+The Godot manifest therefore now shows black on frames 0–12, then 13 separate
+transition frames generated from ROM CHR and per-frame PPU/RAM snapshots for
+frames 13–25, before continuing from the existing frame 26. The images were
+not generated from FCEUX screen pixels.
 
-24 Ekim'de ana sahneye bağlı kaynak-komut sunucusu sessiz Godot'ta kare 13, 14 ve 26'ya kadar elle ilerletilip kendi ROM-derived arka plan/sprite texture'larından karşılaştırma görüntüsü oluşturdu. Bu kareler FCEUX `.gd` referansıyla FCEUX'ün “Power on” OSD bölgesi `(x=2,y=212,w=45,h=9)` dışında her pikselde eşleşti; OSD dışı 61.035 pikselin tamamı aynı. Godot çıktıları ve kaynak/hash metaverisi `reference/diagnostics/opening_godot_verification_20261024/` altında. Aynı yöntemle kare 380/382/394'teki saha-koşucu çıktısı o aşamada yalnız sırasıyla 84.45%, 83.94% ve 82.91% tam RGB eşleşmesi verdi. Logo karesi doğrulandı; saha/koşucu rasteri ve sprite yerleşimi belirgin açık farktır. Bu seçili kare testleri tüm giriş/intro akışını veya ses özdeşliğini doğrulamaz.
+The frame-14 candidates for frames 13–25 use a two-band raster/bank plan
+verified in another capture. Frame-14 PPU/nametable/palette/OAM source state is
+byte-identical to the same frame in the new capture; this does not prove that
+all scanline/bank timing is identical across frames 13–25. Each JSON sidecar
+for assets/opening/intro/ppu_timing/frame_000013.png through
+frame_000025.png records the ROM hash, PPU/RAM snapshot, external RGB palette,
+and plan assumption. Source frame 13 has now been verified by a
+Godot/FCEUX screen comparison; the first logo pixel appears at (79,77) on that
+frame. The exact in-frame dot/scanline onset and every raster bank change
+across frames 13–25 are still unresolved. Therefore fidelity_verified and
+complete remain false.
 
-Sonraki 24 Ekim raster entegrasyonunda ROM `$BF5F` preset'i ve `$AADF/$AAE0` delta verisiyle `$78–$8D` scroll-event tablosu üretilip ana çiziciye bağlandı. Source frame 378–400 arası tablo 23/23 karede FCEUX RAM snapshot'ıyla bayt bayt eşleşti. Aynı üç Godot/FCEUX kare karşılaştırması frame 380/382/394'te sırasıyla 87.77%, 86.08% ve 83.54% RGB exactness verdi. Ayrı OAM denetimi ROM `$6E` frame descriptor'larını RAM OAM gölgesiyle 42/42, 41/41 ve 42/42 kayıtta; `$D310` sprite palette'ini de PPU palette byte'larıyla eşleştirdi. Negatif-X gizli sprite kuralının ROM kodu henüz bulunmadı. Scanline 134 R0/R1 yazılarından sonraki ilk CHR okumaları FCEUX fetch zamanlamasına göre hesaplandı; frame 380 R1 yazısından sonra dot 196/198, yaklaşık x=208 tahmini çıktı, ancak ilk etkilenen piksel doğrudan ölçülmedi. Görsel fark hâlâ açık. Sonuçlar `reference/diagnostics/raster_runtime_compare_1792867924/` ve `reference/diagnostics/field_runner_oam_palette_fetch_audit_20261024.md` altında; ayrıntılı raster izi `reference/rom_extract/intro/field_runner_chr_raster_split_trace.md` içindedir.
+On October 24, a source-command presenter connected to the main scene was
+manually advanced in silent Godot through frames 13, 14, and 26 to produce
+comparison images from its own ROM-derived background/sprite textures. These
+frames matched every pixel of the FCEUX .gd reference outside FCEUX's “Power
+on” OSD region (x=2,y=212,w=45,h=9); all 61,035 pixels outside the OSD matched.
+Godot outputs and source/hash metadata are under
+reference/diagnostics/opening_godot_verification_20261024/. With the same
+method, the field-runner output at frames 380/382/394 then had exact RGB
+matches of 84.45%, 83.94%, and 82.91%, respectively. The logo frame was
+verified; field/runner raster and sprite placement remained major gaps. These
+selected-frame tests do not verify the entire input/opening flow or audio
+identity.
 
-Tanı yakalamasındaki PPU scanline/dot konumlarıyla ilk 14 kare incelendikten sonra, `tools/diagnostics/render_loopy_event_frame_poc.py` ve toplu karşılaştırma aracı `tools/diagnostics/batch_render_loopy_intro.py` 928 gözlenebilir intro karesinde denendi. Aday çizici tüm karelerde ortalama %96,73; mevcut runtime PNG'leri aynı karelerde %94,50 RGB eşleşmesi verdi. `reference/diagnostics/loopy_event_full_intro_20261024_125300/best_per_frame/` altındaki inceleme paketi kare başına daha iyi kaynağı seçerek ortalamayı %97,44'e çıkardı; 779 aday kare, 149 mevcut kare seçildi, regresyon yok. Bu seçimde 91 kaynak sınırı vardı; kaynak değiştiren 91 geçişin 73'ünde ardışık kare farkı mevcut runtime'dan kötü ve tamamı 380–809 saha/koşucu sahnesindeydi. Bu nedenle kare başına hibrit runtime'a alınmadı. 380–808 saha-koşucusu sahnesi için aynı FCEUX çekirdeğinde, aynı sessiz input replay sırasında ekranlar ve PPU olayları birlikte yakalandı. `tools/diagnostics/experiment_loopy_cycle_order.py`, cycle sırasını koruyup dot sayaç wrap durumlarını normalize ederek bu 198 runtime karesini ROM CHR/PPU/RAM verilerinden yeniden çiziyor. Runtime PNG’lerine aktarılan seçim aynı çekirdek referansında ortalama %96,81 RGB eşleşti; eski seçim %91,51 idi ve karşılaştırılan 198 karenin tamamında yeni seçim daha iyi çıktı. Alt diyalog bandı eşleşmesi %93,01. 197 örneklenmiş kare aralığındaki delta eşleşmesi %99,84’e çıktı (eski seçim %98,25); yalnız 530→532 çiftinde çok küçük bir düşüş var. FCEUX ekran görüntüleri yalnız karşılaştırma içindir; üretim ROM CHR, PPU/RAM durumu ve olay izini kullanır. Dot-wrap düzeltmesi callback sınırında ölçülmüştür; renderer hâlâ tüm NES 2C02 fetch/shifter ve OAM hattını uygulamayan bir POC’dur. Bu nedenle `fidelity_verified` ve `complete` kapalı kalır. Kaynaklar ve hash’ler `assets/opening/intro/ppu_timing_manifest.json` ile her PNG’nin `.source.json` dosyalarında kayıtlıdır. Kare başına %97,44'e ulaşan ama 91 geçişin 73'ünü zaman içinde kötüleştiren alternatif hâlâ yalnızca tanı paketinde. İlk doğrulanan örneklerden kare 1108 %100, kare 1510 %96,56 eşleşti. Referans `.gd` görüntüleri yalnız ölçüm için okundu; PNG üretiminde ekran görüntüsü pikselleri kullanılmadı.
-Bu tanı renderer'ı dot zamanlı `$2000/$2002/$2005/$2006/$2007` ve MMC3 yazılarını, loopy `v/t/x/w` adres durumunu ve ROM CHR baytlarını kullanır; yine de gerçek 2C02 fetch/shifter hattını yaklaşık per-pixel aramayla değiştirir. Kare içindeki VRAM eski/yeni değerleri, gerçek OAM değerlendirmesi/DMA ve MMC3 bank latch anı modellenmemiştir. 380–808 aralığındaki yeni doğrulama ekran görüntüleri PPU olaylarıyla aynı FCEUX çekirdeği ve giriş replay’inden alınmıştır; diğer intro karelerinin önceki görsel referansları ayrı bir çekirdek kaydındandır. POC’nin 2C02 fetch/shifter, kare içi VRAM, fiziksel OAM değerlendirmesi/DMA ve MMC3 latch eksikleri sürdüğü için `fidelity_verified` ve `complete` kapalı kalır. %97,44 skorlu kare başına seçim de 91 görsel kaynak sınırında zaman sürekliliğini düşürdüğünden tanı paketinde kalır.
-- `assets/opening/title_menu_continue.png`, ROM'daki başlık tile yazmalarıyla imlecin `CONTINUE` satırına taşınmış hâlidir. Sessiz Down-only yakalamasında frame 4693'te basılan tuşun sonucu ilk kez frame 4694'te görünür; Godot'ta `CONTINUE` kompozisyonu ile bu FCEUX referansı 61.440/61.440 RGB pikselde eşleşti. Referans görüntüsü yalnız doğrulama için kullanıldı; PPU/RAM kaydı ve hash'leri `assets/opening/title_menu_continue.json` içindedir. Godot menüsünde Yukarı, Aşağı ve Select imleci değiştirir; Start bu dilimde başlıkta kalır.
-- Başlık geçişi sessiz FCEUX yakalamasında Start'ın frame 399 ve 2200'de basıldığı iki probla doğrulandı: giriş karesi korunur, sonraki 30 kare siyah, 31. kare başlıktır. Bu eski `opening_controller.gd` kare-manifesti denetleyicisinin davranış kaydıdır; güncel ana sahne `opening_source_runtime.gd` kullanır. Ayrıca soğuk açılışın tam PPU/RAM yakalamasında 4662–4691 karelerinin her birinde `$3F00–$3F1F` paleti `$0F`'tır; FCEUX RGB tablosunda bu değer siyahtır. Kare 4692'de ROM başlık paleti geri gelir ve başlık görünür. Güncel Godot ana-sahne denetimi 30 kare siyah örtüyü ve 31. karede başlığın açılmasını doğruladı; `KICK OFF`/`CONTINUE` seçili durumları frame 4692/4694'te FCEUX ile piksel piksel eşleşti. CPU/NMI alt-kare fazı ve ilk renkli başlık pikselinin dot zamanı açıktır. Yakalama ayrıntıları `reference/diagnostics/start_timing_probe_20261024/{early_frame_400,mid_frame_2200}/` ve `reference/opening_timing_capture_20261024_125300/` altındadır. Ekran/WAV kayıtları yalnız doğrulamadır; runtime varlığı değildir.
-- Başlığın oluştuğu 3602–3652 arasındaki 26 değişim karesi ROM CHR + PPU nametable/raster bantlarından yeniden üretildi. Her biri aynı kare FCEUX gözlemiyle RGB piksellerinde tam eşleşti; ekran görüntüsü pikselleri üretimde kullanılmadı. Bu doğrulama yalnız o 26 kare için geçerlidir; intro'nun geri kalanı henüz birebir değildir.
+Later raster integration on October 24 generated and connected a $78–$8D
+scroll-event table from ROM preset $BF5F and delta data $AADF/$AAE0. Across
+source frames 378–400, the table matched the FCEUX RAM snapshot byte for byte
+on 23/23 frames. The same three Godot/FCEUX frame comparisons at frames
+380/382/394 then reported 87.77%, 86.08%, and 83.54% RGB exactness. A separate
+OAM audit matched ROM $6E frame descriptors to the RAM OAM shadow in 42/42,
+41/41, and 42/42 records, and matched the $D310 sprite palette to PPU palette
+bytes. The ROM rule for hidden negative-X sprites has not yet been found.
+First CHR reads after scanline-134 R0/R1 writes were calculated from FCEUX fetch
+timing; after the frame-380 R1 write, the estimate was dot 196/198, about
+x=208, but the first affected pixel was not measured directly. The visual gap
+remains open. Results are under
+reference/diagnostics/raster_runtime_compare_1792867924/ and
+reference/diagnostics/field_runner_oam_palette_fetch_audit_20261024.md; the
+detailed raster trace is in
+reference/rom_extract/intro/field_runner_chr_raster_split_trace.md.
 
-## Grafik çıkarımı
+After the first 14 frames were inspected using PPU scanline/dot positions from
+the diagnostic capture, tools/diagnostics/render_loopy_event_frame_poc.py and
+the batch comparison tool tools/diagnostics/batch_render_loopy_intro.py were
+run on 928 observable intro frames. The candidate renderer averaged 96.73%
+across all frames; current runtime PNGs averaged 94.50% RGB matches on the same
+frames. The review package under
+reference/diagnostics/loopy_event_full_intro_20261024_125300/best_per_frame/
+selected the better source per frame and raised the average to 97.44: 779
+candidate frames and 149 existing frames were selected, with no regressions.
+That selection had 91 source boundaries; 73 of the 91 source-changing
+transitions had a worse adjacent-frame difference than the current runtime,
+all in the field/runner scene at frames 380–809. It was therefore not adopted
+as a per-frame hybrid runtime.
 
-- Nihai tile piksellerinin kaynağı ROM CHR baytları olmalıdır. ROM'daki tile desenleri, nametable/tilemap, attribute/palet ve sprite verisi çözümlenerek Godot'a uygun atlas veya programatik çizim kaynağı hazırlanır.
-- CHR içindeki her fiziksel tile/banka ve başlık/açılış sırasında kullanılan etkin tile'lar eşlenir. MMC3 banka yazma geçmişi gerekirse PRG kodundan çıkarılır; PPU snapshot tek başına fiziksel CHR bankasını her zaman kanıtlamaz.
-- FCEUX PPU/RAM/OAM kayıtları, oyunun hangi tile'ları nerede ve ne zaman kullandığını anlamak için referanstır. PPU yakalamaları özgün ROM baytlarının yerine geçmez.
-- FCEUX ekran görüntüsü runtime texture/asset üretmek veya piksel almak için kullanılmaz; yalnız görsel karşılaştırmada kullanılır.
-- NES palet değeri ROM'da genellikle yalnız renk indeksidir; RGB eşlemesi PPU/standart palet bilgisiyle belgelenir. FCEUX screenshot renklerini kopyalayarak final paleti üretme.
+For the field-runner scene at frames 380–808, screens and PPU events were
+captured together during the same silent input replay in the same FCEUX core.
+tools/diagnostics/experiment_loopy_cycle_order.py redraws these 198 runtime
+frames from ROM CHR/PPU/RAM data, preserving cycle order and normalizing dot
+counter wrap. The selection imported into runtime PNGs averaged 96.81% RGB
+matches against that same-core reference, versus 91.51% for the previous
+selection, and improved every one of the 198 compared frames. The lower
+dialogue band matched at 93.01%. Delta matching across 197 sampled frame
+intervals reached 99.84% (previously 98.25%), with a very small decline only
+on the 530→532 pair. FCEUX screenshots are for comparison only; production
+uses ROM CHR, PPU/RAM state, and event traces. The dot-wrap correction was
+measured at a callback boundary; the renderer remains a POC and does not
+implement the complete NES 2C02 fetch/shifter and OAM pipeline. Therefore
+fidelity_verified and complete remain false. Sources and hashes are recorded in
+assets/opening/intro/ppu_timing_manifest.json and each PNG's .source.json
+sidecar. The alternative that scored 97.44% per frame but worsened continuity
+at 73 of 91 transitions remains diagnostic-only. Among the first verified
+samples, frame 1108 matched at 100% and frame 1510 at 96.56%. Reference .gd
+images were read only for measurement; screenshot pixels were not used to
+generate PNGs.
 
-## Ses çıkarımı
+This diagnostic renderer uses dot-timed $2000/$2002/$2005/$2006/$2007 and MMC3
+writes, loopy v/t/x/w address state, and ROM CHR bytes, but approximates the
+real 2C02 fetch/shifter pipeline with per-pixel lookup. It does not model
+old/new in-frame VRAM values, real OAM evaluation/DMA, or the MMC3 bank-latch
+edge. The new validation images for frames 380–808 came from the same FCEUX
+core and input replay as the PPU events; earlier visual references for other
+intro frames came from a separate core recording. The POC still lacks 2C02
+fetch/shifter, in-frame VRAM, physical OAM evaluation/DMA, and MMC3 latch
+behavior, so fidelity_verified and complete remain false. The 97.44% per-frame
+selection also reduces temporal continuity at 91 visual-source boundaries and
+remains in the diagnostic package.
 
-- ROM'dan PRG kodu içindeki ses/APU sürücüsü, parça tabloları, müzik dizileri ve efekt verileri bulunur. Başlık/açılış müzik kimliği ve gerekli bank/ofset aralıkları kanıtla kaydedilir.
-- ROM'daki bu veri doğrudan WAV değildir. Godot için özgün sesi üretmenin doğru yolları: müzik dizilerini ve APU davranışını Godot'da yeniden oynatmak veya ROM kaynaklı kod/veriyi çevrimdışı APU emülasyonundan geçirip PCM'e dönüştürmek. Her iki halde de ROM runtime'da yüklenmez.
-- FCEUX WAV ve APU kanal dökümleri yalnız parça, başlangıç/döngü, ses seviyesi ve zamanlamayı doğrulamak için kullanılır; final Godot ses dosyası değildir.
-- Çıkarılan/üretilen her ses kaynağı için ROM bank/ofseti, parça kimliği, araç/sürüm ve dönüştürme yöntemi belirtilir.
-- İlk analizde ROM ile yerel disassembly baytları şu parçalarda eşleşti: intro `$58` (`0x01F7BD`, PRG bank `$0F`, CPU `$B7AD`), menü adayı `$55` (`0x01E31F`, bank `$0F`, CPU `$A30F`), logo `$45` (`0x01C974`, bank `$0E`, CPU `$A964`). APU sürücü giriş adayı bank `$8C`, `0x018010` / CPU `$8000`.
-- `$58` disassembly'de intro olarak etiketli ve reset akışı cutscene 0'ı çağırıyor. Başlıkta `$55` çalındığı henüz doğrulanmadı; Start'ta ses-stop komutu görülüyor. Parça kimliği final eşlemesinden önce doğrulanmalı.
-- Track ofsetleri ön bulgudur; yerel disassembly farklı çeviri ROM'undan geldiği için kullanıcı ROM'una her adres uygulaması bayt karşılaştırmasıyla doğrulanmalıdır.
+- assets/opening/title_menu_continue.png is the title tile-write result with
+  the cursor moved to CONTINUE. In a silent Down-only capture, the effect of
+  the input pressed on frame 4693 first appears on frame 4694. The Godot
+  CONTINUE composition matched that FCEUX reference at 61,440/61,440 RGB
+  pixels. The reference image was used only for validation; PPU/RAM data and
+  hashes are in assets/opening/title_menu_continue.json. In the Godot menu, Up,
+  Down, and Select move the cursor; Start remains on the title in this slice.
+- The title transition was verified in silent FCEUX probes with Start pressed
+  on frames 399 and 2200: the input frame is preserved, the next 30 frames are
+  black, and the title appears on frame 31. This documents behavior of the
+  retired opening_controller.gd frame-manifest controller; the current main
+  scene uses opening_source_runtime.gd. In the full cold-start PPU/RAM capture,
+  the $3F00–$3F1F palette is $0F on every frame from 4662 to 4691, which maps
+  to black in the FCEUX RGB table. The ROM title palette returns on frame 4692
+  and the title appears. The current Godot main-scene check verified the
+  30-frame black interval and title on frame 31; the KICK OFF/CONTINUE
+  selection states matched FCEUX pixel-for-pixel on frames 4692/4694.
+  CPU/NMI subframe phase and the dot time of the first colored title pixel
+  remain open. Capture details are under
+  reference/diagnostics/start_timing_probe_20261024/{early_frame_400,mid_frame_2200}/
+  and reference/opening_timing_capture_20261024_125300/. Screen/WAV recordings
+  are validation material only, not runtime assets.
+- The 26 changing frames that form the title, across frames 3602–3652, were
+  rebuilt from ROM CHR plus PPU nametable/raster bands. Each matched the
+  same-frame FCEUX observation at every RGB pixel; screenshot pixels were not
+  used in production. This applies only to those 26 frames; the rest of the
+  intro is not yet a perfect match.
 
-## Akış ve zamanlama referansı
+## Graphics extraction
 
-- `reference/opening_reference_capture/`, `reference/title_start_capture/` ve `reference/title_selection_capture/` içindeki kayıtlar açılış, başlık, giriş ve seçim geçişlerini gözlemlemek içindir.
-- Açılışın ardından `KICK OFF` / `CONTINUE` başlık ekranına ulaşıldı. Bu dilimin kapsamı burada biter; sonraki hikâye veya kayıt ekranları hedefte değildir.
-- PPU/RAM/APU dump'larıyla kare ve durum eşlemesi yapılabilir; nihai oyun verisi ise ROM'dan çıkarılır veya ROM'un davranışı yeniden uygulanır.
-- Kayıtlardaki girişler, kare numaraları, geçişler ve müzik başlangıç/döngü noktaları kısa bir akış çizelgesinde belgelenir.
+- Final tile pixels must come from ROM CHR bytes. Decode ROM tile patterns,
+  nametable/tilemap, attributes/palette, and sprite data into a Godot atlas or
+  programmatic drawing source.
+- Map each physical tile/bank in CHR and the active tiles used during the
+  title/opening. Derive MMC3 bank-write history from PRG code where needed; a
+  PPU snapshot alone does not always identify the physical CHR bank.
+- FCEUX PPU/RAM/OAM records are references for determining which tiles the
+  game used, where, and when. PPU captures do not replace original ROM bytes.
+- Do not use FCEUX screenshots to create runtime textures/assets or sample
+  pixels. Use them only for visual comparisons.
+- NES palette values in the ROM are usually color indices only; document the
+  RGB mapping using PPU/standard palette information. Do not create the final
+  palette by copying colors from an FCEUX screenshot.
 
-## PPU snapshot sınırı
+## Audio extraction
 
-`reference/opening_reference_capture/ppu_states/ppu_*.bin` örnekleri 12.320 bayttır: 8.192 bayt o anda eşlenmiş pattern belleği, 4.096 bayt nametable/attribute ve 32 bayt palette RAM. Bunlar tek başına fiziksel MMC3 CHR banka numarasını, harici RGB paletini, scroll/register durumunu, OAM'ı veya kare içindeki mapper/raster değişimlerini vermez. CPU RAM'deki `$0200–$02FF` OAM shadow tahminidir; fiziksel PPU OAM ile doğrulanmalıdır.
+- Locate the sound/APU driver in ROM PRG code, track tables, music sequences,
+  and sound-effect data. Record evidence for the title/opening music identity
+  and required bank/offset ranges.
+- The ROM data is not directly a WAV. The correct ways to reproduce original
+  audio for Godot are to replay the music sequences and APU behavior in Godot,
+  or to run ROM-derived code/data through an offline APU emulation and convert
+  it to PCM. In either case, the ROM is not loaded at runtime.
+- FCEUX WAV and APU-channel dumps are for validating track identity, start and
+  loop positions, volume, and timing only; they are not final Godot audio.
+- For every extracted/generated audio resource, record ROM bank/offset, track
+  ID, tool/version, and conversion method.
+- In the initial analysis, ROM bytes matched the local disassembly for these
+  tracks: intro $58 (0x01F7BD, PRG bank $0F, CPU $B7AD), candidate menu $55
+  (0x01E31F, bank $0F, CPU $A30F), and logo $45 (0x01C974, bank $0E, CPU
+  $A964). Candidate APU-driver entry: bank $8C, 0x018010 / CPU $8000.
+- The disassembly labels $58 as the intro and the reset flow calls cutscene 0.
+  It had not yet been confirmed whether $55 plays on the title screen; a
+  sound-stop command was observed at Start. Verify track identity before
+  finalizing the mapping.
+- Track offsets are preliminary. The local disassembly is from a different
+  translated ROM, so verify every address against the user-supplied ROM bytes
+  before applying it.
 
-Bu sınırlar tam görüntü eşlemesi için ek ROM analizi ve FCEUX davranış gözlemi gerektiği anlamına gelir; ekran görüntüsünü nihai görsele dönüştürme izni değildir.
+## Flow and timing references
 
-## Nihai Godot paketi
+- Captures under reference/opening_reference_capture/,
+  reference/title_start_capture/, and reference/title_selection_capture/ are
+  for observing the opening, title, input, and selection transitions.
+- The KICK OFF / CONTINUE title screen appears after the opening. This slice
+  ends there; later story or save/continue screens are out of scope.
+- Use PPU/RAM/APU dumps to align frames and states. Derive final game data from
+  the ROM or by reimplementing its behavior.
+- Document captured inputs, frame numbers, transitions, and music start/loop
+  points in a concise flow timeline.
 
-Godot kaynakları ROM'dan türetilmiş grafik ve ses varlıklarını, tile/sprite yerleşimlerini, açılış zaman çizelgesini ve başlık menüsü durumlarını içerir. Oyun açılırken `.nes` okumaz, FCEUX çağırmaz ve emülatör kaydını oynatmaz. Bu dilim, aynı giriş dizisiyle FCEUX referansına karşı kare ve ses açısından kontrol edilir; doğrulanamayan farklar tamamlandı diye sunulmaz.
+## PPU snapshot limitations
+
+Samples under reference/opening_reference_capture/ppu_states/ppu_*.bin are
+12,320 bytes: 8,192 bytes of currently mapped pattern memory, 4,096 bytes of
+nametable/attributes, and 32 bytes of palette RAM. By themselves they do not
+provide the physical MMC3 CHR bank number, external RGB palette,
+scroll/register state, OAM, or in-frame mapper/raster changes. The
+$0200–$02FF region in CPU RAM is only an estimate of OAM shadow memory; verify
+it against physical PPU OAM.
+
+These limitations mean that complete image matching requires additional ROM
+analysis and FCEUX behavior observations. They do not permit converting a
+screenshot into a final image.
+
+## Final Godot package
+
+Godot resources contain graphics and audio derived from the ROM, tile/sprite
+layouts, the opening timeline, and title-menu states. At startup, the game
+does not read a .nes file, call FCEUX, or play an emulator recording. Compare
+this slice with the FCEUX reference using the same input sequence and frame
+and audio measurements. Do not claim completion for differences that remain
+unverified.
