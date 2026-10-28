@@ -107,8 +107,8 @@ jobs:
           elapsed_seconds="$(awk -v start="$CACHE_STARTED_NS" -v end="$ended_ns" 'BEGIN { printf "%.3f", (end - start) / 1000000000 }')"
           cache_bytes=0
           if [[ "$CACHE_HIT" == true ]]; then
-            cache_bytes="$(gh api "repos/$GITHUB_REPOSITORY/actions/caches?key=$CACHE_KEY&ref=$GITHUB_REF" --jq '.actions_caches[0].size_in_bytes // 0' 2>/dev/null || printf 'unknown')"
-            [[ -n "$cache_bytes" ]] || cache_bytes=unknown
+            cache_bytes="$(gh api "repos/$GITHUB_REPOSITORY/actions/caches?key=$CACHE_KEY" --jq '.actions_caches[0].size_in_bytes // empty' 2>/dev/null || printf 'unknown')"
+            [[ "$cache_bytes" =~ ^[0-9]+$ ]] || cache_bytes=unknown
           fi
           {
             echo "duration_seconds=$elapsed_seconds"
