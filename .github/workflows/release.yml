@@ -208,7 +208,7 @@ jobs:
           linux_smoke_log="$RUNNER_TEMP/linux-export-smoke.log"
           "$linux_dir/captain-tsubasa-2-remake.x86_64" --headless --quit-after 2 >"$linux_smoke_log" 2>&1
           cat "$linux_smoke_log"
-          if rg -n 'SCRIPT ERROR:|ERROR:' "$linux_smoke_log" | rg -v 'resources still in use at exit'; then
+          if grep -En 'SCRIPT ERROR:|ERROR:' "$linux_smoke_log" | grep -Ev 'resources still in use at exit'; then
             echo "The exported Linux release reported a runtime error." >&2
             exit 1
           fi
@@ -507,7 +507,7 @@ jobs:
           smoke_log="$RUNNER_TEMP/linux-release-smoke.log"
           "$executable" --headless --quit-after 2 >"$smoke_log" 2>&1
           cat "$smoke_log"
-          if rg -n 'SCRIPT ERROR:|ERROR:' "$smoke_log" | rg -v 'resources still in use at exit'; then
+          if grep -En 'SCRIPT ERROR:|ERROR:' "$smoke_log" | grep -Ev 'resources still in use at exit'; then
             echo "The published Linux release reported a runtime error." >&2
             exit 1
           fi
@@ -579,7 +579,7 @@ jobs:
           smoke_log="$RUNNER_TEMP/macos-release-smoke.log"
           "$app/Contents/MacOS/$executable" --headless --quit-after 2 >"$smoke_log" 2>&1
           cat "$smoke_log"
-          if rg -n 'SCRIPT ERROR:|ERROR:' "$smoke_log" | rg -v 'resources still in use at exit'; then
+          if grep -En 'SCRIPT ERROR:|ERROR:' "$smoke_log" | grep -Ev 'resources still in use at exit'; then
             echo "The published macOS release reported a runtime error." >&2
             exit 1
           fi

@@ -65,7 +65,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git ls-files | rg -n '(^|/)[^/]+\.(nes|NES|nsf|NSF|fm2|fcm|sav|srm|state)$|^reference/diagnostics/|^reference/[^/]*capture|^assets/opening/intro/|^tools/audio/build/'; then
+          if git ls-files | grep -En '(^|/)[^/]+\.(nes|NES|nsf|NSF|fm2|fcm|sav|srm|state)$|^reference/diagnostics/|^reference/[^/]*capture|^assets/opening/intro/|^tools/audio/build/'; then
             echo "ROM, generated audio, or observation-only capture files must not be tracked." >&2
             exit 1
           fi
@@ -99,7 +99,7 @@ jobs:
           "$GODOT_BIN" --headless --path . --export-pack "Linux Desktop" "$pack"
           "$GODOT_BIN" --headless --main-pack "$pack" --quit-after 2 >"$log" 2>&1
           cat "$log"
-          if rg -n 'SCRIPT ERROR:|ERROR:' "$log" | rg -v 'resources still in use at exit'; then
+          if grep -En 'SCRIPT ERROR:|ERROR:' "$log" | grep -Ev 'resources still in use at exit'; then
             echo "The exported runtime pack reported an error." >&2
             exit 1
           fi
