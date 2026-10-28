@@ -5,58 +5,63 @@
 </p>
 
 <p align="left">
+  <a href="https://github.com/susimsek/captain-tsubasa-2-remake/releases/latest"><img src="https://img.shields.io/github/v/release/susimsek/captain-tsubasa-2-remake?display_name=tag&amp;label=Version" alt="Latest release version"></a>
   <a href="https://github.com/susimsek/captain-tsubasa-2-remake/actions/workflows/ci.yml"><img src="https://github.com/susimsek/captain-tsubasa-2-remake/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI status"></a>
   <img src="https://img.shields.io/badge/Engine-Godot%204.7.2-478cbf" alt="Engine: Godot 4.7.2">
-  <img src="https://img.shields.io/badge/Language-GDScript-478cbf" alt="Language: GDScript">
-  <img src="https://img.shields.io/badge/Runtime-Standalone-2ea44f" alt="Standalone runtime">
-  <img src="https://img.shields.io/badge/Milestone-Opening%20to%20Title-f0ad4e" alt="Milestone: opening to title">
+  <img src="https://img.shields.io/badge/Language-GDScript-355570?logo=godotengine&amp;logoColor=white" alt="Language: GDScript">
+  <img src="https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows&amp;logoColor=white" alt="Platform: Windows">
+  <img src="https://img.shields.io/badge/Platform-Linux-FCC624?logo=linux&amp;logoColor=black" alt="Platform: Linux">
+  <img src="https://img.shields.io/badge/Platform-macOS-303030?logo=apple&amp;logoColor=white" alt="Platform: macOS">
+  <a href="https://en.wikipedia.org/wiki/Role-playing_video_game"><img src="https://img.shields.io/badge/Genre-RPG-7B61A8" alt="Genre: RPG"></a>
+  <a href="https://en.wikipedia.org/wiki/Sports_game"><img src="https://img.shields.io/badge/Genre-Sports-2E8B57" alt="Genre: Sports"></a>
+  <img src="https://img.shields.io/badge/Original%20release-1990--07--20-6c757d" alt="Original game release date: 1990-07-20">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-blue.svg" alt="Apache-2.0"></a>
 </p>
 
 # Captain Tsubasa 2 Remake
 
-An unofficial Godot reconstruction of the Turkish NES release. The current milestone rebuilds the cold-start opening and original music, then stops at the title menu with **KICK OFF** and **CONTINUE** visible. It does not enter either option.
-
-The game runs from the Godot project without loading the supplied ROM or starting an emulator. Runtime resources extracted from the ROM are kept in the project and their source information is documented under **reference/rom_extract/**.
-
-The poster above is the original promotional image supplied by the project owner and is stored at `assets/readme/captain-tsubasa-2-poster.jpg`. The same artwork supplies the desktop application icons; it is kept separate from the ROM-derived game visuals. Its source is [LaunchBox](https://images.launchbox-app.com/78127ee0-f18d-4a8d-87d1-eb8afdb3ca0a.jpg), and its rights remain with its respective owners.
+A Godot remake of *Captain Tsubasa 2: Super Striker* for Windows, macOS, and Linux. It is being developed as a standalone desktop game and does not require an external ROM or emulator.
 
 ## Table of Contents
 
-1. [Features](#features)
-2. [Current milestone](#current-milestone)
-3. [Requirements](#requirements)
-4. [Run locally](#run-locally)
-5. [Controls](#controls)
-6. [Project layout](#project-layout)
-7. [Verification notes](#verification-notes)
-8. [CI and releases](#ci-and-releases)
-9. [Contributing](#contributing)
-10. [License and original game content](#license-and-original-game-content)
+1. [Current build](#current-build)
+2. [Highlights](#highlights)
+3. [Download](#download)
+4. [System requirements](#system-requirements)
+5. [Run from source](#run-from-source)
+6. [Controls](#controls)
+7. [Project structure](#project-structure)
+8. [Development notes](#development-notes)
+9. [CI and releases](#ci-and-releases)
+10. [Contributing](#contributing)
+11. [License and credits](#license-and-credits)
 
-## Features
+## Current build
 
-- ROM-command-driven opening presentation, sprite animation, text timing, and sound triggers.
-- Original CHR, palette, background, sprite, and audio-derived project resources.
-- ROM-derived opening music with an offline Godot audio resource.
-- Title handoff to the initial **KICK OFF** / **CONTINUE** menu.
-- Native macOS **About** menu command with project and release information; F1 opens the same dialog on other desktop platforms.
-- No ROM file or emulator dependency at runtime.
+The current release recreates the opening sequence and soundtrack, then presents the initial title screen. **KICK OFF** and **CONTINUE** are displayed, but match and story flows are not part of this release. Additional interface languages are planned and are not available yet.
 
-## Current milestone
+## Highlights
 
-The opening plays from a cold start and ends at the title menu. Cursor movement is available, but confirming a title option is outside this milestone. Match play, story selection, and continue flows are not implemented here.
+- Opening presentation with original graphics, animation, text timing, and sound cues.
+- Original opening soundtrack reproduced in a standalone Godot audio resource.
+- Initial title screen with keyboard and controller cursor navigation.
+- Built-in desktop updates download the matching platform package, verify its SHA-256 checksum, and offer **Install and Relaunch**.
+- Windows and Linux provide separate **Help → About…** and **Help → Check for Updates…** commands. macOS keeps both in its native application menu. **F1** opens About; **F2** checks for updates. About shows the installed version and original release date; the update check uses a separate dialog.
 
-The implementation follows decoded ROM behavior and project-owned data rather than replaying captured emulator frames. Known timing gaps are summarized in **GOAL.md**. Bulky local diagnostic captures are excluded from this repository and are not required by the running game.
+## Download
 
-## Requirements
+Download the latest desktop release from [GitHub Releases](https://github.com/susimsek/captain-tsubasa-2-remake/releases/latest). Choose the package for your operating system. The exported game runs without Godot, a ROM file, or an emulator.
 
-- Godot 4.7.2
-- Desktop keyboard or gamepad
+macOS releases are ad-hoc signed but not notarized, so Gatekeeper may ask you to approve the app the first time it opens. Windows releases are not Authenticode-signed and may show a SmartScreen warning.
 
-## Run locally
+## System requirements
 
-Open this folder in Godot 4.7.2 and run the main scene. From a terminal with Godot available:
+- **Playing:** Windows x86_64, Linux x86_64, or macOS Universal.
+- **Building from source:** Godot 4.7.2.
+
+## Run from source
+
+Open the project in Godot 4.7.2 and run the main scene, or launch it from a terminal:
 
     godot --path . scenes/main.tscn
 
@@ -64,36 +69,30 @@ Open this folder in Godot 4.7.2 and run the main scene. From a terminal with God
 
 - Up / Down: move the title cursor.
 - Tab / controller Back: switch the title selection.
-- Enter / controller Start: trigger the opening's Start handoff. The title options themselves remain unconfirmed in this milestone.
+- Enter / controller Start: trigger the opening's Start handoff. This does not select a title option.
 
-## Project layout
+## Project structure
 
-- **scenes/**: main scene, opening runtime, and title menu.
-- **scripts/**: ROM-derived presenter, renderers, input, and audio code.
-- **assets/opening/**: project-owned runtime audio and event data.
-- **reference/rom_extract/**: source bytes, decoded records, and provenance for runtime resources.
-- **reference/palettes/**: the documented external palette used for NES-color comparison.
-- **docs/**: focused architecture and behavior notes.
-- **tools/**: extraction and diagnostic utilities; these are not runtime dependencies.
+- `scenes/` — main scene, opening runtime, and title screen.
+- `scripts/` — presentation, rendering, input, and audio systems.
+- `assets/opening/` — runtime audio and event data.
+- `reference/rom_extract/` — source bytes, decoded records, and provenance for project resources.
+- `reference/palettes/` — palette data used for NES-color comparisons.
+- `docs/` — architecture and behavior notes.
+- `tools/` — development and diagnostic utilities; these are not runtime dependencies.
 
-## Verification notes
+## Development notes
 
-The project's latest same-input comparison reports a full match for the visible 256×224 NTSC crop across 4,693 opening frames. Raw 256×240 PPU comparisons preserve the overscan rows and can show a small y=0 difference. This does not establish physical 2C02 sub-frame timing.
-
-The active soundtrack is generated from ROM-derived CPU/APU/DMC events and the pinned FCEUX audio filter implementation. Its PCM matches the recorded FCEUX filtered reference; that comparison is not a claim about analog NES output.
+The opening has been validated against FCEUX: all 4,693 frames in the visible 256×224 crop match the reference, and the generated soundtrack matches the captured PCM sample-for-sample. This validates the emulator reference; it does not establish original hardware sub-frame timing or analog audio output.
 
 ## CI and releases
 
-Every branch push and pull request targeting **main** runs a clean Godot import and a short headless main-scene launch. Version tags use the release workflow, which checks the project, exports Linux x86_64, Windows x86_64, and macOS Universal desktop packages, and publishes those with source ZIP/TAR.GZ archives, a SHA-256 manifest, and a verified Sigstore signature bundle. Desktop packages include `THIRD_PARTY_NOTICES.txt` for required engine notices; this does not add engine branding to the game's menus. The macOS app has a valid built-in ad-hoc signature but is not notarized, so Gatekeeper may still require a one-time approval; a Developer ID signature and notarization are needed to avoid that prompt. The Windows executable is not Authenticode-signed and may show a SmartScreen unknown-publisher warning. The Linux archive preserves the executable permission. If the RELEASE_GPG_PRIVATE_KEY Actions secret is configured, the manifest also receives a detached GPG signature; RELEASE_GPG_PASSPHRASE is optional for an unencrypted key.
-
-Sonar badges and quality gates are intentionally absent: Sonar's documented supported-language list does not include GDScript, so it would not analyze the game's main code.
+Every branch push and pull request targeting **main** runs a clean Godot import, exports and launches a runtime pack, and performs a short headless startup check. Version tags trigger desktop exports for Linux x86_64, Windows x86_64, and macOS Universal. Each release includes those desktop packages, source archives, a SHA-256 manifest, and its Sigstore signature bundle. Desktop packages also include `THIRD_PARTY_NOTICES.txt` for required engine notices.
 
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for commit and pull request conventions. Bugs and proposals can use the repository issue forms.
 
-## License and original game content
+## License and credits
 
-The project license is [Apache-2.0](LICENSE) for work that the project contributors are entitled to license. The original game's ROM, graphics, music, text, characters, and marks are not relicensed by this file. The ROM itself is not part of this repository.
-
-The poster file is not covered by the Apache-2.0 license.
+Project code is licensed under [Apache-2.0](LICENSE). Original game content is separate from the project code and is not covered by that license; the ROM is not included. Poster artwork source: [LaunchBox](https://images.launchbox-app.com/78127ee0-f18d-4a8d-87d1-eb8afdb3ca0a.jpg).

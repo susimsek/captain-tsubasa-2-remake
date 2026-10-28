@@ -2,6 +2,20 @@
 
 Kullanıcının sağladığı NES ROM'unu davranış ve içerik kaynağı kabul et. Açılış akışını, komutların zamanlamasını, çizim/animasyon düzenini ve ses sürücüsü davranışını ROM üzerinde reverse engineering ile çöz; bu mantıkları ROM gerektirmeden çalışan Godot 4 sahne, betik ve kaynaklarına taşı. Hedef dilim soğuk açılıştan introyu izleyip `KICK OFF` / `CONTINUE` başlık ekranına ulaşır ve orada durur.
 
+## Masaüstü dağıtım hedefi
+
+Windows, Linux ve macOS sürümlerinde güncelleme kontrolü aynı güvenli indirme,
+SHA-256 doğrulama, kurulum ve yeniden başlatma akışını kullanır. Windows/Linux'ta
+Help menüsü, birbirinden ayrı `About…` ve `Check for Updates…` komutları sunar;
+macOS'ta iki komut yerel uygulama menüsünde kalır. About yalnızca sürüm ve
+orijinal çıkış tarihi bilgisini gösterir; güncelleme kontrolü kendi penceresini
+açar. Windows/Linux menü çubuğu 256×224 oyun görüntüsünün dışında ayrılmıştır.
+Godot 4.7.2 ile CI, Linux x86_64,
+Windows x86_64 ve macOS universal paketlerini üretip açılışlarını doğrular.
+Release; üçüncü taraf bildirimlerini ve imzalı SHA-256 manifestini içerir.
+Kurulum/geri alma hataları anlaşılır ürün diliyle gösterilmeli, oyun
+görüntüsünü veya açılış akışını bozmamalıdır.
+
 ## Güncel durum — 27 Ekim 2026
 
 ### 27 Ekim doğrulama ve hızlandırma güncellemesi

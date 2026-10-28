@@ -5,9 +5,12 @@ extends Node2D
 const NES_CPU_CLOCK_HZ := 1789773.0
 # The live FCEUX NTSC window displays 224 lines from the 240-line PPU output,
 # cropping eight overscan rows from both ends. Keep source renderers in their
-# native 256x240 coordinate space and shift only the live 224-line viewport.
+# native 256x240 coordinate space. Windows/Linux reserve a seven-pixel-high
+# desktop Help menu above the same 224-line gameplay area.
 const FCEUX_VISIBLE_HEIGHT := 224
 const PPU_TOP_OVERSCAN_LINES := 8
+const DESKTOP_MENU_VIEWPORT_HEIGHT := 231
+const DESKTOP_MENU_HEIGHT := 7
 # Same-input PPU snapshots are black on frames 4662–4691 after Start at 4661;
 # the title palette returns on 4692. This is a captured 30-frame boundary.
 const START_POLL_TO_STOP_CPU_CYCLES := 38
@@ -53,9 +56,13 @@ func _ready() -> void:
 
 func _apply_fceux_visible_crop() -> void:
 	# Diagnostic capture harnesses explicitly use a 256x240 viewport to compare
-	# every PPU output row. The actual project window is 256x224; offset the
-	# rendered source by -8 there so its visible rows match FCEUX's cropped view.
-	if int(round(get_viewport().get_visible_rect().size.y)) == FCEUX_VISIBLE_HEIGHT:
+	# every PPU output row. macOS uses a 256x224 game viewport; Windows/Linux
+	# add seven rows above it for the Help menu, without scaling or covering the
+	# game image. Offset source art so the gameplay rows stay the same on both.
+	var visible_height := int(round(get_viewport().get_visible_rect().size.y))
+	if visible_height == DESKTOP_MENU_VIEWPORT_HEIGHT:
+		position.y = float(DESKTOP_MENU_HEIGHT - PPU_TOP_OVERSCAN_LINES)
+	elif visible_height == FCEUX_VISIBLE_HEIGHT:
 		position.y = -PPU_TOP_OVERSCAN_LINES
 
 
