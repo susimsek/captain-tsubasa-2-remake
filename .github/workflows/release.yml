@@ -16,7 +16,9 @@ permissions:
 env:
   GODOT_VERSION: "4.7.2"
   GODOT_EDITOR_ARCHIVE_SHA256: cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4
+  # Pins the upstream archive identity for cache invalidation; the range path validates selected ZIP members.
   GODOT_TEMPLATES_ARCHIVE_SHA256: f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011
+  GODOT_TEMPLATES_ARCHIVE_SIZE_BYTES: "1281349702"
 
 concurrency:
   group: release-${{ github.ref }}
@@ -28,6 +30,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     permissions:
+      actions: read
       contents: read
     outputs:
       release_tag: ${{ steps.release.outputs.tag }}
@@ -78,6 +81,11 @@ jobs:
           echo "GODOT_BIN=$godot_bin" >> "$GITHUB_ENV"
           echo "duration_seconds=$SECONDS" >> "$GITHUB_OUTPUT"
 
+      - name: Start desktop template cache timer
+        id: godot-template-cache-start
+        shell: bash
+        run: echo "started_ns=$(date +%s%N)" >> "$GITHUB_OUTPUT"
+
       - name: Cache verified desktop export templates
         id: godot-template-cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -85,13 +93,34 @@ jobs:
           path: ~/.local/share/godot/export_templates/4.7.2.stable
           key: godot-templates-${{ runner.os }}-${{ env.GODOT_VERSION }}-${{ env.GODOT_TEMPLATES_ARCHIVE_SHA256 }}
 
+      - name: Measure desktop template cache restore
+        id: godot-template-cache-measure
+        env:
+          CACHE_HIT: ${{ steps.godot-template-cache.outputs.cache-hit }}
+          CACHE_STARTED_NS: ${{ steps.godot-template-cache-start.outputs.started_ns }}
+          CACHE_KEY: godot-templates-${{ runner.os }}-${{ env.GODOT_VERSION }}-${{ env.GODOT_TEMPLATES_ARCHIVE_SHA256 }}
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          ended_ns="$(date +%s%N)"
+          elapsed_seconds="$(awk -v start="$CACHE_STARTED_NS" -v end="$ended_ns" 'BEGIN { printf "%.3f", (end - start) / 1000000000 }')"
+          cache_bytes=0
+          if [[ "$CACHE_HIT" == true ]]; then
+            cache_bytes="$(gh api "repos/$GITHUB_REPOSITORY/actions/caches?key=$CACHE_KEY" --jq '.actions_caches[0].size_in_bytes // empty' 2>/dev/null || printf 'unknown')"
+            [[ "$cache_bytes" =~ ^[0-9]+$ ]] || cache_bytes=unknown
+          fi
+          {
+            echo "duration_seconds=$elapsed_seconds"
+            echo "cache_bytes=$cache_bytes"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Install and verify desktop export templates
         id: godot-template-install
         shell: bash
         run: |
           set -euo pipefail
           SECONDS=0
-          archive="$RUNNER_TEMP/Godot_v4.7.2-stable_export_templates.tpz"
           template_dir="$HOME/.local/share/godot/export_templates/4.7.2.stable"
           template_files=(linux_release.x86_64 windows_release_x86_64.exe macos.zip version.txt)
           cached_templates=true
@@ -102,22 +131,24 @@ jobs:
           done
           if [[ "$cached_templates" != true ]]; then
             rm -rf "$template_dir"
-            curl --fail --silent --show-error --location \
-              "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz" \
-              --output "$archive"
-            printf '%s  %s\n' "$GODOT_TEMPLATES_ARCHIVE_SHA256" "$archive" | sha256sum --check -
-            mkdir -p "$template_dir"
-            unzip -q -j "$archive" \
-              templates/linux_release.x86_64 \
-              templates/windows_release_x86_64.exe \
-              templates/macos.zip \
-              templates/version.txt \
-              -d "$template_dir"
-            echo "template_source=download" >> "$GITHUB_OUTPUT"
+            python3 tools/ci/download_godot_export_templates.py \
+              --version "$GODOT_VERSION" \
+              --expected-archive-size "$GODOT_TEMPLATES_ARCHIVE_SIZE_BYTES" \
+              --output-dir "$template_dir"
+            template_source=range-download
           else
-            echo "template_source=cache" >> "$GITHUB_OUTPUT"
+            range_downloaded_bytes=0
+            archive_size_bytes="$GODOT_TEMPLATES_ARCHIVE_SIZE_BYTES"
+            template_source=cache
           fi
-          echo "duration_seconds=$SECONDS" >> "$GITHUB_OUTPUT"
+          {
+            if [[ "$cached_templates" == true ]]; then
+              echo "range_downloaded_bytes=$range_downloaded_bytes"
+              echo "archive_size_bytes=$archive_size_bytes"
+            fi
+            echo "template_source=${template_source:-range-download}"
+            echo "duration_seconds=$SECONDS"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Validate desktop helper syntax
         shell: bash
@@ -261,8 +292,12 @@ jobs:
         env:
           ENGINE_SECONDS: ${{ steps.godot-install.outputs.duration_seconds }}
           TEMPLATE_CACHE_HIT: ${{ steps.godot-template-cache.outputs.cache-hit }}
+          TEMPLATE_CACHE_SECONDS: ${{ steps.godot-template-cache-measure.outputs.duration_seconds }}
+          TEMPLATE_CACHE_BYTES: ${{ steps.godot-template-cache-measure.outputs.cache_bytes }}
           TEMPLATE_SOURCE: ${{ steps.godot-template-install.outputs.template_source }}
           TEMPLATE_SECONDS: ${{ steps.godot-template-install.outputs.duration_seconds }}
+          TEMPLATE_RANGE_BYTES: ${{ steps.godot-template-install.outputs.range_downloaded_bytes }}
+          TEMPLATE_ARCHIVE_BYTES: ${{ steps.godot-template-install.outputs.archive_size_bytes }}
           IMPORT_CACHE_HIT: ${{ steps.godot-import-cache.outputs.cache-hit }}
           IMPORT_SECONDS: ${{ steps.import-assets.outputs.duration_seconds }}
           EXPORT_SECONDS: ${{ steps.desktop-export.outputs.duration_seconds }}
@@ -276,17 +311,32 @@ jobs:
             import_state="cache miss; imported"
             import_duration="$(value "${IMPORT_SECONDS:-}")"
           fi
+          template_transfer="not reached"
+          if [[ "$TEMPLATE_CACHE_HIT" == true ]]; then
+            if [[ "$TEMPLATE_CACHE_BYTES" =~ ^[0-9]+$ ]]; then
+              template_transfer="$(numfmt --to=iec-i --suffix=B "$TEMPLATE_CACHE_BYTES") restored from cache"
+            else
+              template_transfer="cache archive size unavailable"
+            fi
+          elif [[ "$TEMPLATE_RANGE_BYTES" =~ ^[0-9]+$ && "$TEMPLATE_ARCHIVE_BYTES" =~ ^[0-9]+$ ]]; then
+            template_transfer="$(numfmt --to=iec-i --suffix=B "$TEMPLATE_RANGE_BYTES") ranged / $(numfmt --to=iec-i --suffix=B "$TEMPLATE_ARCHIVE_BYTES") full archive"
+            if [[ "$TEMPLATE_ARCHIVE_BYTES" -gt 0 ]]; then
+              saved_percent="$(awk -v transferred="$TEMPLATE_RANGE_BYTES" -v full="$TEMPLATE_ARCHIVE_BYTES" 'BEGIN { printf "%.1f%% less network data", (1 - transferred / full) * 100 }')"
+              template_transfer="$template_transfer ($saved_percent)"
+            fi
+          fi
+          template_duration="cache restore $(value "$TEMPLATE_CACHE_SECONDS"); template setup $(value "$TEMPLATE_SECONDS")"
           {
             echo "## Release build performance"
             echo
-            echo "Measured stages for the tagged desktop release build. Cache entries are keyed by the pinned engine/template checksums and the project's import inputs."
+            echo "Measured stages for the tagged desktop release build. The cold template path fetches only required archive ranges; cache entries are keyed by the pinned engine/template archive identities and the project's import inputs."
             echo
-            echo "| Stage | Cache | Duration |"
-            echo "| --- | --- | ---: |"
-            echo "| Godot 4.7.2 install (SHA-256 verified) | — | $(value "${ENGINE_SECONDS:-}") |"
-            echo "| Godot 4.7.2 desktop templates | exact hit: ${TEMPLATE_CACHE_HIT:-unknown}; source: ${TEMPLATE_SOURCE:-unknown} | $(value "${TEMPLATE_SECONDS:-}") |"
-            echo "| Imported Godot resources | ${import_state} | ${import_duration} |"
-            echo "| Linux, Windows, and macOS exports and packaging | — | $(value "${EXPORT_SECONDS:-}") |"
+            echo "| Stage | Cache | Duration | Network transfer |"
+            echo "| --- | --- | ---: | ---: |"
+            echo "| Godot 4.7.2 install (SHA-256 verified) | — | $(value "${ENGINE_SECONDS:-}") | — |"
+            echo "| Godot 4.7.2 desktop templates | exact hit: ${TEMPLATE_CACHE_HIT:-unknown}; source: ${TEMPLATE_SOURCE:-unknown} | $template_duration | $template_transfer |"
+            echo "| Imported Godot resources | ${import_state} | ${import_duration} | — |"
+            echo "| Linux, Windows, and macOS exports and packaging | — | $(value "${EXPORT_SECONDS:-}") | — |"
           } >> "$GITHUB_STEP_SUMMARY"
 
   windows-installer:
@@ -474,6 +524,21 @@ jobs:
             --title "$RELEASE_TAG" \
             --generate-notes \
             --repo "$GH_REPO"
+          notes_file="$RUNNER_TEMP/release-notes.md"
+          gh release view "$RELEASE_TAG" --repo "$GH_REPO" --json body --jq '.body' > "$notes_file"
+          cat >> "$notes_file" <<'EOF'
+
+          ## First launch
+
+          | Platform | File | First launch |
+          | --- | --- | --- |
+          | Windows | Setup `.exe` or portable `.zip` | Setup: follow the installer. ZIP: extract and run `captain-tsubasa-2-remake.exe`. Unsigned build: SmartScreen → **More info** → **Run anyway**. |
+          | Linux | `.AppImage` or `.tar.gz` | AppImage: run `chmod +x <file>`, then launch it. Tarball: extract and run `./captain-tsubasa-2-remake.x86_64`. |
+          | macOS | Universal `.zip` | Extract and move `Captain Tsubasa 2 Remake.app` to Applications. Not notarized: Control-click → **Open** → **Open**. |
+
+          Optional: check downloaded files against `SHA256SUMS` in the release. This checks file integrity; it does not change SmartScreen or Gatekeeper prompts.
+          EOF
+          gh release edit "$RELEASE_TAG" --notes-file "$notes_file" --repo "$GH_REPO"
 
   linux-release-smoke:
     name: Launch published Linux package
