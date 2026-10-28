@@ -61,7 +61,10 @@ For gameplay engineering tasks, also follow the project skill at `.agents/skills
 - `reference/diagnostics/`: observation and validation artifacts; these are not runtime assets.
 - `docs/`: renderer, cutscene, audio, timing, and integration notes.
 - `tools/diagnostics/`: focused verification and diagnostic utilities.
+- `packaging/linux/`: Linux desktop-entry helpers and AppImage packaging.
+- `packaging/windows/`: per-user Windows installer definition.
 - `.github/workflows/ci.yml`: pinned Godot import and short main-scene launch checks.
+- `.github/workflows/release.yml`: pinned release exports, portable packages, installer, AppImage, checksums, and signatures.
 - Root guidance and contribution files: `AGENTS.md`, `GOAL.md`, `README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, and `LICENSE`.
 
 ## Code Style and Quality Gates
@@ -69,7 +72,7 @@ For gameplay engineering tasks, also follow the project skill at `.agents/skills
 - Follow Godot 4.7.2 and the project's existing GDScript conventions.
 - Keep runtime logic typed and focused; use explicit state, clear names, and small functions.
 - Keep factual claims in documentation aligned with current evidence and CI configuration.
-- CI currently imports Godot resources, briefly launches the main scene, and checks that ROMs and observation-only/generated capture data are not tracked. Do not claim a Sonar, coverage, lint, or other quality gate unless it is configured and has run.
+- CI imports Godot resources, briefly launches the main scene, and checks that ROMs and observation-only/generated capture data are not tracked. The release workflow builds the Windows per-user setup, Windows portable ZIP, Linux AppImage and tarball, and macOS universal archive before signing the release manifest. Do not claim a Sonar, coverage, lint, or other quality gate unless it is configured and has run.
 
 ## Testing Guidelines
 
@@ -530,5 +533,8 @@ Treat the About page and every desktop update dialog as one shipped product surf
 - Use one solid accent-filled primary action and a quiet secondary action. Do not draw a permanent border around the primary button. Show a clear focus ring only while keyboard focus is active; preserve keyboard navigation and never initially focus an install/relaunch action. Pressing Return must not unexpectedly install an update.
 - Keep About/update utility copy and menu command labels in concise, idiomatic English, matching the existing product language. Do not translate them without an explicit request. Use short, accurate state messages for checking, up-to-date, update available, downloading, ready to install, installing, unavailable, and failure. Convert helper-script failures into clear English player-facing messages; do not expose raw platform errors or implementation details.
 - Keep the desktop commands separate and consistent: Windows/Linux use `Help → About…` and `Help → Check for Updates…`; macOS retains both actions in its native application menu. About shows product/version information only. Check for Updates opens the shared update flow directly. On Windows/Linux, reserve menu chrome outside the 256×224 game image; never cover or scale the game to make room for it. F1/F2 remain shortcuts, never the only route to either action.
+- Keep update consent explicit on every desktop: release builds may silently check for a newer stable release after launch when `Automatically check for updates` is enabled (default on), but must not download or install in the background. Persist the preference. A found update is offered through the shared Check for Updates flow; the player must choose `Download Update`, then `Install and Relaunch`. Keep the wording and state transitions identical on Windows, Linux, and macOS.
+- Keep install and update package selection aligned: the Windows setup installs per-user without elevation, and updates choose the matching Windows package for the current install. Linux uses the AppImage asset when launched through an AppImage runtime and the tarball for portable archive installs. Preserve that package-type match when changing update selection or installer scripts.
+- On Windows, use the per-user setup package when the running copy is in a protected or temporary folder; use the portable ZIP for writable installs. On macOS and Linux, detect an unwritable install before downloading and explain that the game must be moved to a writable folder. Never claim automatic updating works when the current install cannot be safely replaced.
 - In About and update result screens, show the current application version and the configured original game release date using the same project setting and the label `Original release`. Do not present a GitHub package publication timestamp as the game's release date. Opening About or Update must never activate gameplay or change the game flow.
 - Before calling these screens finished, inspect every state at native desktop scale, including long text, progress, focus, close/later actions, and the transition between download and install. Report which states were actually exercised; a successful startup alone is not a visual review.

@@ -19,12 +19,11 @@ concurrency:
 
 jobs:
   source-release:
-    name: Verify, export, and publish release
+    name: Verify and export release assets
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     permissions:
-      contents: write
-      id-token: write
+      contents: read
     outputs:
       release_tag: ${{ steps.release.outputs.tag }}
     steps:
@@ -86,7 +85,7 @@ jobs:
             templates/version.txt \
             -d "$template_dir"
 
-      - name: Validate desktop update helper syntax
+      - name: Validate desktop helper syntax
         shell: bash
         run: |
           set -euo pipefail
@@ -107,31 +106,41 @@ jobs:
           set -euo pipefail
           asset_dir="$RUNNER_TEMP/release-assets"
           version="${RELEASE_TAG#v}"
+          release_commit="$(git rev-parse "${RELEASE_TAG}^{commit}")"
           linux_dir="$RUNNER_TEMP/linux-package"
           mkdir -p "$asset_dir"
           mkdir -p "$linux_dir"
 
-          python3 - "$version" <<'PY'
+          python3 - "$version" "$release_commit" <<'PY'
           from pathlib import Path
           import re
           import sys
 
           version = sys.argv[1]
+          commit = sys.argv[2]
           project_path = Path("project.godot")
           project_config = project_path.read_text(encoding="utf-8")
           project_config = re.sub(r'(?m)^config/version="[^"]*"$', f'config/version="{version}"', project_config)
+          project_config = re.sub(r'(?m)^config/update_channel="[^"]*"$', 'config/update_channel="stable"', project_config)
+          project_config = re.sub(r'(?m)^config/build_commit="[^"]*"$', f'config/build_commit="{commit}"', project_config)
           project_path.write_text(project_config, encoding="utf-8")
           path = Path("export_presets.cfg")
           config = path.read_text(encoding="utf-8")
           config = config.replace('application/short_version="0.1.0"', f'application/short_version="{version}"')
           config = config.replace('application/version="0.1.0"', f'application/version="{version}"')
+          config = re.sub(r'(?m)^application/product_version="[^"]*"$', f'application/product_version="{version}"', config)
+          config = re.sub(r'(?m)^application/file_version="[^"]*"$', f'application/file_version="{version}"', config)
           path.write_text(config, encoding="utf-8")
           PY
 
           "$GODOT_BIN" --headless --path . --export-release \
             "Linux Desktop" "$linux_dir/captain-tsubasa-2-remake.x86_64"
           cp THIRD_PARTY_NOTICES.txt "$linux_dir/THIRD_PARTY_NOTICES.txt"
+          cp assets/branding/captain-tsubasa-2-icon.png "$linux_dir/captain-tsubasa-2-icon.png"
+          cp packaging/linux/install-desktop-entry.sh "$linux_dir/install-desktop-entry.sh"
+          cp packaging/linux/uninstall-desktop-entry.sh "$linux_dir/uninstall-desktop-entry.sh"
           chmod +x "$linux_dir/captain-tsubasa-2-remake.x86_64"
+          chmod +x "$linux_dir/install-desktop-entry.sh" "$linux_dir/uninstall-desktop-entry.sh"
           linux_smoke_log="$RUNNER_TEMP/linux-export-smoke.log"
           "$linux_dir/captain-tsubasa-2-remake.x86_64" --headless --quit-after 2 >"$linux_smoke_log" 2>&1
           cat "$linux_smoke_log"
@@ -139,8 +148,19 @@ jobs:
             echo "The exported Linux release reported a runtime error." >&2
             exit 1
           fi
+
+          appimagetool="$RUNNER_TEMP/appimagetool-x86_64.AppImage"
+          curl --fail --silent --show-error --location \
+            "https://github.com/AppImage/appimagetool/releases/download/1.9.1/appimagetool-x86_64.AppImage" \
+            --output "$appimagetool"
+          echo "ed4ce84f0d9caff66f50bcca6ff6f35aae54ce8135408b3fa33abfc3cb384eb0  $appimagetool" | sha256sum --check -
+          chmod +x "$appimagetool"
+          APPIMAGETOOL="$appimagetool" packaging/linux/build-appimage.sh \
+            "$linux_dir" "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-x86_64.AppImage"
+
           tar --sort=name --mtime='@0' --owner=0 --group=0 --numeric-owner \
             -C "$linux_dir" -cf - captain-tsubasa-2-remake.x86_64 THIRD_PARTY_NOTICES.txt \
+            captain-tsubasa-2-icon.png install-desktop-entry.sh uninstall-desktop-entry.sh \
             | gzip --no-name > "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz"
 
           windows_dir="$RUNNER_TEMP/windows-package"
@@ -157,6 +177,7 @@ jobs:
           zip -X -q -j "$macos_asset" "$GITHUB_WORKSPACE/THIRD_PARTY_NOTICES.txt"
 
           test -s "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz"
+          test -s "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-x86_64.AppImage"
           test -s "$windows_dir/captain-tsubasa-2-remake.exe"
           test -s "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-windows-x86_64.zip"
           test -s "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-macos-universal.zip"
@@ -166,8 +187,11 @@ jobs:
           unzip -Z1 "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-windows-x86_64.zip" | grep -Fxq THIRD_PARTY_NOTICES.txt
           unzip -Z1 "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-macos-universal.zip" | grep -Fxq THIRD_PARTY_NOTICES.txt
           tar -tzf "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz" | grep -Fxq THIRD_PARTY_NOTICES.txt
+          tar -tzf "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz" | grep -Fxq captain-tsubasa-2-icon.png
+          tar -tzf "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz" | grep -Fxq install-desktop-entry.sh
+          tar -tzf "$asset_dir/captain-tsubasa-2-remake-${RELEASE_TAG}-linux-x86_64.tar.gz" | grep -Fxq uninstall-desktop-entry.sh
 
-      - name: Create source archives and SHA-256 manifest
+      - name: Create source archives
         shell: bash
         env:
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
@@ -181,6 +205,117 @@ jobs:
           git archive --format=tar --prefix="${archive_prefix}/" "$RELEASE_TAG" \
             | gzip --no-name \
             > "$asset_dir/${archive_prefix}-source.tar.gz"
+      - name: Upload release assets for packaging
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-assets
+          path: ${{ runner.temp }}/release-assets/*
+          if-no-files-found: error
+
+  windows-installer:
+    name: Build per-user Windows installer
+    needs: source-release
+    runs-on: windows-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      RELEASE_TAG: ${{ needs.source-release.outputs.release_tag }}
+    steps:
+      - name: Check out release source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+
+      - name: Download the portable Windows package
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release-assets
+          path: ${{ runner.temp }}/release-assets
+
+      - name: Prepare installer inputs
+        shell: pwsh
+        run: |
+          $releaseAssets = Join-Path $env:RUNNER_TEMP 'release-assets'
+          $packageDirectory = Join-Path $env:RUNNER_TEMP 'windows-package'
+          $installerDirectory = Join-Path $env:RUNNER_TEMP 'windows-installer'
+          New-Item -ItemType Directory -Path $packageDirectory, $installerDirectory -Force | Out-Null
+          $archive = Get-ChildItem -LiteralPath $releaseAssets -Filter '*-windows-x86_64.zip' | Select-Object -First 1
+          if ($null -eq $archive) { throw 'The portable Windows release package is missing.' }
+          Expand-Archive -LiteralPath $archive.FullName -DestinationPath $packageDirectory -Force
+          "WINDOWS_PACKAGE_DIR=$packageDirectory" >> $env:GITHUB_ENV
+          "WINDOWS_INSTALLER_DIR=$installerDirectory" >> $env:GITHUB_ENV
+          "APP_VERSION=$($env:RELEASE_TAG.Substring(1))" >> $env:GITHUB_ENV
+
+      - name: Install pinned Inno Setup compiler
+        shell: pwsh
+        run: |
+          $download = Join-Path $env:RUNNER_TEMP 'innosetup-6.4.3.exe'
+          Invoke-WebRequest -Uri 'https://github.com/jrsoftware/issrc/releases/download/is-6_4_3/innosetup-6.4.3.exe' -OutFile $download
+          $actualHash = (Get-FileHash -LiteralPath $download -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne 'f3c42116542c4cc57263c5ba6c4feabfc49fe771f2f98a79d2f7628b8762723b') {
+            throw "Inno Setup checksum mismatch: $actualHash"
+          }
+          $process = Start-Process -FilePath $download -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/SP-' -Wait -PassThru
+          if ($process.ExitCode -ne 0) { throw "Inno Setup installation failed with exit code $($process.ExitCode)." }
+          $compilerPaths = @(
+            (Join-Path $env:ProgramFiles 'Inno Setup 6\ISCC.exe'),
+            (Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6\ISCC.exe')
+          )
+          $iscc = $compilerPaths | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+          if ($null -eq $iscc) { throw 'The Inno Setup compiler was not installed.' }
+          "ISCC=$iscc" >> $env:GITHUB_ENV
+
+      - name: Compile Windows setup package
+        shell: pwsh
+        run: |
+          $icon = Join-Path $env:GITHUB_WORKSPACE 'assets/branding/captain-tsubasa-2.ico'
+          $script = Join-Path $env:GITHUB_WORKSPACE 'packaging/windows/windows_installer.iss'
+          & $env:ISCC "/DAppVersion=$env:APP_VERSION" "/DReleaseTag=$env:RELEASE_TAG" "/DSourceDir=$env:WINDOWS_PACKAGE_DIR" "/DIconFile=$icon" "/DOutputDir=$env:WINDOWS_INSTALLER_DIR" $script
+          if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed with exit code $LASTEXITCODE." }
+          $installer = Join-Path $env:WINDOWS_INSTALLER_DIR "captain-tsubasa-2-remake-$env:RELEASE_TAG-windows-x86_64-setup.exe"
+          if (-not (Test-Path -LiteralPath $installer)) { throw 'The Windows setup package was not produced.' }
+
+      - name: Upload Windows setup package
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: windows-setup
+          path: ${{ runner.temp }}/windows-installer/*.exe
+          if-no-files-found: error
+
+  publish-release:
+    name: Sign and publish desktop release
+    needs: [source-release, windows-installer]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      id-token: write
+    outputs:
+      release_tag: ${{ needs.source-release.outputs.release_tag }}
+    env:
+      RELEASE_TAG: ${{ needs.source-release.outputs.release_tag }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Download release assets
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release-assets
+          path: ${{ runner.temp }}/release-assets
+
+      - name: Download Windows setup package
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: windows-setup
+          path: ${{ runner.temp }}/release-assets
+
+      - name: Create SHA-256 manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          asset_dir="$RUNNER_TEMP/release-assets"
+          chmod +x "$asset_dir"/*.AppImage
           (
             cd "$asset_dir"
             sha256sum -- * > SHA256SUMS
@@ -193,8 +328,6 @@ jobs:
 
       - name: Sign and verify checksum manifest with Sigstore
         shell: bash
-        env:
-          RELEASE_TAG: ${{ steps.release.outputs.tag }}
         run: |
           set -euo pipefail
           asset_dir="$RUNNER_TEMP/release-assets"
@@ -249,11 +382,7 @@ jobs:
           fi
           echo "- GPG detached signature: created." >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Recreate the tagged release with source and desktop assets
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+      - name: Recreate the tagged release with all packages
         run: |
           set -euo pipefail
           asset_dir="$RUNNER_TEMP/release-assets"
@@ -271,7 +400,7 @@ jobs:
 
   linux-release-smoke:
     name: Launch published Linux package
-    needs: source-release
+    needs: publish-release
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -279,7 +408,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          RELEASE_TAG: ${{ needs.source-release.outputs.release_tag }}
+          RELEASE_TAG: ${{ needs.publish-release.outputs.release_tag }}
         shell: bash
         run: |
           set -euo pipefail
@@ -301,19 +430,19 @@ jobs:
 
   windows-release-smoke:
     name: Launch published Windows package
-    needs: source-release
+    needs: publish-release
     runs-on: windows-latest
     timeout-minutes: 10
     steps:
       - name: Check out the release source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: ${{ needs.source-release.outputs.release_tag }}
+          ref: ${{ needs.publish-release.outputs.release_tag }}
       - name: Download and launch the Windows release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          RELEASE_TAG: ${{ needs.source-release.outputs.release_tag }}
+          RELEASE_TAG: ${{ needs.publish-release.outputs.release_tag }}
         shell: pwsh
         run: |
           $tokens = $null
@@ -342,7 +471,7 @@ jobs:
 
   macos-release-smoke:
     name: Launch published macOS package
-    needs: source-release
+    needs: publish-release
     runs-on: macos-latest
     timeout-minutes: 10
     steps:
@@ -350,7 +479,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          RELEASE_TAG: ${{ needs.source-release.outputs.release_tag }}
+          RELEASE_TAG: ${{ needs.publish-release.outputs.release_tag }}
         shell: bash
         run: |
           set -euo pipefail
