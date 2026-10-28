@@ -58,13 +58,15 @@ The current release recreates the opening sequence and soundtrack, then presents
 
 Download the latest version from [GitHub Releases](https://github.com/susimsek/captain-tsubasa-2-remake/releases/latest). Choose the asset for your platform:
 
-| Platform | Release asset | First launch |
+| Platform | File | First launch |
 | --- | --- | --- |
-| Windows x86_64 | `captain-tsubasa-2-remake-vX.Y.Z-windows-x86_64-setup.exe` or `captain-tsubasa-2-remake-vX.Y.Z-windows-x86_64.zip` | The setup installs to your user account without administrator access. The ZIP is portable: extract it and open `captain-tsubasa-2-remake.exe`. |
-| Linux x86_64 | `captain-tsubasa-2-remake-vX.Y.Z-x86_64.AppImage` or `captain-tsubasa-2-remake-vX.Y.Z-linux-x86_64.tar.gz` | For AppImage, make the file executable and launch it. For the tarball, extract and run `./captain-tsubasa-2-remake.x86_64`; `./install-desktop-entry.sh` adds a user-level menu launcher for that folder. |
-| macOS Universal | `captain-tsubasa-2-remake-vX.Y.Z-macos-universal.zip` | Extract and open `Captain Tsubasa 2 Remake.app`. |
+| Windows | `captain-tsubasa-2-remake-vX.Y.Z-windows-x86_64-setup.exe` or portable `captain-tsubasa-2-remake-vX.Y.Z-windows-x86_64.zip` | Setup: follow the installer. ZIP: extract and run `captain-tsubasa-2-remake.exe`. Unsigned build: SmartScreen → **More info** → **Run anyway**. |
+| Linux | `captain-tsubasa-2-remake-vX.Y.Z-x86_64.AppImage` or `captain-tsubasa-2-remake-vX.Y.Z-linux-x86_64.tar.gz` | AppImage: run `chmod +x <file>`, then launch it. Tarball: extract and run `./captain-tsubasa-2-remake.x86_64`. |
+| macOS | Universal `captain-tsubasa-2-remake-vX.Y.Z-macos-universal.zip` | Extract and move `Captain Tsubasa 2 Remake.app` to Applications. Not notarized: Control-click → **Open** → **Open**. |
 
-The in-game updater uses the Windows ZIP for writable portable installs and the per-user setup package when the current copy is in a protected or temporary folder. Linux updates use the package format matching the running install (AppImage or tarball); macOS updates replace the app bundle in place. Automatic checks never download or install an update on their own. If FUSE is unavailable, launch the AppImage with `--appimage-extract-and-run` or use the tarball instead. The game runs without Godot, a ROM file, or an emulator. macOS builds are ad-hoc signed but not notarized, so Gatekeeper may ask you to approve the app on first launch. Windows builds are not Authenticode-signed and may show a SmartScreen warning. Release assets include a SHA-256 manifest and Sigstore signature bundle.
+Optional: check downloaded files against `SHA256SUMS` in the release. This checks file integrity; it does not change SmartScreen or Gatekeeper prompts.
+
+The in-game updater uses the Windows ZIP for writable portable installs and the per-user setup package when the current copy is in a protected or temporary folder. Linux updates use the package format matching the running install (AppImage or tarball); macOS updates replace the app bundle in place. Automatic checks never download or install an update on their own. If FUSE is unavailable, launch the AppImage with `--appimage-extract-and-run` or use the tarball instead. The game runs without Godot, a ROM file, or an emulator. Release assets include a SHA-256 manifest and Sigstore signature bundle.
 
 ## System requirements
 
