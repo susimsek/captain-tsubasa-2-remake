@@ -45,19 +45,30 @@ The current release recreates the opening sequence and soundtrack, then presents
 - Opening presentation with original graphics, animation, text timing, and sound cues.
 - Original opening soundtrack reproduced in a standalone Godot audio resource.
 - Initial title screen with keyboard and controller cursor navigation.
-- Built-in desktop updates download the matching platform package, verify its SHA-256 checksum, and offer **Install and Relaunch**.
+- Release builds check for updates after launch by default. The check only reports availability; downloading starts when you choose **Download Update**. You can turn automatic checks off in **Check for Updates…**.
+- The built-in updater verifies the matching platform package before offering **Install and Relaunch**. Windows uses the per-user setup package for protected or temporary installs and the portable ZIP for writable installs.
 - Windows and Linux provide separate **Help → About…** and **Help → Check for Updates…** commands. macOS keeps both in its native application menu. **F1** opens About; **F2** checks for updates. About shows the installed version and original release date; the update check uses a separate dialog.
 
 ## Download
 
-Download the latest desktop release from [GitHub Releases](https://github.com/susimsek/captain-tsubasa-2-remake/releases/latest). Choose the package for your operating system. The exported game runs without Godot, a ROM file, or an emulator.
+Download the latest version from [GitHub Releases](https://github.com/susimsek/captain-tsubasa-2-remake/releases/latest). Choose the asset for your platform:
 
-macOS releases are ad-hoc signed but not notarized, so Gatekeeper may ask you to approve the app the first time it opens. Windows releases are not Authenticode-signed and may show a SmartScreen warning.
+| Platform | Release asset | First launch |
+| --- | --- | --- |
+| Windows x86_64 | `captain-tsubasa-2-remake-vX.Y.Z-windows-x86_64-setup.exe` or `captain-tsubasa-2-remake-vX.Y.Z-windows-x86_64.zip` | The setup installs to your user account without administrator access. The ZIP is portable: extract it and open `captain-tsubasa-2-remake.exe`. |
+| Linux x86_64 | `captain-tsubasa-2-remake-vX.Y.Z-x86_64.AppImage` or `captain-tsubasa-2-remake-vX.Y.Z-linux-x86_64.tar.gz` | For AppImage, make the file executable and launch it. For the tarball, extract and run `./captain-tsubasa-2-remake.x86_64`; `./install-desktop-entry.sh` adds a user-level menu launcher for that folder. |
+| macOS Universal | `captain-tsubasa-2-remake-vX.Y.Z-macos-universal.zip` | Extract and open `Captain Tsubasa 2 Remake.app`. |
+
+The in-game updater uses the Windows ZIP for writable portable installs and the per-user setup package when the current copy is in a protected or temporary folder. Linux updates use the package format matching the running install (AppImage or tarball); macOS updates replace the app bundle in place. Automatic checks never download or install an update on their own. If FUSE is unavailable, launch the AppImage with `--appimage-extract-and-run` or use the tarball instead. The game runs without Godot, a ROM file, or an emulator. macOS builds are ad-hoc signed but not notarized, so Gatekeeper may ask you to approve the app on first launch. Windows builds are not Authenticode-signed and may show a SmartScreen warning. Release assets include a SHA-256 manifest and Sigstore signature bundle.
 
 ## System requirements
 
-- **Playing:** Windows x86_64, Linux x86_64, or macOS Universal.
+- **Windows:** Windows 10 or later, x86_64.
+- **Linux:** x86_64; a distribution released after 2018.
+- **macOS:** Universal build for Intel and Apple silicon; Godot 4.7's baseline is macOS 11 or later on Intel and macOS 13 or later on Apple silicon.
 - **Building from source:** Godot 4.7.2.
+
+The operating system baselines follow [Godot 4.7's exported-project requirements](https://docs.godotengine.org/en/4.7/about/system_requirements.html).
 
 ## Run from source
 

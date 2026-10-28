@@ -25,9 +25,11 @@ const APPLICATION_ICON := preload("res://assets/branding/captain-tsubasa-2-icon.
 const ABOUT_INPUT_ACTION := "application_about"
 const UPDATE_INPUT_ACTION := "application_check_for_updates"
 const ABOUT_WINDOW_SIZE := Vector2i(380, 230)
-const UPDATE_WINDOW_SIZE := Vector2i(520, 250)
+const UPDATE_WINDOW_SIZE := Vector2i(520, 280)
 const UPDATE_RELEASE_API_URL := "https://api.github.com/repos/susimsek/captain-tsubasa-2-remake/releases/latest"
 const UPDATE_ASSET_URL_PREFIX := "https://github.com/susimsek/captain-tsubasa-2-remake/releases/download/"
+const UPDATE_SETTINGS_PATH := "user://update_settings.cfg"
+const UPDATE_AUTO_CHECK_DELAY := 3.0
 const UPDATE_MENU_TAG := "captain_tsubasa_check_for_updates"
 const UPDATE_MENU_LABEL := "Check for Updates…"
 const UPDATE_MENU_RETRY_SECONDS := 0.5
@@ -41,6 +43,7 @@ var _update_status_label: Label
 var _update_message_label: Label
 var _update_date_label: Label
 var _update_progress_bar: ProgressBar
+var _auto_update_checkbox: CheckBox
 var _update_action_button: Button
 var _update_later_button: Button
 var _update_request: HTTPRequest
@@ -50,14 +53,18 @@ var _update_download_url := ""
 var _update_expected_sha256 := ""
 var _update_available_version := ""
 var _update_asset_size := 0
+var _update_package_kind := "archive"
 var _update_download_path := ""
 var _last_download_percent := -1
 var _update_state := "idle"
 var _checking_for_updates := false
+var _interactive_update_check := false
+var _automatic_update_checks_enabled := true
 var _desktop_help_menu: MenuBar
 
 
 func _ready() -> void:
+	_load_update_preferences()
 	# Keep About independent of the game's 256x224 pixel-art viewport. An
 	# embedded child window inherits the game's stretch scale and becomes huge.
 	get_viewport().gui_embed_subwindows = false
@@ -71,6 +78,9 @@ func _ready() -> void:
 	_install_update_input_action()
 	_install_update_menu_item.call_deferred()
 	_show_pending_update_result()
+	if _is_updater_enabled_for_this_build() and _automatic_update_checks_enabled:
+		var auto_check_timer := get_tree().create_timer(UPDATE_AUTO_CHECK_DELAY)
+		auto_check_timer.timeout.connect(_check_for_updates_in_background)
 
 
 func _uses_inline_desktop_help_menu() -> bool:
@@ -174,11 +184,25 @@ func show_about_dialog() -> void:
 
 
 func check_for_updates() -> void:
-	if _update_dialog == null or _update_request == null or _checking_for_updates:
+	if _update_dialog == null or _update_request == null:
 		return
-	if _update_state in ["downloading", "ready", "installing"]:
+	if _update_state in ["available", "downloading", "ready", "installing"]:
 		_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
 		_clear_update_button_focus.call_deferred()
+		return
+	_interactive_update_check = true
+	if _checking_for_updates:
+		_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
+		_clear_update_button_focus.call_deferred()
+		return
+	if not _is_updater_enabled_for_this_build():
+		_show_update_unavailable("Updates are available in installed release builds.")
+		_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
+		return
+	var permission_message := _get_update_permission_message()
+	if not permission_message.is_empty():
+		_show_update_unavailable(permission_message)
+		_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
 		return
 
 	_checking_for_updates = true
@@ -202,6 +226,101 @@ func check_for_updates() -> void:
 	var request_error := _update_request.request(UPDATE_RELEASE_API_URL, headers)
 	if request_error != OK:
 		_show_update_error()
+
+
+func _check_for_updates_in_background() -> void:
+	if not _automatic_update_checks_enabled or not _is_updater_enabled_for_this_build():
+		return
+	if _checking_for_updates or _update_state in ["downloading", "ready", "installing"]:
+		return
+	if not _get_update_permission_message().is_empty() and OS.get_name() != "Windows":
+		return
+	_interactive_update_check = false
+	_checking_for_updates = true
+	_update_state = "checking"
+	_update_date_label.visible = false
+	_update_progress_bar.visible = false
+	var headers := PackedStringArray([
+		"Accept: application/vnd.github+json",
+		"X-GitHub-Api-Version: 2022-11-28",
+		"User-Agent: Captain-Tsubasa-2-Remake"
+	])
+	var request_error := _update_request.request(UPDATE_RELEASE_API_URL, headers)
+	if request_error != OK:
+		_show_update_error()
+
+
+func _is_updater_enabled_for_this_build() -> bool:
+	var channel := str(ProjectSettings.get_setting("application/config/update_channel", "development"))
+	var build_commit := str(ProjectSettings.get_setting("application/config/build_commit", ""))
+	return channel == "stable" and build_commit.length() >= 7
+
+
+func _get_update_target_path() -> String:
+	var executable_path := OS.get_executable_path()
+	match OS.get_name():
+		"macOS":
+			var app_bundle_path := _get_mac_app_bundle_path(executable_path)
+			return app_bundle_path.get_base_dir() if not app_bundle_path.is_empty() else ""
+		"Windows":
+			return executable_path.get_base_dir()
+		"Linux":
+			var appimage_path := OS.get_environment("APPIMAGE").strip_edges()
+			return appimage_path.get_base_dir() if not appimage_path.is_empty() else executable_path.get_base_dir()
+	return ""
+
+
+func _is_directory_writable(directory_path: String) -> bool:
+	if directory_path.is_empty() or not DirAccess.dir_exists_absolute(directory_path):
+		return false
+	var probe_path := directory_path.path_join(
+		".captain-tsubasa-update-check-%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()]
+	)
+	var probe_file := FileAccess.open(probe_path, FileAccess.WRITE)
+	if probe_file == null:
+		return false
+	probe_file.close()
+	return DirAccess.remove_absolute(probe_path) == OK
+
+
+func _get_update_permission_message() -> String:
+	if OS.get_name() == "Windows":
+		return ""
+	var target_directory := _get_update_target_path()
+	if target_directory.is_empty():
+		return "The game installation could not be located. Reinstall the game, then try again."
+	if not _is_directory_writable(target_directory):
+		return "This install folder can't be updated. Move the game to a folder you can write to, then try again."
+	return ""
+
+
+func _windows_should_use_setup() -> bool:
+	if OS.get_name() != "Windows":
+		return false
+	var target_directory := _get_update_target_path()
+	if not _is_directory_writable(target_directory):
+		return true
+	var temp_directory := OS.get_environment("TEMP").replace("\\", "/").trim_suffix("/").to_lower()
+	var executable_path := OS.get_executable_path().replace("\\", "/").to_lower()
+	return not temp_directory.is_empty() and executable_path.begins_with(temp_directory + "/")
+
+
+func _load_update_preferences() -> void:
+	var preferences := ConfigFile.new()
+	if preferences.load(UPDATE_SETTINGS_PATH) == OK:
+		_automatic_update_checks_enabled = bool(preferences.get_value("updates", "automatic_checks", true))
+
+
+func _save_update_preferences() -> void:
+	var preferences := ConfigFile.new()
+	preferences.load(UPDATE_SETTINGS_PATH)
+	preferences.set_value("updates", "automatic_checks", _automatic_update_checks_enabled)
+	preferences.save(UPDATE_SETTINGS_PATH)
+
+
+func _on_auto_update_checkbox_toggled(enabled: bool) -> void:
+	_automatic_update_checks_enabled = enabled
+	_save_update_preferences()
 
 
 func _create_about_dialog() -> void:
@@ -360,6 +479,17 @@ func _create_update_dialog() -> void:
 	_update_progress_bar.add_theme_stylebox_override("background", _create_update_progress_style(Color("383a3d")))
 	_update_progress_bar.add_theme_stylebox_override("fill", _create_update_progress_style(Color(UI_ACCENT_COLOR)))
 	content.add_child(_update_progress_bar)
+
+	_auto_update_checkbox = CheckBox.new()
+	_auto_update_checkbox.name = "AutomaticUpdateChecks"
+	_auto_update_checkbox.text = "Automatically check for updates"
+	_auto_update_checkbox.tooltip_text = "Checks for a new release after launch. Updates are never downloaded until you choose Download Update."
+	_auto_update_checkbox.add_theme_font_size_override("font_size", UI_FONT_METADATA)
+	_auto_update_checkbox.add_theme_color_override("font_color", Color(UI_TEXT_MUTED))
+	_auto_update_checkbox.add_theme_color_override("font_hover_color", Color(UI_TEXT_SECONDARY))
+	_auto_update_checkbox.set_pressed_no_signal(_automatic_update_checks_enabled)
+	_auto_update_checkbox.toggled.connect(_on_auto_update_checkbox_toggled)
+	content.add_child(_auto_update_checkbox)
 
 	_update_action_button = Button.new()
 	_update_action_button.name = "UpdateAction"
@@ -534,6 +664,8 @@ func _on_update_request_completed(result: int, response_code: int, _headers: Pac
 		_update_progress_bar.visible = false
 		_update_progress_bar.indeterminate = false
 		_set_update_actions("Download Update", "Later")
+		if not _interactive_update_check:
+			get_window().title = "%s — Update Available" % APPLICATION_NAME
 	else:
 		_update_state = "current"
 		_update_status_label.text = "You're up to date!"
@@ -541,6 +673,7 @@ func _on_update_request_completed(result: int, response_code: int, _headers: Pac
 		_update_progress_bar.visible = false
 		_update_progress_bar.indeterminate = false
 		_set_update_actions("OK")
+	_interactive_update_check = false
 	_clear_update_button_focus.call_deferred()
 
 
@@ -587,9 +720,11 @@ func _find_platform_download_asset(release: Dictionary, latest_tag: String) -> D
 		"macOS":
 			platform_suffix = "macos-universal.zip"
 		"Windows":
-			platform_suffix = "windows-x86_64.zip"
+			_update_package_kind = "setup" if _windows_should_use_setup() else "archive"
+			platform_suffix = "windows-x86_64-setup.exe" if _update_package_kind == "setup" else "windows-x86_64.zip"
 		"Linux":
-			platform_suffix = "linux-x86_64.tar.gz"
+			_update_package_kind = "appimage" if _is_running_as_appimage() else "archive"
+			platform_suffix = "x86_64.AppImage" if _is_running_as_appimage() else "linux-x86_64.tar.gz"
 		_:
 			return {}
 
@@ -612,9 +747,15 @@ func _find_platform_download_asset(release: Dictionary, latest_tag: String) -> D
 
 func _format_update_message(latest_version: String, current_version: String) -> String:
 	var message := "Version %s is available. You're using version %s." % [latest_version, current_version]
+	if _update_package_kind == "setup":
+		message += " It will install a copy in your user account."
 	if OS.get_name() == "macOS":
 		message += " After updating, macOS may ask you to approve opening the app."
 	return message
+
+
+func _is_running_as_appimage() -> bool:
+	return OS.get_name() == "Linux" and not OS.get_environment("APPIMAGE").strip_edges().is_empty()
 
 
 func _start_update_download() -> void:
@@ -686,12 +827,17 @@ func _start_update_installer() -> void:
 			helper_program = "powershell.exe"
 			helper_arguments = PackedStringArray([
 				"-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", helper_path,
-				game_pid, _update_download_path, executable_path, status_path
+				game_pid, _update_download_path, executable_path, status_path, _update_package_kind
 			])
 		"Linux":
 			helper_resource = "res://scripts/updater/apply_update_linux.sh"
 			helper_program = "/bin/sh"
-			helper_arguments = PackedStringArray([helper_path, _update_download_path, executable_path, game_pid, status_path])
+			var appimage_path := OS.get_environment("APPIMAGE").strip_edges()
+			var linux_target := appimage_path if not appimage_path.is_empty() else executable_path
+			var package_kind := "appimage" if not appimage_path.is_empty() else "archive"
+			helper_arguments = PackedStringArray([
+				helper_path, _update_download_path, linux_target, game_pid, status_path, package_kind
+			])
 		_:
 			_show_update_unavailable("Automatic installation is not supported on this platform.")
 			return
@@ -771,7 +917,7 @@ func _format_install_failure(result: String) -> String:
 		"replace", "install":
 			return "The update couldn't be installed. The previous version was restored."
 		"relaunch":
-			return "The updated game couldn't be reopened. The previous version was restored."
+			return "The updated game couldn't be reopened. Your previous copy is still available."
 		"recovery":
 			return "The update couldn't be completed. The previous version is saved beside the game for recovery."
 		_:

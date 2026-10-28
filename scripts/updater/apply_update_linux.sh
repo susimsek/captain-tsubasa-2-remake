@@ -5,10 +5,23 @@ archive="$1"
 target_executable="$2"
 game_pid="$3"
 status_file="$4"
+appimage_update=0
 
 write_status() {
 	printf '%s\n' "$1" > "$status_file"
 }
+
+case "${5:-archive}" in
+	appimage)
+		appimage_update=1
+		;;
+	archive)
+		;;
+	*)
+		write_status "failed:package"
+		exit 1
+		;;
+esac
 
 relaunch_game() {
 	if [ -x "$target_executable" ]; then
@@ -56,17 +69,26 @@ cleanup() {
 }
 trap cleanup EXIT
 
-if ! /bin/tar -xzf "$archive" -C "$stage_dir" --no-same-owner --no-same-permissions -- captain-tsubasa-2-remake.x86_64 THIRD_PARTY_NOTICES.txt; then
-	write_status "failed:unpack"
-	relaunch_after_cleanup=1
-	exit 1
-fi
+if [ "$appimage_update" -eq 1 ]; then
+	new_executable="$archive"
+	if [ ! -f "$new_executable" ] || [ -L "$new_executable" ]; then
+		write_status "failed:package"
+		relaunch_after_cleanup=1
+		exit 1
+	fi
+else
+	if ! /bin/tar -xzf "$archive" -C "$stage_dir" --no-same-owner --no-same-permissions -- captain-tsubasa-2-remake.x86_64 THIRD_PARTY_NOTICES.txt; then
+		write_status "failed:unpack"
+		relaunch_after_cleanup=1
+		exit 1
+	fi
 
-new_executable="$stage_dir/captain-tsubasa-2-remake.x86_64"
-if [ ! -f "$new_executable" ] || [ -L "$new_executable" ]; then
-	write_status "failed:package"
-	relaunch_after_cleanup=1
-	exit 1
+	new_executable="$stage_dir/captain-tsubasa-2-remake.x86_64"
+	if [ ! -f "$new_executable" ] || [ -L "$new_executable" ]; then
+		write_status "failed:package"
+		relaunch_after_cleanup=1
+		exit 1
+	fi
 fi
 
 if ! /bin/cp -f "$target_executable" "$backup_executable"; then
@@ -82,7 +104,7 @@ if ! /bin/cp -f "$new_executable" "$temporary_executable" || ! /bin/chmod +x "$t
 	exit 1
 fi
 
-if [ -f "$stage_dir/THIRD_PARTY_NOTICES.txt" ]; then
+if [ "$appimage_update" -eq 0 ] && [ -f "$stage_dir/THIRD_PARTY_NOTICES.txt" ]; then
 	if ! /bin/cp -f "$stage_dir/THIRD_PARTY_NOTICES.txt" "$parent_dir/THIRD_PARTY_NOTICES.txt"; then
 		write_status "failed:install"
 		relaunch_after_cleanup=1
