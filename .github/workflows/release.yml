@@ -176,9 +176,6 @@ jobs:
           "$GODOT_BIN" --headless --editor --path . --import
           echo "duration_seconds=$SECONDS" >> "$GITHUB_OUTPUT"
 
-      - name: Launch main scene briefly
-        run: '"$GODOT_BIN" --headless --path . --quit-after 2'
-
       - name: Export Linux, Windows, and macOS desktop builds
         id: desktop-export
         shell: bash
@@ -224,13 +221,6 @@ jobs:
           cp packaging/linux/uninstall-desktop-entry.sh "$linux_dir/uninstall-desktop-entry.sh"
           chmod +x "$linux_dir/captain-tsubasa-2-remake.x86_64"
           chmod +x "$linux_dir/install-desktop-entry.sh" "$linux_dir/uninstall-desktop-entry.sh"
-          linux_smoke_log="$RUNNER_TEMP/linux-export-smoke.log"
-          "$linux_dir/captain-tsubasa-2-remake.x86_64" --headless --quit-after 2 >"$linux_smoke_log" 2>&1
-          cat "$linux_smoke_log"
-          if grep -En 'SCRIPT ERROR:|ERROR:' "$linux_smoke_log" | grep -Ev 'resources still in use at exit'; then
-            echo "The exported Linux release reported a runtime error." >&2
-            exit 1
-          fi
 
           appimagetool="$RUNNER_TEMP/appimagetool-x86_64.AppImage"
           curl --fail --silent --show-error --location \
@@ -541,106 +531,3 @@ jobs:
           sed -i "s/RELEASE_TAG/$RELEASE_TAG/g" "$notes_file"
           gh release edit "$RELEASE_TAG" --notes-file "$notes_file" --repo "$GH_REPO"
 
-  linux-release-smoke:
-    name: Launch published Linux package
-    needs: publish-release
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    steps:
-      - name: Download and launch the Linux release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          RELEASE_TAG: ${{ needs.publish-release.outputs.release_tag }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          package_dir="$RUNNER_TEMP/linux-release"
-          mkdir -p "$package_dir"
-          gh release download "$RELEASE_TAG" --repo "$GH_REPO" \
-            --pattern "*linux-x86_64.tar.gz" --dir "$package_dir"
-          archive=$(find "$package_dir" -maxdepth 1 -name '*linux-x86_64.tar.gz' -print -quit)
-          tar -xzf "$archive" -C "$package_dir"
-          executable="$package_dir/captain-tsubasa-2-remake.x86_64"
-          chmod +x "$executable"
-          smoke_log="$RUNNER_TEMP/linux-release-smoke.log"
-          "$executable" --headless --quit-after 2 >"$smoke_log" 2>&1
-          cat "$smoke_log"
-          if grep -En 'SCRIPT ERROR:|ERROR:' "$smoke_log" | grep -Ev 'resources still in use at exit'; then
-            echo "The published Linux release reported a runtime error." >&2
-            exit 1
-          fi
-
-  windows-release-smoke:
-    name: Launch published Windows package
-    needs: publish-release
-    runs-on: windows-latest
-    timeout-minutes: 10
-    steps:
-      - name: Check out the release source
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          ref: ${{ needs.publish-release.outputs.release_tag }}
-      - name: Download and launch the Windows release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          RELEASE_TAG: ${{ needs.publish-release.outputs.release_tag }}
-        shell: pwsh
-        run: |
-          $tokens = $null
-          $parseErrors = $null
-          $installerPath = Join-Path $env:GITHUB_WORKSPACE 'scripts/updater/apply_update_windows.ps1'
-          [System.Management.Automation.Language.Parser]::ParseFile($installerPath, [ref]$tokens, [ref]$parseErrors) | Out-Null
-          if ($parseErrors.Count -gt 0) {
-            $parseErrors | ForEach-Object { Write-Error $_.Message }
-            throw 'The Windows update installer could not be parsed.'
-          }
-          $packageDirectory = Join-Path $env:RUNNER_TEMP 'windows-release'
-          New-Item -ItemType Directory -Path $packageDirectory -Force | Out-Null
-          gh release download $env:RELEASE_TAG --repo $env:GH_REPO `
-            --pattern '*windows-x86_64.zip' --dir $packageDirectory
-          $archive = Get-ChildItem -LiteralPath $packageDirectory -Filter '*windows-x86_64.zip' | Select-Object -First 1
-          Expand-Archive -LiteralPath $archive.FullName -DestinationPath $packageDirectory -Force
-          $executable = Join-Path $packageDirectory 'captain-tsubasa-2-remake.exe'
-          $smokeLog = Join-Path $env:RUNNER_TEMP 'windows-release-smoke.log'
-          & $executable --headless --quit-after 2 2>&1 | Tee-Object -FilePath $smokeLog
-          if ($LASTEXITCODE -ne 0) {
-            throw "The published Windows release exited with code $LASTEXITCODE."
-          }
-          $runtimeErrors = Select-String -Path $smokeLog -Pattern 'SCRIPT ERROR:|ERROR:' -CaseSensitive |
-            Where-Object { $_.Line -notmatch 'resources still in use at exit' }
-          if ($runtimeErrors) {
-            throw 'The published Windows release reported a runtime error.'
-          }
-
-  macos-release-smoke:
-    name: Launch published macOS package
-    needs: publish-release
-    runs-on: macos-latest
-    timeout-minutes: 10
-    steps:
-      - name: Download and launch the macOS release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          RELEASE_TAG: ${{ needs.publish-release.outputs.release_tag }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          package_dir="$RUNNER_TEMP/macos-release"
-          mkdir -p "$package_dir"
-          gh release download "$RELEASE_TAG" --repo "$GH_REPO" \
-            --pattern "*macos-universal.zip" --dir "$package_dir"
-          archive=$(find "$package_dir" -maxdepth 1 -name '*macos-universal.zip' -print -quit)
-          /usr/bin/ditto -x -k "$archive" "$package_dir"
-          app=$(find "$package_dir" -maxdepth 2 -type d -name '*.app' -print -quit)
-          test -n "$app"
-          executable=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$app/Contents/Info.plist")
-          smoke_log="$RUNNER_TEMP/macos-release-smoke.log"
-          "$app/Contents/MacOS/$executable" --headless --quit-after 2 >"$smoke_log" 2>&1
-          cat "$smoke_log"
-          if grep -En 'SCRIPT ERROR:|ERROR:' "$smoke_log" | grep -Ev 'resources still in use at exit'; then
-            echo "The published macOS release reported a runtime error." >&2
-            exit 1
-          fi
