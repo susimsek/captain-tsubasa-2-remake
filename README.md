@@ -56,7 +56,7 @@ The current release recreates the opening sequence and soundtrack, then presents
 
 ## Downloads
 
-Get the [latest release](https://github.com/susimsek/captain-tsubasa-2-remake/releases/latest):
+Download the latest version from [GitHub Releases](https://github.com/susimsek/captain-tsubasa-2-remake/releases/latest). Choose the asset for your platform:
 
 | Platform | File | First launch |
 | --- | --- | --- |
