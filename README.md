@@ -83,9 +83,17 @@ Open the project in Godot 4.7.2 and run the main scene, or launch it from a term
 
 ## Controls
 
-- Up / Down: move the title cursor.
-- Tab / controller Back: switch the title selection.
-- Enter / controller Start: trigger the opening's Start handoff. This does not select a title option.
+Keyboard controls follow the virtual NES layout:
+
+| Keyboard | NES input | Use |
+| --- | --- | --- |
+| Arrow keys | D-pad | Move the title cursor and navigate menus. |
+| Z | A | Advance dialogue and confirm menu choices. |
+| X | B | Send B during the match setup flow. |
+| Enter | Start | Trigger the title handoff; during the route it also advances as A. |
+| Shift (Tab also works) | Select | Switch the title cursor between KICK OFF and CONTINUE, or send Select in the route. |
+
+Space is also accepted as A in route menus. Gamepads use the D-pad, A, B, Start, and Back/Select buttons. At the title, Enter/Start starts KICK OFF when it is selected; CONTINUE remains outside this slice.
 
 ## Project structure
 
