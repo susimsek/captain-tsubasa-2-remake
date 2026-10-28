@@ -93,7 +93,7 @@ Keyboard controls follow the virtual NES layout:
 | Enter | Start | Trigger the title handoff; during the route it also advances as A. |
 | Shift | Select | Switch the title cursor between KICK OFF and CONTINUE, or send Select in the route. |
 
-Space is also accepted as A in route menus. Gamepads use the D-pad, A, B, Start, and Back/Select buttons. At the title, Enter/Start starts KICK OFF when it is selected; CONTINUE remains outside this slice.
+Gamepads use the D-pad, A, B, Start, and Back/Select buttons. At the title, Enter/Start starts KICK OFF when it is selected; CONTINUE remains outside this slice.
 
 ## Project structure
 
