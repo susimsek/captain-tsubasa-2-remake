@@ -97,13 +97,15 @@ Space is also accepted as A in route menus. Gamepads use the D-pad, A, B, Start,
 
 ## Project structure
 
-- `scenes/` — main scene, opening runtime, and title screen.
-- `scripts/` — presentation, rendering, input, and audio systems.
-- `assets/opening/` — runtime audio and event data.
-- `reference/rom_extract/` — source bytes, decoded records, and provenance for project resources.
-- `reference/palettes/` — palette data used for NES-color comparisons.
-- `docs/` — architecture and behavior notes.
-- `tools/` — development and diagnostic utilities; these are not runtime dependencies.
+| Directory | Purpose |
+| --- | --- |
+| `scenes/` | Main scene, opening runtime, and title screen. |
+| `scripts/` | Presentation, rendering, input, and audio systems. |
+| `assets/opening/` | Runtime audio and event data. |
+| `reference/rom_extract/` | Source bytes, decoded records, and provenance for project resources. |
+| `reference/palettes/` | Palette data used for NES-color comparisons. |
+| `docs/` | Architecture and behavior notes. |
+| `tools/` | Development and diagnostic utilities; these are not runtime dependencies. |
 
 ## Development notes
 
