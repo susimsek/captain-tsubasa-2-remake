@@ -1,0 +1,27 @@
+{
+  "schema": "first-command-field-descriptor-selector-v1",
+  "resource_kind": "byte-preserved ROM code/table; not emulator output",
+  "rom_filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "bank_mapping": {
+    "bank_1f_cpu_e000_file_base": "0x03E010"
+  },
+  "entries": [
+    {
+      "path": "bank_1f_selector_code_EFF6_F00E.bin",
+      "file_offset": "0x03F006",
+      "size_bytes": 25,
+      "source": "bank-$1F CPU $EFF6-$F00E selector instructions",
+      "sha256": "ceb162a49b18c4629a508c12762d90e54e5b720dacf857634e3cee9014abc27b",
+      "raw_hex": "AE 21 06 BD 0F F0 8D 3D 06 8A D0 11 AD 00 06 D0 0C A9 02 8D 3D 06 4C 13 F0"
+    },
+    {
+      "path": "bank_1f_descriptor_lookup_F00F_F012.bin",
+      "file_offset": "0x03F01F",
+      "size_bytes": 4,
+      "source": "bank-$1F CPU $F00F-$F012 context lookup bytes",
+      "sha256": "6b1e73a0094b7b812d3b9e22cffb4f8239319847522c4fa103753b6950020f93",
+      "raw_hex": "00 00 01 00"
+    }
+  ]
+}

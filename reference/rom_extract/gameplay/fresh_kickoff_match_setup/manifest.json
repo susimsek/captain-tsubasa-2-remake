@@ -1,0 +1,38 @@
+{
+  "schema": "ct2-fresh-kickoff-match-setup-sources-v1",
+  "rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "mapping": "Bank $00 at CPU $8000 maps file 0x000010 + (CPU-$8000); offsets include the iNES header.",
+  "scope": "Exact ROM spans for the fresh caller's $8920 preset-loader prefix and its $9DEE index arithmetic; the source stops at the unresolved $78 wait.",
+  "spans": [
+    {
+      "id": "preset_loader_prefix",
+      "path": "reference/rom_extract/gameplay/fresh_kickoff_match_setup/preset_loader_prefix_A920_893E.bin",
+      "cpu_start": "$8920",
+      "cpu_end_exclusive": "$893F",
+      "file_offset": "0x000930",
+      "length": 31,
+      "rom_offset": 2352,
+      "callsite": {
+        "cpu": "$8938",
+        "target": "$C4B9",
+        "return": "$893B"
+      },
+      "sha256": "6f4f250519c608d82a9a58aa154e87070a7e6563341a4ec32ae78aa23ee51b12",
+      "bytes": "a21320ee9da5ec18690085eca5ed69bf85eda52585eaa20620b9c4a578d0fc"
+    },
+    {
+      "id": "multiply_by_x_helper",
+      "path": "reference/rom_extract/gameplay/fresh_kickoff_match_setup/multiply_by_x_helper_9DEE_9E0B.bin",
+      "cpu_start": "$9DEE",
+      "cpu_end_exclusive": "$9E0C",
+      "file_offset": "0x001DFE",
+      "length": 30,
+      "rom_offset": 7678,
+      "sha256": "274c1ff01f655cdaf900689a6b938df2f67d5d0c16713760e4d6074c5f684f79",
+      "bytes": "85eda90085eca00806ec26ed900c8a1865ec85eca5ed690085ed88d0eb60"
+    }
+  ]
+}

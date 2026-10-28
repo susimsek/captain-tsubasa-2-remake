@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Decode static 4x4 metatile layout from Turkish-ROM opening backgrounds.
+"""Decode static 4x4 metatile layouts from the supplied Turkish ROM.
 
 The export preserves NES tile IDs and palette indices. It does not choose an
 RGB palette or resolve scroll/raster timing; those belong to the renderer.
@@ -7,6 +7,7 @@ RGB palette or resolve scroll/raster timing; those belong to the renderer.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -16,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ROM = ROOT / "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes"
 OUT = ROOT / "reference" / "rom_extract" / "intro"
 BLOCK_PAGE_VARIANT_OFFSET = 0x1100
+DEFAULT_BACKGROUND_IDS = (0x00, 0x01, 0x03, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x17)
 
 
 def w(data: bytes, at: int) -> int:
@@ -30,12 +32,15 @@ def bank_file(bank: int, cpu: int) -> int:
     return 16 + 0x2000 * bank + cpu - 0xA000
 
 
-def decode_background(rom: bytes, bg_id: int) -> dict:
+def decode_background(rom: bytes, bg_id: int, output_dir: Path = OUT) -> dict:
     pointer_table = bank_file(7, 0xA000)
     cpu = w(rom, pointer_table + 2 * bg_id)
     source = bank_file(7, cpu)
     next_cpu = w(rom, pointer_table + 2 * (bg_id + 1))
     record = rom[source : bank_file(7, next_cpu)]
+    if len(record) < 6:
+        raise ValueError(f"Background ${bg_id:02X} record is truncated.")
+    (output_dir / f"background_{bg_id:02X}.bin").write_bytes(record)
     chr_first, chr_second, palette_flag, block_rows, block_cols, packed_origin = record[:6]
     block_page_selector = (palette_flag >> 7) & 1
     block_page_offset = BLOCK_PAGE_VARIANT_OFFSET * block_page_selector
@@ -62,16 +67,16 @@ def decode_background(rom: bytes, bg_id: int) -> dict:
         base_block = rom[base_block_source : base_block_source + 17]
         assert len(base_block) == 17
         base_page_blocks[block_id] = (base_block_source, base_block)
-        (OUT / f"block_{block_id:02X}.bin").write_bytes(base_block)
+        (output_dir / f"block_{block_id:02X}.bin").write_bytes(base_block)
 
         block_source = base_block_source + block_page_offset
         block = rom[block_source : block_source + 17]
         assert len(block) == 17
         block_name = f"block_{block_id:02X}_page_11.bin" if block_page_selector else f"block_{block_id:02X}.bin"
-        block_relative_path = f"reference/rom_extract/intro/{block_name}"
+        block_relative_path = (output_dir / block_name).relative_to(ROOT).as_posix()
         used_blocks[block_id] = (block_source, block, block_relative_path)
         if block_page_selector:
-            (OUT / block_name).write_bytes(block)
+            (output_dir / block_name).write_bytes(block)
         attr = block[0]
         if bg_id == 0x0A:
             # The BG0A loader treats $201C as the destination cursor for the
@@ -100,7 +105,7 @@ def decode_background(rom: bytes, bg_id: int) -> dict:
     palette_source = bank_file(6, 0xB000) + 16 * palette_index
     palette = rom[palette_source : palette_source + 16]
     assert len(palette) == 16
-    (OUT / f"background_palette_{palette_index:02X}.bin").write_bytes(palette)
+    (output_dir / f"background_palette_{palette_index:02X}.bin").write_bytes(palette)
 
     return {
         "background_id": hexn(bg_id),
@@ -108,7 +113,7 @@ def decode_background(rom: bytes, bg_id: int) -> dict:
         "record_file_offset": hexn(source, 6),
         "record_cpu_address": hexn(cpu, 4),
         "record_raw_hex": record.hex(" "),
-        "record_source_bin": f"reference/rom_extract/intro/background_{bg_id:02X}.bin",
+        "record_source_bin": (output_dir / f"background_{bg_id:02X}.bin").relative_to(ROOT).as_posix(),
         "chr_2k_bank_start_ids": [chr_first, chr_second],
         "chr_1k_banks_for_background": [chr_first, chr_first + 1, chr_second, chr_second + 1],
         "palette_flag_byte": hexn(palette_flag),
@@ -119,7 +124,7 @@ def decode_background(rom: bytes, bg_id: int) -> dict:
         "palette_index": palette_index,
         "palette_file_offset": hexn(palette_source, 6),
         "palette_raw_hex": palette.hex(" "),
-        "palette_source_bin": f"reference/rom_extract/intro/background_palette_{palette_index:02X}.bin",
+        "palette_source_bin": (output_dir / f"background_palette_{palette_index:02X}.bin").relative_to(ROOT).as_posix(),
         "metatile_rows": block_rows,
         "metatile_columns": block_cols,
         "metatile_ids_hex": bytes(ids).hex(" "),
@@ -141,7 +146,7 @@ def decode_background(rom: bytes, bg_id: int) -> dict:
         ],
         "base_page_4x4_blocks": [
             {"id": hexn(i), "file_offset": hexn(v[0], 6), "raw_hex": v[1].hex(" "),
-             "source_bin": f"reference/rom_extract/intro/block_{i:02X}.bin"}
+             "source_bin": (output_dir / f"block_{i:02X}.bin").relative_to(ROOT).as_posix()}
             for i, v in sorted(base_page_blocks.items())
         ] if block_page_selector else [],
         "tile_placements": placements,
@@ -149,12 +154,36 @@ def decode_background(rom: bytes, bg_id: int) -> dict:
     }
 
 
+def route_background_ids() -> list[int]:
+    result: set[int] = set()
+    event_root = ROOT / "assets/gameplay/rom_logic"
+    for cutscene_id in (1, 2):
+        path = event_root / f"kickoff_cutscene_{cutscene_id:02d}_events.json"
+        document = json.loads(path.read_text(encoding="utf-8"))
+        if document.get("source_rom_sha256") != hashlib.sha256(ROM.read_bytes()).hexdigest():
+            raise SystemExit(f"Cutscene event metadata ROM identity mismatch: {path}")
+        for event in document.get("events", []):
+            if event.get("kind") in ("background_1", "background_2"):
+                result.add(int(event["id"]))
+    return sorted(result)
+
+
 def main() -> None:
     rom = ROM.read_bytes()
-    OUT.mkdir(parents=True, exist_ok=True)
-    for bg_id in (0x00, 0x01, 0x03, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x17):
-        result = decode_background(rom, bg_id)
-        (OUT / f"background_{bg_id:02X}_layout.json").write_text(
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--kickoff-cutscenes", action="store_true",
+                        help="extract layouts used by the byte-indexed cutscene 1/2 event manifests")
+    args = parser.parse_args()
+    if args.kickoff_cutscenes:
+        output_dir = ROOT / "reference/rom_extract/gameplay/backgrounds"
+        background_ids = route_background_ids()
+    else:
+        output_dir = OUT
+        background_ids = list(DEFAULT_BACKGROUND_IDS)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    for bg_id in background_ids:
+        result = decode_background(rom, bg_id, output_dir)
+        (output_dir / f"background_{bg_id:02X}_layout.json").write_text(
             json.dumps(result, indent=2) + "\n", encoding="utf-8"
         )
         print(bg_id, result["metatile_rows"], result["metatile_columns"],

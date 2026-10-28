@@ -2,7 +2,7 @@
 -- Evidence only: this does not extract ROM assets or write runtime resources.
 -- Run with FCEUX sound disabled; see the paired diagnostic note for invocation.
 
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 -- FCEUX rom.gethash("md5") returns the PRG+CHR payload digest without the
 -- 16-byte iNES header. The whole-file MD5 is 93d14fb7962c54062be9734642fbe7bd.
 local ROM_MD5_EXPECTED = "eaf2b3745263efa4b1afd2b400f68dae"

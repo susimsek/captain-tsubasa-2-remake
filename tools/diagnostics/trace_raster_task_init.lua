@@ -1,6 +1,6 @@
 -- Trace raster task initialization, preset calls, and saved phase around the
 -- field-runner interval. Diagnostic only; no runtime assets are generated.
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local INPUT_CSV = PROJECT_ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local FIRST_FRAME, LAST_FRAME = 342, 400
 local run_id = os.date("%Y%m%d_%H%M%S")

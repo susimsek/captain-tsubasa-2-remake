@@ -1,0 +1,3 @@
+interface:
+  display_name: "NES / 6502 Reverse Engineering"
+  short_description: "Trace NES ROM logic and FCEUX behavior"

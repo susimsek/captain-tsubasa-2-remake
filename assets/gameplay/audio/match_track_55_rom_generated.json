@@ -1,0 +1,57 @@
+{
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "cue": "0x55",
+  "cue_kind": "bgm",
+  "runtime_pointer_table_file_offset": "0x018C92",
+  "runtime_pointer_cpu_address": "0xA30F",
+  "sequence_file_offset": "0x01E31F",
+  "sound_test_ordinal": 3,
+  "empty_sequence": false,
+  "observed_route_queue": true,
+  "sequence_prg_bank": "0x0F",
+  "sequence_bank_file_offset": "0x01E010",
+  "source_nsf": "tools/audio/build/first_match_track_55.nsf",
+  "source_nsf_sha256": "74f0fe5153b99a6ccfbdc7be45023960039223b3c74bcbbd6ba55080cda515f8",
+  "wav": "assets/gameplay/audio/match_track_55_rom_generated.wav",
+  "wav_sha256": "aa297e4dd8f9bde1b6202f6075c63b28ca49eb3a93227f4c4a5a4190bf9e4f95",
+  "sample_rate": 44100,
+  "channels": 1,
+  "seconds": 90,
+  "renderer": "libgme 0.6.5, offline NSF execution of supplied ROM sound driver and cue data",
+  "captured_pcm_used": false,
+  "capture_used": false,
+  "runtime_needs_rom_or_emulator": false,
+  "driver_mmc3_write_patches": [
+    {
+      "cpu_address": "0x8011",
+      "rom_file_offset": "0x018021",
+      "original": "8c0180",
+      "nsf": "eaeaea"
+    },
+    {
+      "cpu_address": "0x8022",
+      "rom_file_offset": "0x018032",
+      "original": "8c0180",
+      "nsf": "eaeaea"
+    },
+    {
+      "cpu_address": "0x8036",
+      "rom_file_offset": "0x018046",
+      "original": "8c0180",
+      "nsf": "eaeaea"
+    },
+    {
+      "cpu_address": "0x804A",
+      "rom_file_offset": "0x01805A",
+      "original": "8c0180",
+      "nsf": "eaeaea"
+    },
+    {
+      "cpu_address": "0x805B",
+      "rom_file_offset": "0x01806B",
+      "original": "8c0180",
+      "nsf": "eaeaea"
+    }
+  ],
+  "validation_status": "ROM-only source render. Same-input FCEUX route onset comparison validates only the ROM-derived trim and per-occurrence delays: Pearson r improves from -0.171442 to 0.054655 (first request) and 0.135587 to 0.246654 (restart), with RMSE decreasing in both windows. Correlation remains low; this is not waveform or synthesis parity, and timbre/mix equivalence is unverified. See reference/diagnostics/audio/route_cue55_asset_onset_audit_20261027.md."
+}

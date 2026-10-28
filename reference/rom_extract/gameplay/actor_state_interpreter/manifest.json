@@ -1,0 +1,91 @@
+{
+  "schema": "ct2-bank14-actor-interpreter-source-v1",
+  "source_rom_filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "prg_bank": "$14",
+  "bank_window": {
+    "cpu_start": "$8000",
+    "file_start": "0x028010"
+  },
+  "runtime_rom_dependency": false,
+  "capture_or_screenshot_bytes_included": false,
+  "resources": [
+    {
+      "name": "appearance_interpreter_83D9_84DB.bin",
+      "file_offset": 164841,
+      "length_bytes": 259,
+      "cpu_start": "$83D9",
+      "cpu_end_exclusive": "$84DC",
+      "prg_bank": "$14",
+      "purpose": "Bank-$14 actor appearance interpreter and its local $F0-$F8 handlers.",
+      "sha256": "776dad1dab540ed1151725c48ea4be2b99dd0f75a27bee293b0b523760eec411",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "motion_interpreter_84DC_8623.bin",
+      "file_offset": 165100,
+      "length_bytes": 328,
+      "cpu_start": "$84DC",
+      "cpu_end_exclusive": "$8624",
+      "prg_bank": "$14",
+      "purpose": "Bank-$14 actor motion interpreter and local command/integration helpers through $8623.",
+      "sha256": "3f9bb278daab82f6b76b2d89cbd91d327dd0202b3bc6e594dd1734fa1882f380",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "appearance_loop_B026_B030.bin",
+      "file_offset": 176182,
+      "length_bytes": 11,
+      "cpu_start": "$B026",
+      "cpu_end_exclusive": "$B031",
+      "prg_bank": "$14",
+      "purpose": "Four timed descriptor pairs followed by source $F3 jump back to $B026.",
+      "sha256": "ddadf844964526d70fe2b454781c33d00d0038447290a4132699f633f3c7ec7c",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "appearance_hold_B5AC_B5B3.bin",
+      "file_offset": 177596,
+      "length_bytes": 8,
+      "cpu_start": "$B5AC",
+      "cpu_end_exclusive": "$B5B4",
+      "prg_bank": "$14",
+      "purpose": "Source $F7 descriptor-hold sequence used by the first-command actors.",
+      "sha256": "271792914b8d88c9f0df0d1bb6571ebf4bbec5785eadbb2b934872fedc155af2",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "fresh_actor_appearance_roots_B30E_B313.bin",
+      "file_offset": 176926,
+      "length_bytes": 6,
+      "cpu_start": "$B30E",
+      "cpu_end_exclusive": "$B314",
+      "prg_bank": "$14",
+      "purpose": "First source $F7 descriptor-hold command at each of animation-$8F appearance roots $B30E/$B310/$B312.",
+      "sha256": "91f6198e377498f48b5bd9fd659fd6a7fbcd76f417abf679e2ef16bdee9228d2",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "motion_step_A38A_A390.bin",
+      "file_offset": 172954,
+      "length_bytes": 7,
+      "cpu_start": "$A38A",
+      "cpu_end_exclusive": "$A391",
+      "prg_bank": "$14",
+      "purpose": "Source motion $01 one-step packet followed by $00 hold.",
+      "sha256": "95a66c8108f14acbb8740fd154087efd6230f204ceec3dcf198c3ac07ac31e7f",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "fresh_actor_motion_roots_A723_A734.bin",
+      "file_offset": 173875,
+      "length_bytes": 18,
+      "cpu_start": "$A723",
+      "cpu_end_exclusive": "$A735",
+      "prg_bank": "$14",
+      "purpose": "Fresh animation-$8F motion roots: timed fixed-point $01 commands and self-targeting $04 loop jumps at $A723/$A72C.",
+      "sha256": "c68a7d28f793918e44b5b1362ba62a9ab07001d8f1ea2d9177672dd544b0d10e",
+      "runtime_rom_dependency": false
+    }
+  ]
+}

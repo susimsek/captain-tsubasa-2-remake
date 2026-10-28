@@ -1,0 +1,63 @@
+{
+  "schema": "ct2-rom-f1-actor-record-constructor-v1",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "runtime_rom_dependency": false,
+  "capture_or_screenshot_bytes_included": false,
+  "scope": "fresh-start scenario $35 animation $8F actor packets",
+  "source_mapping": {
+    "prg_bank": "$14",
+    "cpu_window": "$8000-$BFFF",
+    "file_window_base": "0x028010",
+    "table_addresses_are_cpu_addresses": true
+  },
+  "resources": [
+    {
+      "name": "actor_record_pointer_table_88E4_00_05.bin",
+      "path": "reference/rom_extract/gameplay/actor_packet_constructor/actor_record_pointer_table_88E4_00_05.bin",
+      "cpu_address": "$88E4",
+      "file_offset": "0x0288F4",
+      "entry_width_bytes": 2,
+      "first_index": 0,
+      "last_index": 5,
+      "length_bytes": 12,
+      "sha256": "c099278e38811268e12679a668fd59f7b3c909ffcedec441c8e60c51514968b6",
+      "purpose": "actor record base pointers selected by F1 packet byte 5 bits 2-4"
+    },
+    {
+      "name": "motion_pointer_table_A1B4_00_71.bin",
+      "path": "reference/rom_extract/gameplay/actor_packet_constructor/motion_pointer_table_A1B4_00_71.bin",
+      "cpu_address": "$A1B4",
+      "file_offset": "0x02A1C4",
+      "entry_width_bytes": 2,
+      "first_index": 0,
+      "last_index": 113,
+      "length_bytes": 228,
+      "sha256": "15171701bd415846f98c0bfe2ab119db90987f426bf16908705e0ba868088c11",
+      "purpose": "motion script roots selected by F1 packet byte 1; bounded through animation $8F's maximum index $71"
+    },
+    {
+      "name": "appearance_pointer_table_AC47_00_93.bin",
+      "path": "reference/rom_extract/gameplay/actor_packet_constructor/appearance_pointer_table_AC47_00_93.bin",
+      "cpu_address": "$AC47",
+      "file_offset": "0x02AC57",
+      "entry_width_bytes": 2,
+      "first_index": 0,
+      "last_index": 147,
+      "length_bytes": 296,
+      "sha256": "a0638cdcc481955ac46aac1576d50ec40786c023c4d8f21867b2e4728691453f",
+      "purpose": "appearance script roots selected by F1 packet byte 2; bounded through animation $8F's maximum index $93"
+    }
+  ],
+  "record_constructor_source": {
+    "cpu_start": "$80AA",
+    "cpu_end_exclusive": "$8128",
+    "behavior": [
+      "select record index (selector & $1C) >> 2 and resolve $88E4 pointer",
+      "clear 21-byte actor record",
+      "resolve motion index through $A1B4 and appearance index through $AC47",
+      "store pointers at actor record offsets +$01 and +$03",
+      "copy packet coordinate bytes to actor record offsets +$08 and +$0C",
+      "store active byte $80 | (selector & $03) at actor record offset +$00"
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 -- Focused, muted FCEUX trace for A160 raster IRQ residuals at source frames
 -- 1029, 1760, and 2121. Diagnostic only: no screenshots, WAV, or PCM.
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local INPUT_CSV = PROJECT_ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local LAST_SOURCE_FRAME = 2121
 local TARGETS = {[1029]=true, [1760]=true, [2121]=true}

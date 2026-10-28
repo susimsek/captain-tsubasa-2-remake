@@ -6,11 +6,12 @@ class_name ColdStartSourceCommandPresenter
 
 signal source_command_applied(event: Dictionary, state_snapshot: Dictionary)
 signal rom_sound_requested(sound_id: int, source_frame: int)
-# Frame-level model of the ROM's `$9FA8` wait followed by its `$001E & $10`
-# Start poll. The exact instruction's variable CPU-cycle position is not modeled.
-signal source_start_poll_completed(source_frame: int)
+# The signal is delivered at the completed source-frame edge and carries the
+# ROM-derived CPU-cycle distance from that frame's `$802C` poll to the edge.
+signal source_start_poll_completed(source_frame: int, elapsed_cpu_cycles_since_poll: float)
 
 const NES_FPS := 60.0988
+const NES_CPU_CLOCK_HZ := 1789773.0
 const SCRIPT_PATH := "res://reference/rom_extract/intro/cutscene_00.bin"
 const SCRIPT_START_FILE_OFFSET := 0x6030
 const SCRIPT_START_CPU_ADDRESS := 0xA020
@@ -19,6 +20,7 @@ const SCRIPT_SHA256 := "499ccb62b8b2b9118d7ebfaa6e6b9fce46806cd3b9173b5e1d5d61de
 const SOURCE_ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
 const COLD_START_BOOTSTRAP_PHASE_PATH := "res://assets/opening/rom_logic/cold_start_bootstrap_phase.json"
 const F8_HELPER_RETURN_EVENT_PATH := "res://assets/opening/rom_logic/f8_helper_return_event.json"
+const ROM_SOURCE_CLOCK_SCHEDULE_PATH := "res://assets/opening/rom_logic/rom_source_clock_schedule.json"
 const NES_RGB_PALETTE_PATH := "res://reference/palettes/FCEUX_internal_default_2.7.0_rgb.pal"
 const BASE_BACKGROUND_PALETTE_PATH := "res://reference/rom_extract/intro/background_palette_01.bin"
 const BASE_SPRITE_PALETTE_PATH := "res://reference/rom_extract/intro/animation_8D_sprite_palette.bin"
@@ -123,7 +125,10 @@ var _command_sequence := 0
 var _pending_command: Dictionary = {}
 var _pending_handler := ""
 var _pending_handler_phase := ""
-var _frame_accumulator := 0.0
+var _frame_accumulator_cpu_cycles := 0.0
+var _source_frame_cycle_deltas := PackedInt32Array()
+var _start_poll_cycle_offsets := PackedInt32Array()
+var _source_clock_schedule: Dictionary = {}
 var _startup_phase: Dictionary = {}
 var _f8_helper_return_event: Dictionary = {}
 var _first_literal_scheduler_scan_source_frame := -1
@@ -220,6 +225,9 @@ func _ready() -> void:
 		set_process(false)
 		return
 	if not _load_f8_helper_return_event():
+		set_process(false)
+		return
+	if not _load_rom_source_clock_schedule():
 		set_process(false)
 		return
 	_source_ppu_write_timeline = SOURCE_PPU_WRITE_TIMELINE_SCRIPT.new()
@@ -341,9 +349,8 @@ func _draw() -> void:
 
 
 func _process(delta: float) -> void:
-	_frame_accumulator += delta
-	var source_frame_duration := 1.0 / NES_FPS
-	var source_frames_due := int(floor(_frame_accumulator / source_frame_duration))
+	_frame_accumulator_cpu_cycles += delta * NES_CPU_CLOCK_HZ
+	var source_frames_due := _source_frames_due_for_accumulator()
 	var defer_intermediate_rendering := source_frames_due > 1
 	if defer_intermediate_rendering:
 		# This Godot frame can display only the newest catch-up state. Keep
@@ -351,8 +358,12 @@ func _process(delta: float) -> void:
 		# intermediate states that cannot be presented.
 		set_render_updates_suppressed(true)
 		field_screen.set_rendering_enabled(false)
-	while _frame_accumulator >= source_frame_duration and not _cutscene_task_stopped:
-		_frame_accumulator -= source_frame_duration
+	while not _cutscene_task_stopped:
+		var next_source_frame := int(state.get("source_frame", 0)) + 1
+		var source_frame_duration_cycles := _source_frame_duration_cycles(next_source_frame)
+		if _frame_accumulator_cpu_cycles < float(source_frame_duration_cycles):
+			break
+		_frame_accumulator_cpu_cycles -= float(source_frame_duration_cycles)
 		_advance_source_frame()
 	if defer_intermediate_rendering:
 		set_render_updates_suppressed(false)
@@ -375,7 +386,114 @@ func _advance_source_frame() -> void:
 	field_screen.end_state_update()
 	var source_frame := int(state.get("source_frame", -1))
 	if not _cutscene_task_stopped and source_frame >= _first_nmi_release_source_frame:
-		source_start_poll_completed.emit(source_frame)
+		var elapsed_since_poll := elapsed_cpu_cycles_since_start_poll(source_frame)
+		if elapsed_since_poll >= 0.0:
+			source_start_poll_completed.emit(source_frame, elapsed_since_poll)
+
+
+func _source_frame_duration_cycles(source_frame: int) -> int:
+	var last_route_frame := int(_source_clock_schedule.get(
+		"start_poll_clock", {}).get("last_source_frame", -1))
+	if source_frame >= 1 and source_frame <= last_route_frame \
+			and source_frame <= _source_frame_cycle_deltas.size():
+		return _source_frame_cycle_deltas[source_frame - 1]
+	return int(round(NES_CPU_CLOCK_HZ / NES_FPS))
+
+
+func _source_frames_due_for_accumulator() -> int:
+	var remaining_cycles := _frame_accumulator_cpu_cycles
+	var source_frame := int(state.get("source_frame", 0))
+	var due := 0
+	while true:
+		var duration := float(_source_frame_duration_cycles(source_frame + 1))
+		if remaining_cycles < duration:
+			return due
+		remaining_cycles -= duration
+		source_frame += 1
+		due += 1
+	return due
+
+
+## Source-stepper cycles from this completed frame's Start poll to its frame edge.
+## The value includes any catch-up time already accumulated after that edge.
+func elapsed_cpu_cycles_since_start_poll(source_frame: int) -> float:
+	if source_frame < 1:
+		return -1.0
+	var poll_offset := -1
+	if source_frame < _start_poll_cycle_offsets.size():
+		poll_offset = _start_poll_cycle_offsets[source_frame]
+	if poll_offset < 0:
+		# The retained source run ends at the accepted Start on frame 4661. If the
+		# player leaves the intro running longer, keep the existing menu path alive
+		# using that last measured poll phase as an explicitly bounded fallback.
+		var last_recorded_poll_frame := int(_source_clock_schedule.get(
+			"start_poll_clock", {}).get("last_source_frame", -1))
+		if source_frame <= last_recorded_poll_frame:
+			return -1.0
+		poll_offset = _start_poll_cycle_offsets[last_recorded_poll_frame]
+	var frame_duration := _source_frame_duration_cycles(source_frame)
+	return float(frame_duration - poll_offset) + _frame_accumulator_cpu_cycles
+
+
+func start_poll_to_stop_cpu_cycles() -> int:
+	return int(_source_clock_schedule.get("title_handoff_alignment", {}).get(
+		"poll_to_stop_cpu_cycles", -1))
+
+
+func title_first_pixel_cycle_offset_from_start_stop() -> int:
+	return int(_source_clock_schedule.get("title_first_pixel_virtual_event", {}).get(
+		"cycle_offset_from_start_stop", -1))
+
+
+func _load_rom_source_clock_schedule() -> bool:
+	if not FileAccess.file_exists(ROM_SOURCE_CLOCK_SCHEDULE_PATH):
+		push_error("ROM-derived source clock schedule is missing.")
+		return false
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(
+		ROM_SOURCE_CLOCK_SCHEDULE_PATH))
+	if not parsed is Dictionary:
+		push_error("ROM-derived source clock schedule is malformed.")
+		return false
+	_source_clock_schedule = parsed
+	if str(_source_clock_schedule.get("schema", "")) != "ct2-rom-source-clock-schedule-v1" \
+			or str(_source_clock_schedule.get("source_rom_sha256", "")) != SOURCE_ROM_SHA256:
+		push_error("ROM-derived source clock schedule belongs to a different ROM or schema.")
+		return false
+	var frame_clock: Variant = _source_clock_schedule.get("source_frame_clock", {})
+	var poll_clock: Variant = _source_clock_schedule.get("start_poll_clock", {})
+	if not frame_clock is Dictionary or not poll_clock is Dictionary:
+		push_error("ROM-derived source clock schedule has missing clock tables.")
+		return false
+	var frame_values: Variant = frame_clock.get("cycle_deltas", [])
+	var poll_values: Variant = poll_clock.get("cycle_offsets_by_source_frame", [])
+	if not frame_values is Array or not poll_values is Array \
+			or frame_values.size() != int(frame_clock.get("last_source_frame", -1)) \
+			or poll_values.size() != frame_values.size() + 1:
+		push_error("ROM-derived source clock schedule has inconsistent frame/poll table sizes.")
+		return false
+	_source_frame_cycle_deltas.clear()
+	for value in frame_values:
+		var duration := int(value)
+		if duration <= 0:
+			push_error("ROM-derived source frame has a nonpositive CPU-cycle duration.")
+			return false
+		_source_frame_cycle_deltas.append(duration)
+	_start_poll_cycle_offsets.clear()
+	for value in poll_values:
+		_start_poll_cycle_offsets.append(int(value))
+	var alignment: Dictionary = _source_clock_schedule.get("title_handoff_alignment", {})
+	var handoff_frame := int(alignment.get("source_frame", -1))
+	var title_pixel: Dictionary = _source_clock_schedule.get("title_first_pixel_virtual_event", {})
+	if handoff_frame != 4661 or _start_poll_cycle_offsets[handoff_frame] != 4288 \
+			or int(alignment.get("poll_to_stop_cpu_cycles", -1)) != 36 \
+			or int(title_pixel.get("source_frame", -1)) != 4692 \
+			or int(title_pixel.get("x", -1)) != 117 \
+			or int(title_pixel.get("y", -1)) != 39 \
+			or int(title_pixel.get("ppu_dot", -1)) != 118 \
+			or int(title_pixel.get("cycle_offset_from_start_stop", -1)) != 925729:
+		push_error("ROM-derived Start-poll/title-stop alignment failed its recorded route anchor.")
+		return false
+	return true
 
 
 func _advance_source_frame_state() -> void:

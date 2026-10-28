@@ -46,11 +46,17 @@ func _verify() -> void:
 	start_event.action = "opening_start"
 	start_event.pressed = true
 	var first_poll_frame := int(presenter.get("_first_nmi_release_source_frame"))
+	var first_poll_elapsed := presenter.elapsed_cpu_cycles_since_start_poll(first_poll_frame)
 	runtime.call("_unhandled_input", start_event)
 	# The main handoff verifier exercises the live presenter poll. This focused
 	# audio-tail check emits its already-connected poll signal to avoid replaying
 	# source-frame sprite setup unrelated to audio cleanup.
-	presenter.source_start_poll_completed.emit(first_poll_frame)
+	var synthetic_poll_time := Time.get_ticks_usec() - int(round(
+		first_poll_elapsed * 1000000.0 / 1789773.0))
+	var input_transition: Dictionary = runtime._start_input_transitions.back()
+	input_transition["timestamp_usec"] = synthetic_poll_time - 1
+	runtime._start_input_transitions[runtime._start_input_transitions.size() - 1] = input_transition
+	presenter.source_start_poll_completed.emit(first_poll_frame, first_poll_elapsed)
 	if not runtime.get("_transition_active"):
 		_fail("Latched Start was not consumed by the ROM's next frame-level poll.")
 		return

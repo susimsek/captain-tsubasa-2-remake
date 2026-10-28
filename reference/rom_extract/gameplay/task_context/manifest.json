@@ -1,0 +1,204 @@
+{
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "mapping": "iNES PRG begins at file offset 0x0010; fixed bank CPU $C000-$FFFF maps to file 0x03C010+; bank $0B CPU $8000-$BFFF maps to file 0x016010+; bank $10 CPU $8000-$BFFF maps to file 0x020010+. Bank $18 CPU $8000-$9FFF maps to file 0x030010+.",
+  "spans": [
+    {
+      "file": "fixed_ram_zero_fill_C650_C679.bin",
+      "cpu_address": "0xC650",
+      "file_offset": "0x03C660",
+      "length": 42,
+      "sha256": "076731fdd07d2c05fcc4c27d65cf0ed29193b97ac79a02501b7f2051082705d9",
+      "description": "fixed-bank cold-start loop that zero-fills internal RAM $0000-$07FF",
+      "bytes": "8d 00 20 78 d8 a2 ff 9a ad 02 20 10 fb ad 02 20 10 fb a9 c0 8d 01 a0 a9 00 85 00 85 01 a8 a2 08 91 00 c8 d0 fb e6 01 ca d0 f6"
+    },
+    {
+      "file": "fixed_task_slot_clear_C6BE_C6E7.bin",
+      "cpu_address": "0xC6BE",
+      "file_offset": "0x03C6CE",
+      "length": 42,
+      "sha256": "4e62f14d490b37ece22e2cec5f55846ddbb6235efa54100634602c20cb29f73e",
+      "description": "fresh-game setup resets task ready/SP bytes for slots $01/$05/$09/$0D/$11/$15",
+      "bytes": "a2 e0 9a a9 00 85 01 85 02 a9 00 85 05 85 06 a9 00 85 09 85 0a a9 00 85 0d 85 0e a9 00 85 11 85 12 a9 00 85 15 85 16 20 1f cf"
+    },
+    {
+      "file": "fixed_task_gameplay_bootstrap_C6E8_C765.bin",
+      "cpu_address": "0xC6E8",
+      "file_offset": "0x03C6F8",
+      "length": 126,
+      "sha256": "dfb460088ed63655a5627ebc5c06f111061b00f0a6d48af562dc995bb67c1160",
+      "description": "clears scheduler mode, seeds slots $01/$05/$09, enables PPU NMI, and enters $CA97",
+      "bytes": "a9 00 85 1b 8d 3f 06 a9 08 85 20 a9 1e 85 21 a9 20 8d 6c 04 a9 00 8d 6d 04 a9 3f 8d 6e 04 a2 00 a9 12 20 02 cc a2 10 a9 12 20 02 cc 20 d2 cc 00 6c 04 a2 07 bd 66 c7 9d eb 05 ca 10 f7 a2 01 a9 28 95 01 a9 00 95 02 a9 ca a0 21 20 e7 ca a2 05 a9 50 95 01 a9 00 95 02 a9 d1 a0 1d 20 e7 ca a2 09 a9 78 95 01 a9 00 95 02 a9 eb a0 85 20 e7 ca a5 20 09 80 85 20 85 19 8d 00 20 4c 97 ca"
+    },
+    {
+      "file": "fixed_task_nmi_gate_and_ready_C76E_C7EF.bin",
+      "cpu_address": "0xC76E",
+      "file_offset": "0x03C77E",
+      "length": 130,
+      "sha256": "a8c2e5e208b5e45900e2fbca7cb75eda18f46231edc989200c723968aa091315",
+      "description": "fixed-bank NMI mode-bit gate and normal-mode $001B.7 ready-latch producer",
+      "bytes": "24 1b 50 03 4c 21 c4 48 8a 48 98 48 a5 20 29 7f 8d 00 20 85 20 ba 8a a2 ff 9a 48 a9 00 8d 03 20 a9 02 8d 14 40 ad 6b 04 8d 00 a0 20 fb c8 2c 02 20 a9 3f 8d 06 20 a9 00 8d 06 20 8d 06 20 8d 06 20 a5 20 8d 00 20 2c 02 20 a5 4a 18 6d 38 05 8d 05 20 a5 4b 8d 05 20 a5 21 8d 01 20 20 e9 c9 a6 8e 86 8c 86 8d bd f7 c8 29 7f 8d 00 c0 8d 01 c0 ae 69 04 9d 00 e0 20 c5 c9 20 82 c9 a5 1b 09 80 85 1b"
+    },
+    {
+      "file": "fixed_task_nmi_special_dispatch_C421_C43C.bin",
+      "cpu_address": "0xC421",
+      "file_offset": "0x03C431",
+      "length": 28,
+      "sha256": "6389b19db8e0a662875a3dba68c5bd642fb75a0dfd2fc80fcfd4ef8344cd0bb2",
+      "description": "bit-6 NMI path bank selection and call into bank-$02 $A000",
+      "bytes": "24 3b 30 4d 38 66 3b 85 3c 86 3d 84 3e a5 22 09 07 8d 00 80 a9 02 8d 01 80 20 00 a0"
+    },
+    {
+      "file": "bank02_nmi_ready_path_A000_A137.bin",
+      "cpu_address": "0xA000",
+      "file_offset": "0x004010",
+      "length": 312,
+      "sha256": "4f938bdaec443590eca1a814afef66fb2be987abafc5c2bba677f8c415a81412",
+      "description": "bank-$02 NMI controller/RNG path through its $001B.7 ready-latch write and RTS",
+      "bytes": "a9 00 8d 03 20 a9 02 8d 14 40 ad 28 06 f0 4e 2c 29 06 70 49 a9 00 8d 01 20 a2 00 a0 80 bd e8 05 10 04 29 3f a0 84 8c 00 20 a8 bd ea 05 8d 06 20 bd e9 05 8d 06 20 bd eb 05 8d 07 20 e8 88 d0 f6 e8 e8 e8 bd e8 05 d0 d3 a9 00 8d 28 06 a9 3f 8d 06 20 a9 00 8d 06 20 8d 06 20 8d 06 20 a5 21 8d 01 20 a5 79 10 0d a5 7b 8d 06 20 a5 7a 8d 06 20 4c 91 a0 46 20 46 20 a5 45 4a 26 20 a5 7b 4a 26 20 a5 20 8d 00 20 a5 7a 8d 05 20 a6 44 ca 8e 05 20 a0 16 20 cb a1 a5 79 f0 10 0a 8d 00 c0 8d 01 c0 8d 01 e0 a9 04 85 78 10 05 8d 00 e0 85 78 a9 02 8d 00 80 a5 9e 8d 01 80 a9 03 8d 00 80 a5 9f 8d 01 80 a9 04 8d 00 80 a5 a0 8d 01 80 a9 05 8d 00 80 a5 a1 8d 01 80 a2 02 a9 04 85 40 b5 1b 85 41 a9 01 8d 16 40 a9 00 8d 16 40 a0 08 bd 15 40 4a 26 3f 29 01 05 3f 85 3f 88 d0 f1 c5 41 f0 07 c6 40 d0 db 4c 13 a1 b5 1b 45 3f 25 3f 95 1d a5 3f 95 1b ca d0 c7 18 a5 e1 69 83 85 e1 a5 e2 69 0d 85 e2 a5 e3 69 11 85 e3 a9 00 85 46 85 47 a5 1b 09 80 85 1b e6 3a 60"
+    },
+    {
+      "file": "bank10_callback_task_setup_8097_80a8.bin",
+      "cpu_address": "0x8097",
+      "file_offset": "0x0200A7",
+      "length": 18,
+      "sha256": "2d69d726177fe1eb737aab04622108e5860b03d4fd95a5182538c4bae7d982db",
+      "description": "bank $10 scenario-reader task setup",
+      "bytes": "a2 15 a9 f0 95 01 a9 0b 95 02 a9 80 a0 08 20 0f c5 60"
+    },
+    {
+      "file": "bank0b_callback_entry_8009.bin",
+      "cpu_address": "0x8009",
+      "file_offset": "0x016019",
+      "length": 3,
+      "sha256": "5813c87d4f453cff4b6738bc2af1b54149488222527a69155072092c9f971fdb",
+      "description": "new-task first instruction jumps to callback reader",
+      "bytes": "4c 4c 81"
+    },
+    {
+      "file": "bank0b_yield_callsite_856f.bin",
+      "cpu_address": "0x856F",
+      "file_offset": "0x01657F",
+      "length": 3,
+      "sha256": "59653ff81dfe5c01f141d4ee69bb4832290c727091c41b92a71a6b0e2400a837",
+      "description": "callback worker JSR to fixed-bank yield trampoline",
+      "bytes": "20 15 c5"
+    },
+    {
+      "file": "fixed_task_create_C50F.bin",
+      "cpu_address": "0xC50F",
+      "file_offset": "0x03C51F",
+      "length": 3,
+      "sha256": "0ea4efd43ee0e2e3d1b9528351bc433e11207744845df22bfaa7bf0e335f08d0",
+      "description": "fixed-bank task-create trampoline",
+      "bytes": "4c e7 ca"
+    },
+    {
+      "file": "fixed_task_yield_trampoline_C515.bin",
+      "cpu_address": "0xC515",
+      "file_offset": "0x03C525",
+      "length": 3,
+      "sha256": "86545169e2c9775f9eb73d63e59343ec9fff70a55fb97b17b22b39ab2fcd1d1e",
+      "description": "fixed-bank task-yield trampoline",
+      "bytes": "4c 0f cb"
+    },
+    {
+      "file": "fixed_task_scheduler_CA97_CAE6.bin",
+      "cpu_address": "0xCA97",
+      "file_offset": "0x03CAA7",
+      "length": 80,
+      "sha256": "3768ab8ac0aaeace9d3d53cf92cb8fea9363c400d6b8d4a40b77619c9900c6d8",
+      "description": "fixed-bank scheduler scan plus yield resume and initial dispatch",
+      "bytes": "a2 01 b5 00 f0 08 c9 ff f0 33 d6 00 f0 14 8a 18 69 04 aa e0 19 d0 eb a5 1b 10 fc 29 7f 85 1b 4c 97 ca 46 19 86 00 b5 02 85 24 b5 03 85 25 20 2d ce b5 01 aa 9a 38 66 19 68 a8 68 aa 60 86 00 b5 02 85 24 18 69 01 85 25 20 2d ce b5 01 aa 9a 60"
+    },
+    {
+      "file": "fixed_task_seed_CAE7.bin",
+      "cpu_address": "0xCAE7",
+      "file_offset": "0x03CAF7",
+      "length": 16,
+      "sha256": "139a8a1b3241ae60cebf1057463d3947c20f219b728ab98e2429ee2a0f3e3a55",
+      "description": "fixed-bank initial task seed",
+      "bytes": "48 98 b4 01 99 01 01 68 99 02 01 a9 ff 95 00 60"
+    },
+    {
+      "file": "fixed_task_finish_CAF7.bin",
+      "cpu_address": "0xCAF7",
+      "file_offset": "0x03CB07",
+      "length": 11,
+      "sha256": "4caa4c1a5da0ac2ac961105268a2fc0a73babbc20efbf55707a5b63b99320770",
+      "description": "fixed-bank task finish",
+      "bytes": "a9 00 a6 00 95 00 95 01 4c a5 ca"
+    },
+    {
+      "file": "fixed_task_yield_save_CB0F.bin",
+      "cpu_address": "0xCB0F",
+      "file_offset": "0x03CB1F",
+      "length": 30,
+      "sha256": "b6377644890b9cd6671e4e63f48da4dfe1bd4975870bb531cb684ee7aeda07fc",
+      "description": "fixed-bank task yield/save",
+      "bytes": "85 7f 8a 48 98 48 a6 00 a5 24 95 02 a5 25 95 03 a5 7f 95 00 8a a8 ba 96 01 a6 00 4c a5 ca"
+    },
+    {
+      "file": "fixed_nmi_vectors_FFFA_FFFF.bin",
+      "cpu_address": "0xFFFA",
+      "file_offset": "0x04000A",
+      "length": 6,
+      "sha256": "72925dda7194399d7eb27eb4a7d41a2b4d4b8be47b049bc1fd06f95f6627edec",
+      "description": "fixed-bank NMI, reset, and IRQ/BRK vector words; NMI points to $C500",
+      "bytes": "00 c5 f0 ff 06 c5"
+    },
+    {
+      "file": "fixed_nmi_vector_entry_C500.bin",
+      "cpu_address": "0xC500",
+      "file_offset": "0x03C510",
+      "length": 3,
+      "sha256": "a8d9fc1dc189a985f762edb564889dbab0a9bc7b4dcced5b1ef17c6933ecf0b5",
+      "description": "NMI vector trampoline jumps to fixed-bank handler gate $C76E",
+      "bytes": "4c 6e c7"
+    },
+    {
+      "file": "fixed_nmi_return_enable_C810_C820.bin",
+      "cpu_address": "0xC810",
+      "file_offset": "0x03C820",
+      "length": 17,
+      "sha256": "1ddfe0a969927fb72713998c3454eae9c61053616ba747d6b6318f9a7cd3df75",
+      "description": "normal NMI return path restores $2000 NMI-enable bit before RTI",
+      "bytes": "a5 20 09 80 85 20 85 19 8d 00 20 68 a8 68 aa 68 40"
+    },
+    {
+      "file": "fixed_root_slot01_startup_CA22_CA51.bin",
+      "cpu_address": "0xCA22",
+      "file_offset": "0x03CA32",
+      "length": 48,
+      "sha256": "a2e9aa1047c184ff21854c6e30733f68f17bc7a4df68ff98e8622571d5c90476",
+      "description": "fixed-bank fresh-root slot $01 first startup sequence through its one-tick $CB0F yield callsite",
+      "bytes": "a5 21 09 1e 85 21 a9 00 8d 90 04 a9 02 8d 91 04 8d 87 00 a9 00 85 8e a9 01 8d 69 04 a9 01 8d 43 05 a9 23 8d 44 05 a9 45 8d 45 05 a9 01 20 0f cb"
+    },
+    {
+      "file": "fixed_slot05_period_setup_D11E_D181.bin",
+      "cpu_address": "0xD11E",
+      "file_offset": "0x03D12E",
+      "length": 100,
+      "sha256": "808e59e334ac88262573c70c8b40ef1ff6e3472513ccaedbbe094cc42da39036",
+      "description": "bounded fresh-period slot-$05 routine through its $DAAA match-setup handoff",
+      "bytes": "ad 27 00 c9 05 d0 03 4c 10 d1 a9 00 8d 3e 06 8d 40 06 8d 41 06 8d 13 06 ad 27 00 c9 04 d0 12 48 a5 22 a9 1a 85 24 a9 1b 85 25 20 2d ce 68 20 30 80 8d 29 06 0a 85 3a a9 08 ae 2b 00 e0 0e f0 0a e0 12 f0 06 e0 1a b0 02 a9 00 18 65 3a aa bd 83 d1 8d f7 05 bd 84 d1 8d f8 05 a9 00 8d f9 05 a2 50 9a 4c aa"
+    },
+    {
+      "file": "fixed_slot05_opponent_camera_table_D183_D184.bin",
+      "cpu_address": "0xD183",
+      "file_offset": "0x03D193",
+      "length": 2,
+      "sha256": "0e1862b77227e30a4b6f6d40295f173db76d2473f8b9e31b241239c07a5837fa",
+      "description": "match-zero camera/position base selected for opponent ID $03",
+      "bytes": "b4 00"
+    },
+    {
+      "file": "bank18_worker_yield_callsite_8886.bin",
+      "cpu_address": "0x8886",
+      "file_offset": "0x030896",
+      "length": 3,
+      "sha256": "59653ff81dfe5c01f141d4ee69bb4832290c727091c41b92a71a6b0e2400a837",
+      "description": "Bank-$18 worker JSR $C515 callsite, verified against the fresh match-zero worker span.",
+      "bytes": "20 15 c5"
+    }
+  ]
+}

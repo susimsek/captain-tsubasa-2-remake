@@ -34,6 +34,8 @@ INTRO_ANIMATION_HEADERS = (
 REFERENCE_DIR = PROJECT_ROOT / "reference/rom_extract/intro"
 PALETTE_BIN = REFERENCE_DIR / "sprite_palette_table_00_08.bin"
 PALETTE_JSON = REFERENCE_DIR / "sprite_palette_table_00_08.json"
+GAMEPLAY_PALETTE_BIN = REFERENCE_DIR / "sprite_palette_table_00_3F.bin"
+GAMEPLAY_PALETTE_JSON = REFERENCE_DIR / "sprite_palette_table_00_3F.json"
 ANIMATION_HEADERS_JSON = REFERENCE_DIR / "animation_palette_headers.json"
 
 
@@ -133,6 +135,35 @@ def main() -> None:
         json.dumps(palette_metadata, indent=2) + "\n", encoding="utf-8"
     )
 
+    gameplay_table = rom[PALETTE_TABLE_OFFSET : PALETTE_TABLE_OFFSET + 0x40 * PALETTE_BYTES]
+    if len(gameplay_table) != 0x40 * PALETTE_BYTES:
+        raise SystemExit("ROM sprite palette table 00-3F is truncated")
+    gameplay_rows = []
+    for palette_index in range(0x40):
+        start = palette_index * PALETTE_BYTES
+        row = gameplay_table[start : start + PALETTE_BYTES]
+        gameplay_rows.append({
+            "palette_index": palette_index,
+            "source_file_offset": hex_offset(PALETTE_TABLE_OFFSET + start),
+            "bytes_hex": row.hex(" "),
+            "sha256": sha256(row),
+        })
+    GAMEPLAY_PALETTE_BIN.write_bytes(gameplay_table)
+    GAMEPLAY_PALETTE_JSON.write_text(json.dumps({
+        "schema": 1,
+        "rom_file": ROM_FILENAME,
+        "rom_sha256": ROM_SHA256,
+        "resource_path": GAMEPLAY_PALETTE_BIN.relative_to(PROJECT_ROOT).as_posix(),
+        "source_cpu_address": f"0x{PALETTE_TABLE_CPU_ADDRESS:04X}",
+        "prg_bank": 6,
+        "source_file_offset": hex_offset(PALETTE_TABLE_OFFSET),
+        "palette_index_base": 0,
+        "palette_count": 0x40,
+        "bytes_per_palette": PALETTE_BYTES,
+        "conversion": "none; exact contiguous ROM bytes copied unchanged",
+        "rows": gameplay_rows,
+    }, indent=2) + "\n", encoding="utf-8")
+
     animation_metadata = {
         "rom_sha256": ROM_SHA256,
         "entries": animation_entries,
@@ -143,6 +174,8 @@ def main() -> None:
 
     print(f"Wrote {PALETTE_BIN.relative_to(PROJECT_ROOT)} ({table_size} ROM bytes)")
     print(f"Wrote {PALETTE_JSON.relative_to(PROJECT_ROOT)}")
+    print(f"Wrote {GAMEPLAY_PALETTE_BIN.relative_to(PROJECT_ROOT)} (64 ROM palette rows)")
+    print(f"Wrote {GAMEPLAY_PALETTE_JSON.relative_to(PROJECT_ROOT)}")
     print(f"Wrote {ANIMATION_HEADERS_JSON.relative_to(PROJECT_ROOT)}")
 
 

@@ -1,0 +1,31 @@
+{
+  "schema": "ct2-fresh-period-slot05-source-v1",
+  "rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "mapping": "iNES PRG starts at file offset 0x0010; fixed bank CPU $C000-$FFFF maps to file offset 0x03C010 + (CPU address - 0xC000).",
+  "scope": "Bounded fresh-start period-zero, opponent-$03 execution from slot-$05 entry $D11E through the source jump target $DAAA. Not a general CPU or task scheduler.",
+  "spans": [
+    {
+      "file": "slot05_D11E_D182.bin",
+      "cpu_start": "$D11E",
+      "cpu_end_inclusive": "$D182",
+      "file_offset": "0x03D12E",
+      "length": 101,
+      "sha256": "28895a5c3512a45e1b1a59c4324654ec03bb5f2ea413445e32333aa3bd6b87cc",
+      "description": "fresh-period slot-$05 instruction stream through the full JMP $DAAA operand",
+      "bytes": "ad 27 00 c9 05 d0 03 4c 10 d1 a9 00 8d 3e 06 8d 40 06 8d 41 06 8d 13 06 ad 27 00 c9 04 d0 12 48 a5 22 a9 1a 85 24 a9 1b 85 25 20 2d ce 68 20 30 80 8d 29 06 0a 85 3a a9 08 ae 2b 00 e0 0e f0 0a e0 12 f0 06 e0 1a b0 02 a9 00 18 65 3a aa bd 83 d1 8d f7 05 bd 84 d1 8d f8 05 a9 00 8d f9 05 a2 50 9a 4c aa da"
+    },
+    {
+      "file": "camera_table_D183_D184.bin",
+      "cpu_start": "$D183",
+      "cpu_end_inclusive": "$D184",
+      "file_offset": "0x03D193",
+      "length": 2,
+      "sha256": "0e1862b77227e30a4b6f6d40295f173db76d2473f8b9e31b241239c07a5837fa",
+      "description": "opponent camera pointer table bytes indexed by the slot-$05 routine",
+      "bytes": "b4 00"
+    }
+  ]
+}

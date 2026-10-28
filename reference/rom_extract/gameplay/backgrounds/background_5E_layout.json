@@ -1,0 +1,1793 @@
+{
+  "background_id": "0x5E",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "record_file_offset": "0x00EE47",
+  "record_cpu_address": "0xAE37",
+  "record_raw_hex": "3c 3e 20 02 06 11 2c 2d 2c 2c 2c 2c 2e 2f 2e 2f 2e 2f 00 a0",
+  "record_source_bin": "reference/rom_extract/gameplay/backgrounds/background_5E.bin",
+  "chr_2k_bank_start_ids": [
+    60,
+    62
+  ],
+  "chr_1k_banks_for_background": [
+    60,
+    61,
+    62,
+    63
+  ],
+  "palette_flag_byte": "0x20",
+  "block_page_selector": 0,
+  "block_page_offset": "0x0000",
+  "block_page_base_file_offset": "0x010010",
+  "block_page_selector_source": "bank-0 $8B4E transfers palette-flag bit 7 to $5B bit 0; bank-0 $8EF0 adds $1100 when set",
+  "palette_index": 32,
+  "palette_file_offset": "0x00D210",
+  "palette_raw_hex": "0f 00 10 30 0f 00 10 30 0f 00 10 30 0f 10 00 30",
+  "palette_source_bin": "reference/rom_extract/gameplay/backgrounds/background_palette_20.bin",
+  "metatile_rows": 2,
+  "metatile_columns": 6,
+  "metatile_ids_hex": "2c 2d 2c 2c 2c 2c 2e 2f 2e 2f 2e 2f",
+  "packed_origin": "0x11",
+  "origin_ppu_address": "0x2104",
+  "origin_x_in_two_nametables": 4,
+  "origin_y": 8,
+  "trailing_record_bytes_hex": "00 a0",
+  "used_4x4_blocks": [
+    {
+      "id": "0x2C",
+      "file_offset": "0x0102FC",
+      "raw_hex": "aa 01 01 01 01 01 01 01 01 01 01 01 01 0d 0d 0d 0d",
+      "source_bin": "reference/rom_extract/gameplay/backgrounds/block_2C.bin"
+    },
+    {
+      "id": "0x2D",
+      "file_offset": "0x01030D",
+      "raw_hex": "aa 01 01 01 01 58 59 5c 01 5a 5b 5e 5f 0f 0f 0f 0f",
+      "source_bin": "reference/rom_extract/gameplay/backgrounds/block_2D.bin"
+    },
+    {
+      "id": "0x2E",
+      "file_offset": "0x01031E",
+      "raw_hex": "ff 10 11 3c 3c 12 13 0a 12 3c 3c 18 19 0a 12 0b 0e",
+      "source_bin": "reference/rom_extract/gameplay/backgrounds/block_2E.bin"
+    },
+    {
+      "id": "0x2F",
+      "file_offset": "0x01032F",
+      "raw_hex": "ff 18 19 3c 3c 0b 0e 0a 12 3c 3c 10 11 0a 12 12 13",
+      "source_bin": "reference/rom_extract/gameplay/backgrounds/block_2F.bin"
+    }
+  ],
+  "base_page_4x4_blocks": [],
+  "tile_placements": [
+    {
+      "x": 4,
+      "unwrapped_x": 4,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 5,
+      "unwrapped_x": 5,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 6,
+      "unwrapped_x": 6,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 7,
+      "unwrapped_x": 7,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 4,
+      "unwrapped_x": 4,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 5,
+      "unwrapped_x": 5,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 6,
+      "unwrapped_x": 6,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 7,
+      "unwrapped_x": 7,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 4,
+      "unwrapped_x": 4,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 5,
+      "unwrapped_x": 5,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 6,
+      "unwrapped_x": 6,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 7,
+      "unwrapped_x": 7,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 4,
+      "unwrapped_x": 4,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 5,
+      "unwrapped_x": 5,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 6,
+      "unwrapped_x": 6,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 7,
+      "unwrapped_x": 7,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 8,
+      "unwrapped_x": 8,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 9,
+      "unwrapped_x": 9,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 10,
+      "unwrapped_x": 10,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 11,
+      "unwrapped_x": 11,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 8,
+      "unwrapped_x": 8,
+      "y": 9,
+      "tile_id": 88,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 9,
+      "unwrapped_x": 9,
+      "y": 9,
+      "tile_id": 89,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 10,
+      "unwrapped_x": 10,
+      "y": 9,
+      "tile_id": 92,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 11,
+      "unwrapped_x": 11,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 8,
+      "unwrapped_x": 8,
+      "y": 10,
+      "tile_id": 90,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 9,
+      "unwrapped_x": 9,
+      "y": 10,
+      "tile_id": 91,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 10,
+      "unwrapped_x": 10,
+      "y": 10,
+      "tile_id": 94,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 11,
+      "unwrapped_x": 11,
+      "y": 10,
+      "tile_id": 95,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 8,
+      "unwrapped_x": 8,
+      "y": 11,
+      "tile_id": 15,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 9,
+      "unwrapped_x": 9,
+      "y": 11,
+      "tile_id": 15,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 10,
+      "unwrapped_x": 10,
+      "y": 11,
+      "tile_id": 15,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 11,
+      "unwrapped_x": 11,
+      "y": 11,
+      "tile_id": 15,
+      "palette_id": 2,
+      "block_id": 45,
+      "block_file_offset": "0x01030D"
+    },
+    {
+      "x": 12,
+      "unwrapped_x": 12,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 13,
+      "unwrapped_x": 13,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 14,
+      "unwrapped_x": 14,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 15,
+      "unwrapped_x": 15,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 12,
+      "unwrapped_x": 12,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 13,
+      "unwrapped_x": 13,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 14,
+      "unwrapped_x": 14,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 15,
+      "unwrapped_x": 15,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 12,
+      "unwrapped_x": 12,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 13,
+      "unwrapped_x": 13,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 14,
+      "unwrapped_x": 14,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 15,
+      "unwrapped_x": 15,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 12,
+      "unwrapped_x": 12,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 13,
+      "unwrapped_x": 13,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 14,
+      "unwrapped_x": 14,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 15,
+      "unwrapped_x": 15,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 16,
+      "unwrapped_x": 16,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 17,
+      "unwrapped_x": 17,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 18,
+      "unwrapped_x": 18,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 19,
+      "unwrapped_x": 19,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 16,
+      "unwrapped_x": 16,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 17,
+      "unwrapped_x": 17,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 18,
+      "unwrapped_x": 18,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 19,
+      "unwrapped_x": 19,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 16,
+      "unwrapped_x": 16,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 17,
+      "unwrapped_x": 17,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 18,
+      "unwrapped_x": 18,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 19,
+      "unwrapped_x": 19,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 16,
+      "unwrapped_x": 16,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 17,
+      "unwrapped_x": 17,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 18,
+      "unwrapped_x": 18,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 19,
+      "unwrapped_x": 19,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 20,
+      "unwrapped_x": 20,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 21,
+      "unwrapped_x": 21,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 22,
+      "unwrapped_x": 22,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 23,
+      "unwrapped_x": 23,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 20,
+      "unwrapped_x": 20,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 21,
+      "unwrapped_x": 21,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 22,
+      "unwrapped_x": 22,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 23,
+      "unwrapped_x": 23,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 20,
+      "unwrapped_x": 20,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 21,
+      "unwrapped_x": 21,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 22,
+      "unwrapped_x": 22,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 23,
+      "unwrapped_x": 23,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 20,
+      "unwrapped_x": 20,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 21,
+      "unwrapped_x": 21,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 22,
+      "unwrapped_x": 22,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 23,
+      "unwrapped_x": 23,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 24,
+      "unwrapped_x": 24,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 25,
+      "unwrapped_x": 25,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 26,
+      "unwrapped_x": 26,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 27,
+      "unwrapped_x": 27,
+      "y": 8,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 24,
+      "unwrapped_x": 24,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 25,
+      "unwrapped_x": 25,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 26,
+      "unwrapped_x": 26,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 27,
+      "unwrapped_x": 27,
+      "y": 9,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 24,
+      "unwrapped_x": 24,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 25,
+      "unwrapped_x": 25,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 26,
+      "unwrapped_x": 26,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 27,
+      "unwrapped_x": 27,
+      "y": 10,
+      "tile_id": 1,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 24,
+      "unwrapped_x": 24,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 25,
+      "unwrapped_x": 25,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 26,
+      "unwrapped_x": 26,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 27,
+      "unwrapped_x": 27,
+      "y": 11,
+      "tile_id": 13,
+      "palette_id": 2,
+      "block_id": 44,
+      "block_file_offset": "0x0102FC"
+    },
+    {
+      "x": 4,
+      "unwrapped_x": 4,
+      "y": 12,
+      "tile_id": 16,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 5,
+      "unwrapped_x": 5,
+      "y": 12,
+      "tile_id": 17,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 6,
+      "unwrapped_x": 6,
+      "y": 12,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 7,
+      "unwrapped_x": 7,
+      "y": 12,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 4,
+      "unwrapped_x": 4,
+      "y": 13,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 5,
+      "unwrapped_x": 5,
+      "y": 13,
+      "tile_id": 19,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 6,
+      "unwrapped_x": 6,
+      "y": 13,
+      "tile_id": 10,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 7,
+      "unwrapped_x": 7,
+      "y": 13,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 4,
+      "unwrapped_x": 4,
+      "y": 14,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 5,
+      "unwrapped_x": 5,
+      "y": 14,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 6,
+      "unwrapped_x": 6,
+      "y": 14,
+      "tile_id": 24,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 7,
+      "unwrapped_x": 7,
+      "y": 14,
+      "tile_id": 25,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 4,
+      "unwrapped_x": 4,
+      "y": 15,
+      "tile_id": 10,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 5,
+      "unwrapped_x": 5,
+      "y": 15,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 6,
+      "unwrapped_x": 6,
+      "y": 15,
+      "tile_id": 11,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 7,
+      "unwrapped_x": 7,
+      "y": 15,
+      "tile_id": 14,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 8,
+      "unwrapped_x": 8,
+      "y": 12,
+      "tile_id": 24,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 9,
+      "unwrapped_x": 9,
+      "y": 12,
+      "tile_id": 25,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 10,
+      "unwrapped_x": 10,
+      "y": 12,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 11,
+      "unwrapped_x": 11,
+      "y": 12,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 8,
+      "unwrapped_x": 8,
+      "y": 13,
+      "tile_id": 11,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 9,
+      "unwrapped_x": 9,
+      "y": 13,
+      "tile_id": 14,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 10,
+      "unwrapped_x": 10,
+      "y": 13,
+      "tile_id": 10,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 11,
+      "unwrapped_x": 11,
+      "y": 13,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 8,
+      "unwrapped_x": 8,
+      "y": 14,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 9,
+      "unwrapped_x": 9,
+      "y": 14,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 10,
+      "unwrapped_x": 10,
+      "y": 14,
+      "tile_id": 16,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 11,
+      "unwrapped_x": 11,
+      "y": 14,
+      "tile_id": 17,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 8,
+      "unwrapped_x": 8,
+      "y": 15,
+      "tile_id": 10,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 9,
+      "unwrapped_x": 9,
+      "y": 15,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 10,
+      "unwrapped_x": 10,
+      "y": 15,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 11,
+      "unwrapped_x": 11,
+      "y": 15,
+      "tile_id": 19,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 12,
+      "unwrapped_x": 12,
+      "y": 12,
+      "tile_id": 16,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 13,
+      "unwrapped_x": 13,
+      "y": 12,
+      "tile_id": 17,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 14,
+      "unwrapped_x": 14,
+      "y": 12,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 15,
+      "unwrapped_x": 15,
+      "y": 12,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 12,
+      "unwrapped_x": 12,
+      "y": 13,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 13,
+      "unwrapped_x": 13,
+      "y": 13,
+      "tile_id": 19,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 14,
+      "unwrapped_x": 14,
+      "y": 13,
+      "tile_id": 10,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 15,
+      "unwrapped_x": 15,
+      "y": 13,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 12,
+      "unwrapped_x": 12,
+      "y": 14,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 13,
+      "unwrapped_x": 13,
+      "y": 14,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 14,
+      "unwrapped_x": 14,
+      "y": 14,
+      "tile_id": 24,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 15,
+      "unwrapped_x": 15,
+      "y": 14,
+      "tile_id": 25,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 12,
+      "unwrapped_x": 12,
+      "y": 15,
+      "tile_id": 10,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 13,
+      "unwrapped_x": 13,
+      "y": 15,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 14,
+      "unwrapped_x": 14,
+      "y": 15,
+      "tile_id": 11,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 15,
+      "unwrapped_x": 15,
+      "y": 15,
+      "tile_id": 14,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 16,
+      "unwrapped_x": 16,
+      "y": 12,
+      "tile_id": 24,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 17,
+      "unwrapped_x": 17,
+      "y": 12,
+      "tile_id": 25,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 18,
+      "unwrapped_x": 18,
+      "y": 12,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 19,
+      "unwrapped_x": 19,
+      "y": 12,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 16,
+      "unwrapped_x": 16,
+      "y": 13,
+      "tile_id": 11,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 17,
+      "unwrapped_x": 17,
+      "y": 13,
+      "tile_id": 14,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 18,
+      "unwrapped_x": 18,
+      "y": 13,
+      "tile_id": 10,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 19,
+      "unwrapped_x": 19,
+      "y": 13,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 16,
+      "unwrapped_x": 16,
+      "y": 14,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 17,
+      "unwrapped_x": 17,
+      "y": 14,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 18,
+      "unwrapped_x": 18,
+      "y": 14,
+      "tile_id": 16,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 19,
+      "unwrapped_x": 19,
+      "y": 14,
+      "tile_id": 17,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 16,
+      "unwrapped_x": 16,
+      "y": 15,
+      "tile_id": 10,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 17,
+      "unwrapped_x": 17,
+      "y": 15,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 18,
+      "unwrapped_x": 18,
+      "y": 15,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 19,
+      "unwrapped_x": 19,
+      "y": 15,
+      "tile_id": 19,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 20,
+      "unwrapped_x": 20,
+      "y": 12,
+      "tile_id": 16,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 21,
+      "unwrapped_x": 21,
+      "y": 12,
+      "tile_id": 17,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 22,
+      "unwrapped_x": 22,
+      "y": 12,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 23,
+      "unwrapped_x": 23,
+      "y": 12,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 20,
+      "unwrapped_x": 20,
+      "y": 13,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 21,
+      "unwrapped_x": 21,
+      "y": 13,
+      "tile_id": 19,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 22,
+      "unwrapped_x": 22,
+      "y": 13,
+      "tile_id": 10,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 23,
+      "unwrapped_x": 23,
+      "y": 13,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 20,
+      "unwrapped_x": 20,
+      "y": 14,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 21,
+      "unwrapped_x": 21,
+      "y": 14,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 22,
+      "unwrapped_x": 22,
+      "y": 14,
+      "tile_id": 24,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 23,
+      "unwrapped_x": 23,
+      "y": 14,
+      "tile_id": 25,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 20,
+      "unwrapped_x": 20,
+      "y": 15,
+      "tile_id": 10,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 21,
+      "unwrapped_x": 21,
+      "y": 15,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 22,
+      "unwrapped_x": 22,
+      "y": 15,
+      "tile_id": 11,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 23,
+      "unwrapped_x": 23,
+      "y": 15,
+      "tile_id": 14,
+      "palette_id": 3,
+      "block_id": 46,
+      "block_file_offset": "0x01031E"
+    },
+    {
+      "x": 24,
+      "unwrapped_x": 24,
+      "y": 12,
+      "tile_id": 24,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 25,
+      "unwrapped_x": 25,
+      "y": 12,
+      "tile_id": 25,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 26,
+      "unwrapped_x": 26,
+      "y": 12,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 27,
+      "unwrapped_x": 27,
+      "y": 12,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 24,
+      "unwrapped_x": 24,
+      "y": 13,
+      "tile_id": 11,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 25,
+      "unwrapped_x": 25,
+      "y": 13,
+      "tile_id": 14,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 26,
+      "unwrapped_x": 26,
+      "y": 13,
+      "tile_id": 10,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 27,
+      "unwrapped_x": 27,
+      "y": 13,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 24,
+      "unwrapped_x": 24,
+      "y": 14,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 25,
+      "unwrapped_x": 25,
+      "y": 14,
+      "tile_id": 60,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 26,
+      "unwrapped_x": 26,
+      "y": 14,
+      "tile_id": 16,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 27,
+      "unwrapped_x": 27,
+      "y": 14,
+      "tile_id": 17,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 24,
+      "unwrapped_x": 24,
+      "y": 15,
+      "tile_id": 10,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 25,
+      "unwrapped_x": 25,
+      "y": 15,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 26,
+      "unwrapped_x": 26,
+      "y": 15,
+      "tile_id": 18,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    },
+    {
+      "x": 27,
+      "unwrapped_x": 27,
+      "y": 15,
+      "tile_id": 19,
+      "palette_id": 3,
+      "block_id": 47,
+      "block_file_offset": "0x01032F"
+    }
+  ],
+  "limitations": "Static NES tile and 2-bit attribute layout with the ROM-selected block page; special traversal timing, scroll, mirroring, raster CHR switches, brightness, sprites and external NES RGB palette are separate."
+}

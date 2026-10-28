@@ -1,6 +1,6 @@
 -- Silent source-provenance trace for cutscene ED/FC dispatch and MMC3 banks.
 -- No ROM bytes are written and no captured media is used as a runtime asset.
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local INPUT_CSV = PROJECT_ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local LAST_SOURCE_FRAME = 4692
 local run_id = os.date("%Y%m%d_%H%M%S")

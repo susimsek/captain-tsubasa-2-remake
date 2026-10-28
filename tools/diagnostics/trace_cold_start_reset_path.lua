@@ -2,7 +2,7 @@
 -- FCEUX process. This is observation/validation only; it does not read or
 -- write screenshots, audio, or runtime resources.
 
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local ROM_MD5_EXPECTED = "eaf2b3745263efa4b1afd2b400f68dae"
 local INPUT_CSV = PROJECT_ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local LAST_SOURCE_FRAME = 12

@@ -1,0 +1,167 @@
+{
+  "resource_kind": "ROM-derived runtime field candidate data; no emulator captures",
+  "rom_filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "entries": [
+    {
+      "path": "animation_70_header.bin",
+      "file_offset": "0x016B48",
+      "size_bytes": 5,
+      "sha256": "bb2c76a6ca796ba6dfead4f090cd5a048740e00c8c47fcfd6aa76f7546209c5d",
+      "raw_hex": "06 00 56 02 00",
+      "source": "bank 0B $8B38 record header"
+    },
+    {
+      "path": "block_map_56.bin",
+      "file_offset": "0x017634",
+      "size_bytes": 32,
+      "sha256": "143cbcbd41f3cd9749f511378403362196682e6077d13c07d48ca507083a5fa1",
+      "raw_hex": "15 16 15 15 1A 16 15 15 AD AD AD AD AD AD AD AD AE AE AE AE AE AE AE AE AF AF AF AF AF AF AF AF",
+      "source": "bank 0B $9624 4x8 metatile map"
+    },
+    {
+      "path": "metatile_15_tiles.bin",
+      "file_offset": "0x024160",
+      "size_bytes": 16,
+      "sha256": "df4576bcf1538c61a77e06901521f14c5b551ad5e3f1f608074eb05dc40e69eb",
+      "raw_hex": "01 01 01 01 0D 0D 0D 0D 10 3C 3C 3C 3D 08 09 0C",
+      "source": "bank 12 metatile tile IDs"
+    },
+    {
+      "path": "metatile_15_attribute.bin",
+      "file_offset": "0x017C09",
+      "size_bytes": 1,
+      "sha256": "aa7225e7d5b0a2552bbb58880b3ec00c286995b801a7aeb69281e76a8b4908de",
+      "raw_hex": "FA",
+      "source": "bank 0B page 0 attribute byte"
+    },
+    {
+      "path": "metatile_16_tiles.bin",
+      "file_offset": "0x024170",
+      "size_bytes": 16,
+      "sha256": "cf874c4933baf6fcdaceeb2d273ba8667bfa4ca6a40c00297c23c390bb77cdca",
+      "raw_hex": "01 01 01 01 0D 0D 0D 0D 3C 3C 10 11 08 3D 3D 1B",
+      "source": "bank 12 metatile tile IDs"
+    },
+    {
+      "path": "metatile_16_attribute.bin",
+      "file_offset": "0x017C0A",
+      "size_bytes": 1,
+      "sha256": "aa7225e7d5b0a2552bbb58880b3ec00c286995b801a7aeb69281e76a8b4908de",
+      "raw_hex": "FA",
+      "source": "bank 0B page 0 attribute byte"
+    },
+    {
+      "path": "metatile_AD_tiles.bin",
+      "file_offset": "0x024AE0",
+      "size_bytes": 16,
+      "sha256": "a25e4e92205ce1bfc8f900e42913293e2e66c46d23bfe4f0b34e081aaee7bc9d",
+      "raw_hex": "94 94 94 94 97 97 97 97 96 96 96 96 9C 9C 9C 9C",
+      "source": "bank 12 metatile tile IDs"
+    },
+    {
+      "path": "metatile_AD_attribute.bin",
+      "file_offset": "0x017CA1",
+      "size_bytes": 1,
+      "sha256": "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89",
+      "raw_hex": "FF",
+      "source": "bank 0B page 0 attribute byte"
+    },
+    {
+      "path": "metatile_AE_tiles.bin",
+      "file_offset": "0x024AF0",
+      "size_bytes": 16,
+      "sha256": "2dcc5000632bca78d1b13172dde53096ab91f64ba2fd50f10fb2128964334a05",
+      "raw_hex": "94 94 94 95 97 97 9A 9B 96 96 B0 B1 9C 9C A6 A7",
+      "source": "bank 12 metatile tile IDs"
+    },
+    {
+      "path": "metatile_AE_attribute.bin",
+      "file_offset": "0x017CA2",
+      "size_bytes": 1,
+      "sha256": "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89",
+      "raw_hex": "FF",
+      "source": "bank 0B page 0 attribute byte"
+    },
+    {
+      "path": "metatile_AF_tiles.bin",
+      "file_offset": "0x024B00",
+      "size_bytes": 16,
+      "sha256": "bbb799bc5533170ec54060c034d86f1b20dfdc62391e9fe9d9c58b85c3bde678",
+      "raw_hex": "87 87 87 87 88 88 88 88 01 01 01 01 01 01 01 01",
+      "source": "bank 12 metatile tile IDs"
+    },
+    {
+      "path": "metatile_AF_attribute.bin",
+      "file_offset": "0x017CA3",
+      "size_bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "raw_hex": "00",
+      "source": "bank 0B page 0 attribute byte"
+    },
+    {
+      "path": "metatile_1A_tiles.bin",
+      "file_offset": "0x0241B0",
+      "size_bytes": 16,
+      "sha256": "2d0a0d353ae97b6ce864817571fffee8730492342436e656a5c40c840f2cf61e",
+      "raw_hex": "12 0A 0A 13 3C 11 3C 10 3D 1B 08 3D 0A 13 12 0A",
+      "source": "bank 12 metatile tile IDs"
+    },
+    {
+      "path": "metatile_1A_attribute.bin",
+      "file_offset": "0x017C0E",
+      "size_bytes": 1,
+      "sha256": "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89",
+      "raw_hex": "FF",
+      "source": "bank 0B page 0 attribute byte"
+    },
+    {
+      "path": "metatile_15_attribute_page_02.bin",
+      "file_offset": "0x017E09",
+      "size_bytes": 1,
+      "sha256": "bceef655b5a034911f1c3718ce056531b45ef03b4c7b1f15629e867294011a7d",
+      "raw_hex": "AA",
+      "source": "bank 0B page 2 attribute byte selected by $05CA=2"
+    },
+    {
+      "path": "metatile_16_attribute_page_02.bin",
+      "file_offset": "0x017E0A",
+      "size_bytes": 1,
+      "sha256": "bceef655b5a034911f1c3718ce056531b45ef03b4c7b1f15629e867294011a7d",
+      "raw_hex": "AA",
+      "source": "bank 0B page 2 attribute byte selected by $05CA=2"
+    },
+    {
+      "path": "metatile_1A_attribute_page_02.bin",
+      "file_offset": "0x017E0E",
+      "size_bytes": 1,
+      "sha256": "bceef655b5a034911f1c3718ce056531b45ef03b4c7b1f15629e867294011a7d",
+      "raw_hex": "AA",
+      "source": "bank 0B page 2 attribute byte selected by $05CA=2"
+    },
+    {
+      "path": "metatile_AD_attribute_page_02.bin",
+      "file_offset": "0x017EA1",
+      "size_bytes": 1,
+      "sha256": "bceef655b5a034911f1c3718ce056531b45ef03b4c7b1f15629e867294011a7d",
+      "raw_hex": "AA",
+      "source": "bank 0B page 2 attribute byte selected by $05CA=2"
+    },
+    {
+      "path": "metatile_AE_attribute_page_02.bin",
+      "file_offset": "0x017EA2",
+      "size_bytes": 1,
+      "sha256": "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89",
+      "raw_hex": "FF",
+      "source": "bank 0B page 2 attribute byte selected by $05CA=2"
+    },
+    {
+      "path": "metatile_AF_attribute_page_02.bin",
+      "file_offset": "0x017EA3",
+      "size_bytes": 1,
+      "sha256": "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89",
+      "raw_hex": "FF",
+      "source": "bank 0B page 2 attribute byte selected by $05CA=2"
+    }
+  ]
+}

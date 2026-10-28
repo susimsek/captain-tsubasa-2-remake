@@ -2,7 +2,7 @@
 -- Run in a separate FCEUX process with the matching ROM, New PPU, and the
 -- environment-gated sprite read/composition traces enabled.
 
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local INPUT_CSV = PROJECT_ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local OUT_DIR = PROJECT_ROOT .. "/reference/diagnostics/oam_row129_cluster_trace_20261026"
 local TARGET_SOURCE_FRAME = 3594

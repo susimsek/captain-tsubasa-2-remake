@@ -36,3 +36,12 @@
 *.log
 *.tmp
 *.bak
+
+# Python bytecode caches.
+__pycache__/
+*.py[cod]
+
+# Large, local emulator diagnostic dumps and scratch instrumentation.
+/reference/rom_extract/audio/first_match_bgm55_driver_trace_20261028/
+/tools/diagnostics/_tmp_dump_runner_frame.gd
+/tools/diagnostics/fceux-*.patch

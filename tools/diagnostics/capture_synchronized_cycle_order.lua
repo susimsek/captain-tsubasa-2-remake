@@ -2,7 +2,7 @@
 -- Run in FCEUX with Mute Speaker Output enabled. This script never reads ROM
 -- bytes, extracts assets, or writes to any pre-existing capture directory.
 
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local INPUT_CSV = PROJECT_ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local FIRST_SCREEN_FRAME = 378
 local LAST_SOURCE_FRAME = 811

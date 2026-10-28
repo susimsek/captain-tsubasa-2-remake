@@ -13,10 +13,10 @@ const DESKTOP_MENU_VIEWPORT_HEIGHT := 231
 const DESKTOP_MENU_HEIGHT := 7
 # Same-input PPU snapshots are black on frames 4662–4691 after Start at 4661;
 # the title palette returns on 4692. This is a captured 30-frame boundary.
-const START_POLL_TO_STOP_CPU_CYCLES := 38
 const AUDIO_RELATIVE_PATH := "assets/opening/audio/opening_timeline_rom_driver.wav"
 const AUDIO_PATH := "res://" + AUDIO_RELATIVE_PATH
 const AUDIO_METADATA_PATH := "res://assets/opening/audio/opening_timeline_rom_driver.json"
+const KICKOFF_ROUTE_SCENE_PATH := "res://scenes/kickoff_route_runtime.tscn"
 const SOURCE_ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
 
 @onready var source_presenter: ColdStartSourceCommandPresenter = $SourcePresenter
@@ -28,9 +28,11 @@ var _transition_active := false
 var _transition_cpu_cycles_elapsed := 0.0
 var _transition_blackout_presented := false
 var _start_input_held := false
+var _start_input_transitions: Array[Dictionary] = []
 var _audio_loop_start_frame := -1
 var _audio_frame_rate := 0.0
 var _last_audio_sync_source_frame := -1
+var _kickoff_route
 
 
 func _ready() -> void:
@@ -49,6 +51,7 @@ func _ready() -> void:
 	opening_audio.finished.connect(_on_opening_audio_finished)
 	source_presenter.rom_sound_requested.connect(_on_rom_sound_requested)
 	source_presenter.source_start_poll_completed.connect(_on_source_start_poll_completed)
+	title_menu.kickoff_requested.connect(_on_kickoff_requested)
 	# This WAV is an offline render of the supplied ROM's sound driver and data.
 	# It contains the scheduled cues; ROM cue signals re-anchor its music timeline.
 	_play_opening_audio()
@@ -81,7 +84,7 @@ func _on_rom_sound_requested(sound_id: int, source_frame: int) -> void:
 	# The mixed ROM-driver render already contains the cue. Re-seek on ROM $58
 	# commands so audio-server clock drift cannot move the opening loop away from
 	# the decoded command timeline. Do not start a second stream for the event.
-	if sound_id != 0x58 or source_frame < 0:
+	if is_instance_valid(_kickoff_route) or sound_id != 0x58 or source_frame < 0:
 		return
 	if _audio_loop_start_frame < 0:
 		_audio_loop_start_frame = source_frame
@@ -100,36 +103,86 @@ func _on_opening_audio_finished() -> void:
 	opening_audio.set_playback_expected_active(false)
 
 
+func _on_kickoff_requested() -> void:
+	if is_instance_valid(_kickoff_route):
+		return
+	# The ROM's title branch returns into the KICK OFF route after the menu
+	# selection. Stop the cold-start timeline and let the route's ROM-derived
+	# sound commands own audio from this point onward.
+	opening_audio.stop()
+	opening_audio.stream = null
+	opening_audio.set_playback_expected_active(false)
+	_audio_loop_start_frame = -1
+	_transition_active = false
+	title_menu.visible = false
+	source_presenter.freeze_source_for_title_handoff()
+	source_presenter.visible = false
+	var kickoff_route_scene := load(KICKOFF_ROUTE_SCENE_PATH) as PackedScene
+	if kickoff_route_scene == null:
+		push_error("KICK OFF route scene could not be loaded: " + KICKOFF_ROUTE_SCENE_PATH)
+		return
+	_kickoff_route = kickoff_route_scene.instantiate()
+	_kickoff_route.name = "KickoffRouteRuntime"
+	add_child(_kickoff_route)
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if _transition_active or title_menu.visible:
 		return
 	if event is InputEventKey and event.echo:
 		return
 	if event.is_action_pressed("opening_start"):
-		_start_input_held = true
+		_record_start_input_transition(true)
 		get_viewport().set_input_as_handled()
 	elif event.is_action_released("opening_start"):
-		_start_input_held = false
+		_record_start_input_transition(false)
 
 
-func _on_source_start_poll_completed(_source_frame: int) -> void:
-	if not _start_input_held or _transition_active or title_menu.visible:
+func _record_start_input_transition(pressed: bool, timestamp_usec: int = -1) -> void:
+	_start_input_held = pressed
+	var event_time := timestamp_usec if timestamp_usec >= 0 else Time.get_ticks_usec()
+	_start_input_transitions.append({"pressed": pressed, "timestamp_usec": event_time})
+	if _start_input_transitions.size() > 256:
+		_start_input_transitions.remove_at(0)
+
+
+func _start_was_held_at(timestamp_usec: int) -> bool:
+	var held := false
+	for transition in _start_input_transitions:
+		if int(transition.get("timestamp_usec", 0)) > timestamp_usec:
+			break
+		held = bool(transition.get("pressed", false))
+	return held
+
+
+func _on_source_start_poll_completed(source_frame: int, elapsed_cpu_cycles_since_poll: float) -> void:
+	if _transition_active or title_menu.visible:
+		return
+	var poll_timestamp_usec := Time.get_ticks_usec() - int(round(
+		elapsed_cpu_cycles_since_poll * 1000000.0 / NES_CPU_CLOCK_HZ))
+	if not _start_was_held_at(poll_timestamp_usec):
 		return
 	if not title_menu.begin_source_handoff():
 		push_warning("ROM title queue could not start; the opening will continue running.")
 		return
 	source_presenter.freeze_source_for_title_handoff()
 	_transition_active = true
-	# The accepted `$802C` path reaches `$8048` after 38 CPU cycles in the
-	# measured frame. The poll's within-frame position is still a coarse model.
-	_transition_cpu_cycles_elapsed = -float(START_POLL_TO_STOP_CPU_CYCLES)
+	var poll_to_stop_cycles := source_presenter.start_poll_to_stop_cpu_cycles()
+	if poll_to_stop_cycles < 0:
+		push_error("ROM source clock has no Start-poll to $8048 timing anchor.")
+		_transition_active = false
+		return
+	# The presenter emits at the source-frame edge. Reconstruct how far ROM time
+	# has already advanced since $802C, including the variable poll phase.
+	_transition_cpu_cycles_elapsed = elapsed_cpu_cycles_since_poll - float(poll_to_stop_cycles)
 	_transition_blackout_presented = false
+	_advance_title_transition(0.0)
 
 
 func _advance_title_transition(delta: float) -> void:
 	# Playback consumes source-stepper CPU-cycle events. The event sequence is
-	# anchored at the ROM's `$8048` Start stop. `$802C` is serviced once per
-	# source frame, but its within-frame poll phase is not reproduced here.
+	# anchored at the ROM's `$8048` Start stop. The source presenter supplies the
+	# elapsed cycle position at the ROM `$802C` poll, including its in-frame phase.
 	_transition_cpu_cycles_elapsed += delta * NES_CPU_CLOCK_HZ
 	var cycle_offset := int(floor(_transition_cpu_cycles_elapsed))
 	if cycle_offset < 0:
@@ -141,7 +194,11 @@ func _advance_title_transition(delta: float) -> void:
 		source_presenter.visible = false
 		transition_black.visible = true
 		_transition_blackout_presented = true
-	if title_queue_complete:
+	var first_pixel_cycle := source_presenter.title_first_pixel_cycle_offset_from_start_stop()
+	if title_queue_complete and cycle_offset >= first_pixel_cycle:
+		# The ROM-derived queue completes during vblank. Reveal the generated
+		# title image at its source-modeled first visible pixel event (line 39,
+		# dot 118), not at the earlier final packet commit.
 		transition_black.visible = false
 		title_menu.visible = true
 		_transition_active = false

@@ -1,7 +1,7 @@
 -- Capture the source OAM page at DMA time during the repeated EC two-pixel gap.
 -- Observation only: this writes emulator state to diagnostics, not game assets.
 
-local ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local ROM_PATH = ROOT .. "/Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes"
 local INPUT_CSV = ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local OUTPUT_DIR = os.getenv("CT2_OAM_TRACE_OUTPUT_DIR")

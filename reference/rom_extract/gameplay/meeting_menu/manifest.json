@@ -1,0 +1,315 @@
+{
+  "name": "supplied_turkish_rom_pre_match_meeting_menu_source_spans",
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_rom_size_bytes": 393232,
+  "rom_content_type": "Exact copied PRG bytes from supplied iNES file; no decoded or capture-derived runtime assets.",
+  "bank_mapping": "For switchable 8 KiB PRG bank N at $A000: file offset = 0x10 + N*0x2000 + (CPU-$A000). For fixed bank 0 at $8000: 0x10 + (CPU-$8000).",
+  "files": [
+    {
+      "file": "bank0_menu_exit_routine.bin",
+      "description": "Menu exit fade/clear called by KICK OFF option 6.",
+      "prg_bank": 0,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$9BA0",
+        "$9BA9"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x001BB0",
+        "0x001BB9"
+      ],
+      "length_bytes": 9,
+      "sha256": "be5348cfdc524a04e586ed4e8fcb2d36446e6885d9acfc6c3b4447d6f3b2ae34"
+    },
+    {
+      "file": "bank0_menu_select_loop.bin",
+      "description": "Shared menu input loop: newly pressed Up/Down, A/Start confirm, returns row offset.",
+      "prg_bank": 0,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$9BE8",
+        "$9C0D"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x001BF8",
+        "0x001C1D"
+      ],
+      "length_bytes": 37,
+      "sha256": "69e11b0cdc850e4b0372b150b4bad53852ae65d42c44b05fe3187d47890ec626"
+    },
+    {
+      "file": "bank0_menu_indirect_dispatch.bin",
+      "description": "Shared indirect option dispatcher.",
+      "prg_bank": 0,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$9C28",
+        "$9C38"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x001C38",
+        "0x001C48"
+      ],
+      "length_bytes": 16,
+      "sha256": "ce4152b2d3e6440a620f11e553b95f795fea39108371749114851afd055fa54c"
+    },
+    {
+      "file": "bank0_menu_cursor_setup.bin",
+      "description": "Copies six-byte cursor descriptor to OAM shadow and records bounds.",
+      "prg_bank": 0,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$9C3A",
+        "$9C71"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x001C4A",
+        "0x001C81"
+      ],
+      "length_bytes": 55,
+      "sha256": "3fe67a396fd98e14bf850449087b01b76fac88248be1516ad1572344bf16ef4f"
+    },
+    {
+      "file": "bank0_menu_vertical_input.bin",
+      "description": "Shared vertical cursor move and endpoint wrap logic.",
+      "prg_bank": 0,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$9CE7",
+        "$9D08"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x001CF7",
+        "0x001D18"
+      ],
+      "length_bytes": 33,
+      "sha256": "9324f67cc39a88e6d69d61af73f8c0a1d497dbed9c0705e19d0fe53306cfdbd5"
+    },
+    {
+      "file": "bank0_menu_vertical_delta.bin",
+      "description": "Input delta table entries 0..8; Down=$10 and Up=$F0.",
+      "prg_bank": 0,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$9EE2",
+        "$9EEB"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x001EF2",
+        "0x001EFB"
+      ],
+      "length_bytes": 9,
+      "sha256": "b67559c1b8ef6e95ff1ce364731aeb43d21bfd6e46490dfba666e4aad4f3a433"
+    },
+    {
+      "file": "bank0_cutscene_bank_thresholds.bin",
+      "description": "Cutscene ID to PRG bank threshold table; ID $44/$5E resolves to bank $05.",
+      "prg_bank": 0,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$8AEE",
+        "$8AF7"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x000AFE",
+        "0x000B07"
+      ],
+      "length_bytes": 9,
+      "sha256": "95862af72d3273074e62427cd8fd7ce5047da8cbb41705e40cf417765b110a5d"
+    },
+    {
+      "file": "bank1_meeting_menu_controller.bin",
+      "description": "Menu setup, four-option pointer table, action handlers through kickoff return.",
+      "prg_bank": 1,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$A64C",
+        "$A6D2"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x00265C",
+        "0x0026E2"
+      ],
+      "length_bytes": 134,
+      "sha256": "c6d8c67c6ad487c11946a136fd6955f7aacd5630d77609db8a7a942b49e66482"
+    },
+    {
+      "file": "bank1_menu_cursor_descriptor.bin",
+      "description": "Target-ROM cursor descriptor: OAM start FC, Y 98, tile FF, palette 03, X 10, max Y C8.",
+      "prg_bank": 1,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$ADD0",
+        "$ADD6"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x002DE0",
+        "0x002DE6"
+      ],
+      "length_bytes": 6,
+      "sha256": "93f65165d1ebdb4e44d6ca61121308c647ca300d9c4e236bbb4c57c4663fb567"
+    },
+    {
+      "file": "bank1_option_advice_match_table.bin",
+      "description": "Match-index offsets for the advice/Information route.",
+      "prg_bank": 1,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$B393",
+        "$B3B5"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x0033A3",
+        "0x0033C5"
+      ],
+      "length_bytes": 34,
+      "sha256": "b20ddf440e2403afc7f4172a27dc48630bb8dc774f7301065959546fc49d11c4"
+    },
+    {
+      "file": "bank1_option_score_memo_match_table.bin",
+      "description": "Match-index offsets for score-memo/password route.",
+      "prg_bank": 1,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$B3D7",
+        "$B3F9"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x0033E7",
+        "0x003409"
+      ],
+      "length_bytes": 34,
+      "sha256": "6c0c0f159cc690967942d6f3af66d07f43833aaf1f9c21e3c8fe99ea3e1dc7a1"
+    },
+    {
+      "file": "bank1_option_kickoff_match_table.bin",
+      "description": "Match-index offsets for team-before-match/KICK OFF route.",
+      "prg_bank": 1,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$B41B",
+        "$B43D"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x00342B",
+        "0x00344D"
+      ],
+      "length_bytes": 34,
+      "sha256": "dc2ac411fe0222f6c1c84d04ec7bbbc8bf207613032ebb38ee42c6ff77b2ab42"
+    },
+    {
+      "file": "bank5_cutscene_pointer_entries_44_to_5f.bin",
+      "description": "Bank-5 pointers for scene IDs $44..$5F after threshold-table bank selection.",
+      "prg_bank": 5,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$A048",
+        "$A080"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x00A058",
+        "0x00A090"
+      ],
+      "length_bytes": 56,
+      "sha256": "6690a553d82b1b272bb85c7da3a8bb38b3a196220fe9495cb46faad8007834ab"
+    },
+    {
+      "file": "bank5_meeting_advice_scene_44_entry.bin",
+      "description": "Scene $44 pointer span; includes FE jump to $BED6.",
+      "prg_bank": 5,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$BE84",
+        "$BE9E"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x00BE94",
+        "0x00BEAE"
+      ],
+      "length_bytes": 26,
+      "sha256": "2f21d523914928f2cc85fb99b67dd554baf5c08770660fd53539ae2ce28abbe4"
+    },
+    {
+      "file": "bank5_meeting_advice_scene_44_jump_target.bin",
+      "description": "Reachable FE jump target through FF; scene $44 terminates at $BEDA.",
+      "prg_bank": 5,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$BED6",
+        "$BEDB"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x00BEE6",
+        "0x00BEEB"
+      ],
+      "length_bytes": 5,
+      "sha256": "72797e153acd7e8b1a357c22b1be41ec02fff14d40592175ee50b2706aa33abe"
+    },
+    {
+      "file": "bank5_kickoff_scene_5e_terminator.bin",
+      "description": "Scene $5E starts with FF; pointer $5E equals next pointer $5F.",
+      "prg_bank": 5,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$BFF4",
+        "$BFF5"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x00C004",
+        "0x00C005"
+      ],
+      "length_bytes": 1,
+      "sha256": "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89"
+    },
+    {
+      "file": "bank7_background_pointer_entry_5f.bin",
+      "description": "Background index $5F pointer entry; resolves to descriptor $AE4B.",
+      "prg_bank": 7,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$A0BE",
+        "$A0C0"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x00E0CE",
+        "0x00E0D0"
+      ],
+      "length_bytes": 2,
+      "sha256": "d230867e96aeb831811b6fe16bb6bf49c41dc003184f103260fa5a8794b0fdda"
+    },
+    {
+      "file": "bank7_background_descriptor_5f.bin",
+      "description": "Background record used by F9 $5F in scene $44; ends at next descriptor.",
+      "prg_bank": 7,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$AE4B",
+        "$AE83"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x00EE5B",
+        "0x00EE93"
+      ],
+      "length_bytes": 56,
+      "sha256": "5b06d666bb6b8e267f1c1410a64fb3495d35ab009ac27d91e2a9cbb139a2a91d"
+    },
+    {
+      "file": "bank9_animation_pointer_entry_3b.bin",
+      "description": "Animation index $3B pointer entry; resolves to $A476.",
+      "prg_bank": 9,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$A076",
+        "$A078"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x012086",
+        "0x012088"
+      ],
+      "length_bytes": 2,
+      "sha256": "63c9b400208949381a7ad84ea42a48c46f3cf9ef6650b455177111cc935b893c"
+    },
+    {
+      "file": "bank9_animation_3b.bin",
+      "description": "Animation $3B data (external listing label: Roberto, normal, right).",
+      "prg_bank": 9,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$A476",
+        "$A480"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x012486",
+        "0x012490"
+      ],
+      "length_bytes": 10,
+      "sha256": "e48ac121e3ef549ac8be743827d733fef3ce4ef98a490d69f10f918556f03796"
+    }
+  ],
+  "limitations": [
+    "The English disassembly is a label/navigation lead only; this extraction was checked against the target ROM hash and target bytes.",
+    "The menu visual still requires native decoding of the referenced ROM background/metatile, CHR and actor-animation data; these fragments preserve the call/data roots, not a ready-to-ship scene.",
+    "FCEUX captures are not included here and remain observation/validation only."
+  ]
+}

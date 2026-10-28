@@ -1,0 +1,35 @@
+{
+  "schema": "ct2-rom-kickoff-rng-arithmetic-spans-v1",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_rom_filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "file_offset_convention": "Offsets include the 16-byte iNES header.",
+  "bank_number_convention": "PRG banks are 8 KiB; bank 30 is the fixed upper bank for $C000-$FFFF.",
+  "spans": [
+    {
+      "id": "a117_rng_update",
+      "file": "a117_rng_update.bin",
+      "file_offset": 16678,
+      "length": 19,
+      "bank_8k": 2,
+      "cpu_start": 41238,
+      "cpu_end_inclusive": 41256,
+      "file_offset_hex": "0x004126",
+      "cpu_span_hex": "$A116-$A128",
+      "meaning": "CLC at $A116 then RNG arithmetic body beginning LDA $E1 at $A117",
+      "sha256": "96d2e722dfb21bf4b41493960cfee8035306d9de9f87a1516da655a2831c5fa9"
+    },
+    {
+      "id": "c9c5_rng_update",
+      "file": "c9c5_rng_update.bin",
+      "file_offset": 248277,
+      "length": 36,
+      "bank_8k": 30,
+      "cpu_start": 51653,
+      "cpu_end_inclusive": 51688,
+      "file_offset_hex": "0x03C9D5",
+      "cpu_span_hex": "$C9C5-$C9E8",
+      "meaning": "Indexed operand-driven RNG transform and RTS",
+      "sha256": "7989c2867a7687a0a79daed64aa10950f5222678cdafa871a7aab8a374f07de0"
+    }
+  ]
+}

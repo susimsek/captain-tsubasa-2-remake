@@ -2,7 +2,7 @@
 -- The APU core remains enabled, but the runner uses volume 0 and SDL's dummy
 -- audio backend. No WAV/PCM output is recorded or used as a game asset.
 
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local INPUT_CSV = PROJECT_ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local OUTPUT_DIR = os.getenv("CT2_DMC_TRACE_OUTPUT_DIR")
 assert(OUTPUT_DIR and #OUTPUT_DIR > 0, "set CT2_DMC_TRACE_OUTPUT_DIR via the Python runner")

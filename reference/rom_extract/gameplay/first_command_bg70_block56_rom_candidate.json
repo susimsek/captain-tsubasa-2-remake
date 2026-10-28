@@ -1,0 +1,1698 @@
+{
+  "resource_kind": "ROM-derived background-animation candidate; not emulator capture data",
+  "rom": {
+    "filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "size_bytes": 393232
+  },
+  "selection_route": {
+    "fresh_first_command_scenario_id": "0x44",
+    "scenario_pointer_table_file_offset": "0x020A57",
+    "scenario_stream_file_offset": "0x0237E5",
+    "event_bytes": "02 70 5C F0",
+    "event_fields_from_bank_10_parser": {
+      "delay": "0x02",
+      "background_animation_id": "0x70",
+      "sequence_id": "0x5C",
+      "cloud_parameter": "0xF0"
+    },
+    "background_animation_record_cpu_address": "0x8B38",
+    "background_animation_record_file_offset": "0x016B48",
+    "background_animation_record_header_hex": "06 00 56 02 00",
+    "record_command": {
+      "opcode": "0x00",
+      "operand": "0x56",
+      "y_placement": "0x80",
+      "y_placement_source": "existing frame-8953 RAM snapshot: $05CD=$80; handler $8327 passes it as Y to $8525"
+    }
+  },
+  "ppu_placement": {
+    "y_argument": "0x80",
+    "nametable_base_address": "0x2800",
+    "attribute_table_base_address": "0x2BC0",
+    "placement_basis": "bank-$0B sub_85C2 address calculation from Y=$80; this is one 4x8 metatile block, not the complete field nametable"
+  },
+  "chr_pair": {
+    "pair_table_cpu_address": "0x86EE",
+    "pair_table_file_offset": "0x0166FE",
+    "pair_index": "0x56",
+    "pair_file_offset": "0x0167AA",
+    "selectors": [
+      "0x3C",
+      "0x2E"
+    ]
+  },
+  "decoded_block": {
+    "block_id": "0x56",
+    "block_map_cpu_address": "0x9624",
+    "block_map_file_offset": "0x017634",
+    "block_map_raw_hex": "15 16 15 15 1a 16 15 15 ad ad ad ad ad ad ad ad ae ae ae ae ae ae ae ae af af af af af af af af",
+    "layout": {
+      "metatile_rows": 4,
+      "metatile_columns": 8,
+      "tiles_per_metatile_row": 4,
+      "tiles_per_metatile_column": 4
+    },
+    "expanded_tile_ids_rows_16x32": [
+      [
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x12",
+        "0x0A",
+        "0x0A",
+        "0x13",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01"
+      ],
+      [
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x3C",
+        "0x11",
+        "0x3C",
+        "0x10",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D",
+        "0x0D"
+      ],
+      [
+        "0x10",
+        "0x3C",
+        "0x3C",
+        "0x3C",
+        "0x3C",
+        "0x3C",
+        "0x10",
+        "0x11",
+        "0x10",
+        "0x3C",
+        "0x3C",
+        "0x3C",
+        "0x10",
+        "0x3C",
+        "0x3C",
+        "0x3C",
+        "0x3D",
+        "0x1B",
+        "0x08",
+        "0x3D",
+        "0x3C",
+        "0x3C",
+        "0x10",
+        "0x11",
+        "0x10",
+        "0x3C",
+        "0x3C",
+        "0x3C",
+        "0x10",
+        "0x3C",
+        "0x3C",
+        "0x3C"
+      ],
+      [
+        "0x3D",
+        "0x08",
+        "0x09",
+        "0x0C",
+        "0x08",
+        "0x3D",
+        "0x3D",
+        "0x1B",
+        "0x3D",
+        "0x08",
+        "0x09",
+        "0x0C",
+        "0x3D",
+        "0x08",
+        "0x09",
+        "0x0C",
+        "0x0A",
+        "0x13",
+        "0x12",
+        "0x0A",
+        "0x08",
+        "0x3D",
+        "0x3D",
+        "0x1B",
+        "0x3D",
+        "0x08",
+        "0x09",
+        "0x0C",
+        "0x3D",
+        "0x08",
+        "0x09",
+        "0x0C"
+      ],
+      [
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x94"
+      ],
+      [
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97",
+        "0x97"
+      ],
+      [
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96",
+        "0x96"
+      ],
+      [
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C",
+        "0x9C"
+      ],
+      [
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x95",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x95",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x95",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x95",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x95",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x95",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x95",
+        "0x94",
+        "0x94",
+        "0x94",
+        "0x95"
+      ],
+      [
+        "0x97",
+        "0x97",
+        "0x9A",
+        "0x9B",
+        "0x97",
+        "0x97",
+        "0x9A",
+        "0x9B",
+        "0x97",
+        "0x97",
+        "0x9A",
+        "0x9B",
+        "0x97",
+        "0x97",
+        "0x9A",
+        "0x9B",
+        "0x97",
+        "0x97",
+        "0x9A",
+        "0x9B",
+        "0x97",
+        "0x97",
+        "0x9A",
+        "0x9B",
+        "0x97",
+        "0x97",
+        "0x9A",
+        "0x9B",
+        "0x97",
+        "0x97",
+        "0x9A",
+        "0x9B"
+      ],
+      [
+        "0x96",
+        "0x96",
+        "0xB0",
+        "0xB1",
+        "0x96",
+        "0x96",
+        "0xB0",
+        "0xB1",
+        "0x96",
+        "0x96",
+        "0xB0",
+        "0xB1",
+        "0x96",
+        "0x96",
+        "0xB0",
+        "0xB1",
+        "0x96",
+        "0x96",
+        "0xB0",
+        "0xB1",
+        "0x96",
+        "0x96",
+        "0xB0",
+        "0xB1",
+        "0x96",
+        "0x96",
+        "0xB0",
+        "0xB1",
+        "0x96",
+        "0x96",
+        "0xB0",
+        "0xB1"
+      ],
+      [
+        "0x9C",
+        "0x9C",
+        "0xA6",
+        "0xA7",
+        "0x9C",
+        "0x9C",
+        "0xA6",
+        "0xA7",
+        "0x9C",
+        "0x9C",
+        "0xA6",
+        "0xA7",
+        "0x9C",
+        "0x9C",
+        "0xA6",
+        "0xA7",
+        "0x9C",
+        "0x9C",
+        "0xA6",
+        "0xA7",
+        "0x9C",
+        "0x9C",
+        "0xA6",
+        "0xA7",
+        "0x9C",
+        "0x9C",
+        "0xA6",
+        "0xA7",
+        "0x9C",
+        "0x9C",
+        "0xA6",
+        "0xA7"
+      ],
+      [
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87",
+        "0x87"
+      ],
+      [
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88",
+        "0x88"
+      ],
+      [
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01"
+      ],
+      [
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01",
+        "0x01"
+      ]
+    ],
+    "attribute_bytes_by_metatile_4x8": [
+      [
+        "0xAA",
+        "0xAA",
+        "0xAA",
+        "0xAA",
+        "0xAA",
+        "0xAA",
+        "0xAA",
+        "0xAA"
+      ],
+      [
+        "0xAA",
+        "0xAA",
+        "0xAA",
+        "0xAA",
+        "0xAA",
+        "0xAA",
+        "0xAA",
+        "0xAA"
+      ],
+      [
+        "0xFF",
+        "0xFF",
+        "0xFF",
+        "0xFF",
+        "0xFF",
+        "0xFF",
+        "0xFF",
+        "0xFF"
+      ],
+      [
+        "0xFF",
+        "0xFF",
+        "0xFF",
+        "0xFF",
+        "0xFF",
+        "0xFF",
+        "0xFF",
+        "0xFF"
+      ]
+    ],
+    "metatiles": [
+      [
+        {
+          "tile_block_id": "0x15",
+          "tile_block_file_offset": "0x024160",
+          "tile_ids_4x4": [
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x0D",
+              "0x0D",
+              "0x0D",
+              "0x0D"
+            ],
+            [
+              "0x10",
+              "0x3C",
+              "0x3C",
+              "0x3C"
+            ],
+            [
+              "0x3D",
+              "0x08",
+              "0x09",
+              "0x0C"
+            ]
+          ],
+          "attribute_file_offset": "0x017E09",
+          "attribute_byte": "0xAA"
+        },
+        {
+          "tile_block_id": "0x16",
+          "tile_block_file_offset": "0x024170",
+          "tile_ids_4x4": [
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x0D",
+              "0x0D",
+              "0x0D",
+              "0x0D"
+            ],
+            [
+              "0x3C",
+              "0x3C",
+              "0x10",
+              "0x11"
+            ],
+            [
+              "0x08",
+              "0x3D",
+              "0x3D",
+              "0x1B"
+            ]
+          ],
+          "attribute_file_offset": "0x017E0A",
+          "attribute_byte": "0xAA"
+        },
+        {
+          "tile_block_id": "0x15",
+          "tile_block_file_offset": "0x024160",
+          "tile_ids_4x4": [
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x0D",
+              "0x0D",
+              "0x0D",
+              "0x0D"
+            ],
+            [
+              "0x10",
+              "0x3C",
+              "0x3C",
+              "0x3C"
+            ],
+            [
+              "0x3D",
+              "0x08",
+              "0x09",
+              "0x0C"
+            ]
+          ],
+          "attribute_file_offset": "0x017E09",
+          "attribute_byte": "0xAA"
+        },
+        {
+          "tile_block_id": "0x15",
+          "tile_block_file_offset": "0x024160",
+          "tile_ids_4x4": [
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x0D",
+              "0x0D",
+              "0x0D",
+              "0x0D"
+            ],
+            [
+              "0x10",
+              "0x3C",
+              "0x3C",
+              "0x3C"
+            ],
+            [
+              "0x3D",
+              "0x08",
+              "0x09",
+              "0x0C"
+            ]
+          ],
+          "attribute_file_offset": "0x017E09",
+          "attribute_byte": "0xAA"
+        },
+        {
+          "tile_block_id": "0x1A",
+          "tile_block_file_offset": "0x0241B0",
+          "tile_ids_4x4": [
+            [
+              "0x12",
+              "0x0A",
+              "0x0A",
+              "0x13"
+            ],
+            [
+              "0x3C",
+              "0x11",
+              "0x3C",
+              "0x10"
+            ],
+            [
+              "0x3D",
+              "0x1B",
+              "0x08",
+              "0x3D"
+            ],
+            [
+              "0x0A",
+              "0x13",
+              "0x12",
+              "0x0A"
+            ]
+          ],
+          "attribute_file_offset": "0x017E0E",
+          "attribute_byte": "0xAA"
+        },
+        {
+          "tile_block_id": "0x16",
+          "tile_block_file_offset": "0x024170",
+          "tile_ids_4x4": [
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x0D",
+              "0x0D",
+              "0x0D",
+              "0x0D"
+            ],
+            [
+              "0x3C",
+              "0x3C",
+              "0x10",
+              "0x11"
+            ],
+            [
+              "0x08",
+              "0x3D",
+              "0x3D",
+              "0x1B"
+            ]
+          ],
+          "attribute_file_offset": "0x017E0A",
+          "attribute_byte": "0xAA"
+        },
+        {
+          "tile_block_id": "0x15",
+          "tile_block_file_offset": "0x024160",
+          "tile_ids_4x4": [
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x0D",
+              "0x0D",
+              "0x0D",
+              "0x0D"
+            ],
+            [
+              "0x10",
+              "0x3C",
+              "0x3C",
+              "0x3C"
+            ],
+            [
+              "0x3D",
+              "0x08",
+              "0x09",
+              "0x0C"
+            ]
+          ],
+          "attribute_file_offset": "0x017E09",
+          "attribute_byte": "0xAA"
+        },
+        {
+          "tile_block_id": "0x15",
+          "tile_block_file_offset": "0x024160",
+          "tile_ids_4x4": [
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x0D",
+              "0x0D",
+              "0x0D",
+              "0x0D"
+            ],
+            [
+              "0x10",
+              "0x3C",
+              "0x3C",
+              "0x3C"
+            ],
+            [
+              "0x3D",
+              "0x08",
+              "0x09",
+              "0x0C"
+            ]
+          ],
+          "attribute_file_offset": "0x017E09",
+          "attribute_byte": "0xAA"
+        }
+      ],
+      [
+        {
+          "tile_block_id": "0xAD",
+          "tile_block_file_offset": "0x024AE0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x94"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x97",
+              "0x97"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0x96",
+              "0x96"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0x9C",
+              "0x9C"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA1",
+          "attribute_byte": "0xAA"
+        },
+        {
+          "tile_block_id": "0xAD",
+          "tile_block_file_offset": "0x024AE0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x94"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x97",
+              "0x97"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0x96",
+              "0x96"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0x9C",
+              "0x9C"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA1",
+          "attribute_byte": "0xAA"
+        },
+        {
+          "tile_block_id": "0xAD",
+          "tile_block_file_offset": "0x024AE0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x94"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x97",
+              "0x97"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0x96",
+              "0x96"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0x9C",
+              "0x9C"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA1",
+          "attribute_byte": "0xAA"
+        },
+        {
+          "tile_block_id": "0xAD",
+          "tile_block_file_offset": "0x024AE0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x94"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x97",
+              "0x97"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0x96",
+              "0x96"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0x9C",
+              "0x9C"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA1",
+          "attribute_byte": "0xAA"
+        },
+        {
+          "tile_block_id": "0xAD",
+          "tile_block_file_offset": "0x024AE0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x94"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x97",
+              "0x97"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0x96",
+              "0x96"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0x9C",
+              "0x9C"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA1",
+          "attribute_byte": "0xAA"
+        },
+        {
+          "tile_block_id": "0xAD",
+          "tile_block_file_offset": "0x024AE0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x94"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x97",
+              "0x97"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0x96",
+              "0x96"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0x9C",
+              "0x9C"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA1",
+          "attribute_byte": "0xAA"
+        },
+        {
+          "tile_block_id": "0xAD",
+          "tile_block_file_offset": "0x024AE0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x94"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x97",
+              "0x97"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0x96",
+              "0x96"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0x9C",
+              "0x9C"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA1",
+          "attribute_byte": "0xAA"
+        },
+        {
+          "tile_block_id": "0xAD",
+          "tile_block_file_offset": "0x024AE0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x94"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x97",
+              "0x97"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0x96",
+              "0x96"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0x9C",
+              "0x9C"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA1",
+          "attribute_byte": "0xAA"
+        }
+      ],
+      [
+        {
+          "tile_block_id": "0xAE",
+          "tile_block_file_offset": "0x024AF0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x95"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x9A",
+              "0x9B"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0xB0",
+              "0xB1"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0xA6",
+              "0xA7"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA2",
+          "attribute_byte": "0xFF"
+        },
+        {
+          "tile_block_id": "0xAE",
+          "tile_block_file_offset": "0x024AF0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x95"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x9A",
+              "0x9B"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0xB0",
+              "0xB1"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0xA6",
+              "0xA7"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA2",
+          "attribute_byte": "0xFF"
+        },
+        {
+          "tile_block_id": "0xAE",
+          "tile_block_file_offset": "0x024AF0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x95"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x9A",
+              "0x9B"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0xB0",
+              "0xB1"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0xA6",
+              "0xA7"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA2",
+          "attribute_byte": "0xFF"
+        },
+        {
+          "tile_block_id": "0xAE",
+          "tile_block_file_offset": "0x024AF0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x95"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x9A",
+              "0x9B"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0xB0",
+              "0xB1"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0xA6",
+              "0xA7"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA2",
+          "attribute_byte": "0xFF"
+        },
+        {
+          "tile_block_id": "0xAE",
+          "tile_block_file_offset": "0x024AF0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x95"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x9A",
+              "0x9B"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0xB0",
+              "0xB1"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0xA6",
+              "0xA7"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA2",
+          "attribute_byte": "0xFF"
+        },
+        {
+          "tile_block_id": "0xAE",
+          "tile_block_file_offset": "0x024AF0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x95"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x9A",
+              "0x9B"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0xB0",
+              "0xB1"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0xA6",
+              "0xA7"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA2",
+          "attribute_byte": "0xFF"
+        },
+        {
+          "tile_block_id": "0xAE",
+          "tile_block_file_offset": "0x024AF0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x95"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x9A",
+              "0x9B"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0xB0",
+              "0xB1"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0xA6",
+              "0xA7"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA2",
+          "attribute_byte": "0xFF"
+        },
+        {
+          "tile_block_id": "0xAE",
+          "tile_block_file_offset": "0x024AF0",
+          "tile_ids_4x4": [
+            [
+              "0x94",
+              "0x94",
+              "0x94",
+              "0x95"
+            ],
+            [
+              "0x97",
+              "0x97",
+              "0x9A",
+              "0x9B"
+            ],
+            [
+              "0x96",
+              "0x96",
+              "0xB0",
+              "0xB1"
+            ],
+            [
+              "0x9C",
+              "0x9C",
+              "0xA6",
+              "0xA7"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA2",
+          "attribute_byte": "0xFF"
+        }
+      ],
+      [
+        {
+          "tile_block_id": "0xAF",
+          "tile_block_file_offset": "0x024B00",
+          "tile_ids_4x4": [
+            [
+              "0x87",
+              "0x87",
+              "0x87",
+              "0x87"
+            ],
+            [
+              "0x88",
+              "0x88",
+              "0x88",
+              "0x88"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA3",
+          "attribute_byte": "0xFF"
+        },
+        {
+          "tile_block_id": "0xAF",
+          "tile_block_file_offset": "0x024B00",
+          "tile_ids_4x4": [
+            [
+              "0x87",
+              "0x87",
+              "0x87",
+              "0x87"
+            ],
+            [
+              "0x88",
+              "0x88",
+              "0x88",
+              "0x88"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA3",
+          "attribute_byte": "0xFF"
+        },
+        {
+          "tile_block_id": "0xAF",
+          "tile_block_file_offset": "0x024B00",
+          "tile_ids_4x4": [
+            [
+              "0x87",
+              "0x87",
+              "0x87",
+              "0x87"
+            ],
+            [
+              "0x88",
+              "0x88",
+              "0x88",
+              "0x88"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA3",
+          "attribute_byte": "0xFF"
+        },
+        {
+          "tile_block_id": "0xAF",
+          "tile_block_file_offset": "0x024B00",
+          "tile_ids_4x4": [
+            [
+              "0x87",
+              "0x87",
+              "0x87",
+              "0x87"
+            ],
+            [
+              "0x88",
+              "0x88",
+              "0x88",
+              "0x88"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA3",
+          "attribute_byte": "0xFF"
+        },
+        {
+          "tile_block_id": "0xAF",
+          "tile_block_file_offset": "0x024B00",
+          "tile_ids_4x4": [
+            [
+              "0x87",
+              "0x87",
+              "0x87",
+              "0x87"
+            ],
+            [
+              "0x88",
+              "0x88",
+              "0x88",
+              "0x88"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA3",
+          "attribute_byte": "0xFF"
+        },
+        {
+          "tile_block_id": "0xAF",
+          "tile_block_file_offset": "0x024B00",
+          "tile_ids_4x4": [
+            [
+              "0x87",
+              "0x87",
+              "0x87",
+              "0x87"
+            ],
+            [
+              "0x88",
+              "0x88",
+              "0x88",
+              "0x88"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA3",
+          "attribute_byte": "0xFF"
+        },
+        {
+          "tile_block_id": "0xAF",
+          "tile_block_file_offset": "0x024B00",
+          "tile_ids_4x4": [
+            [
+              "0x87",
+              "0x87",
+              "0x87",
+              "0x87"
+            ],
+            [
+              "0x88",
+              "0x88",
+              "0x88",
+              "0x88"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA3",
+          "attribute_byte": "0xFF"
+        },
+        {
+          "tile_block_id": "0xAF",
+          "tile_block_file_offset": "0x024B00",
+          "tile_ids_4x4": [
+            [
+              "0x87",
+              "0x87",
+              "0x87",
+              "0x87"
+            ],
+            [
+              "0x88",
+              "0x88",
+              "0x88",
+              "0x88"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ],
+            [
+              "0x01",
+              "0x01",
+              "0x01",
+              "0x01"
+            ]
+          ],
+          "attribute_file_offset": "0x017EA3",
+          "attribute_byte": "0xFF"
+        }
+      ]
+    ],
+    "source_decode": {
+      "metatile_tile_data_prg_bank": "0x12 (CPU $A000 window when $05CA=0)",
+      "metatile_tile_data_file_base": "0x024010",
+      "tile_bytes_per_metatile": 16,
+      "metatile_tile_data_address_formula": "file_offset = 0x024010 + tile_block_id * 0x10",
+      "attribute_prg_bank": "0x0B",
+      "attribute_cpu_base": "0x9DE4 (page selected by $05CA=2)",
+      "attribute_file_base": "0x017DF4",
+      "attribute_formula": "file_offset = 0x017DF4 + tile_block_id",
+      "attribute_selector_source": "bank-$0B $86D3 packs the block-$56 selector from table $8B42 into $05CA=2"
+    },
+    "block_map_decode": "sub_8525 computes tbl_8B64 + (block_id * 0x20); record 0x56 is the 32-byte 4x8 metatile-ID layout at CPU $9624.",
+    "attribute_table_layout": "sub_85C2 reads $9BE4 + ($05CA << 8) + tile_block_id; block $56 selects $05CA=2, so its source table is $9DE4 / file 0x017DF4."
+  },
+  "limits": [
+    "This decodes the ROM-provided 4x8 metatile block selected by the first-command background-animation record.",
+    "It does not decode the complete scrolling map, every row-queue update, the full main-field background record, or all nametable attribute writes.",
+    "Background record $01 remains a partial full-map candidate; its exact active loader and map-to-PPU transform are unresolved.",
+    "Source RGB colors require the project palette; no emulator screenshot or captured image/audio was used."
+  ]
+}

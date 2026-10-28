@@ -1,0 +1,82 @@
+{
+  "schema": "ct2-first-match-player-state-rom-resources-v1",
+  "source_rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "extractor": "tools/gameplay/extract_first_match_player_state_resources.py",
+  "resources": {
+    "match_00_home_roster.bin": {
+      "file_offset": 19031,
+      "size_bytes": 12,
+      "meaning": "match-00 home roster slots 0-10 plus terminator",
+      "sha256": "dcb5f0103eaecbc9785e947085b02cd6b56f7d31e6671a699d82b22d80a3b123"
+    },
+    "stamina_profile_values_AE86_AFAE.bin": {
+      "file_offset": 241302,
+      "size_bytes": 296,
+      "cpu_start": "0xAE86",
+      "cpu_end_exclusive": "0xAFAE",
+      "prg_bank": "0x1C",
+      "meaning": "37 records of eight stamina/special skill curve selectors",
+      "sha256": "1c87d94c9754655c7101939c784abf02a7c37f6287cbb89ed674cc40562b6cf8"
+    },
+    "stamina_value_words_9F0E_9FCD.bin": {
+      "file_offset": 237342,
+      "size_bytes": 192,
+      "cpu_start": "0x9F0E",
+      "cpu_end_exclusive": "0x9FCE",
+      "prg_bank": "0x1C",
+      "meaning": "96 little-endian 16-bit maximum-stamina values",
+      "sha256": "9278cbdf95434a0dc120d6938b6095fc24261d735e8ce4f91c5c95400e291085"
+    }
+  },
+  "verified_code_windows": [
+    {
+      "prg_bank": "fixed",
+      "cpu_start": "0xDB62",
+      "cpu_end_exclusive": "0xDB9E",
+      "file_offset": "0x03DB72",
+      "size_bytes": 60,
+      "sha256": "430dd56ae794b1424df1b19834d68b81f7e498b7758337574bc59f2a724143c8"
+    },
+    {
+      "prg_bank": "fixed",
+      "cpu_start": "0xE0DF",
+      "cpu_end_exclusive": "0xE349",
+      "file_offset": "0x03E0EF",
+      "size_bytes": 618,
+      "sha256": "dc3cd54d809ec4a80dffc8959dd365ecfc994e926dafcfdd7b20d1afc6117523"
+    },
+    {
+      "prg_bank": "fixed",
+      "cpu_start": "0xCE08",
+      "cpu_end_exclusive": "0xCE2A",
+      "file_offset": "0x03CE18",
+      "size_bytes": 34,
+      "sha256": "a3fdef03b9da4f2e5f11a7ab79e70079600cf331bbd842c4ff695871df4395bb"
+    },
+    {
+      "prg_bank": "bank_1C",
+      "cpu_start": "0x802D",
+      "cpu_end_exclusive": "0x813D",
+      "file_offset": "0x03803D",
+      "size_bytes": 272,
+      "sha256": "9dfbec2e777774033ced8f43f7bac0d6eacb13522ff1a99ca4b280298784dbf7"
+    },
+    {
+      "prg_bank": "bank_01",
+      "cpu_start": "0xA611",
+      "cpu_end_exclusive": "0xA636",
+      "file_offset": "0x002621",
+      "size_bytes": 37,
+      "sha256": "66ba462837c47a0d94637637c461de438618f15451f9a10cee0c4cad2edbf985"
+    }
+  ],
+  "assumptions": [
+    "The player profile selector at $95D6 is preserved in the existing first-action-menu table resource; the stamina evaluator uses its first byte to index the $AE86 table for skill selector X=0.",
+    "The fresh-start level byte is zero because the cold reset clears volatile RAM; the pre-match $A611 path leaves it unchanged when experience resolves to level zero.",
+    "The provider models the ROM run timer only when a caller reports reaching the $E14D check after the $E349 input handler; B can leave the loop before that check.",
+    "The $E2BC stamina updater increments reset-zero byte $0618; only its wrap to zero skips teammate regeneration, and holder charging still runs."
+  ]
+}

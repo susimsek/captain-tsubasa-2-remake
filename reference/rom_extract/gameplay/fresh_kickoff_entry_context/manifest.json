@@ -1,0 +1,81 @@
+{
+  "schema": "ct2-fresh-kickoff-entry-context-source-v1",
+  "rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "mapping": "Offsets include the 16-byte iNES header. Fixed PRG window maps at 0x03C010 + CPU-$C000; bank $00 maps at 0x000010 + CPU-$8000; bank $02 at CPU $A000 maps at 0x004010 + CPU-$A000.",
+  "scope": "ROM-source provenance for fresh KICK OFF match index, period, and opponent inputs. Trace data is validation evidence only.",
+  "spans": [
+    {
+      "file": "reset_vector_FFFC.bin",
+      "cpu_start": "$FFFC",
+      "cpu_end_exclusive": "$FFFE",
+      "file_offset": "0x04000C",
+      "length": 2,
+      "sha256": "def1e0885184cca73afc582c50470a0c10851a849027a1dd1d2aacc482b2516a",
+      "bytes": "f0 ff",
+      "description": "fixed $1F reset vector"
+    },
+    {
+      "file": "reset_entry_FFF0_FFF7.bin",
+      "cpu_start": "$FFF0",
+      "cpu_end_exclusive": "$FFF8",
+      "file_offset": "0x040000",
+      "length": 8,
+      "sha256": "95925881564c84710f0f280e12ddf5913882b5d9cf59cd89eabdf47442f9b122",
+      "bytes": "a9 00 8d 00 80 4c 03 c5",
+      "description": "fixed $1F reset entry"
+    },
+    {
+      "file": "reset_jump_C503.bin",
+      "cpu_start": "$C503",
+      "cpu_end_exclusive": "$C506",
+      "file_offset": "0x03C513",
+      "length": 3,
+      "sha256": "1af2205ae6c5e64cd5a956e38ab915e5f3049b2c6e40ed85803c3c8b6abbdf3d",
+      "bytes": "4c 4e c6",
+      "description": "fixed reset jump to $C64E"
+    },
+    {
+      "file": "reset_ram_clear_C64E_C679.bin",
+      "cpu_start": "$C64E",
+      "cpu_end_exclusive": "$C67A",
+      "file_offset": "0x03C65E",
+      "length": 44,
+      "sha256": "8315e93ae660d302632f7bfeffc9db002b3f1c1643ae2b6936d3ce5703e6f75a",
+      "bytes": "a9 08 8d 00 20 78 d8 a2 ff 9a ad 02 20 10 fb ad 02 20 10 fb a9 c0 8d 01 a0 a9 00 85 00 85 01 a8 a2 08 91 00 c8 d0 fb e6 01 ca d0 f6",
+      "description": "fixed cold-start zero-fill routine for $0000-$07FF"
+    },
+    {
+      "file": "title_kickoff_branch_80DF_8104.bin",
+      "cpu_start": "$80DF",
+      "cpu_end_exclusive": "$8105",
+      "file_offset": "0x0000EF",
+      "length": 38,
+      "sha256": "9644d6c798c23b733a43b63e67b2216ffe0aacc8a36ae8a636e7f0fd66b00dd8",
+      "bytes": "24 ed 50 03 4c 6a 82 20 a0 9b a9 01 20 64 84 20 b5 82 a9 c0 85 e0 a2 02 20 b9 c4 20 0f a2 a9 00 85 28 85 29 85 27",
+      "description": "bank $00 title choice through KICK OFF new-game writes"
+    },
+    {
+      "file": "match_selector_trampoline_A20F.bin",
+      "cpu_start": "$A20F",
+      "cpu_end_exclusive": "$A212",
+      "file_offset": "0x00421F",
+      "length": 3,
+      "sha256": "51244f9af68e818db390d67b69d822597a021d99bb35339132f4ce2dfde5430d",
+      "bytes": "4c 6e a8",
+      "description": "bank $02 trampoline to match selector $A86E"
+    },
+    {
+      "file": "match_selector_A86E_A8CD.bin",
+      "cpu_start": "$A86E",
+      "cpu_end_exclusive": "$A8CE",
+      "file_offset": "0x00487E",
+      "length": 96,
+      "sha256": "f9b27195e6d6c9163d55ee6161fbf8d4d795537df2f2347d3e4c406765033123",
+      "bytes": "a5 26 c9 06 90 08 c9 0c 90 0c c9 10 b0 10 a2 00 20 b7 a8 4c a3 a8 a2 0c 20 b7 a8 4c a3 a8 a2 18 20 b7 a8 a0 00 bd 47 aa 99 08 04 e8 98 18 69 04 a8 c9 28 90 f0 bd 47 aa 85 2c a6 26 bd 75 aa 85 2a a5 26 18 69 03 85 2b 60 4c 38 a1 ed a0 00 bd 47 aa 99 00 03 e8 98 18 69 0c a8 c9 84 90 f0 60",
+      "description": "bank $02 match-index/roster/opponent selector"
+    }
+  ]
+}

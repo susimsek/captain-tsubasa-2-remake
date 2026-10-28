@@ -1,7 +1,7 @@
 -- Capture the source replay's writes to the opening raster-event workspace.
 -- Run with FCEUX --sound 0 --volume 0 --newppu 1. This is diagnostic-only.
 
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local INPUT_CSV = PROJECT_ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local FIRST_CAPTURE_FRAME = 378
 local LAST_SOURCE_FRAME = 400

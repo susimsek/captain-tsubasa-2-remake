@@ -1,6 +1,6 @@
 -- Compare Start handling at early/mid opening frames. Muted FCEUX only.
 -- This records emulator state for observation; no captured media becomes runtime assets.
-local root = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe/reference/diagnostics/start_timing_probe_20261024"
+local root = (os.getenv("CT2_PROJECT_ROOT") or ".") .. "/reference/diagnostics/start_timing_probe_20261024"
 os.execute("mkdir -p " .. string.format("%q", root))
 
 local function write(path, data)

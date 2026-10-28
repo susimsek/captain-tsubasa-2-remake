@@ -2,7 +2,7 @@
 -- Run in a separate FCEUX instance with --sound 0 --volume 0; no UI/audio
 -- capture is used. Output is source evidence only, never a runtime asset.
 
-local PROJECT_ROOT = "/Users/T097315/Documents/Captain Tsubasa 2 Super Striker Türkçe"
+local PROJECT_ROOT = os.getenv("CT2_PROJECT_ROOT") or "."
 local ROM_PATH = PROJECT_ROOT .. "/Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes"
 local INPUT_CSV = PROJECT_ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local EXPECTED_ROM_MD5 = "eaf2b3745263efa4b1afd2b400f68dae"

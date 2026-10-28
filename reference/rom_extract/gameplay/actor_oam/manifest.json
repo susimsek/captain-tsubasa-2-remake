@@ -1,0 +1,50 @@
+{
+  "resource_kind": "preserved ROM source bytes for the gameplay actor OAM decoder",
+  "source_rom_filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "bank_window_file_base": "0x02C010",
+  "runtime_rom_dependency": false,
+  "capture_or_screenshot_bytes_included": false,
+  "segments": [
+    {
+      "name": "sprite_engine_8000_8185",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_sprite_engine_8000_8185.bin",
+      "bank": "0x16",
+      "cpu_start": "0x8000",
+      "file_offset": "0x02C010",
+      "length_bytes": 390,
+      "sha256": "4c8913c90c578a7924f74b8a94b91ff5ac4b059c7c9e7304d3f48a7ae67f9894",
+      "purpose": "actor transform, compact stream interpreter, and descriptor dispatch"
+    },
+    {
+      "name": "sprite_offsets_81d2_8239",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_sprite_offsets_81d2_8239.bin",
+      "bank": "0x16",
+      "cpu_start": "0x81D2",
+      "file_offset": "0x02C1E2",
+      "length_bytes": 104,
+      "sha256": "7cbf389d7e51e0b550b95a5a11cbb6840320c95e3a25215f4553c2b15b06214d",
+      "purpose": "40-byte Y offset table followed by 64-byte X offset table"
+    },
+    {
+      "name": "sprite_descriptor_pointers_8280_82af",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_sprite_descriptor_pointers_8280_82af.bin",
+      "bank": "0x16",
+      "cpu_start": "0x8280",
+      "file_offset": "0x02C290",
+      "length_bytes": 48,
+      "sha256": "307422f39c84f3bb3f12cd84879091d437582c0ed0d6d41adb2555c808ee6564",
+      "purpose": "24 descriptor stream pointers; first 12 are direct, following values follow source table layout"
+    },
+    {
+      "name": "first_command_sprite_streams_842c_8979",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_first_command_sprite_streams_842c_8979.bin",
+      "bank": "0x16",
+      "cpu_start": "0x842C",
+      "file_offset": "0x02C43C",
+      "length_bytes": 1358,
+      "sha256": "90caefd89c50a5696347adba35d47b1b428829c4983051da11226f6bab1f1fa7",
+      "purpose": "descriptor $00/$04/$0A stream roots, selector tables, jump targets, and compact OAM runs"
+    }
+  ]
+}

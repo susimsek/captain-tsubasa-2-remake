@@ -39,9 +39,9 @@ var encoded_packet_byte_count := 0
 var last_error := ""
 
 
-static func get_supported_background_ids() -> Array[int]:
+static func get_supported_background_ids(data_root: String = INTRO_DATA_ROOT) -> Array[int]:
 	var result: Array[int] = []
-	var directory := DirAccess.open(INTRO_DATA_ROOT)
+	var directory := DirAccess.open(data_root)
 	if directory == null:
 		return result
 	directory.list_dir_begin()
@@ -62,13 +62,17 @@ static func get_supported_background_ids() -> Array[int]:
 	return result
 
 
-func build_packets(background_id: int) -> bool:
+func build_packets(background_id: int, data_root: String = INTRO_DATA_ROOT) -> bool:
 	_clear_result()
 	if background_id < 0 or background_id > 0xFF:
 		return _fail("Background ID must fit in one ROM byte.")
+	var normalized_data_root := data_root.trim_prefix("res://").trim_suffix("/")
+	if normalized_data_root != "reference/rom_extract/intro" \
+			and normalized_data_root != "reference/rom_extract/gameplay/backgrounds":
+		return _fail("Background data root is outside the supported ROM-extract folders.")
 
 	var id_hex := "%02X" % background_id
-	var layout_path := "%s/background_%s_layout.json" % [INTRO_DATA_ROOT, id_hex]
+	var layout_path := "res://%s/background_%s_layout.json" % [normalized_data_root, id_hex]
 	var layout := _read_json(layout_path)
 	if layout.is_empty():
 		return _fail("Missing or invalid background layout: %s" % layout_path)
@@ -78,7 +82,7 @@ func build_packets(background_id: int) -> bool:
 		return _fail("Background layout ID does not match requested ID $%s." % id_hex)
 
 	var record_path := _project_resource_path(str(layout.get("record_source_bin", "")))
-	var expected_record_source := "reference/rom_extract/intro/background_%s.bin" % id_hex
+	var expected_record_source := "%s/background_%s.bin" % [normalized_data_root, id_hex]
 	if record_path.is_empty() or str(layout.get("record_source_bin", "")) != expected_record_source:
 		return _fail("Background $%s has an invalid record source path." % id_hex)
 	var record := FileAccess.get_file_as_bytes(record_path)
@@ -117,7 +121,8 @@ func build_packets(background_id: int) -> bool:
 		return _fail("Background $%s trailing record bytes differ from the layout manifest." % id_hex)
 
 	var block_records := _load_block_records(
-		layout.get("used_4x4_blocks", []), id_hex, block_page_selector
+		layout.get("used_4x4_blocks", []), id_hex, block_page_selector,
+		normalized_data_root
 	)
 	if block_records.is_empty():
 		return false
@@ -307,7 +312,8 @@ func _attribute_address(tile_x: int, tile_y: int) -> int:
 	return ATTRIBUTE_TABLE_BASE + nametable * 0x400 + attribute_row * 8 + attribute_column
 
 
-func _load_block_records(raw_records: Variant, id_hex: String, block_page_selector: int) -> Dictionary:
+func _load_block_records(raw_records: Variant, id_hex: String, block_page_selector: int,
+		data_root: String) -> Dictionary:
 	var result: Dictionary = {}
 	if not raw_records is Array or raw_records.is_empty():
 		_fail("Background $%s has no extracted block descriptors." % id_hex)
@@ -322,9 +328,9 @@ func _load_block_records(raw_records: Variant, id_hex: String, block_page_select
 			_fail("Background $%s has an invalid block ID." % id_hex)
 			return {}
 		var source_path := _project_resource_path(str(descriptor.get("source_bin", "")))
-		var expected_source := "reference/rom_extract/intro/block_%02X.bin" % block_id
+		var expected_source := "%s/block_%02X.bin" % [data_root, block_id]
 		if block_page_selector == 1:
-			expected_source = "reference/rom_extract/intro/block_%02X_page_11.bin" % block_id
+			expected_source = "%s/block_%02X_page_11.bin" % [data_root, block_id]
 		if source_path.is_empty() or str(descriptor.get("source_bin", "")) != expected_source or not FileAccess.file_exists(source_path):
 			_fail("Background $%s block $%02X source is missing." % [id_hex, block_id])
 			return {}
@@ -401,7 +407,7 @@ func _validate_tile_placements(raw_placements: Variant, generated: Dictionary,
 
 func _project_resource_path(path: String) -> String:
 	var normalized := path.trim_prefix("res://")
-	if normalized.begins_with("/") or not normalized.begins_with("reference/rom_extract/intro/"):
+	if normalized.begins_with("/") or not normalized.begins_with("reference/rom_extract/"):
 		return ""
 	return "res://%s" % normalized
 
