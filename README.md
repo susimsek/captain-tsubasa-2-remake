@@ -25,20 +25,25 @@ A Godot remake of *Captain Tsubasa 2: Super Striker* for Windows, macOS, and Lin
 ## Table of Contents
 
 1. [Current build](#current-build)
-2. [Highlights](#highlights)
-3. [Download](#download)
-4. [System requirements](#system-requirements)
-5. [Run from source](#run-from-source)
-6. [Controls](#controls)
-7. [Project structure](#project-structure)
-8. [Development notes](#development-notes)
-9. [CI and releases](#ci-and-releases)
-10. [Contributing](#contributing)
-11. [License and credits](#license-and-credits)
+2. [About the original game](#about-the-original-game)
+3. [Highlights](#highlights)
+4. [Download](#download)
+5. [System requirements](#system-requirements)
+6. [Run from source](#run-from-source)
+7. [Controls](#controls)
+8. [Project structure](#project-structure)
+9. [Development notes](#development-notes)
+10. [CI and releases](#ci-and-releases)
+11. [Contributing](#contributing)
+12. [License and credits](#license-and-credits)
 
 ## Current build
 
 The current release recreates the opening sequence and soundtrack, then presents the initial title screen. **KICK OFF** and **CONTINUE** are displayed, but match and story flows are not part of this release. Additional interface languages are planned and are not available yet.
+
+## About the original game
+
+*Captain Tsubasa II: Super Striker* is Tecmo's direct sequel to *Captain Tsubasa* for the Famicom. It was released in Japan on 20 July 1990 and combines sports and RPG elements. Its story begins after a three-year time skip. The original Japanese [instruction manual](https://www.nintendo.co.jp/clvj/manuals/pdf/CLV-P-HBANJ.pdf) is available from Nintendo.
 
 ## Highlights
 
@@ -98,7 +103,7 @@ The opening has been validated against FCEUX: all 4,693 frames in the visible 25
 
 ## CI and releases
 
-Every branch push and pull request targeting **main** runs a clean Godot import, exports and launches a runtime pack, and performs a short headless startup check. Version tags trigger desktop exports for Linux x86_64, Windows x86_64, and macOS Universal. Each release includes those desktop packages, source archives, a SHA-256 manifest, and its Sigstore signature bundle. Desktop packages also include `THIRD_PARTY_NOTICES.txt` for required engine notices.
+Every branch push and pull request targeting **main** runs a clean Godot import, exports and launches a runtime pack, and performs a short headless startup check. Version tags trigger desktop exports for Linux x86_64, Windows x86_64, and macOS Universal. Each release includes those desktop packages, a SHA-256 manifest, and its Sigstore signature bundle. GitHub also provides automatic source snapshots for the tag. Desktop packages include `THIRD_PARTY_NOTICES.txt` for required engine notices.
 
 ## Contributing
 

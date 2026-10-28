@@ -61,6 +61,16 @@ The Japanese [Captain Tsubasa 2 binary wiki](https://w.atwiki.jp/cap2bin/) expos
 
 No web tutorial or editor documentation found in this check provides a complete, already-solved Godot-ready opening renderer. The practical gain is the annotated disassembly: use its routine names and RAM labels as hypotheses, verify the bytes in this ROM, then map the executed opening path using the local emulator trace and ROM data.
 
+## General game metadata and official manual
+
+Checked 2026-10-28. The [Captain Tsubasa Wiki article for *Captain Tsubasa II: Super Striker*](https://captaintsubasa.fandom.com/wiki/Captain_Tsubasa_II:_Super_Striker) describes it as a Tecmo-developed and published Famicom game released on 1990-07-20, a direct sequel to *Captain Tsubasa* (FC), and a sports/RPG title. The README already carried the original release date and genre; the Famicom platform, Tecmo attribution, and sequel relationship were missing from its short overview. The Japanese [Famicom game-catalog entry](https://w.atwiki.jp/famicom-log/pages/67.html) independently records Famicom, Tecmo, and 1990-07-20.
+
+The wiki's description says the game uses an original story and characters after a three-year time skip. Its match section groups the campaign into Rio Cup, Japanese National High School Tournament, Japan Cup, World Youth Asian qualifiers, a practice match, World Youth preliminaries, and World Youth. This is useful narrative and campaign context, but it is a fan-maintained summary—not a trace of the Turkish ROM. The Japanese scenario index already documented in [`japanese_sources_opening_20261025.md`](japanese_sources_opening_20261025.md) divides the story into eight sections and provides richer walkthrough/transcript references. Preserve that difference as a source-grouping discrepancy; verify campaign order, branch behavior, and localized text against the supplied ROM before implementing them. The wiki's featured-character list is an index, not a verified roster/data source, and has not been copied into runtime or documentation tables.
+
+The Fandom page also links Nintendo's [official Japanese instruction manual PDF](https://www.nintendo.co.jp/clvj/manuals/pdf/CLV-P-HBANJ.pdf). The linked file is a 57-page Japanese manual and is a primary source for original instructions and interface context. It was identified here but not transcribed page by page; use the manual itself for future controls/story claims and still check behavior against the Turkish ROM where revisions or localization may differ.
+
+Composer credits are unresolved: this Fandom article lists Keiji Yamagishi, Mayuko Okamura, and Mikio Saito, while the Japanese soundtrack catalog recorded in [`sound_test_index_audit_20261025.md`](../audio/sound_test_index_audit_20261025.md) lists Tsugutoshi Yamagishi, Mayuko Okamura, and Mikio Saito. Do not promote either Yamagishi-name form into project credits until a primary credit source resolves the discrepancy. No Fandom prose or images were copied.
+
 ## Opening-specific source leads and byte checks
 
 ### Japanese offset memo: script, palette, and scene-table leads
