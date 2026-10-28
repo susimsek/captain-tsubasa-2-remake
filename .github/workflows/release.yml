@@ -196,20 +196,6 @@ jobs:
           grep -Fxq install-desktop-entry.sh "$linux_entries"
           grep -Fxq uninstall-desktop-entry.sh "$linux_entries"
 
-      - name: Create source archives
-        shell: bash
-        env:
-          RELEASE_TAG: ${{ steps.release.outputs.tag }}
-        run: |
-          set -euo pipefail
-          asset_dir="$RUNNER_TEMP/release-assets"
-          mkdir -p "$asset_dir"
-          archive_prefix="captain-tsubasa-2-remake-${RELEASE_TAG}"
-          git archive --format=zip --prefix="${archive_prefix}/" "$RELEASE_TAG" \
-            > "$asset_dir/${archive_prefix}-source.zip"
-          git archive --format=tar --prefix="${archive_prefix}/" "$RELEASE_TAG" \
-            | gzip --no-name \
-            > "$asset_dir/${archive_prefix}-source.tar.gz"
       - name: Upload release assets for packaging
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
