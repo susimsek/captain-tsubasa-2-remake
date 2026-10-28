@@ -20,49 +20,51 @@
 
 # Captain Tsubasa 2 Remake
 
-An unofficial Godot reconstruction of the Turkish NES release. The current milestone rebuilds the cold-start opening and original music, then stops at the title menu with **KICK OFF** and **CONTINUE** visible. It does not enter either option.
+A fan-made remake of *Captain Tsubasa 2: Super Striker*, built with Godot for Windows, macOS, and Linux. The current build recreates the original opening and music, ending at the initial title screen with **KICK OFF** and **CONTINUE** visible. Match and story modes are not included in this build. Multilingual support is planned for a later stage of development.
 
-The game runs from the Godot project without loading the supplied ROM or starting an emulator. Runtime resources extracted from the ROM are kept in the project and their source information is documented under **reference/rom_extract/**.
+The game runs without an external ROM or emulator. Project resources derived from the supplied ROM, along with their provenance, are documented under **reference/rom_extract/**.
 
-The poster above is the original promotional image supplied by the project owner and is stored at `assets/readme/captain-tsubasa-2-poster.jpg`. The same artwork supplies the desktop application icons; it is kept separate from the ROM-derived game visuals. Its source is [LaunchBox](https://images.launchbox-app.com/78127ee0-f18d-4a8d-87d1-eb8afdb3ca0a.jpg), and its rights remain with its respective owners.
+The poster above is the original promotional artwork stored at `assets/readme/captain-tsubasa-2-poster.jpg`; the desktop application icons use the same image. It is separate from the ROM-derived game visuals. Source: [LaunchBox](https://images.launchbox-app.com/78127ee0-f18d-4a8d-87d1-eb8afdb3ca0a.jpg). The artwork remains the property of its respective rights holders.
 
 ## Table of Contents
 
-1. [Features](#features)
-2. [Current milestone](#current-milestone)
-3. [Requirements](#requirements)
-4. [Run locally](#run-locally)
-5. [Controls](#controls)
-6. [Project layout](#project-layout)
-7. [Verification notes](#verification-notes)
-8. [CI and releases](#ci-and-releases)
-9. [Contributing](#contributing)
-10. [License and original game content](#license-and-original-game-content)
+1. [Highlights](#highlights)
+2. [Current build](#current-build)
+3. [Download](#download)
+4. [System requirements](#system-requirements)
+5. [Build and run locally](#build-and-run-locally)
+6. [Controls](#controls)
+7. [Project layout](#project-layout)
+8. [Technical notes](#technical-notes)
+9. [CI and releases](#ci-and-releases)
+10. [Contributing](#contributing)
+11. [License and original game content](#license-and-original-game-content)
 
-## Features
+## Highlights
 
-- ROM-command-driven opening presentation, sprite animation, text timing, and sound triggers.
-- Original CHR, palette, background, sprite, and audio-derived project resources.
-- ROM-derived opening music with an offline Godot audio resource.
-- Title handoff to the initial **KICK OFF** / **CONTINUE** menu.
-- Windows/Linux provide separate **Help → About…** and **Help → Check for Updates…** commands. macOS keeps both commands in its native application menu. About contains version and original-release information only; update checks open their own dialog. F1 opens About, and F2 checks for updates directly.
-- Desktop update checks select the matching macOS, Windows, or Linux release package. The game downloads it in the background, verifies its SHA-256 digest, then offers **Install and Relaunch**.
-- The updater verifies the release asset digest reported by GitHub over HTTPS. Releases also publish a separately Sigstore-signed `SHA256SUMS` manifest for manual package verification.
-- Automatic installation requires the game folder to be writable. macOS builds are not notarized, so Gatekeeper may still ask for approval after an update.
-- No ROM file or emulator dependency at runtime.
+- Reconstructed opening presentation with original sprite animation, text timing, and sound cues.
+- Original opening soundtrack rendered from game data.
+- Title-screen arrival with **KICK OFF** and **CONTINUE** visible.
+- Standalone desktop builds for Windows, Linux, and macOS; no ROM or emulator is needed to play the current build.
+- Built-in desktop update checks download the matching platform package, verify its SHA-256 digest, and offer **Install and Relaunch**.
+- Windows and Linux provide separate **Help → About…** and **Help → Check for Updates…** commands. macOS keeps both commands in its native application menu. About shows version and original-release information; update checks open a separate dialog. F1 and F2 are keyboard shortcuts for those actions.
 
-## Current milestone
+## Current build
 
-The opening plays from a cold start and ends at the title menu. Cursor movement is available, but confirming a title option is outside this milestone. Match play, story selection, and continue flows are not implemented here.
+This build covers the opening from a cold start through the initial title screen. The title choices are displayed, but selecting **KICK OFF** or **CONTINUE** does not enter a match or story flow. Multilingual support is planned and is not available in the current build.
 
-The implementation follows decoded ROM behavior and project-owned data rather than replaying captured emulator frames. Known timing gaps are summarized in **GOAL.md**. Bulky local diagnostic captures are excluded from this repository and are not required by the running game.
+The project is developed from documented game behavior and source data. Emulator recordings are used for comparison, not as runtime assets.
 
-## Requirements
+## Download
+
+Download the latest desktop build from the [GitHub Releases page](https://github.com/susimsek/captain-tsubasa-2-remake/releases/latest). Choose the package for Windows, macOS, or Linux.
+
+## System requirements
 
 - Godot 4.7.2
 - Desktop keyboard or gamepad
 
-## Run locally
+## Build and run locally
 
 Open this folder in Godot 4.7.2 and run the main scene. From a terminal with Godot available:
 
@@ -84,7 +86,7 @@ Open this folder in Godot 4.7.2 and run the main scene. From a terminal with God
 - **docs/**: focused architecture and behavior notes.
 - **tools/**: extraction and diagnostic utilities; these are not runtime dependencies.
 
-## Verification notes
+## Technical notes
 
 The project's latest same-input comparison reports a full match for the visible 256×224 NTSC crop across 4,693 opening frames. Raw 256×240 PPU comparisons preserve the overscan rows and can show a small y=0 difference. This does not establish physical 2C02 sub-frame timing.
 
