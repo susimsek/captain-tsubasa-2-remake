@@ -42,6 +42,12 @@ Runtime graphics, text, music, sound effects, and game data must derive from ver
 
 Follow the Godot skill and the project's existing architecture. For About/update UI or release workflow changes, also follow `.agents/skills/godot/references/desktop-ui-and-release.md`. Keep gameplay state and rules separate from input and presentation; use typed, focused scripts and named data instead of unexplained gameplay constants. Preserve pixel-art filtering and the current project structure unless a change has a clear purpose. Add dependencies only for a concrete need.
 
+Desktop utility screens must share `scripts/desktop_ui_theme.gd` for palette,
+typography, spacing, dialog surfaces, and button states. Use its semantic button
+variants consistently across desktop dialogs; do not hand-style the same
+variant per screen. Keep ROM-authentic in-game menus in their own pixel-art
+presentation system.
+
 ## Documentation language
 
 Write all repository Markdown documentation in English. Preserve original

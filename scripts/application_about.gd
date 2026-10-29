@@ -3,19 +3,17 @@ class_name ApplicationAbout
 ## Provides consistent desktop Help commands and About/update dialogs.
 
 const APPLICATION_NAME := "Captain Tsubasa 2 Remake"
-const UI_SURFACE_COLOR := "202122"
-const UI_TEXT_PRIMARY := "f3f3f3"
-const UI_TEXT_SECONDARY := "d0d0d0"
-const UI_TEXT_MUTED := "a7a7a7"
-const UI_ACCENT_COLOR := "0a84ff"
-const UI_MARGIN_HORIZONTAL := 24
-const UI_MARGIN_VERTICAL := 18
-const UI_SECTION_GAP := 16
-const UI_FONT_HEADING := 18
-const UI_FONT_BODY := 14
-const UI_FONT_METADATA := 12
-const UI_BUTTON_HEIGHT := 40
-const UI_BUTTON_RADIUS := 8
+const DESKTOP_UI_THEME := preload("res://scripts/desktop_ui_theme.gd")
+const UI_SURFACE_COLOR := DESKTOP_UI_THEME.SURFACE_COLOR
+const UI_TEXT_PRIMARY := DESKTOP_UI_THEME.TEXT_PRIMARY_COLOR
+const UI_TEXT_SECONDARY := DESKTOP_UI_THEME.TEXT_SECONDARY_COLOR
+const UI_TEXT_MUTED := DESKTOP_UI_THEME.TEXT_MUTED_COLOR
+const UI_MARGIN_HORIZONTAL := DESKTOP_UI_THEME.MARGIN_HORIZONTAL
+const UI_MARGIN_VERTICAL := DESKTOP_UI_THEME.MARGIN_VERTICAL
+const UI_SECTION_GAP := DESKTOP_UI_THEME.SECTION_GAP
+const UI_FONT_HEADING := DESKTOP_UI_THEME.FONT_HEADING
+const UI_FONT_BODY := DESKTOP_UI_THEME.FONT_BODY
+const UI_FONT_METADATA := DESKTOP_UI_THEME.FONT_METADATA
 const DESKTOP_MENU_HEIGHT := 7.0
 const DESKTOP_MENU_VIEWPORT_SIZE := Vector2i(256, 231)
 const DESKTOP_MENU_LOGICAL_SCALE := Vector2(0.25, 0.25)
@@ -29,7 +27,9 @@ const UPDATE_WINDOW_SIZE := Vector2i(520, 280)
 const UPDATE_RELEASE_API_URL := "https://api.github.com/repos/susimsek/captain-tsubasa-2-remake/releases/latest"
 const UPDATE_ASSET_URL_PREFIX := "https://github.com/susimsek/captain-tsubasa-2-remake/releases/download/"
 const UPDATE_SETTINGS_PATH := "user://update_settings.cfg"
+const UPDATE_READY_METADATA_PATH := "user://update_staging/ready_update.cfg"
 const UPDATE_AUTO_CHECK_DELAY := 3.0
+const UPDATE_REMINDER_DELAY_SECONDS := 24 * 60 * 60
 const UPDATE_MENU_TAG := "captain_tsubasa_check_for_updates"
 const UPDATE_MENU_LABEL := "Check for Updates…"
 const UPDATE_MENU_RETRY_SECONDS := 0.5
@@ -41,25 +41,30 @@ var _release_date_label: Label
 var _update_dialog: Window
 var _update_status_label: Label
 var _update_message_label: Label
-var _update_date_label: Label
 var _update_progress_bar: ProgressBar
 var _auto_update_checkbox: CheckBox
 var _update_action_button: Button
 var _update_later_button: Button
+var _update_skip_button: Button
 var _update_request: HTTPRequest
 var _update_download_request: HTTPRequest
 var _update_asset_name := ""
 var _update_download_url := ""
 var _update_expected_sha256 := ""
 var _update_available_version := ""
+var _update_release_tag := ""
 var _update_asset_size := 0
 var _update_package_kind := "archive"
 var _update_download_path := ""
 var _last_download_percent := -1
 var _update_state := "idle"
+var _restored_ready_update := false
 var _checking_for_updates := false
 var _interactive_update_check := false
 var _automatic_update_checks_enabled := true
+var _skipped_update_version := ""
+var _remind_later_version := ""
+var _remind_later_until := 0.0
 var _desktop_help_menu: MenuBar
 
 
@@ -113,7 +118,7 @@ func _create_inline_desktop_help_menu() -> void:
 	menu_divider.position = Vector2(0, 27)
 	menu_divider.size = Vector2(1024, 1)
 	menu_divider.scale = DESKTOP_MENU_LOGICAL_SCALE
-	menu_divider.color = Color("44474b")
+	menu_divider.color = Color(DESKTOP_UI_THEME.MENU_DIVIDER_COLOR)
 	menu_divider.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(menu_divider)
 
@@ -127,35 +132,24 @@ func _create_inline_desktop_help_menu() -> void:
 	_desktop_help_menu.add_theme_color_override("font_color", Color(UI_TEXT_SECONDARY))
 	_desktop_help_menu.add_theme_color_override("font_hover_color", Color(UI_TEXT_PRIMARY))
 	_desktop_help_menu.add_theme_color_override("font_pressed_color", Color.WHITE)
-	_desktop_help_menu.add_theme_stylebox_override("normal", _create_menu_item_style(Color("00000000")))
-	_desktop_help_menu.add_theme_stylebox_override("hover", _create_menu_item_style(Color("303236")))
-	_desktop_help_menu.add_theme_stylebox_override("pressed", _create_menu_item_style(Color("3a3d42")))
-	_desktop_help_menu.add_theme_stylebox_override("focus", _create_menu_item_style(Color("303236")))
+	_desktop_help_menu.add_theme_stylebox_override("normal", DESKTOP_UI_THEME.create_menu_item_style(Color.TRANSPARENT))
+	_desktop_help_menu.add_theme_stylebox_override("hover", DESKTOP_UI_THEME.create_menu_item_style(Color(DESKTOP_UI_THEME.MENU_HOVER_COLOR)))
+	_desktop_help_menu.add_theme_stylebox_override("pressed", DESKTOP_UI_THEME.create_menu_item_style(Color(DESKTOP_UI_THEME.MENU_PRESSED_COLOR)))
+	_desktop_help_menu.add_theme_stylebox_override("focus", DESKTOP_UI_THEME.create_menu_item_style(Color(DESKTOP_UI_THEME.MENU_HOVER_COLOR)))
 
 	var help_popup := PopupMenu.new()
 	help_popup.name = "Help"
 	help_popup.add_theme_font_size_override("font_size", 14)
 	help_popup.add_theme_color_override("font_color", Color(UI_TEXT_SECONDARY))
 	help_popup.add_theme_color_override("font_hover_color", Color(UI_TEXT_PRIMARY))
-	help_popup.add_theme_stylebox_override("panel", _create_menu_item_style(Color(UI_SURFACE_COLOR)))
-	help_popup.add_theme_stylebox_override("hover", _create_menu_item_style(Color("303236")))
+	help_popup.add_theme_stylebox_override("panel", DESKTOP_UI_THEME.create_menu_item_style(Color(UI_SURFACE_COLOR)))
+	help_popup.add_theme_stylebox_override("hover", DESKTOP_UI_THEME.create_menu_item_style(Color(DESKTOP_UI_THEME.MENU_HOVER_COLOR)))
 	help_popup.add_item("About " + APPLICATION_NAME + "…", DESKTOP_MENU_ITEM_ABOUT)
 	help_popup.add_item(UPDATE_MENU_LABEL, DESKTOP_MENU_ITEM_UPDATES)
 	help_popup.id_pressed.connect(_on_inline_desktop_help_menu_selected)
 	_desktop_help_menu.add_child(help_popup)
 	_desktop_help_menu.set_menu_title(0, "Help")
 	add_child(_desktop_help_menu)
-
-
-func _create_menu_item_style(color: Color) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = color
-	style.set_corner_radius_all(4)
-	style.content_margin_left = 8
-	style.content_margin_right = 8
-	style.content_margin_top = 2
-	style.content_margin_bottom = 2
-	return style
 
 
 func _on_inline_desktop_help_menu_selected(item_id: int) -> void:
@@ -186,7 +180,10 @@ func show_about_dialog() -> void:
 func check_for_updates() -> void:
 	if _update_dialog == null or _update_request == null:
 		return
-	if _update_state in ["available", "downloading", "ready", "installing"]:
+	if (
+		_update_state in ["available", "downloading", "ready", "installing"]
+		and not (_update_state == "ready" and _restored_ready_update)
+	):
 		_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
 		_clear_update_button_focus.call_deferred()
 		return
@@ -199,18 +196,10 @@ func check_for_updates() -> void:
 		_show_update_unavailable("Updates are available in installed release builds.")
 		_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
 		return
-	var permission_message := _get_update_permission_message()
-	if not permission_message.is_empty():
-		_show_update_unavailable(permission_message)
-		_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
-		return
-
 	_checking_for_updates = true
 	_update_state = "checking"
 	_update_status_label.text = "Checking for Updates…"
 	_update_message_label.text = "Checking for the latest version."
-	_update_date_label.text = ""
-	_update_date_label.visible = false
 	_update_progress_bar.value = 0
 	_update_progress_bar.indeterminate = true
 	_update_progress_bar.visible = true
@@ -231,15 +220,15 @@ func check_for_updates() -> void:
 func _check_for_updates_in_background() -> void:
 	if not _automatic_update_checks_enabled or not _is_updater_enabled_for_this_build():
 		return
-	if _checking_for_updates or _update_state in ["downloading", "ready", "installing"]:
+	if _checking_for_updates or _update_state in ["downloading", "installing"]:
 		return
-	if not _get_update_permission_message().is_empty():
+	if _update_state == "ready" and not _restored_ready_update:
 		return
 	_interactive_update_check = false
 	_checking_for_updates = true
-	_update_state = "checking"
-	_update_date_label.visible = false
-	_update_progress_bar.visible = false
+	if not _restored_ready_update:
+		_update_state = "checking"
+		_update_progress_bar.visible = false
 	var headers := PackedStringArray([
 		"Accept: application/vnd.github+json",
 		"X-GitHub-Api-Version: 2022-11-28",
@@ -247,7 +236,8 @@ func _check_for_updates_in_background() -> void:
 	])
 	var request_error := _update_request.request(UPDATE_RELEASE_API_URL, headers)
 	if request_error != OK:
-		_show_update_error()
+		if not _preserve_restored_ready_update():
+			_show_update_error()
 
 
 func _is_updater_enabled_for_this_build() -> bool:
@@ -346,12 +336,18 @@ func _load_update_preferences() -> void:
 	var preferences := ConfigFile.new()
 	if preferences.load(UPDATE_SETTINGS_PATH) == OK:
 		_automatic_update_checks_enabled = bool(preferences.get_value("updates", "automatic_checks", true))
+		_skipped_update_version = str(preferences.get_value("updates", "skipped_version", ""))
+		_remind_later_version = str(preferences.get_value("updates", "remind_later_version", ""))
+		_remind_later_until = float(preferences.get_value("updates", "remind_later_until", 0.0))
 
 
 func _save_update_preferences() -> void:
 	var preferences := ConfigFile.new()
 	preferences.load(UPDATE_SETTINGS_PATH)
 	preferences.set_value("updates", "automatic_checks", _automatic_update_checks_enabled)
+	preferences.set_value("updates", "skipped_version", _skipped_update_version)
+	preferences.set_value("updates", "remind_later_version", _remind_later_version)
+	preferences.set_value("updates", "remind_later_until", _remind_later_until)
 	preferences.save(UPDATE_SETTINGS_PATH)
 
 
@@ -372,7 +368,7 @@ func _create_about_dialog() -> void:
 	_about_dialog.visible = false
 	_about_dialog.close_requested.connect(_about_dialog.hide)
 
-	var background := _create_dialog_surface(_about_dialog)
+	var background := DESKTOP_UI_THEME.create_dialog_surface(_about_dialog)
 
 	var margins := MarginContainer.new()
 	margins.name = "Margins"
@@ -422,17 +418,6 @@ func _create_about_dialog() -> void:
 	add_child(_about_dialog)
 
 
-func _create_dialog_surface(dialog: Window) -> PanelContainer:
-	var surface := PanelContainer.new()
-	surface.name = "Background"
-	surface.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(UI_SURFACE_COLOR)
-	surface.add_theme_stylebox_override("panel", style)
-	dialog.add_child(surface)
-	return surface
-
-
 func _create_update_dialog() -> void:
 	_update_dialog = Window.new()
 	_update_dialog.name = "UpdateDialog"
@@ -445,7 +430,7 @@ func _create_update_dialog() -> void:
 	_update_dialog.visible = false
 	_update_dialog.close_requested.connect(_on_update_later_button_pressed)
 
-	var background := _create_dialog_surface(_update_dialog)
+	var background := DESKTOP_UI_THEME.create_dialog_surface(_update_dialog)
 
 	var margins := MarginContainer.new()
 	margins.name = "Margins"
@@ -497,13 +482,6 @@ func _create_update_dialog() -> void:
 	_update_message_label.add_theme_color_override("font_color", Color(UI_TEXT_SECONDARY))
 	details_text.add_child(_update_message_label)
 
-	_update_date_label = Label.new()
-	_update_date_label.name = "UpdateDate"
-	_update_date_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	_update_date_label.add_theme_font_size_override("font_size", UI_FONT_METADATA)
-	_update_date_label.add_theme_color_override("font_color", Color(UI_TEXT_MUTED))
-	details_text.add_child(_update_date_label)
-
 	_update_progress_bar = ProgressBar.new()
 	_update_progress_bar.name = "UpdateProgress"
 	_update_progress_bar.min_value = 0
@@ -513,8 +491,8 @@ func _create_update_dialog() -> void:
 	_update_progress_bar.custom_minimum_size = Vector2(0, 5)
 	_update_progress_bar.visible = false
 	_update_progress_bar.indeterminate = false
-	_update_progress_bar.add_theme_stylebox_override("background", _create_update_progress_style(Color("383a3d")))
-	_update_progress_bar.add_theme_stylebox_override("fill", _create_update_progress_style(Color(UI_ACCENT_COLOR)))
+	_update_progress_bar.add_theme_stylebox_override("background", DESKTOP_UI_THEME.create_progress_style(Color(DESKTOP_UI_THEME.PROGRESS_TRACK_COLOR)))
+	_update_progress_bar.add_theme_stylebox_override("fill", DESKTOP_UI_THEME.create_progress_style(DESKTOP_UI_THEME.palette_color(&"blue", 500)))
 	content.add_child(_update_progress_bar)
 
 	_auto_update_checkbox = CheckBox.new()
@@ -531,37 +509,33 @@ func _create_update_dialog() -> void:
 	_update_action_button = Button.new()
 	_update_action_button.name = "UpdateAction"
 	_update_action_button.text = "OK"
-	_update_action_button.custom_minimum_size = Vector2(0, UI_BUTTON_HEIGHT)
-	_update_action_button.add_theme_font_size_override("font_size", UI_FONT_BODY)
-	_update_action_button.add_theme_color_override("font_color", Color.WHITE)
-	_update_action_button.add_theme_color_override("font_hover_color", Color.WHITE)
-	_update_action_button.add_theme_color_override("font_pressed_color", Color.WHITE)
-	_update_action_button.add_theme_color_override("font_disabled_color", Color("aeb8c4"))
-	_update_action_button.add_theme_stylebox_override("normal", _create_update_button_style(Color(UI_ACCENT_COLOR)))
-	_update_action_button.add_theme_stylebox_override("hover", _create_update_button_style(Color("2790ff")))
-	_update_action_button.add_theme_stylebox_override("pressed", _create_update_button_style(Color("0874e5")))
-	_update_action_button.add_theme_stylebox_override("disabled", _create_update_button_style(Color("3a4b5e")))
-	_update_action_button.add_theme_stylebox_override("focus", _create_update_focus_style())
+	DESKTOP_UI_THEME.apply_button_style(_update_action_button, DESKTOP_UI_THEME.BUTTON_PRIMARY)
 	_update_action_button.pressed.connect(_on_update_action_button_pressed)
 
 	_update_later_button = Button.new()
 	_update_later_button.name = "UpdateLater"
 	_update_later_button.text = "Later"
-	_update_later_button.custom_minimum_size = Vector2(0, UI_BUTTON_HEIGHT)
-	_update_later_button.add_theme_font_size_override("font_size", UI_FONT_BODY)
-	_update_later_button.add_theme_color_override("font_color", Color("d2d5d9"))
-	_update_later_button.add_theme_color_override("font_hover_color", Color("f3f3f3"))
-	_update_later_button.add_theme_color_override("font_pressed_color", Color("ffffff"))
-	_update_later_button.add_theme_stylebox_override("normal", _create_update_button_style(Color("00000000")))
-	_update_later_button.add_theme_stylebox_override("hover", _create_update_button_style(Color("303236")))
-	_update_later_button.add_theme_stylebox_override("pressed", _create_update_button_style(Color("3a3d42")))
-	_update_later_button.add_theme_stylebox_override("focus", _create_update_focus_style())
+	_update_later_button.tooltip_text = "Show this update reminder again after 24 hours."
+	DESKTOP_UI_THEME.apply_button_style(_update_later_button, DESKTOP_UI_THEME.BUTTON_SECONDARY)
 	_update_later_button.pressed.connect(_on_update_later_button_pressed)
+
+	_update_skip_button = Button.new()
+	_update_skip_button.name = "UpdateSkipVersion"
+	_update_skip_button.text = "Skip This Version"
+	_update_skip_button.tooltip_text = "Stop automatic reminders for this version."
+	_update_skip_button.visible = false
+	DESKTOP_UI_THEME.apply_button_style(_update_skip_button, DESKTOP_UI_THEME.BUTTON_SECONDARY)
+	_update_skip_button.pressed.connect(_on_update_skip_button_pressed)
 
 	var button_row := HBoxContainer.new()
 	button_row.name = "ButtonRow"
 	button_row.alignment = BoxContainer.ALIGNMENT_END
 	button_row.add_theme_constant_override("separation", 10)
+	button_row.add_child(_update_skip_button)
+	var button_spacer := Control.new()
+	button_spacer.name = "ButtonSpacer"
+	button_spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button_row.add_child(button_spacer)
 	button_row.add_child(_update_later_button)
 	button_row.add_child(_update_action_button)
 	content.add_child(button_row)
@@ -581,44 +555,16 @@ func _create_update_dialog() -> void:
 	add_child(_update_dialog)
 
 
-func _create_update_button_style(color: Color) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = color
-	style.set_corner_radius_all(UI_BUTTON_RADIUS)
-	style.content_margin_left = 16
-	style.content_margin_right = 16
-	style.content_margin_top = 8
-	style.content_margin_bottom = 8
-	return style
-
-
-func _create_update_progress_style(color: Color) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = color
-	style.set_corner_radius_all(3)
-	return style
-
-
-func _create_update_focus_style() -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("00000000")
-	style.border_color = Color("8abfff")
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(UI_BUTTON_RADIUS)
-	style.content_margin_left = 14
-	style.content_margin_right = 14
-	style.content_margin_top = 6
-	style.content_margin_bottom = 6
-	return style
-
-
-func _set_update_actions(primary_text: String, secondary_text := "", primary_disabled := false) -> void:
+func _set_update_actions(primary_text: String, secondary_text := "", skip_text := "", primary_disabled := false) -> void:
 	_update_action_button.text = primary_text
 	_update_action_button.visible = not primary_text.is_empty()
 	_update_action_button.disabled = primary_disabled
 	_update_later_button.text = secondary_text
 	_update_later_button.visible = not secondary_text.is_empty()
 	_update_later_button.disabled = false
+	_update_skip_button.text = skip_text
+	_update_skip_button.visible = not skip_text.is_empty()
+	_update_skip_button.disabled = false
 	_clear_update_button_focus.call_deferred()
 
 
@@ -627,6 +573,8 @@ func _clear_update_button_focus() -> void:
 		_update_action_button.release_focus()
 	if _update_later_button != null and _update_later_button.has_focus():
 		_update_later_button.release_focus()
+	if _update_skip_button != null and _update_skip_button.has_focus():
+		_update_skip_button.release_focus()
 
 
 func _format_megabytes(byte_count: int) -> String:
@@ -654,11 +602,15 @@ func _process(_delta: float) -> void:
 func _on_update_request_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	_checking_for_updates = false
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		if _preserve_restored_ready_update():
+			return
 		_show_update_error()
 		return
 
 	var release: Variant = JSON.parse_string(body.get_string_from_utf8())
 	if typeof(release) != TYPE_DICTIONARY:
+		if _preserve_restored_ready_update():
+			return
 		_show_update_error()
 		return
 
@@ -668,23 +620,53 @@ func _on_update_request_completed(result: int, response_code: int, _headers: Pac
 	var current_version := str(ProjectSettings.get_setting("application/config/version", "0.1.0"))
 	var current_parts := _parse_version(current_version)
 	if latest_parts.is_empty() or current_parts.is_empty():
+		if _preserve_restored_ready_update():
+			return
 		_show_update_error("The version information could not be read. Try again later.", "Version Information Unavailable")
 		return
 
-	var original_release_date := _format_release_date()
-	_update_date_label.visible = not original_release_date.is_empty()
-	if not original_release_date.is_empty():
-		_update_date_label.text = "Original release · %s" % original_release_date
+	if _restored_ready_update:
+		var cached_package_kind := _update_package_kind
+		var latest_asset := _find_platform_download_asset(release, latest_tag)
+		var latest_digest := str(latest_asset.get("digest", "")).trim_prefix("sha256:").to_lower()
+		var latest_size := int(latest_asset.get("size", 0))
+		var cached_package_is_latest := (
+			latest_version == _update_available_version
+			and not latest_asset.is_empty()
+			and _update_package_kind == cached_package_kind
+			and str(latest_asset.get("name", "")) == _update_asset_name
+			and latest_digest == _update_expected_sha256
+			and latest_size == _update_asset_size
+		)
+		if cached_package_is_latest:
+			_update_release_tag = latest_tag
+			_update_state = "ready"
+			_update_status_label.text = "Ready to Install"
+			_update_message_label.text = "Version %s has been downloaded and verified." % _update_available_version
+			_set_update_actions("Install and Relaunch", "Later")
+			_restored_ready_update = false
+			_interactive_update_check = false
+			_clear_update_button_focus.call_deferred()
+			return
+		_clear_ready_update_cache()
+		_restored_ready_update = false
+		_update_state = "idle"
 
 	if _compare_versions(latest_parts, current_parts) > 0:
+		if not _interactive_update_check and latest_version == _skipped_update_version:
+			_update_state = "skipped"
+			_interactive_update_check = false
+			return
+
 		var update_asset := _find_platform_download_asset(release, latest_tag)
 		if update_asset.is_empty():
 			_show_update_unavailable("A download package for this platform is not available yet.")
 			return
 		var permission_message := _get_update_permission_message(_update_package_kind)
 		if not permission_message.is_empty():
-			_show_update_unavailable(permission_message)
+			_show_update_permission_blocked(latest_version, permission_message)
 			return
+
 		var digest := str(update_asset.get("digest", ""))
 		if not digest.begins_with("sha256:") or digest.length() != 71:
 			_show_update_unavailable("The update package cannot be verified right now. Try again later.")
@@ -695,18 +677,21 @@ func _on_update_request_completed(result: int, response_code: int, _headers: Pac
 			return
 
 		_update_available_version = latest_version
+		_update_release_tag = latest_tag
 		_update_asset_name = str(update_asset.get("name", ""))
 		_update_download_url = str(update_asset.get("browser_download_url", ""))
 		_update_expected_sha256 = digest.trim_prefix("sha256:").to_lower()
 		_update_asset_size = asset_size
+
 		_update_state = "available"
 		_update_status_label.text = "Update Available"
 		_update_message_label.text = _format_update_message(latest_version, current_version)
 		_update_progress_bar.visible = false
 		_update_progress_bar.indeterminate = false
-		_set_update_actions("Download Update", "Later")
-		if not _interactive_update_check:
-			get_window().title = "%s — Update Available" % APPLICATION_NAME
+		_set_update_actions("Download Update", "Remind Me Later", "Skip This Version")
+		if not _interactive_update_check and not _is_update_reminder_active(latest_version):
+			_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
+			_clear_update_button_focus.call_deferred()
 	else:
 		_update_state = "current"
 		_update_status_label.text = "You're up to date!"
@@ -723,20 +708,47 @@ func _show_update_error(message := "Check your connection and try again.", statu
 	_update_state = "error"
 	_update_status_label.text = status
 	_update_message_label.text = message
-	_update_date_label.text = ""
-	_update_date_label.visible = false
 	_update_progress_bar.visible = false
 	_update_progress_bar.indeterminate = false
 	_set_update_actions("Try Again", "Close")
 
 
-func _show_update_unavailable(message: String) -> void:
+func _preserve_restored_ready_update() -> bool:
+	if not _restored_ready_update:
+		return false
+	_restored_ready_update = false
+	_checking_for_updates = false
+	_interactive_update_check = false
+	_update_state = "ready"
+	_update_status_label.text = "Ready to Install"
+	_update_message_label.text = "Version %s has been downloaded and verified." % _update_available_version
+	_update_progress_bar.value = 100
+	_update_progress_bar.visible = true
+	_update_progress_bar.indeterminate = false
+	_set_update_actions("Install and Relaunch", "Later")
+	return true
+
+
+func _show_update_unavailable(message: String, status := "Update Unavailable") -> void:
 	_update_state = "unavailable"
-	_update_status_label.text = "Update Unavailable"
+	_update_status_label.text = status
 	_update_message_label.text = message
 	_update_progress_bar.visible = false
 	_update_progress_bar.indeterminate = false
 	_set_update_actions("Close")
+
+
+func _show_update_permission_blocked(version: String, permission_message: String) -> void:
+	var show_background_prompt := not _interactive_update_check and not _is_update_reminder_active(version)
+	_update_available_version = version
+	_show_update_unavailable(
+		"Version %s is available. %s" % [version, permission_message], "Update Available"
+	)
+	_set_update_actions("Close", "Remind Me Later", "Skip This Version")
+	_interactive_update_check = false
+	if show_background_prompt:
+		_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
+	_clear_update_button_focus.call_deferred()
 
 
 func _on_update_action_button_pressed() -> void:
@@ -752,7 +764,37 @@ func _on_update_action_button_pressed() -> void:
 
 
 func _on_update_later_button_pressed() -> void:
+	if _update_state in ["available", "unavailable", "ready"] and not _update_available_version.is_empty():
+		_remind_later_version = _update_available_version
+		_remind_later_until = Time.get_unix_time_from_system() + UPDATE_REMINDER_DELAY_SECONDS
+		if _skipped_update_version == _update_available_version:
+			_skipped_update_version = ""
+		_save_update_preferences()
 	_update_dialog.hide()
+
+
+func _on_update_skip_button_pressed() -> void:
+	if _update_state not in ["available", "unavailable"] or _update_available_version.is_empty():
+		return
+	_skipped_update_version = _update_available_version
+	if _remind_later_version == _update_available_version:
+		_remind_later_version = ""
+		_remind_later_until = 0.0
+	_save_update_preferences()
+	_clear_ready_update_cache()
+	_update_state = "skipped"
+	_update_dialog.hide()
+
+
+func _is_update_reminder_active(version: String) -> bool:
+	if version != _remind_later_version:
+		return false
+	if Time.get_unix_time_from_system() < _remind_later_until:
+		return true
+	_remind_later_version = ""
+	_remind_later_until = 0.0
+	_save_update_preferences()
+	return false
 
 
 func _find_platform_download_asset(release: Dictionary, latest_tag: String) -> Dictionary:
@@ -786,17 +828,145 @@ func _find_platform_download_asset(release: Dictionary, latest_tag: String) -> D
 	return {}
 
 
+func _get_current_update_package_kind() -> String:
+	match OS.get_name():
+		"Windows":
+			return "setup" if _windows_should_use_setup() else "archive"
+		"Linux":
+			return "appimage" if _is_running_as_appimage() else "archive"
+		"macOS":
+			return "archive"
+	return ""
+
+
+func _get_update_asset_suffix(package_kind: String) -> String:
+	match OS.get_name():
+		"macOS":
+			return "macos-universal.zip" if package_kind == "archive" else ""
+		"Windows":
+			if package_kind == "setup":
+				return "windows-x86_64-setup.exe"
+			if package_kind == "archive":
+				return "windows-x86_64.zip"
+		"Linux":
+			if package_kind == "appimage":
+				return "x86_64.AppImage"
+			if package_kind == "archive":
+				return "linux-x86_64.tar.gz"
+	return ""
+
+
+func _save_ready_update_metadata() -> bool:
+	var metadata := ConfigFile.new()
+	metadata.set_value("update", "version", _update_available_version)
+	metadata.set_value("update", "tag", _update_release_tag)
+	metadata.set_value("update", "asset_name", _update_asset_name)
+	metadata.set_value("update", "sha256", _update_expected_sha256)
+	metadata.set_value("update", "size", _update_asset_size)
+	metadata.set_value("update", "package_kind", _update_package_kind)
+	return metadata.save(UPDATE_READY_METADATA_PATH) == OK
+
+
+func _clear_ready_update_cache() -> void:
+	var asset_names: Array[String] = []
+	var metadata := ConfigFile.new()
+	if metadata.load(UPDATE_READY_METADATA_PATH) == OK:
+		var cached_asset_name := str(metadata.get_value("update", "asset_name", ""))
+		if not cached_asset_name.is_empty() and cached_asset_name.get_file() == cached_asset_name:
+			asset_names.append(cached_asset_name)
+	if not _update_asset_name.is_empty() and _update_asset_name.get_file() == _update_asset_name:
+		if not asset_names.has(_update_asset_name):
+			asset_names.append(_update_asset_name)
+
+	var staging_directory := ProjectSettings.globalize_path("user://update_staging")
+	for asset_name in asset_names:
+		var asset_path := staging_directory.path_join(asset_name)
+		if FileAccess.file_exists(asset_path):
+			DirAccess.remove_absolute(asset_path)
+	var metadata_path := ProjectSettings.globalize_path(UPDATE_READY_METADATA_PATH)
+	if FileAccess.file_exists(metadata_path):
+		DirAccess.remove_absolute(metadata_path)
+
+
+func _restore_ready_update() -> bool:
+	if not _is_updater_enabled_for_this_build() or not FileAccess.file_exists(UPDATE_READY_METADATA_PATH):
+		return false
+
+	var metadata := ConfigFile.new()
+	if metadata.load(UPDATE_READY_METADATA_PATH) != OK:
+		_clear_ready_update_cache()
+		return false
+
+	var cached_version := str(metadata.get_value("update", "version", ""))
+	var cached_tag := str(metadata.get_value("update", "tag", ""))
+	var cached_asset_name := str(metadata.get_value("update", "asset_name", ""))
+	var cached_sha256 := str(metadata.get_value("update", "sha256", "")).to_lower()
+	var cached_size := int(metadata.get_value("update", "size", 0))
+	var cached_package_kind := str(metadata.get_value("update", "package_kind", ""))
+	var current_version := str(ProjectSettings.get_setting("application/config/version", "0.1.0"))
+	var cached_parts := _parse_version(cached_version)
+	var current_parts := _parse_version(current_version)
+	var asset_suffix := _get_update_asset_suffix(cached_package_kind)
+	var expected_asset_name := "captain-tsubasa-2-remake-%s-%s" % [cached_tag, asset_suffix]
+	var cache_metadata_is_valid := (
+		not cached_parts.is_empty()
+		and not current_parts.is_empty()
+		and cached_tag.begins_with("v")
+		and cached_tag.trim_prefix("v") == cached_version
+		and _compare_versions(cached_parts, current_parts) > 0
+		and cached_package_kind == _get_current_update_package_kind()
+		and not asset_suffix.is_empty()
+		and cached_asset_name == expected_asset_name
+		and cached_sha256.length() == 64
+		and cached_size > 0
+	)
+	if not cache_metadata_is_valid:
+		_clear_ready_update_cache()
+		return false
+
+	var package_path := ProjectSettings.globalize_path("user://update_staging").path_join(cached_asset_name)
+	if not FileAccess.file_exists(package_path):
+		_clear_ready_update_cache()
+		return false
+	var package_file := FileAccess.open(package_path, FileAccess.READ)
+	if package_file == null:
+		_clear_ready_update_cache()
+		return false
+	var actual_size := package_file.get_length()
+	package_file.close()
+	if actual_size != cached_size or FileAccess.get_sha256(package_path).to_lower() != cached_sha256:
+		_clear_ready_update_cache()
+		return false
+	if not _get_update_permission_message(cached_package_kind).is_empty():
+		return false
+
+	_update_available_version = cached_version
+	_update_release_tag = cached_tag
+	_update_asset_name = cached_asset_name
+	_update_expected_sha256 = cached_sha256
+	_update_asset_size = cached_size
+	_update_package_kind = cached_package_kind
+	_update_download_path = package_path
+	_update_state = "ready"
+	_restored_ready_update = true
+	_update_status_label.text = "Ready to Install"
+	_update_message_label.text = "Version %s has been downloaded and verified." % cached_version
+	_update_progress_bar.value = 100
+	_update_progress_bar.visible = true
+	_update_progress_bar.indeterminate = false
+	_set_update_actions("Install and Relaunch", "Later")
+	if not _is_update_reminder_active(cached_version):
+		_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
+		_clear_update_button_focus.call_deferred()
+	return true
+
+
 func _format_update_message(latest_version: String, current_version: String) -> String:
-	var message := "Version %s is available. You're using version %s." % [latest_version, current_version]
-	if _update_package_kind == "setup":
-		message += " It will install in your Windows user account."
-	elif OS.get_name() == "macOS":
-		message += " It will update this app in place; macOS may ask you to approve opening it."
-	elif OS.get_name() == "Linux" and _is_running_as_appimage():
-		message += " It will replace this AppImage."
-	else:
-		message += " It will update this game folder."
-	return message
+	return "%s %s is now available—you have %s. Would you like to download it now?" % [
+		APPLICATION_NAME,
+		latest_version,
+		current_version
+	]
 
 
 func _is_running_as_appimage() -> bool:
@@ -817,9 +987,8 @@ func _start_update_download() -> void:
 		_show_update_error("The update folder can't be written to. Check your account's folder permissions, then try again.", "Download Could Not Start")
 		return
 
+	_clear_ready_update_cache()
 	_update_download_path = update_directory.path_join(_update_asset_name)
-	if FileAccess.file_exists(_update_download_path):
-		DirAccess.remove_absolute(_update_download_path)
 	_update_download_request.download_file = _update_download_path
 	_last_download_percent = -1
 	_update_state = "downloading"
@@ -852,7 +1021,11 @@ func _on_update_download_completed(result: int, response_code: int, _headers: Pa
 	_update_progress_bar.value = 100
 	_update_progress_bar.visible = true
 	_update_progress_bar.indeterminate = false
-	_set_update_actions("Install and Relaunch", "Later")
+	if _save_ready_update_metadata():
+		_set_update_actions("Install and Relaunch", "Later")
+	else:
+		_update_message_label.text += " Keep this window open to install it; the package couldn't be saved for later."
+		_set_update_actions("Install and Relaunch", "Close")
 
 
 func _start_update_installer() -> void:
@@ -916,8 +1089,8 @@ func _start_update_installer() -> void:
 	_update_state = "installing"
 	_update_status_label.text = "Installing Update…"
 	_update_message_label.text = "The game will close and reopen when installation is complete."
-	_update_progress_bar.indeterminate = true
-	_update_progress_bar.visible = true
+	_update_progress_bar.indeterminate = false
+	_update_progress_bar.visible = false
 	_set_update_actions("", "")
 	get_tree().quit()
 
@@ -932,14 +1105,17 @@ func _get_mac_app_bundle_path(executable_path: String) -> String:
 func _show_pending_update_result() -> void:
 	var status_path := "user://update_staging/update_status.txt"
 	if not FileAccess.file_exists(status_path):
+		_restore_ready_update()
 		return
 	var status_file := FileAccess.open(status_path, FileAccess.READ)
 	if status_file == null:
+		_restore_ready_update()
 		return
 	var update_result := status_file.get_as_text().strip_edges()
 	status_file.close()
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(status_path))
 	if update_result == "installed":
+		_clear_ready_update_cache()
 		_update_state = "current"
 		_update_status_label.text = "Update Installed"
 		_update_message_label.text = "The game is now running version %s." % str(ProjectSettings.get_setting("application/config/version", "0.1.0"))
@@ -948,9 +1124,19 @@ func _show_pending_update_result() -> void:
 		_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
 		_clear_update_button_focus.call_deferred()
 	elif update_result.begins_with("failed:"):
-		_show_update_error(_format_install_failure(update_result), "Installation Failed")
-		_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
-		_clear_update_button_focus.call_deferred()
+		var failure_message := _format_install_failure(update_result)
+		if _restore_ready_update():
+			_update_status_label.text = "Installation Failed"
+			_update_message_label.text = "%s The verified update is still available to retry." % failure_message
+			_set_update_actions("Install and Relaunch", "Later")
+			_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
+			_clear_update_button_focus.call_deferred()
+		else:
+			_show_update_error(failure_message, "Installation Failed")
+			_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
+			_clear_update_button_focus.call_deferred()
+	else:
+		_restore_ready_update()
 
 
 func _format_install_failure(result: String) -> String:
