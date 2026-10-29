@@ -59,6 +59,8 @@ var _update_download_path := ""
 var _last_download_percent := -1
 var _update_state := "idle"
 var _restored_ready_update := false
+var _pending_update_result_dialog := false
+var _background_update_check_deferred := false
 var _checking_for_updates := false
 var _interactive_update_check := false
 var _automatic_update_checks_enabled := true
@@ -222,6 +224,9 @@ func _check_for_updates_in_background() -> void:
 		return
 	if _checking_for_updates or _update_state in ["downloading", "installing"]:
 		return
+	if _pending_update_result_dialog and _update_dialog.visible:
+		_background_update_check_deferred = true
+		return
 	if _update_state == "ready" and not _restored_ready_update:
 		return
 	_interactive_update_check = false
@@ -238,6 +243,23 @@ func _check_for_updates_in_background() -> void:
 	if request_error != OK:
 		if not _preserve_restored_ready_update():
 			_show_update_error()
+
+
+func _finish_pending_update_result(resume_background_check: bool) -> void:
+	if not _pending_update_result_dialog:
+		return
+	_pending_update_result_dialog = false
+	if not _background_update_check_deferred:
+		return
+	_background_update_check_deferred = false
+	if (
+		not resume_background_check
+		or not _automatic_update_checks_enabled
+		or not _is_updater_enabled_for_this_build()
+	):
+		return
+	var auto_check_timer := get_tree().create_timer(UPDATE_AUTO_CHECK_DELAY)
+	auto_check_timer.timeout.connect(_check_for_updates_in_background)
 
 
 func _is_updater_enabled_for_this_build() -> bool:
@@ -752,6 +774,8 @@ func _show_update_permission_blocked(version: String, permission_message: String
 
 
 func _on_update_action_button_pressed() -> void:
+	var dismissed_state := _update_state
+	_finish_pending_update_result(dismissed_state == "current")
 	match _update_state:
 		"available":
 			_start_update_download()
@@ -771,6 +795,7 @@ func _on_update_later_button_pressed() -> void:
 			_skipped_update_version = ""
 		_save_update_preferences()
 	_update_dialog.hide()
+	_finish_pending_update_result(true)
 
 
 func _on_update_skip_button_pressed() -> void:
@@ -1121,9 +1146,11 @@ func _show_pending_update_result() -> void:
 		_update_message_label.text = "The game is now running version %s." % str(ProjectSettings.get_setting("application/config/version", "0.1.0"))
 		_update_progress_bar.visible = false
 		_set_update_actions("OK")
+		_pending_update_result_dialog = true
 		_update_dialog.popup_centered(UPDATE_WINDOW_SIZE)
 		_clear_update_button_focus.call_deferred()
 	elif update_result.begins_with("failed:"):
+		_pending_update_result_dialog = true
 		var failure_message := _format_install_failure(update_result)
 		if _restore_ready_update():
 			_update_status_label.text = "Installation Failed"
