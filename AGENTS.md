@@ -87,7 +87,29 @@ documentation.
 
 ## Changes and review
 
-- Use Conventional Commit subjects if a commit is requested. Keep commits focused; exclude generated captures, local exports, secrets, emulator states, and the ROM.
-- If asked to open a pull request, use `.github/PULL_REQUEST_TEMPLATE.md` and describe the change, evidence, checks actually run, and remaining gaps.
-- Review scope against `GOALS.md`; distinguish ROM-derived facts, observations, external leads, and assumptions. Confirm runtime independence and source provenance where relevant.
-- A completed feature has documented rules/state transitions, works through the intended command flow, and has no unrelated placeholder presented as final. Run verification only when requested.
+### Pull Request and Commit Guidelines
+
+- Keep each change focused on one coherent behavior, evidence update, or project-maintenance task. Avoid unrelated refactors and noisy fixup commits.
+- Use **Conventional Commits** with a short subject and optional scope, for example `feat(gameplay): trace kickoff handoff`:
+  - `feat`: new feature
+  - `fix`: bug fix
+  - `docs`: documentation only
+  - `test`: adding or fixing tests
+  - `chore`: build, CI, or tooling maintenance
+  - `perf`: performance improvement
+  - `refactor`: code changes without a feature or bug fix
+  - `build`: changes to the build system or dependencies
+  - `ci`: CI configuration
+  - `style`: formatting or code style only
+  - `revert`: revert a previous commit
+- Use `.github/PULL_REQUEST_TEMPLATE.md`. Explain the change, its relation to the active `GOALS.md` endpoint, the evidence used, checks actually run, and unresolved gaps.
+- Do not run tests or validation commands unless requested. Report configured CI accurately: a clean headless import and short main-scene launch do not establish gameplay fidelity.
+- Exclude the ROM, emulator states, screenshots or WAV captures, generated diagnostics, local exports, build output, and credentials. Runtime assets must follow the ROM provenance rules above.
+
+### Review Process & What Reviewers Look For
+
+- Check that the diff is focused and advances the active goal without extending its stop point. A diagnostic executor or isolated menu component does not prove the production route reaches that behavior.
+- Trace important behavior from ROM bytes and source logic through its production Godot consumer to an observable route result. Label ROM-confirmed facts, emulator observations, external leads, and assumptions distinctly.
+- Confirm derived-resource provenance and that the game runs without the ROM or emulator at runtime.
+- Check that the PR reports only verification actually performed and states remaining route, timing, visual, or audio gaps. Claim exactness only after same-input comparison supports it.
+- A completed feature documents its rules and state transitions, works through the intended command flow, and does not present unrelated placeholders as final. Run verification only when requested.
