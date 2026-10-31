@@ -14,8 +14,6 @@ This file contains durable repository instructions. `GOALS.md` is the source of 
 8. [Workflow](#workflow)
 9. [Collaboration and change discipline](#collaboration-and-change-discipline)
 10. [Changes and review](#changes-and-review)
-    1. [Pull Request and Commit Guidelines](#pull-request-and-commit-guidelines)
-    2. [Review Process & What Reviewers Look For](#review-process--what-reviewers-look-for)
 
 ## Tools and source use
 
