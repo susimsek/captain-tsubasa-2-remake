@@ -13,6 +13,8 @@ signal done(cutscene_id: int)
 signal unsupported_opcode(event: Dictionary)
 signal vm_error(message: String)
 signal scheduler_tick_processed(tick_index: int, event_index: int, source_cpu_address: int)
+signal screen_fade_palette_step_requested(event: Dictionary, level: int)
+signal screen_off_clear_completed(event: Dictionary)
 
 enum RunState {
 	STOPPED,
@@ -26,6 +28,8 @@ enum RunState {
 const SOURCE_ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
 const NES_A_PRESSED_EDGE := 0x80
 const FC_YIELD_TICKS := 4
+const SCREEN_ON_PRE_WAIT_TICKS := 2
+const SCREEN_ON_FADE_LEVELS := 15
 const MAX_EVENTS_PER_PUMP := 4096
 const INITIAL_TEXT_SPEED := 8
 
@@ -101,6 +105,8 @@ const VM_HANDLED_KINDS := [
 	"fc_handler",
 	"jump",
 	"pause_frames",
+	"screen_off_clear",
+	"screen_on",
 	"text_speed",
 	"text_base_ppu_address",
 	"text_tile_ids",
@@ -122,6 +128,7 @@ var _wait_kind: String = ""
 var _wait_remaining: int = 0
 var _text_tiles: Array = []
 var _text_glyph_index: int = 0
+var _screen_palette_level: int = 0
 
 
 ## Loads and validates one of the ROM-derived event streams, then dispatches
@@ -181,6 +188,12 @@ func stop() -> void:
 
 func is_running() -> bool:
 	return state == RunState.RUNNING or state == RunState.WAITING_TICKS or state == RunState.WAITING_INPUT
+
+
+## The supported E9/EA model uses one level for the two ROM fade counters.
+## Callers may seed a source-owned helper only from this VM state.
+func get_rom_modeled_fade_counters() -> Vector2i:
+	return Vector2i(_screen_palette_level, _screen_palette_level)
 
 
 func is_waiting() -> bool:
@@ -423,6 +436,18 @@ func _pump_events() -> void:
 		if not VM_HANDLED_KINDS.has(kind):
 			unsupported_opcode.emit(_active_event.duplicate(true))
 		match kind:
+			"screen_on":
+				if int(_active_event.get("opcode", -1)) != 0xE9:
+					_fail("Screen-on event is not backed by ROM opcode $E9.")
+					return
+				_begin_timed_wait("screen_on_pre_wait", SCREEN_ON_PRE_WAIT_TICKS)
+				return
+			"screen_off_clear":
+				if int(_active_event.get("opcode", -1)) != 0xEA:
+					_fail("Screen-off/clear event is not backed by ROM opcode $EA.")
+					return
+				_begin_timed_wait("screen_off_pre_wait", 1)
+				return
 			"compact_pause":
 				_begin_timed_wait("compact_pause", int(_active_event["ticks"]))
 				return
@@ -492,6 +517,34 @@ func _complete_wait() -> void:
 	wait_completed.emit(completed_kind, completed_event)
 	_wait_kind = ""
 	_wait_remaining = 0
+	if completed_kind == "screen_on_pre_wait":
+		if _screen_palette_level < SCREEN_ON_FADE_LEVELS:
+			_screen_palette_level += 1
+			screen_fade_palette_step_requested.emit(completed_event, _screen_palette_level)
+			_begin_wait("screen_on_fade_up", 1, completed_event)
+			return
+	if completed_kind == "screen_on_fade_up":
+		if _screen_palette_level < SCREEN_ON_FADE_LEVELS:
+			_screen_palette_level += 1
+			screen_fade_palette_step_requested.emit(completed_event, _screen_palette_level)
+			_begin_wait("screen_on_fade_up", 1, completed_event)
+			return
+	if completed_kind == "screen_off_pre_wait":
+		if _screen_palette_level > 0:
+			_screen_palette_level -= 1
+			screen_fade_palette_step_requested.emit(completed_event, _screen_palette_level)
+			_begin_wait("screen_off_fade_down", 1, completed_event)
+			return
+		_finish_screen_off_clear(completed_event)
+		return
+	if completed_kind == "screen_off_fade_down":
+		if _screen_palette_level > 0:
+			_screen_palette_level -= 1
+			screen_fade_palette_step_requested.emit(completed_event, _screen_palette_level)
+			_begin_wait("screen_off_fade_down", 1, completed_event)
+			return
+		_finish_screen_off_clear(completed_event)
+		return
 	if completed_kind == "text_speed" and _text_glyph_index < _text_tiles.size():
 		_emit_text_glyph(_active_event)
 		_begin_wait("text_speed", text_speed, _active_event)
@@ -508,6 +561,13 @@ func _advance_active_event() -> void:
 	_next_event_index += 1
 	_active_event = {}
 	current_event_index = _next_event_index - 1
+
+
+func _finish_screen_off_clear(event: Dictionary) -> void:
+	screen_off_clear_completed.emit(event.duplicate(true))
+	state = RunState.RUNNING
+	_advance_active_event()
+	_pump_events()
 	if current_event_index >= 0 and current_event_index < _events.size():
 		current_source_address = int(_events[current_event_index]["cpu_address"]) + int(_events[current_event_index]["raw_bytes"].size())
 
@@ -562,5 +622,6 @@ func _reset_runtime_state() -> void:
 	_active_event.clear()
 	_wait_kind = ""
 	_wait_remaining = 0
+	_screen_palette_level = 0
 	_text_tiles.clear()
 	_text_glyph_index = 0

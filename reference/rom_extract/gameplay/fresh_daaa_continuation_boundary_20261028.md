@@ -50,23 +50,29 @@ are runner inputs.
 
 ## Exact remaining boundary to scenario `$35`
 
+Address correction (2026-10-29): the source manifest maps CPU `$DAD8` to file
+offset `0x03DAE8`, bytes `A9 35 20 B0 CB`. Thus `$DAD8` is `LDA #$35`, `$DAD9`
+is the immediate operand, and `$DADA` is `JSR $CBB0`.
+
 This does **not** reach the bank-$10 scenario `$35` call. The first worker must
 execute from `$800C -> $8851` through its `$8886 -> $C515 -> $CB0F` yield,
 then resume from source-owned task continuation and NMI-ready/scheduler
-state. That must allow `$EF7F` to return to `$DACB`. The caller then enters a
+state. The JSR stores `$DACB` on the stack; RTS resumes the caller at `$DACC`.
+The caller then enters a
 second `$EF7F` wrapper with A=`$01`; that worker also needs its source-owned
 yield/resume. After it returns, fixed code at `$DAD0` checks `$0629`; on this
-fresh selector-zero path, `$DAD7` loads scenario ID `$35` and `$DAD9` calls
-`$CBB0` to enqueue it. The later `$CB0F` polling loop and eventual `$DAD8`
-The `$DAD8` byte is the immediate `$35` operand, and the actual enqueue call
-is `$DAD9`; neither can be replaced with observed frame delays.
+fresh selector-zero path the caller executes `$DAD8: LDA #$35` and
+`$DADA: JSR $CBB0`. `$CBB0` stores `$35` at `$0518`, enables scenario mode,
+clears `$0005`, and reaches its `$CBBE: JSR $CB0F` yield. These are the source
+events that establish scenario `$35`; none can be replaced with observed frame
+delays.
 
 Still open:
 
 - Execute bank-$18 worker code, its `$C515/$CB0F` yield/save, and the ROM task
   scheduler/NMI-ready continuation from source bytes.
-- Return through both `$EF7F` calls and execute `$DAD0-$DAD9` to the real
-  `$35` enqueue call.
+- Return through both `$EF7F` calls; execute `$DAD8->$DADA->$CBB0`, verify the
+  `$0518=$35` setup, and reach the source yield at `$CBBE->$CB0F`.
 - Prove that the route's RAM preconditions at `$DAAA` follow from prior
   source-executed gameplay. This isolated runner starts from the documented
   reset-zero baseline plus the existing source-derived `$DAAA` handoff; the

@@ -1,0 +1,39 @@
+{
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "mapping": "bank 0 mapped at CPU $8000-$9FFF; ROM file offset is 0x10 + (CPU address - 0x8000)",
+  "spans": [
+    {
+      "file": "bank00_cutscene_cleanup_98A0_98DB.bin",
+      "start": 39072,
+      "end_exclusive": 39132,
+      "file_offset": 6320,
+      "role": "disable rendering, clear PPU $2000-$27FF through $2007, restore source register masks; RTS",
+      "length": 60,
+      "sha256": "e06d0e6831e6b42ff97d91bf052b8ba0384a4a61d149d62148bd2ddda5936d1a",
+      "cpu_range": "$98A0-$98DB",
+      "file_offset_hex": "0x0018B0"
+    },
+    {
+      "file": "bank00_cutscene_cleanup_9B7F_9B9F.bin",
+      "start": 39807,
+      "end_exclusive": 39840,
+      "file_offset": 7055,
+      "role": "fill OAM shadow and DMA image with $F8, clear four motion records; RTS",
+      "length": 33,
+      "sha256": "3d8b1ba05b37b8f4813ee4f312b94d3e69742c7b83748903b5e54e55a706882b",
+      "cpu_range": "$9B7F-$9B9F",
+      "file_offset_hex": "0x001B8F"
+    },
+    {
+      "file": "bank00_cutscene_cleanup_9BA0_9BA8.bin",
+      "start": 39840,
+      "end_exclusive": 39849,
+      "file_offset": 7088,
+      "role": "JSR $99F0; JSR $98A0; JMP $9B7F",
+      "length": 9,
+      "sha256": "be5348cfdc524a04e586ed4e8fcb2d36446e6885d9acfc6c3b4447d6f3b2ae34",
+      "cpu_range": "$9BA0-$9BA8",
+      "file_offset_hex": "0x001BB0"
+    }
+  ]
+}

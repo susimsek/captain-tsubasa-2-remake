@@ -1,0 +1,89 @@
+{
+  "schema": "ct2-fresh-kickoff-audio-wait-input-source-v1",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "header": "iNES 1.0; 16-byte header; no trainer",
+    "mapper": 4,
+    "submapper": 0,
+    "prg_rom_size_bytes": 262144,
+    "chr_rom_size_bytes": 131072
+  },
+  "runtime_rom_dependency": false,
+  "trace_state_included": false,
+  "mapping": "Offsets include the 16-byte iNES header. Fixed bank $1E maps $C000-$DFFF from 0x03C010; physical bank $02 maps $A000-$BFFF from 0x004010.",
+  "spans": [
+    {
+      "file": "fixed_cold_ram_clear_C64E_C679.bin",
+      "cpu_start": "0xC64E",
+      "cpu_end_exclusive": "0xC67A",
+      "bank": "0x1E",
+      "window": "fixed",
+      "file_offset": "0x03C65E",
+      "length": 44,
+      "sha256": "8315e93ae660d302632f7bfeffc9db002b3f1c1643ae2b6936d3ce5703e6f75a",
+      "bytes": "a9 08 8d 00 20 78 d8 a2 ff 9a ad 02 20 10 fb ad 02 20 10 fb a9 c0 8d 01 a0 a9 00 85 00 85 01 a8 a2 08 91 00 c8 d0 fb e6 01 ca d0 f6",
+      "description": "Cold reset fills all 2 KiB CPU RAM with zero, including $0078/$0079/$001B/$003B."
+    },
+    {
+      "file": "fixed_bootstrap_clear_1B_C6E8_C6EB.bin",
+      "cpu_start": "0xC6E8",
+      "cpu_end_exclusive": "0xC6EC",
+      "bank": "0x1E",
+      "window": "fixed",
+      "file_offset": "0x03C6F8",
+      "length": 4,
+      "sha256": "9e37501f8ef4975adac73033bb6aa2699fd9b46d47b1a20dfdf68a6beef6b59a",
+      "bytes": "a9 00 85 1b",
+      "description": "Later fresh-game scheduler bootstrap explicitly clears $001B; it is downstream of the $8114 call on this caller route."
+    },
+    {
+      "file": "fixed_C41E_mode_dispatch_bridge.bin",
+      "cpu_start": "0xC41E",
+      "cpu_end_exclusive": "0xC421",
+      "bank": "0x1E",
+      "window": "fixed",
+      "file_offset": "0x03C42E",
+      "length": 3,
+      "sha256": "c36deaf930bda84f02962a47f1dab95b08c06d433abbc79b975a54b4db604363",
+      "bytes": "4c 00 a2",
+      "description": "Candidate fixed-bank bridge JMP $A200; caller/route entry is not established."
+    },
+    {
+      "file": "bank02_mode_setter_dispatch_A200_A22A.bin",
+      "cpu_start": "0xA200",
+      "cpu_end_exclusive": "0xA22A",
+      "bank": "0x02",
+      "window": "A000",
+      "file_offset": "0x004210",
+      "length": 42,
+      "sha256": "3f4ddbdf38609b69daaadfcae493258520ebc3563925d5137eb14efd9c02fa5a",
+      "bytes": "4c 1b a2 4c af a2 4c e8 a2 4c d8 a3 4c 55 a8 4c 6e a8 4c 84 a4 4c ce a8 4c fe a8 a2 ff 9a 48 a9 00 8d 00 a0 a5 1b 09 40 85 1b",
+      "description": "Indirect mode dispatcher; $A200 enters $A21B which ORs $40 into $001B."
+    },
+    {
+      "file": "bank02_indirect_mode_dispatch_A484_A4A5.bin",
+      "cpu_start": "0xA484",
+      "cpu_end_exclusive": "0xA4A5",
+      "bank": "0x02",
+      "window": "A000",
+      "file_offset": "0x004494",
+      "length": 33,
+      "sha256": "bb485e2a41c378093292bce80969c23f0bbee48970431fae43db7fe5abca98de",
+      "bytes": "a5 ed 0a aa bd 92 a4 48 bd 91 a4 48 60 c0 a4 59 a5 7b a5 81 a5 a2 a5 a8 a5 b0 a5 b8 a5 bf a5 cd a5",
+      "description": "Reads $00ED, dispatches through a pointer table; entries 8/9 target the bit-clear/set handlers."
+    },
+    {
+      "file": "bank02_mode_bit_handlers_A5C0_A5DC.bin",
+      "cpu_start": "0xA5C0",
+      "cpu_end_exclusive": "0xA5DC",
+      "bank": "0x02",
+      "window": "A000",
+      "file_offset": "0x0045D0",
+      "length": 28,
+      "sha256": "d4c754730d702ed153465dae81f7ecab3fd883eb8aca5554a60bf50359f0546b",
+      "bytes": "a9 00 8d 00 a0 a5 1b 29 bf 85 1b a9 02 60 a9 01 8d 00 a0 a5 1b 09 40 85 1b a9 02 60",
+      "description": "Mode handler 8 clears $001B.6; mode handler 9 sets it."
+    }
+  ]
+}

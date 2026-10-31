@@ -12,9 +12,16 @@ func _run() -> void:
 	root.add_child(main)
 	await process_frame
 	var title := main.get_node("TitleMenu") as RomTitleMenu
-	title.kickoff_requested.emit()
+	title.visible = true
+	if int(title.get("_selected")) != 0:
+		_fail("The title did not begin with KICK OFF selected.")
+		return
+	var kickoff_start := InputEventKey.new()
+	kickoff_start.keycode = KEY_ENTER
+	kickoff_start.pressed = true
+	title.call("_unhandled_input", kickoff_start)
 	await process_frame
-	var route := main.get_node_or_null("KickoffRouteRuntime") as KickoffRouteRuntime
+	var route: KickoffRouteRuntime = main.get_node_or_null("KickoffRouteRuntime") as KickoffRouteRuntime
 	if route == null:
 		_fail("KICK OFF selection did not create the fresh-start route.")
 		return
@@ -24,12 +31,23 @@ func _run() -> void:
 	if route.vm.cutscene_id != 1 or route.get_route_status().get("stage") != "cutscene_1":
 		_fail("Fresh-start route did not begin ROM cutscene ID 1.")
 		return
+	var event_before_select: int = route.vm.current_event_index
+	var vm_state_before_select: int = int(route.vm.state)
+	var select_input := InputEventAction.new()
+	select_input.action = "route_select"
+	select_input.pressed = true
+	route._unhandled_input(select_input)
+	if route.vm.current_event_index != event_before_select \
+			or int(route.vm.state) != vm_state_before_select \
+			or route.get_route_status().get("stage") != "cutscene_1":
+		_fail("Select incorrectly skipped or completed a ROM cutscene command.")
+		return
 	if main.get_node("OpeningAudio").playing:
 		_fail("Cold-start music was not stopped when KICK OFF took audio ownership.")
 		return
 
-	print("PASS: title KICK OFF creates the route and starts ROM cutscene ID 1.")
-	print("LIMIT: this test stops at cutscene ID 1. The separately checked route reaches field/menu pending; source callback/task integration, full visuals, exact timing, and route PCM remain open.")
+	print("PASS: Enter confirms selected KICK OFF, starts ROM cutscene ID 1, and Select cannot skip its source commands.")
+	print("LIMIT: this test stops at cutscene ID 1. Cutscene-2 caller wait and the explicit $9BA0 stop boundary are checked separately; cleanup integration, field/menu rendering, exact timing, and route PCM remain open.")
 	route.cue_audio.release_rom_audio_resources()
 	(main.get_node("OpeningAudio") as AudioStreamPlayer).stop()
 	root.remove_child(main)

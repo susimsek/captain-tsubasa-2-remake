@@ -1,0 +1,74 @@
+{
+  "schema": "ct2-slot09-87e6-worker-source-v1",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "header": "iNES 1.0; 16-byte header; no trainer",
+    "mapper": 4,
+    "submapper": 0
+  },
+  "runtime_rom_dependency": false,
+  "trace_state_included": false,
+  "spans": [
+    {
+      "file": "bank18_slot09_vector_8009_800B.bin",
+      "cpu_start": "0x8009",
+      "cpu_end_exclusive": "0x800C",
+      "bank": "0x18",
+      "file_offset": "0x030019",
+      "description": "Third root slot-$09 bank-$18 worker vector; JMP $87E6.",
+      "length": 3,
+      "sha256": "ee600ed5f0ff7a46e0b9a1d41acb3615828d6c635eee42c16598839227a71e27",
+      "bytes": "4c e6 87"
+    },
+    {
+      "file": "bank18_slot09_worker_87E6_8850.bin",
+      "cpu_start": "0x87E6",
+      "cpu_end_exclusive": "0x8851",
+      "bank": "0x18",
+      "file_offset": "0x0307F6",
+      "description": "Complete worker body through its final JMP $8815; next code begins at $8851.",
+      "length": 107,
+      "sha256": "879cfbc3684874aa7a857d9ee294755cbb773b616d5815335a2208d414799509",
+      "bytes": "ad 36 05 f0 26 10 1b 29 7f 8d 36 05 f0 1d 38 e9 01 0a aa bd 54 ad 85 7d bd 55 ad 85 7e a9 00 8d 37 05 ad 37 05 f0 08 ce 37 05 60 8d 38 05 60 a0 00 b1 7d c9 f0 90 0b c9 f0 f0 1c c9 f1 f0 1e c8 d0 ef 8d 37 05 c8 b1 7d 8d 38 05 c8 98 18 65 7d 85 7d 90 02 e6 7e 60 a9 00 8d 36 05 60 c8 b1 7d aa c8 b1 7d 85 7e 86 7d 4c 15 88"
+    },
+    {
+      "file": "bank19_slot09_worker_pointer_table_AD54_AD5D.bin",
+      "cpu_start": "0xAD54",
+      "cpu_end_exclusive": "0xAD5E",
+      "bank": "0x19",
+      "file_offset": "0x032D64",
+      "description": "Five little-endian stream pointers indexed by the worker reset-marker path; not selected by the observed zero-state route.",
+      "length": 10,
+      "sha256": "8d1c08abdc6be570a1a0e8304738c995c09856b4081e0962f15db579cb95f7b5",
+      "bytes": "5e ad 61 ad 68 ad 6b ad 6e ad"
+    },
+    {
+      "file": "fixed_root_slot09_after_8779_EBC5_EBD7.bin",
+      "cpu_start": "0xEBC5",
+      "cpu_end_exclusive": "0xEBD7",
+      "bank": "0x1F",
+      "file_offset": "0x03EBD5",
+      "description": "Root caller bridge from $EBC5 through JSR $8009; returns from this call at $EBD7.",
+      "length": 18,
+      "sha256": "75ff2ee06764439aecb4eae84c694e1f99b083d7b21a92c9ad5e41baa09b304e",
+      "bytes": "48 a5 22 a9 18 85 24 a9 19 85 25 20 2d ce 68 20 09 80"
+    },
+    {
+      "file": "fixed_mapper_helper_CE2D_CE4A.bin",
+      "cpu_start": "0xCE2D",
+      "cpu_end_exclusive": "0xCE4A",
+      "bank": "0x1E",
+      "file_offset": "0x03CE3D",
+      "description": "Fixed-bank MMC3 helper called by the $EBC5 root bridge to select PRG banks $18/$19.",
+      "length": 29,
+      "sha256": "6a815aa4ebad9e014531c5590616d6ec5596be7aa1a31c1542057062f25eb64c",
+      "bytes": "a5 22 09 06 85 23 8d 00 80 a5 24 8d 01 80 a5 22 09 07 85 23 8d 00 80 a5 25 8d 01 80 60"
+    }
+  ],
+  "runtime_executor": {
+    "class": "RomSlot09Worker87E6ZeroBranchExecutor",
+    "file": "scripts/gameplay/rom_slot09_87e6_zero_branch_executor.gd",
+    "supported_branch": "live $0536 == 0; execute $EBC5 through $87E6 LDA/BEQ/STA/RTS; return at $EBD7"
+  }
+}

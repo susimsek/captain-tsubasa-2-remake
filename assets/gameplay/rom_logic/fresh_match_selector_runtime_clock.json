@@ -1,0 +1,240 @@
+{
+  "schema": "ct2-fresh-match-selector-runtime-clock-v1",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "input_route_sha256": "6cae92ff2b6a77fcc05c34c57c734bbff47930ada172633cb4a4b830cc3e77dc",
+  "source_model_sha256": "b0f528dfd73f79cf7148a5a2f6a9f0683cde22a03c1705deb8e5215864d888db",
+  "source_artifact": {
+    "path": "reference/rom_extract/gameplay/fresh_kickoff_893b_irq_candidate_schedule_20261031.json",
+    "sha256": "cdd177b35a059a5cf499e904279362f71f0f8d799a2c233b44c868e73774fd93"
+  },
+  "call_contract": {
+    "entry_pc": "$A20F",
+    "entry_prg_bank_8k": 2,
+    "entry_source_frame_provenance": 7258,
+    "entry_source_cycle_provenance": 216143875,
+    "caller_return_word": "$80FC",
+    "return_instruction_pc": "$A8B6",
+    "return_prg_bank_8k": 2,
+    "return_source_frame_provenance": 7266,
+    "return_source_cycle_provenance": 216367117,
+    "return_pc": "$80FD",
+    "consumed_caller_return_word": "$80FC"
+  },
+  "entry_status_contract": {
+    "flag": "I",
+    "known_mask": 4,
+    "known_value": 0,
+    "candidate_p_byte": 48,
+    "basis": "ROM-only source CPU candidate from reset with the hash-bound recorded input route",
+    "source_model_sha256": "b0f528dfd73f79cf7148a5a2f6a9f0683cde22a03c1705deb8e5215864d888db",
+    "input_route_sha256": "6cae92ff2b6a77fcc05c34c57c734bbff47930ada172633cb4a4b830cc3e77dc",
+    "physical_nes_timing_proven": false
+  },
+  "cycle_totals": {
+    "elapsed": 223242,
+    "interrupt": 19909,
+    "mainline": 203333
+  },
+  "source_limits": {
+    "fceux_trace_used_as_input": false,
+    "complete_ppu_fetch_parity": false,
+    "physical_nes_timing_proven": false,
+    "handler_writes_applied": false,
+    "return_receipts_applied": false,
+    "runtime_rom_dependency": false,
+    "runtime_emulator_dependency": false
+  },
+  "frame_intervals": [
+    {
+      "frame_offset": 0,
+      "source_frame": 7258,
+      "elapsed_cycle_start": 0,
+      "elapsed_cycle_end": 2999
+    },
+    {
+      "frame_offset": 1,
+      "source_frame": 7259,
+      "elapsed_cycle_start": 2999,
+      "elapsed_cycle_end": 32777
+    },
+    {
+      "frame_offset": 2,
+      "source_frame": 7260,
+      "elapsed_cycle_start": 32777,
+      "elapsed_cycle_end": 62559
+    },
+    {
+      "frame_offset": 3,
+      "source_frame": 7261,
+      "elapsed_cycle_start": 62559,
+      "elapsed_cycle_end": 92338
+    },
+    {
+      "frame_offset": 4,
+      "source_frame": 7262,
+      "elapsed_cycle_start": 92338,
+      "elapsed_cycle_end": 122121
+    },
+    {
+      "frame_offset": 5,
+      "source_frame": 7263,
+      "elapsed_cycle_start": 122121,
+      "elapsed_cycle_end": 151900
+    },
+    {
+      "frame_offset": 6,
+      "source_frame": 7264,
+      "elapsed_cycle_start": 151900,
+      "elapsed_cycle_end": 181681
+    },
+    {
+      "frame_offset": 7,
+      "source_frame": 7265,
+      "elapsed_cycle_start": 181681,
+      "elapsed_cycle_end": 211460
+    },
+    {
+      "frame_offset": 8,
+      "source_frame": 7266,
+      "elapsed_cycle_start": 211460,
+      "elapsed_cycle_end": 223242
+    }
+  ],
+  "interrupt_events": [
+    {
+      "kind": "NMI",
+      "frame_offset": 1,
+      "elapsed_cycle": 3005,
+      "return_cycle": 5267,
+      "pc_before": "$A14C",
+      "vector_pc": "$C500",
+      "return_pc": "$A14C"
+    },
+    {
+      "kind": "IRQ",
+      "frame_offset": 1,
+      "elapsed_cycle": 19908,
+      "return_cycle": 20167,
+      "pc_before": "$A1F1",
+      "vector_pc": "$C506",
+      "return_pc": "$A1F1"
+    },
+    {
+      "kind": "NMI",
+      "frame_offset": 2,
+      "elapsed_cycle": 32785,
+      "return_cycle": 35047,
+      "pc_before": "$A14A",
+      "vector_pc": "$C500",
+      "return_pc": "$A14A"
+    },
+    {
+      "kind": "IRQ",
+      "frame_offset": 2,
+      "elapsed_cycle": 49687,
+      "return_cycle": 49946,
+      "pc_before": "$A1F1",
+      "vector_pc": "$C506",
+      "return_pc": "$A1F1"
+    },
+    {
+      "kind": "NMI",
+      "frame_offset": 3,
+      "elapsed_cycle": 62564,
+      "return_cycle": 64826,
+      "pc_before": "$A1F3",
+      "vector_pc": "$C500",
+      "return_pc": "$A1F3"
+    },
+    {
+      "kind": "IRQ",
+      "frame_offset": 3,
+      "elapsed_cycle": 79470,
+      "return_cycle": 79729,
+      "pc_before": "$A1ED",
+      "vector_pc": "$C506",
+      "return_pc": "$A1ED"
+    },
+    {
+      "kind": "NMI",
+      "frame_offset": 4,
+      "elapsed_cycle": 92346,
+      "return_cycle": 94608,
+      "pc_before": "$A1F7",
+      "vector_pc": "$C500",
+      "return_pc": "$A1F7"
+    },
+    {
+      "kind": "IRQ",
+      "frame_offset": 4,
+      "elapsed_cycle": 109252,
+      "return_cycle": 109511,
+      "pc_before": "$A15B",
+      "vector_pc": "$C506",
+      "return_pc": "$A15B"
+    },
+    {
+      "kind": "NMI",
+      "frame_offset": 5,
+      "elapsed_cycle": 122129,
+      "return_cycle": 124391,
+      "pc_before": "$A1F3",
+      "vector_pc": "$C500",
+      "return_pc": "$A1F3"
+    },
+    {
+      "kind": "IRQ",
+      "frame_offset": 5,
+      "elapsed_cycle": 139031,
+      "return_cycle": 139290,
+      "pc_before": "$A15B",
+      "vector_pc": "$C506",
+      "return_pc": "$A15B"
+    },
+    {
+      "kind": "NMI",
+      "frame_offset": 6,
+      "elapsed_cycle": 151908,
+      "return_cycle": 154170,
+      "pc_before": "$A1F3",
+      "vector_pc": "$C500",
+      "return_pc": "$A1F3"
+    },
+    {
+      "kind": "IRQ",
+      "frame_offset": 6,
+      "elapsed_cycle": 168812,
+      "return_cycle": 169071,
+      "pc_before": "$A14E",
+      "vector_pc": "$C506",
+      "return_pc": "$A14E"
+    },
+    {
+      "kind": "NMI",
+      "frame_offset": 7,
+      "elapsed_cycle": 181686,
+      "return_cycle": 183948,
+      "pc_before": "$A1ED",
+      "vector_pc": "$C500",
+      "return_pc": "$A1ED"
+    },
+    {
+      "kind": "IRQ",
+      "frame_offset": 7,
+      "elapsed_cycle": 198591,
+      "return_cycle": 198850,
+      "pc_before": "$A14E",
+      "vector_pc": "$C506",
+      "return_pc": "$A14E"
+    },
+    {
+      "kind": "NMI",
+      "frame_offset": 8,
+      "elapsed_cycle": 211468,
+      "return_cycle": 213730,
+      "pc_before": "$A15B",
+      "vector_pc": "$C500",
+      "return_pc": "$A15B"
+    }
+  ]
+}

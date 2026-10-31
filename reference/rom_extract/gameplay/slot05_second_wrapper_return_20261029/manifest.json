@@ -1,0 +1,68 @@
+{
+  "schema": "ct2-slot05-second-wrapper-return-source-v1",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "mapping": "iNES PRG begins at file offset 0x0010; fixed bank $1E covers $C000-$DFFF and fixed bank $1F covers $E000-$FFFF.",
+  "scope": "Hash-checked spans for the live EF99 wrapper tail, its first return to DACC, the second wrapper caller, the DAD1 fresh-match branch, the second descriptor lookup/pointer, and the selected descriptor. These spans establish the pending DAD1 return frame and explain why the route next stops at text pointer BBE0; they do not claim that DAD1 or CBB0 has executed.",
+  "spans": [
+    {
+      "file": "fixed_wrapper_return_EF99_EFA2.bin",
+      "bank": "0x1F",
+      "window": "fixed",
+      "cpu_start": "0xEF99",
+      "cpu_end_exclusive": "0xEFA2",
+      "file_offset": "0x03EFA9",
+      "length": 9,
+      "sha256": "fdd5528d0faaa01104c6038c4a6ff377aae5ee0353a21b9e389e0751bc60a022",
+      "description": "Wrapper restores the saved mapper pair and jumps through the fixed mapper helper.",
+      "bytes": "68 85 25 68 85 24 4c 2d ce"
+    },
+    {
+      "file": "fixed_second_wrapper_caller_DACC_DAD1.bin",
+      "bank": "0x1E",
+      "window": "fixed",
+      "cpu_start": "0xDACC",
+      "cpu_end_exclusive": "0xDAD1",
+      "file_offset": "0x03DADC",
+      "length": 5,
+      "sha256": "a7ab7907c755f42d77ea782327d3f104258f9191dd333779c9af45c2f6db300a",
+      "description": "Caller loads A=$01 and invokes the second $EF7F bank-$18 wrapper.",
+      "bytes": "a9 01 20 7f ef"
+    },
+    {
+      "file": "fixed_kickoff_caller_DAD1_DAD8.bin",
+      "bank": "0x1E",
+      "window": "fixed",
+      "cpu_start": "0xDAD1",
+      "cpu_end_exclusive": "0xDAD8",
+      "file_offset": "0x03DAE1",
+      "length": 7,
+      "sha256": "8577a4922b07af947dc28746b106cc81365aa68d16d2c4bc7497618cf1db6311",
+      "description": "Fresh-match caller checks $0629 and takes the zero-source not-equal path.",
+      "bytes": "ad 29 06 c9 04 f0 11"
+    },
+    {
+      "file": "bank19_worker_lookup_tail_B3D1_B3D3.bin",
+      "bank": "0x19",
+      "window": "High",
+      "cpu_start": "0xB3D1",
+      "cpu_end_exclusive": "0xB3D3",
+      "file_offset": "0x0333E1",
+      "length": 2,
+      "sha256": "accbbfd498e294cb0ec1047d516f6d35959b8eb5489383366cb620e32143fa20",
+      "description": "Second worker lookup entry selected when the second wrapper supplies A=$01.",
+      "bytes": "64 b4"
+    },
+    {
+      "file": "bank19_match_descriptor_B464_B475.bin",
+      "bank": "0x19",
+      "window": "High",
+      "cpu_start": "0xB464",
+      "cpu_end_exclusive": "0xB475",
+      "file_offset": "0x033474",
+      "length": 17,
+      "sha256": "8d41b63b58bec5ef2fa68d010c32fcd3eb62d21c480da7093ad19f276deff2fc",
+      "description": "Match descriptor selected by the newly verified second lookup pointer $B464.",
+      "bytes": "c1 22 07 07 00 00 07 04 04 01 01 e0 bb 01 05 9c bd"
+    }
+  ]
+}

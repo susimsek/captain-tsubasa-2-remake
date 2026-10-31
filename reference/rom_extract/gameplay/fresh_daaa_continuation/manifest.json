@@ -2,7 +2,7 @@
   "schema": "ct2-fresh-daaa-continuation-source-v2",
   "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
   "mapping": "iNES PRG starts at file offset 0x0010; fixed $C000-$DFFF maps bank $1E and $E000-$FFFF maps bank $1F; switchable 8 KiB slot-$8000/$A000 windows use the MMC3 bank pair.",
-  "scope": "Synchronous source-byte execution from $DAAA through fresh selector dispatch, bank-$1C match-zero setup, and the first $EF7F wrapper into bank-$18:$800C. Stops at the asynchronous worker entry.",
+  "scope": "Source-byte execution from $DAAA through fresh selector dispatch, bank-$1C match-zero setup, and the first $EF7F wrapper into bank-$18:$800C; also packages the scenario-$35 A/B poll exit through the $DAF2 call to the $DC07 position initializer. Both asynchronous source-task boundaries remain outside this executor.",
   "spans": [
     {
       "file": "fixed_reset_ram_clear_C64E_C679.bin",
@@ -27,6 +27,42 @@
       "sha256": "0b9acbf846aac59eaed906fe3441808178139cca03402de600fbc1ef14d46cf7",
       "description": "Hash-checked ROM code/data for the synchronous fresh match-zero continuation to the first bank-$18 worker entry.",
       "bytes": "a9 01 20 f1 cb 20 4f cf 48 a5 22 a9 1a 85 24 a9 1b 85 25 20 2d ce 68 20 39 80 20 24 db a9 00 20 7f ef"
+    },
+    {
+      "file": "fixed_scenario_wait_DADD_DAE9.bin",
+      "bank": "0x1E",
+      "window": "fixed",
+      "cpu_start": "0xDADD",
+      "cpu_end_exclusive": "0xDAE9",
+      "file_offset": "0x03DAED",
+      "length": 12,
+      "sha256": "9319820b3f90540d3fbf253d146a10f00cc7150bf86eec0f5c956cf720ecf06e",
+      "description": "Scenario-$35 caller after $CBC1 returns: loads delay 1, calls the $CB0F task-yield routine, and tests held A/B at $001C.",
+      "bytes": "a9 01 20 0f cb ad 1c 00 29 c0 f0 f4"
+    },
+    {
+      "file": "fixed_scenario_input_exit_DAE9_DAF2.bin",
+      "bank": "0x1E",
+      "window": "fixed",
+      "cpu_start": "0xDAE9",
+      "cpu_end_exclusive": "0xDAF2",
+      "file_offset": "0x03DAF9",
+      "length": 9,
+      "sha256": "7e2464bd95777a7c548b325644e92789fa8ae50f09bc6282166d4f3450e698bb",
+      "description": "Set-A/B branch after the scenario wait: ROM reads $05FB, adds 8, and writes initial ball holder $0441 before the $DC07 position initializer call.",
+      "bytes": "ad fb 05 18 69 08 8d 41 04"
+    },
+    {
+      "file": "fixed_position_initializer_call_DAF2_DAF5.bin",
+      "bank": "0x1E",
+      "window": "fixed",
+      "cpu_start": "0xDAF2",
+      "cpu_end_exclusive": "0xDAF5",
+      "file_offset": "0x03DB02",
+      "length": 3,
+      "sha256": "d684331968a2ce849ac9eadf834cd573bbd265f1c93d98727829c9731b6e2267",
+      "description": "ROM JSR at the scenario-$36 setup caller: requests fixed-bank match-position initializer $DC07 and returns to $DAF5.",
+      "bytes": "20 07 dc"
     },
     {
       "file": "fixed_sound_queue_CBF1_CC01.bin",

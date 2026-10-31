@@ -132,23 +132,57 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 	var source_event_id := String(source_call.get("source_event_id", "")).strip_edges()
 	if source_event_id.is_empty():
 		return _failure("A source-owned caller event identity is required; this executor does not create call events.")
-	var pre_call_sp := int(source_call.get("pre_call_sp", -1))
-	if pre_call_sp < 0 or pre_call_sp > 0xFF:
-		return _failure("Caller must supply its byte-valued pre-JSR stack pointer.")
-	var entry_sp := (pre_call_sp - 2) & 0xFF
-	if int(cpu_state.get("sp", -1)) != entry_sp or int(cpu_state.get("pc", -1)) != SELECTOR_ENTRY_PC:
-		return _failure("CPU PC/SP do not match the `$A20F` post-JSR entry state.")
-	var stack_variant: Variant = source_call.get("stack_page")
-	if not stack_variant is PackedByteArray or stack_variant.size() != 0x100:
-		return _failure("The decoded 256-byte stack page is required for the nested and outer RTS instructions.")
-	var stack: PackedByteArray = stack_variant.duplicate()
-	var stacked_return := _peek_return_word(stack, entry_sp)
-	if stacked_return != CALLER_PC + 2:
-		return _failure("The caller's stacked JSR return word does not match `$80FA->$A20F`.")
-	for register_name: String in ["a", "x", "y", "p"]:
+	var logical_stack_mode := source_call.has("logical_stack_frame")
+	var pre_call_sp := -1
+	var entry_sp := -1
+	var stack := PackedByteArray()
+	var logical_stack: Array[Dictionary] = []
+	if logical_stack_mode:
+		var frame_variant: Variant = source_call.get("logical_stack_frame", {})
+		if not frame_variant is Dictionary:
+			return _failure("The source-owned logical JSR frame is malformed.")
+		var frame: Dictionary = frame_variant
+		if String(frame.get("kind", "")) != "rom_jsr" \
+				or int(frame.get("caller_pc", -1)) != CALLER_PC \
+				or int(frame.get("target_pc", -1)) != SELECTOR_ENTRY_PC \
+				or int(frame.get("return_pc", -1)) != RETURN_PC \
+				or int(frame.get("return_word", -1)) != CALLER_PC + 2 \
+				or String(frame.get("source_event_id", "")) != source_event_id:
+			return _failure("The logical call frame does not match the checked `$80FA->$A20F` JSR.")
+		if int(cpu_state.get("pc", -1)) != SELECTOR_ENTRY_PC:
+			return _failure("CPU PC does not match the `$A20F` logical post-JSR entry.")
+		logical_stack.append(frame.duplicate(true))
+	else:
+		pre_call_sp = int(source_call.get("pre_call_sp", -1))
+		if pre_call_sp < 0 or pre_call_sp > 0xFF:
+			return _failure("Caller must supply its byte-valued pre-JSR stack pointer.")
+		entry_sp = (pre_call_sp - 2) & 0xFF
+		if int(cpu_state.get("sp", -1)) != entry_sp or int(cpu_state.get("pc", -1)) != SELECTOR_ENTRY_PC:
+			return _failure("CPU PC/SP do not match the `$A20F` post-JSR entry state.")
+		var stack_variant: Variant = source_call.get("stack_page")
+		if not stack_variant is PackedByteArray or stack_variant.size() != 0x100:
+			return _failure("The decoded 256-byte stack page is required for the nested and outer RTS instructions.")
+		stack = stack_variant.duplicate()
+		var stacked_return := _peek_return_word(stack, entry_sp)
+		if stacked_return != CALLER_PC + 2:
+			return _failure("The caller's stacked JSR return word does not match `$80FA->$A20F`.")
+	for register_name: String in ["a", "x", "y"]:
 		var value := int(cpu_state.get(register_name, -1))
 		if value < 0 or value > 0xFF:
 			return _failure("CPU register `%s` must be supplied as an explicit source byte." % register_name)
+	var p_known_mask := 0xFF
+	if logical_stack_mode:
+		p_known_mask = int(cpu_state.get("p_known_mask", -1))
+		if p_known_mask < 0 or p_known_mask > 0xFF \
+				or int(cpu_state.get("p_known_value", -1)) < 0 \
+				or int(cpu_state.get("p_known_value", -1)) > 0xFF:
+			return _failure("Logical CPU entry requires a partial P known-mask/value contract.")
+		if (p_known_mask & 0x82) != 0x82:
+			return _failure("Logical CPU entry must know N/Z after the ROM mapper helper.")
+	else:
+		var p_value := int(cpu_state.get("p", -1))
+		if p_value < 0 or p_value > 0xFF:
+			return _failure("CPU register `p` must be supplied as an explicit source byte.")
 	for address: int in [0x0022, 0x0023, 0x0025, 0x0026]:
 		if not ram_before.has(address):
 			return _failure("Caller-owned RAM `$%04X` is required." % address)
@@ -164,18 +198,27 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 			or int(cpu_state["x"]) != 0x02 \
 			or int(cpu_state["a"]) != expected_mapper_value:
 		return _failure("Caller state does not match `$80F7->$C4B9` bank-$02 select output.")
-	if (int(cpu_state["p"]) & 0x82) != _nz_bits(expected_mapper_value):
+	if logical_stack_mode and (int(cpu_state["p_known_value"]) & 0x82) != _nz_bits(expected_mapper_value):
+		return _failure("Caller N/Z flags do not match the preceding ROM mapper-select helper.")
+	if not logical_stack_mode and (int(cpu_state["p"]) & 0x82) != _nz_bits(expected_mapper_value):
 		return _failure("Caller N/Z flags do not match the preceding ROM mapper-select helper.")
 	if int(cpu_state["y"]) != 0:
 		return _failure("ROM `$A138` uses `(pointer),Y` while copying `$ACB0-$BFFF`; this bounded route requires explicit Y=0.")
 
 	var registers := {
 		"a": int(cpu_state["a"]), "x": int(cpu_state["x"]),
-		"y": int(cpu_state["y"]), "p": int(cpu_state["p"]),
-		"sp": entry_sp, "pc": SELECTOR_ENTRY_PC,
+		"y": int(cpu_state["y"]),
+		"p": int(cpu_state.get("p", cpu_state.get("p_known_value", 0))),
+		"p_known_mask": p_known_mask,
+		"p_known_value": int(cpu_state.get("p", cpu_state.get("p_known_value", 0))) & p_known_mask,
+		"pc": SELECTOR_ENTRY_PC,
 	}
+	if not logical_stack_mode:
+		registers["sp"] = entry_sp
 	var ram_after := ram_before.duplicate(true)
 	var writes: Array[Dictionary] = []
+	var ram_write_timeline: Array[Dictionary] = []
+	var logical_stack_timeline: Array[Dictionary] = []
 	var cpu_cycles := 0
 	var instruction_count := 0
 	var source_path: Array[int] = [SELECTOR_ENTRY_PC, SELECTOR_BODY_PC, 0xA870, 0xA872, 0xA87C, 0xA87E, ROSTER_COPY_TRAMPOLINE_PC, 0xA138]
@@ -198,9 +241,27 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 	registers["p"] = _set_nz(int(registers["p"]), 0)
 	cpu_cycles += 2 # LDX #$00
 	instruction_count += 1
-	if not _push_jsr(stack, int(registers["sp"]), 0xA880):
-		return _failure("Nested `$A87E JSR $A8B7` could not push its ROM return word.")
-	registers["sp"] = (int(registers["sp"]) - 2) & 0xFF
+	if logical_stack_mode:
+		logical_stack.append({
+			"kind": "rom_jsr", "caller_pc": 0xA87E,
+			"target_pc": ROSTER_COPY_TRAMPOLINE_PC,
+			"return_pc": 0xA881, "return_word": 0xA880,
+			"source_event_id": "selector_nested_jsr_A87E_A8B7",
+		})
+		logical_stack_timeline.append({
+			"source_pc": 0xA87E, "source_cycle_start_offset": cpu_cycles,
+			"source_cycle_end_offset": cpu_cycles + 6,
+			"kind": "logical_jsr", "return_word": 0xA880,
+			"return_pc": 0xA881, "target_pc": ROSTER_COPY_TRAMPOLINE_PC,
+		})
+	else:
+		if not _push_jsr(stack, int(registers["sp"]), 0xA880):
+			return _failure("Nested `$A87E JSR $A8B7` could not push its ROM return word.")
+		_append_ram_write_timeline(ram_write_timeline, cpu_cycles + 5,
+			0xA87E, 0x0100 | int(registers["sp"]), 0xA8)
+		_append_ram_write_timeline(ram_write_timeline, cpu_cycles + 6,
+			0xA87E, 0x0100 | ((int(registers["sp"]) - 1) & 0xFF), 0x80)
+		registers["sp"] = (int(registers["sp"]) - 2) & 0xFF
 	registers["pc"] = ROSTER_COPY_TRAMPOLINE_PC
 	cpu_cycles += 6 + 3 # JSR `$A8B7`; its ROM instruction is JMP `$A138`.
 	instruction_count += 2
@@ -221,6 +282,8 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 		registers["p"] = _set_nz(int(registers["p"]), load_immediate)
 		ram_after[int(item["address"])] = load_immediate
 		writes.append({"source_pc": int(item["pc"]) + 2, "address": int(item["address"]), "value": load_immediate})
+		_append_ram_write_timeline(ram_write_timeline, cpu_cycles + 5,
+			int(item["pc"]) + 2, int(item["address"]), load_immediate)
 		cpu_cycles += 5
 		instruction_count += 2
 		registers["pc"] = int(item["pc"]) + 4
@@ -249,6 +312,8 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 		registers["p"] = _set_nz(int(registers["p"]), copied_byte)
 		ram_after[destination_address] = copied_byte
 		writes.append({"source_pc": 0xA14A, "address": destination_address, "value": copied_byte})
+		_append_ram_write_timeline(ram_write_timeline,
+			cpu_cycles + copy_loop_cycles + 11, 0xA14A, destination_address, copied_byte)
 		copy_loop_cycles += 5 + 6
 		instruction_count += 2
 		copy_iterations += 1
@@ -288,30 +353,40 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 		registers["p"] = _set_nz(int(registers["p"]), next_source_low)
 		copy_loop_cycles += 5
 		instruction_count += 1
+		_append_ram_write_timeline(ram_write_timeline,
+			cpu_cycles + copy_loop_cycles, 0xA1EB, 0x00D0, next_source_low)
 		if next_source_low != 0:
 			copy_loop_cycles += 3
 			instruction_count += 1
 		else:
-			copy_loop_cycles += 2 + 5
+			copy_loop_cycles += 2
 			instruction_count += 2
 			var next_source_high := (source_high + 1) & 0xFF
 			ram_after[0x00D1] = next_source_high
 			registers["p"] = _set_nz(int(registers["p"]), next_source_high)
+			copy_loop_cycles += 5
+			_append_ram_write_timeline(ram_write_timeline,
+				cpu_cycles + copy_loop_cycles, 0xA1EF, 0x00D1, next_source_high)
 
 		var next_destination_low := (destination_low + 1) & 0xFF
 		ram_after[0x00D2] = next_destination_low
 		registers["p"] = _set_nz(int(registers["p"]), next_destination_low)
 		copy_loop_cycles += 5
 		instruction_count += 1
+		_append_ram_write_timeline(ram_write_timeline,
+			cpu_cycles + copy_loop_cycles, 0xA1F1, 0x00D2, next_destination_low)
 		if next_destination_low != 0:
 			copy_loop_cycles += 3
 			instruction_count += 1
 		else:
-			copy_loop_cycles += 2 + 5
+			copy_loop_cycles += 2
 			instruction_count += 2
 			var next_destination_high := (destination_high + 1) & 0xFF
 			ram_after[0x00D3] = next_destination_high
 			registers["p"] = _set_nz(int(registers["p"]), next_destination_high)
+			copy_loop_cycles += 5
+			_append_ram_write_timeline(ram_write_timeline,
+				cpu_cycles + copy_loop_cycles, 0xA1F5, 0x00D3, next_destination_high)
 		copy_loop_cycles += 3 # JMP `$A148`
 		instruction_count += 1
 
@@ -320,9 +395,12 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 			or int(ram_after[0x00D2]) != 0x4F or int(ram_after[0x00D3]) != 0x73:
 		return _failure("ROM `$A138` did not terminate at `$BFFF` with the expected post-copy pointers.")
 	source_path.append_array([0xA148, 0xA150, 0xA15B, 0xA1EB, 0xA148, 0xA158, 0xA1E4, ROSTER_COPY_PC])
+	var copy_finish_write_cycle := cpu_cycles + copy_loop_cycles + 5
 	cpu_cycles += copy_loop_cycles + 8 # `$A1E4 LDA/STA/JMP $A8BB`
 	instruction_count += 3
 	writes.append({"source_pc": 0xA1E6, "address": 0x00ED, "value": 0x0B})
+	_append_ram_write_timeline(ram_write_timeline, copy_finish_write_cycle,
+		0xA1E6, 0x00ED, 0x0B)
 	ram_after[0x00ED] = 0x0B
 	registers["a"] = 0x0B
 	registers["p"] = _set_nz(int(registers["p"]), 0x0B)
@@ -344,6 +422,8 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 		var record_address := 0x0300 + record_offset
 		ram_after[record_address] = player_id
 		writes.append({"source_pc": 0xA8C0, "address": record_address, "value": player_id})
+		_append_ram_write_timeline(ram_write_timeline,
+			cpu_cycles + 4 + 5, 0xA8C0, record_address, player_id)
 		cpu_cycles += 4 + 5 + 2 + 2 + 2 + 2 + 2 + 2 + (3 if player_index < 10 else 2)
 		instruction_count += 9
 		registers["x"] = (int(registers["x"]) + 1) & 0xFF
@@ -362,10 +442,15 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 		registers["a"] = next_y
 	if int(registers["x"]) != 11 or int(registers["y"]) != 0x84:
 		return _failure("The `$A8BB` roster loop did not reach its ROM `$84` Y sentinel.")
-	var nested_return := _pop_rts(stack, int(registers["sp"]))
+	var nested_return: Dictionary
+	if logical_stack_mode:
+		nested_return = _pop_logical_rts(logical_stack)
+	else:
+		nested_return = _pop_rts(stack, int(registers["sp"]))
 	if int(nested_return["return_pc"]) != 0xA881:
 		return _failure("The internal `$A8CD RTS` did not return to `$A881`.")
-	registers["sp"] = int(nested_return["sp"])
+	if not logical_stack_mode:
+		registers["sp"] = int(nested_return["sp"])
 	registers["pc"] = 0xA881
 	cpu_cycles += 6
 	instruction_count += 1
@@ -378,6 +463,8 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 	registers["p"] = _set_nz(int(registers["p"]), formation)
 	ram_after[0x002C] = formation
 	writes.append({"source_pc": 0xA8A6, "address": 0x002C, "value": formation})
+	_append_ram_write_timeline(ram_write_timeline, cpu_cycles + 4 + 3,
+		0xA8A6, 0x002C, formation)
 	cpu_cycles += 4 + 3
 	instruction_count += 2
 	registers["x"] = int(ram_after[0x0026])
@@ -389,6 +476,8 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 	registers["p"] = _set_nz(int(registers["p"]), home_team_id)
 	ram_after[0x002A] = home_team_id
 	writes.append({"source_pc": 0xA8AD, "address": 0x002A, "value": home_team_id})
+	_append_ram_write_timeline(ram_write_timeline, cpu_cycles + 4 + 3,
+		0xA8AD, 0x002A, home_team_id)
 	cpu_cycles += 4 + 3
 	instruction_count += 2
 	var match_index := int(ram_after[0x0026])
@@ -405,16 +494,30 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 	instruction_count += 1
 	ram_after[0x002B] = int(registers["a"])
 	writes.append({"source_pc": 0xA8B4, "address": 0x002B, "value": int(registers["a"])})
+	_append_ram_write_timeline(ram_write_timeline, cpu_cycles + 3,
+		0xA8B4, 0x002B, int(registers["a"]))
 	cpu_cycles += 3
 	instruction_count += 1
-	var outer_return := _pop_rts(stack, int(registers["sp"]))
-	if int(outer_return["return_pc"]) != RETURN_PC \
-			or int(outer_return["sp"]) != pre_call_sp:
-		return _failure("The outer `$A8B6 RTS` did not return to the caller with a balanced stack.")
-	registers["sp"] = int(outer_return["sp"])
+	var outer_return: Dictionary
+	if logical_stack_mode:
+		outer_return = _pop_logical_rts(logical_stack)
+		if int(outer_return.get("return_pc", -1)) != RETURN_PC or not logical_stack.is_empty():
+			return _failure("The outer `$A8B6 RTS` did not consume the logical caller frame and return to `$80FD`.")
+	else:
+		outer_return = _pop_rts(stack, int(registers["sp"]))
+		if int(outer_return["return_pc"]) != RETURN_PC \
+				or int(outer_return["sp"]) != pre_call_sp:
+			return _failure("The outer `$A8B6 RTS` did not return to the caller with a balanced stack.")
+		registers["sp"] = int(outer_return["sp"])
 	registers["pc"] = RETURN_PC
 	cpu_cycles += 6
 	instruction_count += 1
+	if logical_stack_mode:
+		# The selector's final ADC defines N/Z/C/V; other status bits pass
+		# through from the caller with their incoming knowledge unchanged.
+		var known_mask := p_known_mask | 0xC3
+		registers["p_known_mask"] = known_mask
+		registers["p_known_value"] = int(registers["p"]) & known_mask
 
 	return {
 		"ok": true,
@@ -427,6 +530,7 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 			"status": "returned",
 			"source_event_id": source_event_id,
 			"source_execution": "hash_checked_6502_subset_through_real_rts",
+			"stack_model": "logical_source_jsr_frames" if logical_stack_mode else "physical_stack_page",
 			"nested_jsr_return": {"caller_pc": 0xA87E, "target_pc": ROSTER_COPY_TRAMPOLINE_PC,
 				"body_tailcall_pc": 0xA8B7, "return_pc": 0xA881, "rts_pc": 0xA8CD},
 			"post_registers": registers.duplicate(true),
@@ -438,11 +542,17 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 		"roster_loop_iterations": 11,
 		"instruction_count": instruction_count,
 		"cpu_cycles_without_interrupts": cpu_cycles,
+		"ram_write_timeline": ram_write_timeline,
+		"ram_write_timeline_scope": "ROM-derived callee RAM writes from `$A20F` through `$A8B6`; the nested JSR stack push is included only with a physical stack, and asynchronous NMI/IRQ writes are not included",
+		"ram_write_timeline_cycle_unit": "6502 CPU cycles after `$A20F` entry; write offset is the final STA/INC cycle",
+		"logical_stack_timeline": logical_stack_timeline if logical_stack_mode else [],
+		"physical_nested_jsr_stack_writes_included": not logical_stack_mode,
 		"entry_registers": cpu_state.duplicate(true),
 		"return_registers": registers,
 		"ram_writes": writes,
 		"ram_after": ram_after,
-		"stack_after": stack,
+		"stack_after": logical_stack if logical_stack_mode else stack,
+		"physical_stack_mode": not logical_stack_mode,
 		"live_mapper_updated": false,
 		"emulator_data_used": false,
 		"trace_state_used": false,
@@ -491,6 +601,49 @@ func _bytes_at(bytes: PackedByteArray, offset: int, expected: PackedByteArray) -
 			and bytes.slice(offset, offset + expected.size()) == expected
 
 
+## Materializes only the prefix of the source-write timeline whose final write
+## cycles have elapsed. This is a write-timeline consumer, not an interrupt or
+## frame clock; asynchronous handler writes are outside the timeline.
+func apply_ram_write_timeline_through_cycle(ram_before: Dictionary,
+		timeline: Array[Dictionary], cycle_limit: int) -> Dictionary:
+	if cycle_limit < 0:
+		return {"ok": false, "error": "Cycle limit must be nonnegative."}
+	var ram_after_prefix := ram_before.duplicate(true)
+	var last_cycle_offset := -1
+	var applied_write_count := 0
+	for event: Dictionary in timeline:
+		var cycle_offset := int(event.get("source_cycle_offset", -1))
+		var address := int(event.get("address", -1))
+		var value := int(event.get("value", -1))
+		if cycle_offset < last_cycle_offset or cycle_offset < 0 \
+				or address < 0 or address > 0xFFFF or value < 0 or value > 0xFF:
+			return {"ok": false, "error": "Source write timeline is malformed or not cycle-ordered."}
+		last_cycle_offset = cycle_offset
+		if cycle_offset > cycle_limit:
+			continue
+		ram_after_prefix[address] = value
+		applied_write_count += 1
+	return {
+		"ok": true,
+		"ram_after_prefix": ram_after_prefix,
+		"applied_write_count": applied_write_count,
+		"last_applied_cycle_offset": int(timeline[applied_write_count - 1].get("source_cycle_offset", -1)) if applied_write_count > 0 else -1,
+		"all_timeline_writes_applied": applied_write_count == timeline.size(),
+		"asynchronous_nmi_irq_writes_included": false,
+	}
+
+
+func _append_ram_write_timeline(timeline: Array[Dictionary], cycle_offset: int,
+		source_pc: int, address: int, value: int) -> void:
+	timeline.append({
+		"sequence": timeline.size(),
+		"source_pc": source_pc,
+		"address": address,
+		"value": value,
+		"source_cycle_offset": cycle_offset,
+	})
+
+
 func _push_jsr(stack: PackedByteArray, sp: int, pushed_return: int) -> bool:
 	if stack.size() != 0x100:
 		return false
@@ -506,6 +659,20 @@ func _pop_rts(stack: PackedByteArray, sp: int) -> Dictionary:
 	var high_index := (sp + 2) & 0xFF
 	var high := int(stack[high_index])
 	return {"return_pc": ((high << 8) | low) + 1, "sp": (sp + 2) & 0xFF}
+
+
+func _pop_logical_rts(frames: Array[Dictionary]) -> Dictionary:
+	if frames.is_empty():
+		return {"return_pc": -1, "error": "logical stack underflow"}
+	var frame: Dictionary = frames.pop_back()
+	var return_word := int(frame.get("return_word", -1))
+	if return_word < 0 or return_word > 0xFFFF:
+		return {"return_pc": -1, "error": "logical frame has no return word"}
+	return {
+		"return_pc": return_word + 1,
+		"frame": frame,
+		"remaining_depth": frames.size(),
+	}
 
 
 func _peek_return_word(stack: PackedByteArray, entry_sp: int) -> int:

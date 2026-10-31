@@ -1,0 +1,864 @@
+{
+  "schema": "ct2-kickoff-preset-irq-source-schedule-v1",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "route_identity": "turkish-fresh-kickoff-capture-20261027",
+  "input_route": {
+    "sha256": "6cae92ff2b6a77fcc05c34c57c734bbff47930ada172633cb4a4b830cc3e77dc",
+    "first_source_frame": 0,
+    "last_source_frame": 9042,
+    "source_files": [
+      "reference/diagnostics/kickoff_select_test_20261027/opening_replay.csv",
+      "reference/diagnostics/kickoff_select_test_20261027/post_title_inputs.csv"
+    ],
+    "emulator_state_used": false
+  },
+  "source_model": {
+    "script": "tools/diagnostics/step_rom_source_cpu_ppu_dmc_mmc3_assert_candidate.py",
+    "script_sha256": "b0f528dfd73f79cf7148a5a2f6a9f0683cde22a03c1705deb8e5215864d888db",
+    "cpu_engine": "Py65 1.2.0; diagnostics/build-time only",
+    "fceux_trace_used_as_input": false,
+    "ppu_model": "ROM-independent NTSC dot/frame model with simplified NewPPU MMC3 slot-2 scanline hook; not a complete PPU fetch pipeline",
+    "physical_nes_timing_proven": false
+  },
+  "selector_call_clock": {
+    "entry": {
+      "source_frame": 7258,
+      "source_cycle": 216143875,
+      "pc": "$A20F",
+      "prg_bank_8k": 2,
+      "cpu": {
+        "a": 7,
+        "x": 2,
+        "y": 0,
+        "p": 48,
+        "sp": 38
+      },
+      "caller_return_word": "$80FC"
+    },
+    "return": {
+      "source_frame": 7266,
+      "source_cycle": 216367117,
+      "instruction_pc": "$A8B6",
+      "prg_bank_8k": 2,
+      "return_pc": "$80FD",
+      "cpu": {
+        "a": 3,
+        "x": 0,
+        "y": 132,
+        "p": 48,
+        "sp": 40
+      },
+      "consumed_caller_return_word": "$80FC"
+    },
+    "elapsed_cpu_cycles": 223242,
+    "per_frame_intervals": [
+      {
+        "source_frame": 7258,
+        "frame_cycle_start": 216117093,
+        "frame_cycle_end": 216146874,
+        "selector_active_cycle_start": 216143875,
+        "selector_active_cycle_end": 216146874,
+        "selector_elapsed_cpu_cycles": 2999
+      },
+      {
+        "source_frame": 7259,
+        "frame_cycle_start": 216146874,
+        "frame_cycle_end": 216176652,
+        "selector_active_cycle_start": 216146874,
+        "selector_active_cycle_end": 216176652,
+        "selector_elapsed_cpu_cycles": 29778
+      },
+      {
+        "source_frame": 7260,
+        "frame_cycle_start": 216176652,
+        "frame_cycle_end": 216206434,
+        "selector_active_cycle_start": 216176652,
+        "selector_active_cycle_end": 216206434,
+        "selector_elapsed_cpu_cycles": 29782
+      },
+      {
+        "source_frame": 7261,
+        "frame_cycle_start": 216206434,
+        "frame_cycle_end": 216236213,
+        "selector_active_cycle_start": 216206434,
+        "selector_active_cycle_end": 216236213,
+        "selector_elapsed_cpu_cycles": 29779
+      },
+      {
+        "source_frame": 7262,
+        "frame_cycle_start": 216236213,
+        "frame_cycle_end": 216265996,
+        "selector_active_cycle_start": 216236213,
+        "selector_active_cycle_end": 216265996,
+        "selector_elapsed_cpu_cycles": 29783
+      },
+      {
+        "source_frame": 7263,
+        "frame_cycle_start": 216265996,
+        "frame_cycle_end": 216295775,
+        "selector_active_cycle_start": 216265996,
+        "selector_active_cycle_end": 216295775,
+        "selector_elapsed_cpu_cycles": 29779
+      },
+      {
+        "source_frame": 7264,
+        "frame_cycle_start": 216295775,
+        "frame_cycle_end": 216325556,
+        "selector_active_cycle_start": 216295775,
+        "selector_active_cycle_end": 216325556,
+        "selector_elapsed_cpu_cycles": 29781
+      },
+      {
+        "source_frame": 7265,
+        "frame_cycle_start": 216325556,
+        "frame_cycle_end": 216355335,
+        "selector_active_cycle_start": 216325556,
+        "selector_active_cycle_end": 216355335,
+        "selector_elapsed_cpu_cycles": 29779
+      },
+      {
+        "source_frame": 7266,
+        "frame_cycle_start": 216355335,
+        "frame_cycle_end": 216372505,
+        "selector_active_cycle_start": 216355335,
+        "selector_active_cycle_end": 216367117,
+        "selector_elapsed_cpu_cycles": 11782
+      }
+    ],
+    "interrupt_accept_return_spans": [
+      {
+        "kind": "NMI",
+        "source_frame": 7259,
+        "acceptance_cycle": 216146880,
+        "pc_before": "$A14C",
+        "mask_before": 0,
+        "vector_pc": "$C500",
+        "return_source_frame": 7259,
+        "return_cycle": 216149142,
+        "return_pc": "$A14C"
+      },
+      {
+        "kind": "IRQ",
+        "source_frame": 7259,
+        "acceptance_cycle": 216163783,
+        "pc_before": "$A1F1",
+        "mask_before": 0,
+        "vector_pc": "$C506",
+        "return_source_frame": 7259,
+        "return_cycle": 216164042,
+        "return_pc": "$A1F1"
+      },
+      {
+        "kind": "NMI",
+        "source_frame": 7260,
+        "acceptance_cycle": 216176660,
+        "pc_before": "$A14A",
+        "mask_before": 0,
+        "vector_pc": "$C500",
+        "return_source_frame": 7260,
+        "return_cycle": 216178922,
+        "return_pc": "$A14A"
+      },
+      {
+        "kind": "IRQ",
+        "source_frame": 7260,
+        "acceptance_cycle": 216193562,
+        "pc_before": "$A1F1",
+        "mask_before": 0,
+        "vector_pc": "$C506",
+        "return_source_frame": 7260,
+        "return_cycle": 216193821,
+        "return_pc": "$A1F1"
+      },
+      {
+        "kind": "NMI",
+        "source_frame": 7261,
+        "acceptance_cycle": 216206439,
+        "pc_before": "$A1F3",
+        "mask_before": 0,
+        "vector_pc": "$C500",
+        "return_source_frame": 7261,
+        "return_cycle": 216208701,
+        "return_pc": "$A1F3"
+      },
+      {
+        "kind": "IRQ",
+        "source_frame": 7261,
+        "acceptance_cycle": 216223345,
+        "pc_before": "$A1ED",
+        "mask_before": 0,
+        "vector_pc": "$C506",
+        "return_source_frame": 7261,
+        "return_cycle": 216223604,
+        "return_pc": "$A1ED"
+      },
+      {
+        "kind": "NMI",
+        "source_frame": 7262,
+        "acceptance_cycle": 216236221,
+        "pc_before": "$A1F7",
+        "mask_before": 0,
+        "vector_pc": "$C500",
+        "return_source_frame": 7262,
+        "return_cycle": 216238483,
+        "return_pc": "$A1F7"
+      },
+      {
+        "kind": "IRQ",
+        "source_frame": 7262,
+        "acceptance_cycle": 216253127,
+        "pc_before": "$A15B",
+        "mask_before": 0,
+        "vector_pc": "$C506",
+        "return_source_frame": 7262,
+        "return_cycle": 216253386,
+        "return_pc": "$A15B"
+      },
+      {
+        "kind": "NMI",
+        "source_frame": 7263,
+        "acceptance_cycle": 216266004,
+        "pc_before": "$A1F3",
+        "mask_before": 0,
+        "vector_pc": "$C500",
+        "return_source_frame": 7263,
+        "return_cycle": 216268266,
+        "return_pc": "$A1F3"
+      },
+      {
+        "kind": "IRQ",
+        "source_frame": 7263,
+        "acceptance_cycle": 216282906,
+        "pc_before": "$A15B",
+        "mask_before": 0,
+        "vector_pc": "$C506",
+        "return_source_frame": 7263,
+        "return_cycle": 216283165,
+        "return_pc": "$A15B"
+      },
+      {
+        "kind": "NMI",
+        "source_frame": 7264,
+        "acceptance_cycle": 216295783,
+        "pc_before": "$A1F3",
+        "mask_before": 0,
+        "vector_pc": "$C500",
+        "return_source_frame": 7264,
+        "return_cycle": 216298045,
+        "return_pc": "$A1F3"
+      },
+      {
+        "kind": "IRQ",
+        "source_frame": 7264,
+        "acceptance_cycle": 216312687,
+        "pc_before": "$A14E",
+        "mask_before": 0,
+        "vector_pc": "$C506",
+        "return_source_frame": 7264,
+        "return_cycle": 216312946,
+        "return_pc": "$A14E"
+      },
+      {
+        "kind": "NMI",
+        "source_frame": 7265,
+        "acceptance_cycle": 216325561,
+        "pc_before": "$A1ED",
+        "mask_before": 0,
+        "vector_pc": "$C500",
+        "return_source_frame": 7265,
+        "return_cycle": 216327823,
+        "return_pc": "$A1ED"
+      },
+      {
+        "kind": "IRQ",
+        "source_frame": 7265,
+        "acceptance_cycle": 216342466,
+        "pc_before": "$A14E",
+        "mask_before": 0,
+        "vector_pc": "$C506",
+        "return_source_frame": 7265,
+        "return_cycle": 216342725,
+        "return_pc": "$A14E"
+      },
+      {
+        "kind": "NMI",
+        "source_frame": 7266,
+        "acceptance_cycle": 216355343,
+        "pc_before": "$A15B",
+        "mask_before": 0,
+        "vector_pc": "$C500",
+        "return_source_frame": 7266,
+        "return_cycle": 216357605,
+        "return_pc": "$A15B"
+      }
+    ],
+    "interrupt_spans_complete": true,
+    "source_semantics": "ROM-only candidate CPU timing for the recorded input route; no FCEUX state or trace values used",
+    "intermediate_ppu_fetch_parity": false
+  },
+  "irq_wait_release": {
+    "runtime_consumable_fields": [
+      "irq_edge"
+    ],
+    "runtime_must_execute_rom_irq_handlers": true,
+    "source_event_id": "fresh-kickoff-893b-irq-edge:7266:216372246",
+    "irq_edge": {
+      "source_frame": 7266,
+      "source_cycle": 216372246,
+      "ppu_line": 128,
+      "ppu_dot": 274,
+      "counter_before": 1,
+      "counter_after": 0,
+      "latch": 128,
+      "irq_enabled": 1
+    },
+    "candidate_execution_audit_only": {
+      "wait_state": {
+        "source_frame": 7266,
+        "cpu_cycle": 216372246,
+        "cpu": {
+          "pc": 35131,
+          "a": 4,
+          "x": 6,
+          "y": 0,
+          "p": 48,
+          "prev_p": 48,
+          "sp": 38
+        },
+        "wait_ram": {
+          "27": 192,
+          "120": 4,
+          "121": 64,
+          "59": 85
+        },
+        "ppu": {
+          "line": 128,
+          "dot": 0,
+          "ctrl": 136,
+          "mask": 30,
+          "status": 0,
+          "addr": 8704,
+          "vram_addr": 8704
+        },
+        "mmc3": {
+          "registers": [
+            60,
+            62,
+            240,
+            113,
+            102,
+            103,
+            0,
+            6
+          ],
+          "command": 7,
+          "latch": 128,
+          "counter": 0,
+          "reload_pending": false,
+          "irq_enabled": true,
+          "irq_pending": true
+        },
+        "wait_ram_write_provenance": {
+          "$001B": {
+            "expected_wait_value": 192,
+            "write_count_before_first_wait": 14509,
+            "first_write": {
+              "source_pc": 50800,
+              "prg_bank": 30,
+              "address": 27,
+              "before": 0,
+              "value": 0,
+              "source_frame": 4,
+              "source_cycle": 89672
+            },
+            "recent_writes": [
+              {
+                "source_pc": 41267,
+                "prg_bank": 2,
+                "address": 27,
+                "before": 64,
+                "value": 192,
+                "source_frame": 7259,
+                "source_cycle": 216148201
+              },
+              {
+                "source_pc": 41267,
+                "prg_bank": 2,
+                "address": 27,
+                "before": 192,
+                "value": 192,
+                "source_frame": 7260,
+                "source_cycle": 216177981
+              },
+              {
+                "source_pc": 41267,
+                "prg_bank": 2,
+                "address": 27,
+                "before": 192,
+                "value": 192,
+                "source_frame": 7261,
+                "source_cycle": 216207760
+              },
+              {
+                "source_pc": 41267,
+                "prg_bank": 2,
+                "address": 27,
+                "before": 192,
+                "value": 192,
+                "source_frame": 7262,
+                "source_cycle": 216237542
+              },
+              {
+                "source_pc": 41267,
+                "prg_bank": 2,
+                "address": 27,
+                "before": 192,
+                "value": 192,
+                "source_frame": 7263,
+                "source_cycle": 216267325
+              },
+              {
+                "source_pc": 41267,
+                "prg_bank": 2,
+                "address": 27,
+                "before": 192,
+                "value": 192,
+                "source_frame": 7264,
+                "source_cycle": 216297104
+              },
+              {
+                "source_pc": 41267,
+                "prg_bank": 2,
+                "address": 27,
+                "before": 192,
+                "value": 192,
+                "source_frame": 7265,
+                "source_cycle": 216326882
+              },
+              {
+                "source_pc": 41267,
+                "prg_bank": 2,
+                "address": 27,
+                "before": 192,
+                "value": 192,
+                "source_frame": 7266,
+                "source_cycle": 216356664
+              }
+            ]
+          },
+          "$0078": {
+            "expected_wait_value": 4,
+            "write_count_before_first_wait": 17632,
+            "first_write": {
+              "source_pc": 50800,
+              "prg_bank": 30,
+              "address": 120,
+              "before": 0,
+              "value": 0,
+              "source_frame": 4,
+              "source_cycle": 90695
+            },
+            "recent_writes": [
+              {
+                "source_pc": 41411,
+                "prg_bank": 2,
+                "address": 120,
+                "before": 4,
+                "value": 0,
+                "source_frame": 7262,
+                "source_cycle": 216253289
+              },
+              {
+                "source_pc": 41126,
+                "prg_bank": 2,
+                "address": 120,
+                "before": 0,
+                "value": 4,
+                "source_frame": 7263,
+                "source_cycle": 216266733
+              },
+              {
+                "source_pc": 41411,
+                "prg_bank": 2,
+                "address": 120,
+                "before": 4,
+                "value": 0,
+                "source_frame": 7263,
+                "source_cycle": 216283068
+              },
+              {
+                "source_pc": 41126,
+                "prg_bank": 2,
+                "address": 120,
+                "before": 0,
+                "value": 4,
+                "source_frame": 7264,
+                "source_cycle": 216296512
+              },
+              {
+                "source_pc": 41411,
+                "prg_bank": 2,
+                "address": 120,
+                "before": 4,
+                "value": 0,
+                "source_frame": 7264,
+                "source_cycle": 216312849
+              },
+              {
+                "source_pc": 41126,
+                "prg_bank": 2,
+                "address": 120,
+                "before": 0,
+                "value": 4,
+                "source_frame": 7265,
+                "source_cycle": 216326290
+              },
+              {
+                "source_pc": 41411,
+                "prg_bank": 2,
+                "address": 120,
+                "before": 4,
+                "value": 0,
+                "source_frame": 7265,
+                "source_cycle": 216342628
+              },
+              {
+                "source_pc": 41126,
+                "prg_bank": 2,
+                "address": 120,
+                "before": 0,
+                "value": 4,
+                "source_frame": 7266,
+                "source_cycle": 216356072
+              }
+            ]
+          },
+          "$0079": {
+            "expected_wait_value": 64,
+            "write_count_before_first_wait": 63,
+            "first_write": {
+              "source_pc": 50800,
+              "prg_bank": 30,
+              "address": 121,
+              "before": 0,
+              "value": 0,
+              "source_frame": 4,
+              "source_cycle": 90706
+            },
+            "recent_writes": [
+              {
+                "source_pc": 42244,
+                "prg_bank": 2,
+                "address": 121,
+                "before": 53,
+                "value": 54,
+                "source_frame": 3651,
+                "source_cycle": 108702760
+              },
+              {
+                "source_pc": 42244,
+                "prg_bank": 2,
+                "address": 121,
+                "before": 54,
+                "value": 55,
+                "source_frame": 3652,
+                "source_cycle": 108732410
+              },
+              {
+                "source_pc": 35139,
+                "prg_bank": 0,
+                "address": 121,
+                "before": 55,
+                "value": 0,
+                "source_frame": 3652,
+                "source_cycle": 108744202
+              },
+              {
+                "source_pc": 35139,
+                "prg_bank": 0,
+                "address": 121,
+                "before": 0,
+                "value": 64,
+                "source_frame": 3967,
+                "source_cycle": 118139067
+              },
+              {
+                "source_pc": 35139,
+                "prg_bank": 0,
+                "address": 121,
+                "before": 64,
+                "value": 64,
+                "source_frame": 4207,
+                "source_cycle": 125273973
+              },
+              {
+                "source_pc": 35139,
+                "prg_bank": 0,
+                "address": 121,
+                "before": 64,
+                "value": 24,
+                "source_frame": 4577,
+                "source_cycle": 136292765
+              },
+              {
+                "source_pc": 35139,
+                "prg_bank": 0,
+                "address": 121,
+                "before": 24,
+                "value": 0,
+                "source_frame": 4691,
+                "source_cycle": 139688187
+              },
+              {
+                "source_pc": 35139,
+                "prg_bank": 0,
+                "address": 121,
+                "before": 0,
+                "value": 64,
+                "source_frame": 4708,
+                "source_cycle": 140204756
+              }
+            ]
+          },
+          "$003B": {
+            "expected_wait_value": 85,
+            "write_count_before_first_wait": 30642,
+            "first_write": {
+              "source_pc": 50800,
+              "prg_bank": 30,
+              "address": 59,
+              "before": 0,
+              "value": 0,
+              "source_frame": 4,
+              "source_cycle": 90024
+            },
+            "recent_writes": [
+              {
+                "source_pc": 50301,
+                "prg_bank": 30,
+                "address": 59,
+                "before": 85,
+                "value": 170,
+                "source_frame": 7264,
+                "source_cycle": 216312717
+              },
+              {
+                "source_pc": 50347,
+                "prg_bank": 30,
+                "address": 59,
+                "before": 170,
+                "value": 85,
+                "source_frame": 7264,
+                "source_cycle": 216312940
+              },
+              {
+                "source_pc": 50214,
+                "prg_bank": 30,
+                "address": 59,
+                "before": 85,
+                "value": 170,
+                "source_frame": 7265,
+                "source_cycle": 216325591
+              },
+              {
+                "source_pc": 50287,
+                "prg_bank": 30,
+                "address": 59,
+                "before": 170,
+                "value": 85,
+                "source_frame": 7265,
+                "source_cycle": 216327817
+              },
+              {
+                "source_pc": 50301,
+                "prg_bank": 30,
+                "address": 59,
+                "before": 85,
+                "value": 170,
+                "source_frame": 7265,
+                "source_cycle": 216342496
+              },
+              {
+                "source_pc": 50347,
+                "prg_bank": 30,
+                "address": 59,
+                "before": 170,
+                "value": 85,
+                "source_frame": 7265,
+                "source_cycle": 216342719
+              },
+              {
+                "source_pc": 50214,
+                "prg_bank": 30,
+                "address": 59,
+                "before": 85,
+                "value": 170,
+                "source_frame": 7266,
+                "source_cycle": 216355373
+              },
+              {
+                "source_pc": 50287,
+                "prg_bank": 30,
+                "address": 59,
+                "before": 170,
+                "value": 85,
+                "source_frame": 7266,
+                "source_cycle": 216357599
+              }
+            ]
+          }
+        },
+        "caller_return_word": 33046
+      },
+      "interrupt_acceptance": {
+        "source_frame": 7266,
+        "cycle": 216372246,
+        "kind": "IRQ",
+        "pc_before": "$893B",
+        "mask_before": 0,
+        "irq_pending": 1
+      },
+      "source_path": [
+        50438,
+        51233,
+        51235,
+        51237,
+        50296,
+        50298,
+        50300,
+        50301,
+        50303,
+        50305,
+        50307,
+        50309,
+        50311,
+        50313,
+        50316,
+        50318,
+        50321,
+        41312,
+        41315,
+        41318,
+        41320,
+        41322,
+        41324,
+        41326,
+        41327,
+        41326,
+        41327,
+        41326,
+        41327,
+        41326,
+        41327,
+        41326,
+        41327,
+        41326,
+        41327,
+        41329,
+        41331,
+        41333,
+        41336,
+        41339,
+        41341,
+        41343,
+        41346,
+        41348,
+        41351,
+        41354,
+        41384,
+        41386,
+        41388,
+        41408,
+        41411,
+        41413,
+        41415,
+        41419,
+        41421,
+        41423,
+        41425,
+        41428,
+        41431,
+        41433,
+        41435,
+        41437,
+        41440,
+        41443,
+        41418,
+        50324,
+        50326,
+        50328,
+        50331,
+        50333,
+        50336,
+        50338,
+        50341,
+        50343,
+        50345,
+        50347,
+        50349
+      ],
+      "release_write": {
+        "source_pc": 41411,
+        "prg_bank": 2,
+        "address": 120,
+        "before": 4,
+        "value": 0,
+        "source_frame": 7266,
+        "source_cycle": 216372408
+      },
+      "return_state": {
+        "source_frame": 7266,
+        "cpu_cycle": 216372505,
+        "cpu": {
+          "pc": 35131,
+          "a": 4,
+          "x": 6,
+          "y": 0,
+          "p": 48,
+          "prev_p": 100,
+          "sp": 38
+        },
+        "wait_ram": {
+          "27": 192,
+          "120": 0,
+          "121": 64,
+          "59": 85
+        },
+        "ppu": {
+          "line": 131,
+          "dot": 0,
+          "ctrl": 136,
+          "mask": 30,
+          "status": 0,
+          "addr": 8704,
+          "vram_addr": 8704
+        },
+        "mmc3": {
+          "registers": [
+            0,
+            2,
+            240,
+            113,
+            102,
+            103,
+            0,
+            6
+          ],
+          "command": 7,
+          "latch": 128,
+          "counter": 127,
+          "reload_pending": false,
+          "irq_enabled": false,
+          "irq_pending": false
+        }
+      },
+      "interrupt_stack_balanced": true
+    }
+  },
+  "validation": {
+    "runtime_rom_dependency": false,
+    "runtime_emulator_dependency": false,
+    "complete_ppu_fetch_parity": false,
+    "same_input_cycle_match_to_fceux": false
+  }
+}

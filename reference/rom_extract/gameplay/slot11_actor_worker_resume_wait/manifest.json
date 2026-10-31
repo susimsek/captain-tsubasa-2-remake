@@ -1,0 +1,280 @@
+{
+  "rom_file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "mapping": "iNES PRG begins at 0x0010. Fixed bank $1E maps CPU $C000-$FFFF to file 0x03C010+. MMC3 8 KiB bank $18 maps $8000-$9FFF to 0x030010+; bank $19 maps $A000-$BFFF to 0x032010+; bank $1A maps $8000-$9FFF to 0x034010+; paired bank $1B maps $A000-$BFFF to 0x036010+.",
+  "purpose": "ROM-derived source context for the slot-$11 $804A resume, match-zero F4/F5 dispatch, the $E8 delay, the traced $8218->$8234 table-driven event dispatch and bank-$19 event bytes, and the first fixed-bank $CC50->$CB0F yield.",
+  "spans": [
+    {
+      "file": "bank18_actor_worker_resume_804a_80fd.bin",
+      "cpu_address": "0x804A",
+      "file_offset": "0x03005A",
+      "length": 179,
+      "sha256": "9c07722c85a0670f8986a7e7a680bc205a587881383fd84276e520806f465c6e",
+      "description": "Slot-$11 continuation after the first saved JSR returns to $804A; includes worker dispatch/interpreter bytes and their inline vector words through $80FC.",
+      "bytes": "20 53 80 20 60 C5 4C 45 80 AD E3 05 D0 01 60 AD E9 05 F0 04 CE E9 05 60 AD E4 05 20 09 C5 6E 80 18 82 F2 82 AC E5 05 EE E5 05 B1 5F C9 F0 90 06 20 87 80 4C 6E 80 8D E9 05 EE E4 05 60 29 0F 20 09 C5 98 80 A0 80 B5 80 B8 80 CB 80 FD 81 A9 00 8D E3 05 68 68 60 A9 01 20 15 C5 AD 1C 00 10 F6 A9 00 8D E9 05 EE E4 05 68 68 60 4C 2D C5 AC E5 05 B1 5F AA C8 B1 5F 85 60 86 5F A9 00 8D E5 05 60 AC E5 05 B1 5F 20 EA 80 8A 0A 38 6D E5 05 A8 B1 5F AA C8 B1 5F 86 5F 85 60 A9 00 8D E5 05 60 20 09 C5 FD 80 06 81 0E 81 1E 81 22 81 38 81 CE 81 E4 81"
+    },
+    {
+      "file": "bank18_actor_stream_parameter73_9f42_9f46.bin",
+      "cpu_address": "0x9F42",
+      "file_offset": "0x031F52",
+      "length": 4,
+      "sha256": "d4f5396e00d1f589c24dc574574534d583449d089b06a9d8e9c32147db03757d",
+      "description": "First four bytes at the parameter-$73 actor-stream pointer. Bank-$18 $806E preincrements its RAM index but loads through the old Y, so it dispatches $F4 at index 0; selector $04 and match row 0 resolve the little-endian target $9F52."
+    },
+    {
+      "file": "fixed_c560_bank1a_call_stub.bin",
+      "cpu_address": "0xC560",
+      "file_offset": "0x03C570",
+      "length": 3,
+      "sha256": "170b3801f4df2a5789a9ef9fbdc6c389c58afdad9c58a94d3c7fad8e6563ccbc",
+      "description": "Fixed-bank vector JMP from $C560 to $CF72.",
+      "bytes": "4C 72 CF"
+    },
+    {
+      "file": "fixed_cf72_bank1a_call_and_restore.bin",
+      "cpu_address": "0xCF72",
+      "file_offset": "0x03CF82",
+      "length": 29,
+      "sha256": "8ef4c31ce9f19ea12db252480ab5342a4429e37c3f81148bdde0286ad03b3c13",
+      "description": "Maps MMC3 banks $1A/$1B, calls bank-$1A entry $802A, restores $18/$19, and returns through $CE2D.",
+      "bytes": "48 A5 22 A9 1A 85 24 A9 1B 85 25 20 2D CE 68 20 2A 80 A9 18 85 24 A9 19 85 25 4C 2D CE"
+    },
+    {
+      "file": "bank1a_worker_entry_802a_802d.bin",
+      "cpu_address": "0x802A",
+      "file_offset": "0x03403A",
+      "length": 3,
+      "sha256": "d8ec35aefd2671a7a810a2fa342db297bfb35011862ec3b907aa09fced64da90",
+      "description": "Bank-$1A entry JMP to the paired bank-$1B address $A1EB.",
+      "bytes": "4C EB A1"
+    },
+    {
+      "file": "fixed_task_yield_waiter_cc46_cc5d.bin",
+      "cpu_address": "0xCC46",
+      "file_offset": "0x03CC56",
+      "length": 23,
+      "sha256": "dce4d011f0e612ea074e546e43c28c5395220f2af924a49aee4b35c2491775e3",
+      "description": "Fixed-bank wait loop containing $CC50 JSR $CB0F; after the yield returns at $CC53, it polls $0515, repeats the yield while nonzero, and sets $0515 to one after the zero branch.",
+      "bytes": "A9 00 8D F4 05 A9 06 48 A9 01 20 0F CB AD 15 05 D0 F6 A9 01 8D 15 05"
+    },
+    {
+      "file": "fixed_wait_packet_builder_CC53_CC9E.bin",
+      "cpu_address": "0xCC53",
+      "file_offset": "0x03CC63",
+      "length": 75,
+      "sha256": "681bf402c35efba946da16d63cb53787bf50ed5ba87261929c10d19906b66d0c",
+      "description": "The yielded $CC53 wait branch and source loop through the $CC9C BPL back-edge or its first exit. On a cleared $0515 flag it fills and prepares the current $04A5 packet, raises the pending-queue flag, decrements the saved six-pass counter, and may yield again at $CC50.",
+      "bytes": "AD 15 05 D0 F6 A9 01 8D 15 05 A0 4F A2 00 8A 9D A5 04 E8 88 D0 F9 A9 18 8D A5 04 8D C0 04 A9 20 8D A6 04 68 48 09 08 4A 6E A6 04 4A 6E A6 04 09 20 8D A7 04 8D C2 04 AD A6 04 18 69 20 8D C1 04 A9 80 8D 15 05 68 38 E9 01 10 AF"
+    },
+    {
+      "file": "fixed_wait_counter_tail_CC9E_CCD1.bin",
+      "cpu_address": "0xCC9E",
+      "file_offset": "0x03CCAE",
+      "length": 52,
+      "sha256": "28ae864c35cf13601f8cb93f4bc13f0cadcd64b9d401fff6f0bef8e2b656bee0",
+      "description": "The zero/negative pass-counter tail after $CC9C, including its repeated $CCA0 wait call, the final $23E0 packet construction, the final $CCCE yield, and RTS at $CCD1.",
+      "bytes": "A9 01 20 0F CB AD 15 05 D0 F6 A9 01 8D 15 05 A9 20 8D A5 04 A9 E0 8D A6 04 A9 23 8D A7 04 A2 00 8A 9D A8 04 E8 E0 21 D0 F8 A9 80 8D 15 05 A9 01 20 0F CB 60"
+    },
+    {
+      "file": "bank18_actor_stream_f4_f5_9f42_9f53.bin",
+      "bank": "bank18",
+      "cpu_address": "0x9F42",
+      "file_offset": "0x031F52",
+      "length": 18,
+      "sha256": "907c3653f2e64fa9d27a0a14a7dd38e404f0f1c05a97c0367be24e587f5ebadf",
+      "bytes": "F4 04 52 9F E1 9F 8B A0 2A A1 25 A2 92 A2 02 A3 F5 02",
+      "description": "Stream bytes for the source path: $F4 dispatches $80CB, selector $04 resolves the match-zero target $9F52, and that target begins with command $F5 followed by $02."
+    },
+    {
+      "file": "bank18_match_index_pointer_resolver_8122_8138.bin",
+      "bank": "bank18",
+      "cpu_address": "0x8122",
+      "file_offset": "0x030132",
+      "length": 22,
+      "sha256": "f4acc27853404adda00ba3dcee5f5f4ecdb2939a5d026a6d8f459261497d35b0",
+      "bytes": "A2 00 A5 26 DD 31 81 90 05 F0 03 E8 D0 F6 60 05 0B 0F 15 16 1A 21",
+      "description": "$26 threshold selector and comparison table used by the F4 pointer command"
+    },
+    {
+      "file": "bank18_actor_stream_command_f5_81fd_8200.bin",
+      "bank": "bank18",
+      "cpu_address": "0x81FD",
+      "file_offset": "0x03020D",
+      "length": 3,
+      "sha256": "9ae06ade354ced65b80ae98704cd748b28b3fb80829dae0172ce09859fa37405",
+      "bytes": "20 2D C5",
+      "description": "The worker's inline vector row for command $F5 resolves to $81FD, whose first instruction is JSR $C52D before the first $CC46 wait/yield."
+    },
+    {
+      "file": "fixed_c52d_jump_to_cc46.bin",
+      "bank": "fixed",
+      "cpu_address": "0xC52D",
+      "file_offset": "0x03C53D",
+      "length": 3,
+      "sha256": "eb93189d38ebaea8201970900e5b276a27c54c6fa2001a705945cb1d5172f371",
+      "bytes": "4C 46 CC",
+      "description": "fixed-bank C52D bridge to the CC46 wait/yield helper"
+    },
+    {
+      "file": "bank18_actor_stream_f5_tail_8200_8217.bin",
+      "bank": "bank18",
+      "cpu_address": "0x8200",
+      "file_offset": "0x030210",
+      "length": 24,
+      "sha256": "f99ead3dbc9481250bab0c306693651ab2ac705bd5feeb82ea3975167c3663a0",
+      "bytes": "A9 0D 8D F3 05 A9 80 8D F4 05 AC E5 05 B1 5F 8D E9 05 EE E5 05 68 68 60",
+      "description": "F5 command continuation after the $C52D waiter returns. It sets the actor delay/mode, reads parameter $02 from stream $9F53, advances $05E5, then pops the inline-dispatch frame and returns to $804D."
+    },
+    {
+      "file": "bank1b_actor_animation_gate_A1EB_A219.bin",
+      "bank": "bank1b",
+      "cpu_address": "0xA1EB",
+      "file_offset": "0x0361FB",
+      "length": 47,
+      "sha256": "7cf2b10130708c5b0a722741eb60d27e732672730c7bbfb515dd1f9a17122618",
+      "bytes": "AD F4 05 D0 01 60 10 19 A9 01 8D F4 05 AD F3 05 0A AA BD 92 A2 85 63 BD 93 A2 85 64 A9 00 8D F5 05 AD F5 05 F0 04 CE F5 05 60 A9 01 20 15 C5",
+      "description": "The bank-$1B `$A1EB` F5 animation gate through the `$A217 JSR $C515` wait call; live `$05F3=$0D` selects animation table entry 13 and the zero `$05F5` branch reaches the first scheduler yield."
+    },
+    {
+      "file": "bank1b_actor_animation_index_0D_A2AC_A2AD.bin",
+      "bank": "bank1b",
+      "cpu_address": "0xA2AC",
+      "file_offset": "0x0362BC",
+      "length": 2,
+      "sha256": "588eba1d324cbcd9381797960eb1a81d099ef8277be6a1f92b935389647e1ae2",
+      "bytes": "25 A4",
+      "description": "The little-endian pointer for animation index `$0D`; it resolves to `$A425`."
+    },
+    {
+      "file": "bank1b_actor_animation_command_loop_A21A_A291.bin",
+      "cpu_address": "0xA21A",
+      "file_offset": "0x03622A",
+      "length": 120,
+      "sha256": "c315087f3f361a05abbbc63748d1c890aea1a2be7f40fb325150cb71688f1cfd",
+      "description": "Bank-$1B F5 animation continuation: `$0515` wait gate, command parsing, packet-buffer writes, and return.",
+      "bytes": "AD 15 05 D0 F6 A9 01 8D 15 05 A0 00 B1 63 C9 FF D0 16 C8 B1 63 AA C8 B1 63 85 64 86 63 AD E3 05 D0 E8 8D F4 05 4C 24 A2 8D F5 05 C8 B1 63 0A AA BD 2A A4 85 3A BD 2B A4 85 3B A0 00 A2 00 B1 3A F0 22 9D A5 04 85 3C C8 B1 3A 9D A6 04 C8 B1 3A 9D A7 04 C8 E8 E8 E8 B1 3A 9D A5 04 E8 C8 C6 3C D0 F5 F0 DA 9D A5 04 A9 80 8D 15 05 A5 63 18 69 02 85 63 90 02 E6 64 60"
+    },
+    {
+      "file": "bank1b_actor_animation_stream_0D_A425_A426.bin",
+      "cpu_address": "0xA425",
+      "file_offset": "0x036435",
+      "length": 2,
+      "sha256": "c80e57d27a62d8f8ae98f6976e64d0a1e4f9cebe78cf5b16e79ecd927b985da6",
+      "description": "Animation-index `$0D` stream bytes: command `$EF`, pointer-table index `$00`.",
+      "bytes": "EF 00"
+    },
+    {
+      "file": "bank1b_actor_animation_pointer_00_A42A_A42B.bin",
+      "cpu_address": "0xA42A",
+      "file_offset": "0x03643A",
+      "length": 2,
+      "sha256": "48dceebd8704067b3697888d1f847f69d77a5fbbcb8e57ac3a9a0b41205e47cf",
+      "description": "Animation command `$EF` pointer row zero: maps the first packet stream to `$A46A`.",
+      "bytes": "6A A4"
+    },
+    {
+      "file": "bank1b_actor_animation_ef_00_ppu_packets_A46A_A48E.bin",
+      "cpu_address": "0xA46A",
+      "file_offset": "0x03647A",
+      "length": 37,
+      "sha256": "4fd878c7cc59ffec84362bfc6f973474f72c83087d302687958b844682b2d678",
+      "description": "ROM packet sequence selected by `$A425=$EF,$00`: six PPU packet records and a zero terminator.",
+      "bytes": "04 C8 22 00 B4 B5 E0 04 E8 22 00 B6 B7 E2 04 08 23 00 BC BD E8 04 28 23 00 BE BF EA 01 EA 23 50 01 F2 23 05 00"
+    },
+    {
+      "file": "bank18_actor_stream_followup_9f54_9f7f.bin",
+      "cpu_address": "0x9F54",
+      "file_offset": "0x031F64",
+      "length": 44,
+      "sha256": "79be558cb1fe9bfbf950a23486ed0da89c1dc37e20daa52feed8f6a124225fe4",
+      "description": "Bank-$18 actor animation continuation bytes read after the initial F5 delay; includes the bounded live $9F54 timer byte and adjacent ROM source bytes.",
+      "bytes": "e8 08 2e 2e 2e 2e fc e8 1b 6f 66 20 11 79 64 69 20 41 20 fc 01 74 75 1d 19 20 02 73 20 06 74 69 6b 2e fc e0 11 45 65 65 2e 2e fc 20"
+    },
+    {
+      "file": "bank19_actor_event_stream_a3c9_a43b.bin",
+      "cpu_address": "0xA3C9",
+      "file_offset": "0x0323D9",
+      "length": 114,
+      "sha256": "98eb047a4e32fafe77d2285722a236b891fb01441b845e2d1c1fc94dfeaae314",
+      "description": "Bank-$19 source bytes covering both live stream pointers observed at $A3C9 and $A439; with index $01, the traced $8218 calls read event bytes $20 and $10 respectively.",
+      "bytes": "01 20 e6 20 fc 01 76 75 72 75 1d 79 14 20 fc 01 08 63 20 02 73 07 51 72 fc f0 01 10 35 2e 20 79 61 72 69 20 fc 01 02 73 6c 61 64 69 fc f0 01 10 75 7a 61 74 6d 61 6c 06 fc 01 02 73 14 64 69 21 20 fc f0 01 10 75 7a 61 74 6d 61 6c 61 72 12 fc 01 35 2e 1b 09 58 20 02 73 14 64 69 20 20 fc f0 01 10 e6 20 fc 01 62 61 73 6c 61 64 69 21 fc f0 01 10"
+    },
+    {
+      "file": "bank18_actor_event_dispatch_and_wait_8218_8273.bin",
+      "cpu_address": "0x8218",
+      "file_offset": "0x030228",
+      "length": 91,
+      "sha256": "ad89d4999241da3618d8c3c06822986cb9f0ba561683e112c5ce71f2b5b05bfb",
+      "description": "Complete bank-$18 event dispatch and queue-wait routine; traces $821F BCS, type lookup at $86B8, payload pointer lookup at $8DC2, and the $8266/$826C wait loop.",
+      "bytes": "ac e5 05 b1 5f c9 90 b0 0d 29 0f 8d f3 05 a9 80 8d f4 05 4c 34 82 20 2d c5 ac e5 05 b1 5f 4a 4a 4a 4a aa bd b8 86 8d e6 05 8a 0a 48 aa bd c2 8d 85 61 bd c3 8d 85 62 a0 00 b1 61 48 c8 b1 61 48 c8 b1 61 8d e7 05 c8 a9 06 8d e8 05 a9 01 20 15 c5 ad 15 05 d0 f6 a9 01 8d 15 05"
+    },
+    {
+      "file": "bank18_actor_event_type_lookup_86b8_86bb.bin",
+      "cpu_address": "0x86B8",
+      "file_offset": "0x0306C8",
+      "length": 3,
+      "sha256": "76fb4484e771b7e9628dbf321e34ef11d1f953a164db859398e5b54f7fa6fa99",
+      "description": "Event-type lookup entries used by the traced type-1 and type-2 actor events; both entries return $0E.",
+      "bytes": "0e 0e 0e"
+    },
+    {
+      "file": "bank18_actor_event_payload_pointer_8dc4_8dc8.bin",
+      "cpu_address": "0x8DC4",
+      "file_offset": "0x030DD4",
+      "length": 4,
+      "sha256": "772bad1ed64aa4e9543211333c2f1213f88cd418ec117a66b4367bae89a33ea8",
+      "description": "Little-endian payload pointers for event types 1 and 2: $8E37 and $8E94.",
+      "bytes": "37 8e 94 8e"
+    },
+    {
+      "file": "bank18_actor_event_payload_type1_8e37_8e3a.bin",
+      "cpu_address": "0x8E37",
+      "file_offset": "0x030E47",
+      "length": 3,
+      "sha256": "6d591cefc508d55b2022f08972e0eb34b31fa14d33e2ba0aa4b7fcb9f5c1ba35",
+      "description": "Three ROM payload bytes read by the traced type-1 event.",
+      "bytes": "2c 22 14"
+    },
+    {
+      "file": "bank18_actor_event_payload_type2_8e94_8e97.bin",
+      "cpu_address": "0x8E94",
+      "file_offset": "0x030EA4",
+      "length": 3,
+      "sha256": "6d591cefc508d55b2022f08972e0eb34b31fa14d33e2ba0aa4b7fcb9f5c1ba35",
+      "description": "Three ROM payload bytes read by the traced type-2 event.",
+      "bytes": "2c 22 14"
+    },
+    {
+      "file": "bank18_actor_stream_dispatch_8218_822e.bin",
+      "cpu_address": "0x8218",
+      "file_offset": "0x030228",
+      "length": 22,
+      "sha256": "a46488bd47acb67282e03aa63e4111b7efc1677dc8f10dc52e90a2d80ae7aa5c",
+      "description": "Bank-$18 actor event dispatcher. For traced bytes below $90, $821F falls through to $8234 and selects a table-driven event path; the observed route does not execute $81D1.",
+      "bytes": "ac e5 05 b1 5f c9 90 b0 0d 29 0f 8d f3 05 a9 80 8d f4 05 4c 34 82"
+    },
+    {
+      "file": "bank18_actor_stream_short_event_decoder_81d1_81e4.bin",
+      "cpu_address": "0x81D1",
+      "file_offset": "0x0301E1",
+      "length": 19,
+      "sha256": "7e59d0713a7eb14d55dcca569ff75b2e6fea37d394fa72531eabcfabe4c106be",
+      "description": "Separate short bank-$18 event decoder retained as ROM source; FCEUX did not execute this span on the traced route through $8218.",
+      "bytes": "4a a2 00 c9 01 90 0b e8 c9 05 90 06 e8 c9 06 90 01 e8 60"
+    }
+  ],
+  "external_dependencies": [
+    {
+      "path": "reference/rom_extract/gameplay/ee9f_empty_actor_call/fixed_mapper_helper_CE2D_CE49.bin",
+      "sha256": "6a815aa4ebad9e014531c5590616d6ec5596be7aa1a31c1542057062f25eb64c",
+      "reason": "Shared fixed-bank MMC3 pair mapper helper used by the `$CF72` wrapper."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/task_context/bank18_actor_worker_entry_8000_804A.bin",
+      "sha256": "2187af6881ea2f4e7eb16c0c5550bb24ead076be918d429d8ab63564ed8fd46c",
+      "reason": "Shared bank-$18 actor entry includes `$8045 LDA #$01; $8047 JSR $C515`, the return/yield reached after the `$A21A` animation queue builder."
+    }
+  ],
+  "trace_state_included": false,
+  "runtime_rom_dependency": false
+}

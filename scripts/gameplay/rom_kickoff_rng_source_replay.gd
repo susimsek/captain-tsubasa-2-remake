@@ -4,9 +4,10 @@ class_name RomKickoffRngSourceReplay
 ## route. This is deliberately not a generic replacement for the game's RNG.
 
 const EXPECTED_ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
-const EXPECTED_SCHEMA := "ct2-kickoff-rom-rng-replay-v1"
+const EXPECTED_SCHEMA := "ct2-kickoff-rom-rng-replay-v2"
 const EXPECTED_ROUTE_ID := "turkish-fresh-kickoff-capture-20261027"
 const RECEIVER_TABLE := [0x05, 0x06, 0x07, 0x09, 0x0A]
+const RNG_ARITHMETIC_SCRIPT := preload("res://scripts/gameplay/rom_kickoff_rng_arithmetic.gd")
 
 var error_message := ""
 var route_identity := ""
@@ -24,6 +25,7 @@ var _receiver_state := Vector3i(-1, -1, -1)
 
 var _a117_frame_set: Dictionary = {}
 var _c9c5_state_by_frame: Dictionary = {}
+var _c9c5_inputs_by_frame: Dictionary = {}
 var _configured := false
 var _input_identity_bound := false
 
@@ -102,6 +104,58 @@ func configure(schedule_path: String, observed_input_timeline_sha256: String) ->
 		}
 	if _c9c5_state_by_frame.size() != int(c9c5.get("count", -1)):
 		return _fail("C9C5 call count does not match its state records.")
+	var operand_rows: Variant = c9c5.get("source_operands_each_call", [])
+	if not operand_rows is Array:
+		return _fail("C9C5 source operand rows are malformed.")
+	for row_variant in operand_rows:
+		if not row_variant is Array or row_variant.size() != 18:
+			return _fail("C9C5 source operand row must contain 18 values.")
+		var row: Array = row_variant
+		var source_frame := int(row[0])
+		if source_frame < 1 or _c9c5_inputs_by_frame.has(source_frame) \
+				or not _c9c5_state_by_frame.has(source_frame):
+			return _fail("C9C5 operand rows must uniquely match a result row.")
+		var e1_before := int(row[2])
+		var e2_before := int(row[3])
+		var e3_before := int(row[4])
+		var carry_in := int(row[5])
+		var x0300 := int(row[6])
+		var address0300 := int(row[7])
+		var value0300 := int(row[8])
+		var x0700 := int(row[9])
+		var address0700 := int(row[10])
+		var value0700 := int(row[11])
+		var x0780 := int(row[12])
+		var address0780 := int(row[13])
+		var value0780 := int(row[14])
+		var state_after: Dictionary = _c9c5_state_by_frame[source_frame]
+		if int(row[1]) != int(state_after["cycle"]) \
+				or int(row[15]) != int(state_after["e1"]) \
+				or int(row[16]) != int(state_after["e2"]) \
+				or int(row[17]) != int(state_after["e3"]) \
+				or e1_before < 0 or e1_before > 0xFF \
+				or e2_before < 0 or e2_before > 0xFF \
+				or e3_before < 0 or e3_before > 0xFF \
+				or carry_in < 0 or carry_in > 1 \
+				or x0300 != e1_before or x0700 != e1_before or x0780 != e1_before \
+				or address0300 != 0x0300 + x0300 \
+				or address0700 != 0x0700 + x0700 \
+				or address0780 != 0x0780 + x0780 \
+				or value0300 < 0 or value0300 > 0xFF \
+				or value0700 < 0 or value0700 > 0xFF \
+				or value0780 < 0 or value0780 > 0xFF:
+			return _fail("C9C5 source operands do not match the call's X, address, carry, or source cycle.")
+		_c9c5_inputs_by_frame[source_frame] = {
+			"e1_before": e1_before,
+			"e2_before": e2_before,
+			"e3_before": e3_before,
+			"carry_in": carry_in,
+			"value0300": value0300,
+			"value0700": value0700,
+			"value0780": value0780,
+		}
+	if _c9c5_inputs_by_frame.size() != _c9c5_state_by_frame.size():
+		return _fail("C9C5 source operand count does not match its call-state records.")
 
 	var receiver: Variant = document.get("receiver_selection", {})
 	if not receiver is Dictionary:
@@ -146,10 +200,27 @@ func advance_to_source_frame(source_frame: int) -> bool:
 		if _a117_frame_set.has(frame):
 			_advance_a117()
 		elif _c9c5_state_by_frame.has(frame):
-			var state: Dictionary = _c9c5_state_by_frame[frame]
-			e1 = int(state["e1"])
-			e2 = int(state["e2"])
-			e3 = int(state["e3"])
+			var input: Dictionary = _c9c5_inputs_by_frame[frame]
+			if e1 != int(input["e1_before"]) \
+					or e2 != int(input["e2_before"]) \
+					or e3 != int(input["e3_before"]):
+				return _fail("C9C5 input state differs from the prior ROM-derived RNG calls.")
+			var source_ram := PackedByteArray()
+			source_ram.resize(0x0800)
+			source_ram.fill(0)
+			source_ram[(0x0300 + e1) & 0x07FF] = int(input["value0300"])
+			source_ram[(0x0700 + e1) & 0x07FF] = int(input["value0700"])
+			source_ram[(0x0780 + e1) & 0x07FF] = int(input["value0780"])
+			var result: Vector4i = RNG_ARITHMETIC_SCRIPT.step_c9c5(
+				e1, e2, e3, int(input["carry_in"]), source_ram)
+			var expected_state: Dictionary = _c9c5_state_by_frame[frame]
+			if result.x != int(expected_state["e1"]) \
+					or result.y != int(expected_state["e2"]) \
+					or result.z != int(expected_state["e3"]):
+				return _fail("ROM C9C5 arithmetic output differs from its recorded source-stepper result.")
+			e1 = result.x
+			e2 = result.y
+			e3 = result.z
 			c9c5_update_count += 1
 		last_source_frame = frame
 	if source_frame == receiver_source_frame:
@@ -215,6 +286,7 @@ func _reset() -> void:
 	_receiver_state = Vector3i(-1, -1, -1)
 	_a117_frame_set.clear()
 	_c9c5_state_by_frame.clear()
+	_c9c5_inputs_by_frame.clear()
 	_configured = false
 	_input_identity_bound = false
 

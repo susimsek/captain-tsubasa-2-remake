@@ -86,3 +86,26 @@ record and copies its initial coordinates to `$0635/$0637`. The muted trace
 confirms one route instance. Live holder selection, post-initialization
 movement, and callback invocation/state are not yet source-produced by Godot;
 the `$F0B5` packet remains withheld from production presentation.
+
+**Current update — 30 October 2026:** the later route now executes `$DAF5`
+receiver selection and `$E6EC->$CDE2` from live source state after applying
+the ROM-derived RNG replay for the recorded input hash. The frame-8593 route
+resolves receiver slot 6 and passes the copied coordinates/tile index through
+`$DB0E`. Arbitrary-input RNG, the callback/task state for `$F0B5`, and the
+production field packet remain unresolved. See the route follow-up report at
+`first_command_field/e6ec_holder_copy_live_route_20261030.md`.
+
+## Route execution follow-up — 30 October 2026
+
+`scripts/gameplay/rom_fresh_e6ec_holder_copy_executor.gd` now executes
+hash-checked `$E6EC` and `$CDE2` bytes from the live slot-$05 boundary. The
+`$E6EC` call to `$CDE2` is at `$E702`; it returns to `$E705`, and the holder
+routine returns to `$DB0E`. The existing source-span decoder covers the ROM
+`$CD7C` record-pointer lookup and `$CD89` table. For holder slot 8, the copied
+record is `$0360`, coordinates are `$7C/$7C`, and `$CDE2` returns tile index
+`$71`. The focused verifier passes from a constructed source boundary.
+
+The recorded route validation reaches `$DB0E` but still fails RNG parity:
+expected slot 6, current Godot slot 5. These holder values are therefore
+verified for the supplied live Godot state, not the ROM's same-input route
+endpoint. See `first_command_field/e6ec_holder_copy_live_route_20261030.md`.

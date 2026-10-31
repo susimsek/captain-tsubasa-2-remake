@@ -6,7 +6,7 @@ class_name RomFirstCommandHolderCoordinateResolver
 
 const SOURCE_ROOT := "res://reference/rom_extract/gameplay/first_command_field/holder_coordinates/"
 const MANIFEST_PATH := SOURCE_ROOT + "manifest.json"
-const MANIFEST_SHA256 := "80fca86317ff013ddbb8c1effea90298725ade7948d7bd93a3cbe5df9535bc09"
+const MANIFEST_SHA256 := "aa951660b645d51a2c8fbfa6fbbc44026c478daea8bd8068b8afedf1a08b2bf3"
 const EXPECTED_ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
 const POSITION_INITIALIZER_SCRIPT := preload("res://scripts/gameplay/rom_match_player_position_initializer.gd")
 
@@ -24,6 +24,13 @@ const SOURCE_EXPECTATIONS := {
 		"cpu_address": "$E6EC",
 		"file_offset": "0x03E6FC",
 		"hex": "ad4104207ccd a006b1348d3506 aa a008b1348d3706 a820e2cd8dfe0560",
+	},
+	"bank_1f_cde2_coordinate_index_helper.bin": {
+		"size": 0x26,
+		"sha256": "e5f6dcb9f5d2451ba1770add2906daa504befaf7800e3bfe2e1b163708e58a83",
+		"cpu_address": "$CDE2",
+		"file_offset": "0x03CDF2",
+		"hex": "8a38e930901dc9a0b0194a4a4aaa9838e950900fc960b00b4a4a4aca30071869 0cd0f8a9ff60",
 	},
 }
 

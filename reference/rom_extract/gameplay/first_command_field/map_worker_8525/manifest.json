@@ -1,0 +1,81 @@
+{
+  "schema": "first-command-slot15-map-worker-8525-v1",
+  "rom_filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_mapping": {
+    "bank_0B_file_base": "0x016010",
+    "bank_0B_cpu_base": "0x8000",
+    "packed_selector_table": "../page_correct_map_sources/packed_map_selectors_8B42.bin",
+    "selector_table_address": "0x8B42",
+    "selector_lookup_formula": "selector=(table[map_id>>2]>>(2*(map_id&3)))&3",
+    "map_id": "0x42",
+    "packed_selector_index": "0x10",
+    "packed_selector_byte": "0x52",
+    "map_42_selector": "0x01",
+    "selector_note": "The packed table byte $52 at index $10 yields selector $01 for map $42."
+  },
+  "entries": [
+    {
+      "path": "bank_0b_8525_856f_pre_yield.bin",
+      "file_offset": "0x016535",
+      "cpu_address": "0x8525",
+      "prg_bank": "0x0B",
+      "size_bytes": 74,
+      "sha256": "1b406e85c56269d2369ebe99eb26c662b48fe32aedfb55c40e654bf3bc4e0f8a",
+      "source": "Map-worker setup through the instruction before its first JSR $C515.",
+      "raw_hex": "8C C8 05 48 AA A9 EE 85 54 A9 86 85 55 8A 0A 90 02 E6 55 A8 B1 54 09 80 8D 26 05 C8 B1 54 8D 27 05 68 20 D3 86 A2 00 86 54 4A 66 54 4A 66 54 4A 66 54 AA A5 54 18 69 64 85 54 8A 69 8B 85 55 A9 20 8D C9 05 AD CA 05 48 A9 01"
+    },
+    {
+      "path": "bank_0b_86d3_86ee_map_selector_lookup.bin",
+      "file_offset": "0x0166E3",
+      "cpu_address": "0x86D3",
+      "prg_bank": "0x0B",
+      "size_bytes": 27,
+      "sha256": "08c5584a0bae0feb953cd6f98c7a8dc792d1304c047872dd8f6b145ac7a555b7",
+      "source": "Selector lookup routine called by $8525; includes the $8B42 table access.",
+      "raw_hex": "48 29 03 AA 68 48 4A 4A A8 B9 42 8B CA 30 05 4A 4A 4C DF 86 29 03 8D CA 05 68 60"
+    },
+    {
+      "path": "bank_0b_86ee_map_42_chr_pair.bin",
+      "file_offset": "0x016782",
+      "cpu_address": "0x8772",
+      "prg_bank": "0x0B",
+      "size_bytes": 2,
+      "sha256": "50ccd3ef9e7c33fc6961800add05d3ed815ad357d03d7fbfcb74354a40986c46",
+      "source": "CHR selector pair read by $8525 for map ID $42.",
+      "raw_hex": "3C 2C"
+    },
+    {
+      "path": "bank_0b_856f_8572_c515_callsite.bin",
+      "file_offset": "0x01657F",
+      "cpu_address": "0x856F",
+      "prg_bank": "0x0B",
+      "size_bytes": 3,
+      "sha256": "59653ff81dfe5c01f141d4ee69bb4832290c727091c41b92a71a6b0e2400a837",
+      "source": "First cooperative-yield JSR from the map-$42 worker to the fixed-bank task trampoline.",
+      "raw_hex": "20 15 C5"
+    },
+    {
+      "name": "worker_8572_85c2",
+      "path": "bank_0b_8572_85c2.bin",
+      "file_offset": "0x016582",
+      "cpu_start": "0x8572",
+      "cpu_end_exclusive": "0x85C2",
+      "prg_bank": "0x0B",
+      "size_bytes": 80,
+      "sha256": "098a354cae578918bf54407b972e69b520327d030eb391ed3c2d476c4d337502",
+      "source": "ROM bytes executed by the resumed slot-$15 map-$42 worker."
+    },
+    {
+      "name": "metatile_expand_85c2_86d3",
+      "path": "bank_0b_85c2_86d3.bin",
+      "file_offset": "0x0165D2",
+      "cpu_start": "0x85C2",
+      "cpu_end_exclusive": "0x86D3",
+      "prg_bank": "0x0B",
+      "size_bytes": 273,
+      "sha256": "1aab318fd595b2cf9f82ed8176340dfe43d4fbdc792e9204ede31c2d21c79e15",
+      "source": "ROM bytes executed by the resumed slot-$15 map-$42 worker."
+    }
+  ]
+}

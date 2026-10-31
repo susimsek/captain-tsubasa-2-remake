@@ -102,6 +102,15 @@
       "bytes": "4c 0f cb"
     },
     {
+      "file": "fixed_task_finish_trampoline_C512.bin",
+      "cpu_address": "0xC512",
+      "file_offset": "0x03C522",
+      "length": 3,
+      "sha256": "bc85dc6c05fac84b9063f3cb28a3acbe16e2591ab2dff53b935530aa2a35940f",
+      "description": "fixed-bank callback completion trampoline to task finish $CAF7",
+      "bytes": "4c f7 ca"
+    },
+    {
       "file": "fixed_task_scheduler_CA97_CAE6.bin",
       "cpu_address": "0xCA97",
       "file_offset": "0x03CAA7",
@@ -136,6 +145,15 @@
       "sha256": "b6377644890b9cd6671e4e63f48da4dfe1bd4975870bb531cb684ee7aeda07fc",
       "description": "fixed-bank task yield/save",
       "bytes": "85 7f 8a 48 98 48 a6 00 a5 24 95 02 a5 25 95 03 a5 7f 95 00 8a a8 ba 96 01 a6 00 4c a5 ca"
+    },
+    {
+      "file": "fixed_scenario_queue_CBB0_CBC1.bin",
+      "cpu_address": "0xCBB0",
+      "file_offset": "0x03CBC0",
+      "length": 18,
+      "sha256": "bda16c7ced2834027dd6039a6c079a701dc8abd9c89179ba2d3c568aa0a16a32",
+      "description": "fixed-bank scenario-$35 queue producer and the $CBBE JSR $CB0F callsite",
+      "bytes": "8d 18 05 a9 80 8d 16 05 a9 00 85 05 a9 00 20 0f cb 60"
     },
     {
       "file": "fixed_nmi_vectors_FFFA_FFFF.bin",
@@ -199,6 +217,42 @@
       "sha256": "59653ff81dfe5c01f141d4ee69bb4832290c727091c41b92a71a6b0e2400a837",
       "description": "Bank-$18 worker JSR $C515 callsite, verified against the fresh match-zero worker span.",
       "bytes": "20 15 c5"
+    },
+    {
+      "file": "fixed_root_slot09_loop_EB86_EC07.bin",
+      "cpu_address": "0xEB86",
+      "file_offset": "0x03EB96",
+      "length": 130,
+      "sha256": "91ee3ddc0110b7575a472103de8f5e4d1391a60efebe557b4f4238940d74f917",
+      "description": "fixed-bank fresh-root slot $09 loop; first five bytes yield through $CB0F and resume at $EB8B",
+      "bytes": "a9 01 20 0f cb a5 21 29 1e ae 39 05 f0 05 a5 21 4d 39 05 85 21 20 08 ec 20 85 ed 48 a5 22 a9 18 85 24 a9 19 85 25 20 2d ce 68 20 03 80 48 a5 22 a9 18 85 24 a9 19 85 25 20 2d ce 68 20 06 80 48 a5 22 a9 18 85 24 a9 19 85 25 20 2d ce 68 20 09 80 ad 2e 05 f0 29 ce 2e 05 d0 24 ad 2f 05 c9 7e 90 11 c9 7f f0 07 ad 27 00 c9 04 f0 12 20 93 d0 4c 05 ec 2c 3f 06 10 04 c9 63 d0 03 20 f1 cb 4c 86 eb"
+    },
+    {
+      "file": "fixed_scenario_actor_worker_seed_ED15_ED2C.bin",
+      "cpu_address": "0xED15",
+      "file_offset": "0x03ED25",
+      "length": 24,
+      "sha256": "61ef48dd58901f95f2c20f7f4a8bc1bb850221cb403f6bfbd52a65a12e33f551",
+      "description": "scenario actor worker caller: parameter check, slot-$11 bank-$18 setup, and `$CAE7` seed call",
+      "bytes": "c9 ff f0 14 8d ea 05 a2 11 a9 c8 95 01 a9 18 95 02 a9 7f a0 ff 20 e7 ca"
+    },
+    {
+      "file": "bank18_actor_worker_entry_8000_804A.bin",
+      "cpu_address": "0x8000",
+      "file_offset": "0x030010",
+      "length": 74,
+      "sha256": "2187af6881ea2f4e7eb16c0c5550bb24ead076be918d429d8ab63564ed8fd46c",
+      "description": "bank-$18 actor worker entry and setup through `$8047 JSR $C515`",
+      "bytes": "4c 0f 80 4c f8 86 4c 79 87 4c e6 87 4c 51 88 2c 3f 06 10 03 4c 12 c5 a9 20 85 5f a9 92 85 60 ad ea 05 0a 90 02 e6 60 a8 b1 5f aa c8 b1 5f 85 60 86 5f a9 00 8d e9 05 8d e5 05 8d e4 05 8d f4 05 a9 01 8d e3 05 a9 01 20 15 c5"
+    },
+    {
+      "file": "bank18_actor_parameter_73_pointer_9306.bin",
+      "cpu_address": "0x9306",
+      "file_offset": "0x031316",
+      "length": 2,
+      "sha256": "03f3c4278cc253614b622fa856993e8b325eb061a29e54685038771778377938",
+      "description": "bank-$18 parameter `$73` pointer-table entry resolving to actor stream `$9F42`",
+      "bytes": "42 9f"
     }
   ]
 }

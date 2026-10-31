@@ -17,7 +17,7 @@ Treat these as evidence in descending authority:
 4. Disassemblies, tools, manuals, and community references for other releases as leads only.
 5. Unverified interpretation or visual inference as a hypothesis, never as a runtime constant.
 
-Before relying on an address, confirm the target ROM identity and map CPU address → mapper bank → file offset. Record exact bytes, bank context, and the evidence that ties the code/data to the observed route. Check `AGENTS.md`, `GOAL.md`, `PLANS.md`, `reference/rom_extract/intro/online_reverse_engineering_resources.md`, and the current route-specific evidence before repeating an investigation.
+Before relying on an address, confirm the target ROM identity and map CPU address → mapper bank → file offset. Record exact bytes, bank context, and the evidence that ties the code/data to the observed route. Check `AGENTS.md`, `GOALS.md`, `PLANS.md`, `reference/rom_extract/intro/online_reverse_engineering_resources.md`, and the current route-specific evidence before repeating an investigation.
 
 ## Reverse-engineering workflow
 
@@ -58,6 +58,6 @@ Before relying on an address, confirm the target ROM identity and map CPU addres
 
 ## Current project entry points
 
-For the active first-match route, read `GOAL.md` and `PLANS.md` first, then the current findings linked from `AGENTS.md`. Particularly relevant evidence includes the fresh-kickoff selector/bootstrap, task scheduler and continuation boundaries, field-intro visual gap, first command-menu trace, audio-source audit, and ROM-derived position initializer. The status in those documents is authoritative; do not repeat historical metrics as current results.
+For the active first-match route, read `GOALS.md` and `PLANS.md` first, then the current findings linked from `AGENTS.md`. Particularly relevant evidence includes the fresh-kickoff selector/bootstrap, task scheduler and continuation boundaries, field-intro visual gap, first command-menu trace, audio-source audit, and ROM-derived position initializer. The status in those documents is authoritative; do not repeat historical metrics as current results.
 
 See [`references/upstream-review.md`](references/upstream-review.md) for which public NES skill-pack ideas were adopted and which bundled tools/version assumptions were excluded. See [`references/fceux-project-workflow.md`](references/fceux-project-workflow.md) for the short checkpoint/replay checklist.

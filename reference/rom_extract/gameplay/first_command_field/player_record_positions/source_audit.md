@@ -47,11 +47,27 @@ pointer from `$CD89`; the 22 preserved entries resolve to `$0300 + 12 × slot`.
 
 ## Implementation and validation boundary
 
-`scripts/gameplay/rom_match_player_position_initializer.gd` applies only these byte-backed
-table and transform rules. It requires explicit match index, home/away formations, side,
-and caller-owned decoded-game-logic context; it neither reads emulator captures nor infers
-the route's active formation/side event. It supports match index 0 and four table rows.
-It initializes static record coordinates only; later movement and dynamic actor selection
-are out of scope. The focused verifier calculates slot 6 from the extracted source bytes.
-If the local frame-8953 RAM dump exists, the verifier compares its record coordinates only
-as a diagnostic oracle; those capture values are not helper inputs or expected constants.
+`scripts/gameplay/rom_match_player_position_initializer.gd` applies these byte-backed
+table and transform rules from the live slot-`$05` `$DAF2` boundary. It requires
+match-zero context already decoded from ROM logic and checks the live
+`$002C/$002E/$05FB` inputs against it; it does not import a capture. It applies
+the formation scratch updates, pointer-table reads, 22 ordered record writes,
+slot-11 `$+7` clear, stack-page effects, and the `$DAF5` return contract.
+Later movement and dynamic actor selection remain out of scope.
+
+The recorded frame-8593 A-input verification compares all 22 calculated X/Y
+pairs against `reference/diagnostics/kickoff_select_test_20261027/ram/route_frame_008593.bin`.
+That capture is diagnostic-only and confirms values for the same recorded
+input frame; it does not prove instruction-phase or source-cycle equivalence.
+
+## Route integration status — 30 October 2026
+
+The live Godot source route now continues past `$DAF5`: it executes the
+`$DC82` receiver-table selection and `$E6EC` holder-record copy, including
+`$CDE2`, then returns at `$DB0E`. This implementation is documented in
+`../e6ec_holder_copy_live_route_20261030.md`. The coordinate copy is
+source-executed. The live route now consumes a ROM-only, input-hash-bound RNG
+replay; 3,901 retained RAM snapshots match. Its operand triples and carry
+inputs match the FCEUX trace. This does not generalize RNG to arbitrary input
+histories. The ROM-only operand trace and cross-check are documented in
+`../../first_command_rng_operand_trace_20261030.md`.

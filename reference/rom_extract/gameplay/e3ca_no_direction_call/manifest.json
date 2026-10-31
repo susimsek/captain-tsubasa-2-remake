@@ -1,0 +1,36 @@
+{
+  "schema": "ct2-e3ca-no-direction-source-v1",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "header": "iNES 1.0; 16-byte header; no trainer",
+    "mapper": 4,
+    "submapper": 0
+  },
+  "runtime_rom_dependency": false,
+  "trace_state_included": false,
+  "spans": [
+    {
+      "file": "fixed_entry_E3CA_E3D5.bin",
+      "bank": "0x1F",
+      "cpu_start": "0xE3CA",
+      "cpu_end_exclusive": "0xE3D6",
+      "file_offset": "0x03E3DA",
+      "length": 12,
+      "description": "Fresh-route entry and no-direction branch",
+      "sha256": "7100463bf16eadd91886eeb73c7afadd11972c955be5a29b99fa79d5a1afc2b1",
+      "bytes": "ad fb 05 d0 07 ad 1c 00 29 0f f0 30"
+    },
+    {
+      "file": "fixed_return_E406.bin",
+      "bank": "0x1F",
+      "cpu_start": "0xE406",
+      "cpu_end_exclusive": "0xE407",
+      "file_offset": "0x03E416",
+      "length": 1,
+      "description": "No-direction RTS target",
+      "sha256": "8d33f520a3c4cef80d2453aef81b612bfe1cb44c8b2025630ad38662763f13d3",
+      "bytes": "60"
+    }
+  ]
+}

@@ -17,6 +17,7 @@ const FIRST_ACTION_MENU_SCRIPT := preload("res://scripts/gameplay/first_action_m
 const FIRST_MATCH_FIELD_SCRIPT := preload("res://scripts/gameplay/first_match_field_candidate_presenter.gd")
 const FIRST_COMMAND_ACTOR_SCRIPT := preload("res://scripts/gameplay/first_command_actor_source_presenter.gd")
 const MEETING_CURSOR_SCRIPT := preload("res://scripts/gameplay/rom_meeting_menu_cursor.gd")
+const FADE_MODEL := preload("res://scripts/opening/prototypes/ea_fade/ea_palette_fade_reference.gd")
 const TEXT_CURSOR_START := 0x2249
 const NAMETABLE_END := 0x2800
 
@@ -41,6 +42,11 @@ var _first_command_actor_presenter: FirstCommandActorSourcePresenter
 var _meeting_speaker: RomSpriteAnimationPrototype
 var _meeting_cursor: Node2D
 var _display_enabled := false
+var _fade_base_event_index := -1
+var _fade_base_background_palette := PackedByteArray()
+var _fade_base_sprite_palettes: Array[Dictionary] = []
+var _pending_fade_palette_commit: Dictionary = {}
+var _fade_timing_gap_reported := false
 
 
 func _ready() -> void:
@@ -52,9 +58,12 @@ func bind_vm(vm: KickoffCutsceneCommandVm) -> void:
 	vm.presenter_event.connect(_on_presenter_event)
 	vm.text_glyph_requested.connect(_on_text_glyph_requested)
 	vm.wait_completed.connect(_on_wait_completed)
+	vm.screen_fade_palette_step_requested.connect(_on_screen_fade_palette_step_requested)
+	vm.screen_off_clear_completed.connect(_on_screen_off_clear_completed)
 
 
 func advance_source_tick() -> void:
+	_commit_pending_fade_palette()
 	_commit_pending_glyph_writes()
 	for animation_node in _animations:
 		if is_instance_valid(animation_node):
@@ -63,6 +72,11 @@ func advance_source_tick() -> void:
 
 func clear_route_screen() -> void:
 	_pending_glyph_writes.clear()
+	_pending_fade_palette_commit.clear()
+	_fade_base_event_index = -1
+	_fade_base_background_palette.clear()
+	_fade_base_sprite_palettes.clear()
+	_fade_timing_gap_reported = false
 	_ppu_memory.clear()
 	_clear_animations()
 	_clear_meeting_cursor()
@@ -278,10 +292,9 @@ func _on_presenter_event(event: Dictionary) -> void:
 			visible = true
 			screen.visible = true
 		"screen_off_clear":
-			_display_enabled = false
-			visible = false
-			screen.visible = false
-			_clear_animations()
+			# EA fades its current ROM palettes before the nametable clear ends.
+			# The completion signal performs the clear after the final committed step.
+			pass
 		"text_cursor_back":
 			text_cursor_column -= int(event.get("tile_count", 0))
 		"text_base_ppu_address":
@@ -313,6 +326,138 @@ func _on_wait_completed(wait_kind: String, event: Dictionary) -> void:
 		pass
 	else:
 		pass
+
+
+func _on_screen_fade_palette_step_requested(event: Dictionary, level: int) -> void:
+	var opcode := int(event.get("opcode", -1))
+	if (opcode != 0xE9 and opcode != 0xEA) or level < 0 or level > 0x0F:
+		presentation_gaps.append("Rejected a screen-fade palette step without a valid E9/EA event and level.")
+		return
+	var event_index := int(event.get("event_index", -1))
+	if event_index != _fade_base_event_index:
+		_fade_base_event_index = event_index
+		_fade_base_background_palette = screen.get_source_background_palette_bytes()
+		_fade_base_sprite_palettes.clear()
+		for animation_node in _animations:
+			if not is_instance_valid(animation_node):
+				continue
+			var palette: PackedByteArray = animation_node.get_gameplay_source_palette_bytes()
+			if palette.size() != 16:
+				presentation_gaps.append("%s at %s lacks a ROM-derived palette row for %s." % ["E9" if opcode == 0xE9 else "EA", str(event.get("cpu_address", "?")), animation_node.name])
+				continue
+			_fade_base_sprite_palettes.append({"node": animation_node, "palette": palette})
+	if _fade_base_background_palette.size() != 16:
+		presentation_gaps.append("%s at %s has no active ROM background palette." % ["E9" if opcode == 0xE9 else "EA", str(event.get("cpu_address", "?"))])
+		return
+	var background_input := _fade_base_background_palette.duplicate()
+	background_input.append_array(_fade_base_background_palette)
+	var background_faded := FADE_MODEL.build_palette(background_input, level, level).slice(0, 16)
+	var sprite_commits: Array[Dictionary] = []
+	for palette_entry in _fade_base_sprite_palettes:
+		var sprite_input := _fade_base_background_palette.duplicate()
+		sprite_input.append_array(palette_entry["palette"])
+		var faded := FADE_MODEL.build_palette(sprite_input, level, level)
+		sprite_commits.append({"node": palette_entry["node"], "palette": faded.slice(16, 32)})
+	_pending_fade_palette_commit = {
+		"background_palette": background_faded,
+		"sprite_palettes": sprite_commits,
+		"event_index": event_index,
+		"source_cpu_address": int(event.get("cpu_address", -1)),
+		"level": level,
+	}
+	if not _fade_timing_gap_reported:
+		presentation_gaps.append("E9/EA palette packets commit on the next modeled source tick; exact NMI/PPU phase remains unresolved.")
+		_fade_timing_gap_reported = true
+
+
+## Return the active ROM-derived background and sprite palette captured by the
+## last E9/EA event. The $99F0 helper operates on this 32-byte source buffer.
+func get_cleanup_fade_base_palette_bytes() -> PackedByteArray:
+	if _fade_base_background_palette.size() != 16:
+		return PackedByteArray()
+	if screen.get_source_background_palette_bytes() != _fade_base_background_palette:
+		return PackedByteArray()
+	if _fade_base_sprite_palettes.is_empty():
+		return PackedByteArray()
+	var selected_sprite_palette := PackedByteArray()
+	for entry in _fade_base_sprite_palettes:
+		var palette: PackedByteArray = entry.get("palette", PackedByteArray())
+		if palette.size() != 16:
+			return PackedByteArray()
+		if selected_sprite_palette.is_empty():
+			selected_sprite_palette = palette.duplicate()
+		elif selected_sprite_palette != palette:
+			# $063A-$0649 contains one active 16-byte sprite-palette group. Do not
+			# guess how several different animation palettes share that group.
+			return PackedByteArray()
+	var base_palette := _fade_base_background_palette.duplicate()
+	base_palette.append_array(selected_sprite_palette)
+	return base_palette
+
+
+## Queue a ROM-built $05E8 palette packet for the next modeled source tick,
+## matching the trace's frame-end PPU packet lag without claiming NMI bus phase.
+func queue_rom_cleanup_fade_palette_packet(packet: PackedByteArray) -> bool:
+	if packet.size() != 0x23 or packet[0] != 0x20 or packet[1] != 0x00 or packet[2] != 0x3F:
+		presentation_gaps.append("Rejected a cleanup fade packet without a valid $05E8/$3F00 header.")
+		return false
+	if _fade_base_background_palette.size() != 16 or _fade_base_sprite_palettes.is_empty():
+		presentation_gaps.append("Cleanup fade packet has no active ROM-derived background/sprite palette consumer.")
+		return false
+	var sprite_bytes := packet.slice(0x13, 0x23)
+	var sprite_commits: Array[Dictionary] = []
+	for entry in _fade_base_sprite_palettes:
+		var animation_node: Variant = entry.get("node")
+		if not is_instance_valid(animation_node):
+			presentation_gaps.append("Cleanup fade packet references an expired sprite palette consumer.")
+			return false
+		sprite_commits.append({"node": animation_node, "palette": sprite_bytes.duplicate()})
+	_pending_fade_palette_commit = {
+		"background_palette": packet.slice(0x03, 0x13),
+		"sprite_palettes": sprite_commits,
+		"event_index": _fade_base_event_index,
+		"source_cpu_address": 0x99F0,
+		"level": -1,
+	}
+	return true
+
+
+func _commit_pending_fade_palette() -> void:
+	if _pending_fade_palette_commit.is_empty():
+		return
+	var background_palette: PackedByteArray = _pending_fade_palette_commit["background_palette"]
+	screen.set_background_palette_bytes(background_palette)
+	for sprite_entry in _pending_fade_palette_commit["sprite_palettes"]:
+		var animation_node: Variant = sprite_entry.get("node")
+		if is_instance_valid(animation_node):
+			animation_node.set_fade_palette_bytes(sprite_entry["palette"])
+	_pending_fade_palette_commit.clear()
+
+
+func _on_screen_off_clear_completed(_event: Dictionary) -> void:
+	var zero_fill_addresses: PackedInt32Array = FADE_MODEL.confirmed_ea_zero_fill_addresses()
+	for address in zero_fill_addresses:
+		_ppu_memory[int(address)] = 0
+	screen.set_ppu_memory(_ppu_memory)
+	_display_enabled = false
+	visible = false
+	screen.visible = false
+	_clear_animations()
+
+
+## Apply the source $98A0/$9B7F presentation effects after the cleanup fade:
+## clear all four nametables/attribute tables and hide every active OAM actor.
+## PPU register masks are intentionally not represented by this renderer.
+func apply_rom_cutscene_cleanup_clear() -> bool:
+	if not is_instance_valid(screen) or _ppu_memory.is_empty():
+		return false
+	_pending_fade_palette_commit.clear()
+	_pending_glyph_writes.clear()
+	for address in range(0x2000, 0x2800):
+		_ppu_memory[address] = 0
+	screen.set_ppu_memory(_ppu_memory)
+	_clear_animations()
+	return true
 
 
 func _on_text_glyph_requested(tile_id: int, _source_cpu: int, _event_index: int, _glyph_index: int) -> void:

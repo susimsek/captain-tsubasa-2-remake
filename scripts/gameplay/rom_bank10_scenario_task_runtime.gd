@@ -10,6 +10,8 @@ const SOURCE_MANIFEST_PATH := SOURCE_ROOT + "manifest.json"
 const TASK_CONTEXT_ROOT := "res://reference/rom_extract/gameplay/task_context/"
 const TASK_CONTEXT_MANIFEST_PATH := TASK_CONTEXT_ROOT + "manifest.json"
 const SCENARIO_CONTINUATION_ROOT := "res://reference/rom_extract/gameplay/scenario_continuation/"
+const FIRST_COMMAND_SCENARIOS_MANIFEST := "res://reference/rom_extract/gameplay/first_command_scenarios/manifest.json"
+const FIRST_COMMAND_SCENARIOS_ROOT := "res://reference/rom_extract/gameplay/first_command_scenarios/"
 const EXPECTED_ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
 const EXPECTED_SOURCE_SCHEMA := "bank10-scenario-task-runtime-sources-v1"
 const ACCEPTED_FRESH_KICKOFF_CALLER_PC := 0xDAD8
@@ -234,6 +236,152 @@ func begin_from_source_callsite(source_caller_cpu_address: int) -> Dictionary:
 	}
 
 
+## Start the reader from a live scenario selector and pointer already resolved
+## by the bank-$10 `$8006` ROM path. Only preserved scenario IDs with a matching
+## pointer-table manifest entry are accepted.
+func begin_from_live_scenario_pointer(scenario_id: int, source_pointer_cpu: int) -> Dictionary:
+	_reset()
+	if scenario_id not in [0x35, 0x36]:
+		return _failure(Status.UNSUPPORTED_CALLER,
+			"Only the preserved fresh-route scenario-$35/$36 streams are supported.",
+			{"scenario_id": scenario_id, "source_pointer_cpu": source_pointer_cpu})
+	var source_bundle := _load_and_verify_source_bundle()
+	if not bool(source_bundle.get("ok", false)):
+		return _failure(Status.SOURCE_INTEGRITY_FAILURE,
+			str(source_bundle.get("error", "Source bundle validation failed.")))
+	var sources: Dictionary = source_bundle["sources"]
+	var scenario_bundle := _load_and_verify_first_command_scenarios(scenario_id)
+	if not bool(scenario_bundle.get("ok", false)):
+		return _failure(Status.SOURCE_INTEGRITY_FAILURE,
+			str(scenario_bundle.get("error", "Scenario source validation failed.")))
+	var pointer_bytes: PackedByteArray = scenario_bundle["pointer_bytes"]
+	var scenario_bytes: PackedByteArray = scenario_bundle["scenario_bytes"]
+	var resolved_pointer := int(pointer_bytes[0]) | (int(pointer_bytes[1]) << 8)
+	if source_pointer_cpu != resolved_pointer:
+		return _failure(Status.SOURCE_STATE_REQUIRED,
+			"Live bank-$10 pointer differs from the manifest-checked table entry.",
+			{"scenario_id": scenario_id, "live_pointer": source_pointer_cpu,
+			"manifest_pointer": resolved_pointer})
+	if not _verify_reader_entry(sources["reference/rom_extract/gameplay/scenario_task_runtime/bank10_reader_entry_8000_803E.bin"]):
+		return _failure(Status.SOURCE_INTEGRITY_FAILURE, error_message)
+	if not _load_and_verify_task_seed_sources():
+		return _failure(Status.SOURCE_INTEGRITY_FAILURE, error_message)
+	_scenario_id = scenario_id
+	_source_pointer_cpu = resolved_pointer
+	_source_file_offset = 0x0237DD if scenario_id == 0x35 else 0x0237F4
+	_source_bytes = scenario_bytes
+	var parsed: Dictionary = READER_SCRIPT.read_project_scenario(_scenario_id, {"continuation_depth": 0})
+	var terminal_status := int(parsed.get("terminal_status", -1))
+	if terminal_status not in [READER_SCRIPT.ParseStatus.SOURCE_TERMINATED,
+			READER_SCRIPT.ParseStatus.EXTERNAL_CONTINUATION_REQUIRED]:
+		return _failure(Status.SOURCE_INTEGRITY_FAILURE,
+			"Manifest-checked scenario-$%02X stream stopped at an unsupported parse status." % scenario_id)
+	var token_list: Variant = parsed.get("tokens", [])
+	var expected_prefix: Array = [0xF9, "event_record"] if scenario_id == 0x35 \
+		else [0xF5, 0xF9, "event_record"]
+	if not token_list is Array or token_list.size() < expected_prefix.size():
+		return _failure(Status.SOURCE_INTEGRITY_FAILURE, "Bank-$10 reader did not return a token array.")
+	for index in expected_prefix.size():
+		var token_variant: Variant = token_list[index]
+		if not token_variant is Dictionary:
+			return _failure(Status.SOURCE_INTEGRITY_FAILURE, "Bank-$10 reader returned a non-dictionary token.")
+		var token: Dictionary = token_variant
+		if expected_prefix[index] is String:
+			if String(token.get("kind", "")) != String(expected_prefix[index]):
+				return _failure(Status.SOURCE_INTEGRITY_FAILURE, "Scenario-$%02X live prefix token order differs from its ROM bytes." % scenario_id)
+		elif String(token.get("kind", "")) != "opcode" \
+				or int(token.get("opcode", -1)) != int(expected_prefix[index]):
+			return _failure(Status.SOURCE_INTEGRITY_FAILURE, "Scenario-$%02X live prefix opcode order differs from its ROM bytes." % scenario_id)
+		_tokens.append(token)
+	_started = true
+	for path_variant in scenario_bundle["source_paths"]:
+		var path := String(path_variant)
+		var bytes: PackedByteArray = scenario_bundle["sources"][path]
+		# The runtime result carries provenance; the caller remains responsible for
+		# recording these same verified spans in its execution report.
+		if bytes.is_empty():
+			return _failure(Status.SOURCE_INTEGRITY_FAILURE, "Scenario source span is empty: %s." % path)
+	return {
+		"ok": true,
+		"status": "ready",
+		"scenario_id": _scenario_id,
+		"source_caller_cpu_address": -1,
+		"source_pointer_cpu": _source_pointer_cpu,
+		"source_byte_index": _source_byte_cursor,
+		"continuation_depth": 0,
+		"root_state_source": "live `$0518` selector, ROM `$89BF` table entry, and manifest-checked bank-$10 stream",
+		"source_rom_sha256": EXPECTED_ROM_SHA256,
+		"source_stream_sha256": _sha256(_source_bytes),
+		"token_count": _tokens.size(),
+		"source_context_required_after_prefix": bool(parsed.get("context_required", false)),
+		"unresolved_context_requirements": parsed.get("context_requirements", []),
+		"emulator_frame_input_used": false,
+		"capture_ram_input_used": false,
+		"source_paths": scenario_bundle["source_paths"].duplicate(),
+	}
+
+
+func _verify_reader_entry(reader_entry: PackedByteArray) -> bool:
+	if reader_entry.size() != 63 \
+			or reader_entry.slice(0, 6) != PackedByteArray([0x4C, 0x06, 0x80, 0x4C, 0x21, 0x80]) \
+			or reader_entry.slice(6, 33) != PackedByteArray([
+				0xA2, 0x89, 0xAD, 0x18, 0x05, 0x0A, 0xA8, 0x90, 0x01, 0xE8,
+				0xA9, 0xBF, 0x85, 0x5D, 0x86, 0x5E, 0xB1, 0x5D, 0xAA, 0xC8,
+				0xB1, 0x5D, 0x85, 0x5E, 0x86, 0x5D, 0x60]):
+		return _fail_bool("Bank-$10 `$8006` pointer reader bytes failed validation.")
+	return true
+
+
+func _load_and_verify_first_command_scenarios(scenario_id: int) -> Dictionary:
+	var file := FileAccess.open(FIRST_COMMAND_SCENARIOS_MANIFEST, FileAccess.READ)
+	if file == null:
+		return {"ok": false, "error": "First-command scenario manifest is unavailable."}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary \
+			or String((parsed as Dictionary).get("schema", "")) != "first-command-bank10-scenario-sources-v1" \
+			or String((parsed as Dictionary).get("source_rom_sha256", "")) != EXPECTED_ROM_SHA256:
+		return {"ok": false, "error": "First-command scenario manifest targets another ROM or schema."}
+	var manifest: Dictionary = parsed
+	var scenario_id_text := "$%02X" % scenario_id
+	var pointer_row: Dictionary = {}
+	var stream_row: Dictionary = {}
+	for row_variant in manifest.get("pointer_table_entries", []):
+		if row_variant is Dictionary and String((row_variant as Dictionary).get("scenario_id", "")) == scenario_id_text:
+			pointer_row = row_variant
+			break
+	for row_variant in manifest.get("scenario_streams", []):
+		if row_variant is Dictionary and String((row_variant as Dictionary).get("scenario_id", "")) == scenario_id_text:
+			stream_row = row_variant
+			break
+	if pointer_row.is_empty() or stream_row.is_empty():
+		return {"ok": false, "error": "Manifest omits scenario-$%02X pointer or stream." % scenario_id}
+	var pointer_path := String(pointer_row.get("path", ""))
+	var stream_path := String(stream_row.get("path", ""))
+	var expected_pointer := 0xB7CD if scenario_id == 0x35 else 0xB7E4
+	var expected_pointer_file_offset := "0x020A39" if scenario_id == 0x35 else "0x020A3B"
+	var expected_stream_file_offset := "0x0237DD" if scenario_id == 0x35 else "0x0237F4"
+	var expected_stream_hash := "02848b8b324fe6c120e6eb26bca5d0c08cab23baa91cf7820db454a3f78544df" if scenario_id == 0x35 else "948f05adfcd95e7fe76759534449f31f4194aed3521389934ee793e8f22e367f"
+	var pointer_bytes := FileAccess.get_file_as_bytes("res://" + pointer_path)
+	var scenario_bytes := FileAccess.get_file_as_bytes("res://" + stream_path)
+	var expected_stream_size := 8 if scenario_id == 0x35 else 38
+	var pointer_hash := "751bb4c1d1d35f0a3f3c86304dffe714c0c1a6483af6e233ecff031004a22bc3" if scenario_id == 0x35 else "5d2bc0e444947ba22ee06b40139852b88e24eb157d3175e1c6ef1c315d4d6a7a"
+	if String(pointer_row.get("cpu_address", "")).to_lower() != "0x%04x" % expected_pointer \
+			or String(pointer_row.get("table_cpu_address", "")).to_lower() != "0x89bf" \
+			or String(pointer_row.get("table_file_offset", "")) != expected_pointer_file_offset \
+			or String(pointer_row.get("sha256", "")) != pointer_hash \
+			or String(stream_row.get("start_cpu_address", "")).to_lower() != "0x%04x" % expected_pointer \
+			or String(stream_row.get("file_offset", "")) != expected_stream_file_offset \
+			or int(stream_row.get("length_bytes", -1)) != expected_stream_size \
+			or String(stream_row.get("sha256", "")) != expected_stream_hash \
+			or pointer_bytes.size() != 2 or _sha256(pointer_bytes) != pointer_hash \
+			or scenario_bytes.size() != expected_stream_size or _sha256(scenario_bytes) != expected_stream_hash \
+			or String(pointer_row.get("bytes_hex", "")).replace(" ", "").to_lower() != pointer_bytes.hex_encode():
+		return {"ok": false, "error": "Scenario-$%02X pointer/stream metadata or bytes failed manifest/hash validation." % scenario_id}
+	return {"ok": true, "pointer_bytes": pointer_bytes, "scenario_bytes": scenario_bytes,
+		"source_paths": [pointer_path, stream_path],
+		"sources": {pointer_path: pointer_bytes, stream_path: scenario_bytes}}
+
+
 ## Consume one contiguous ROM-decoded token. Event records yield typed wait and
 ## task-seed contracts; the cooperative scheduler is deliberately not run.
 func advance_one() -> Dictionary:
@@ -290,6 +438,9 @@ func _consume_decoded_opcode(token: Dictionary, offset: int, length: int) -> Dic
 		"status": "decoded_byte_operation_applied",
 		"scenario_id": _scenario_id,
 		"opcode": opcode,
+		"handler_cpu_address": int(token.get("handler_cpu_address", -1)),
+		"handler_file_offset": int(token.get("handler_file_offset", -1)),
+		"handler_bytes": token.get("handler_bytes", []),
 		"source_byte_offset": offset,
 		"source_byte_index_after": _source_byte_cursor,
 		"ram_writes": writes.duplicate(true),
@@ -305,9 +456,12 @@ func _consume_event_record(token: Dictionary, offset: int) -> Dictionary:
 	var raw: PackedByteArray = raw_variant
 	if raw != _source_bytes.slice(offset, offset + 4):
 		return _failure(Status.SOURCE_INTEGRITY_FAILURE, "Decoded event record differs from the hash-checked stream bytes.")
-	if raw != PackedByteArray([0x02, 0x3A, 0x8F, 0x73]) or offset != 3:
+	var expected_offset := 3 if _scenario_id == 0x35 else 4
+	var expected_record := PackedByteArray([0x02, 0x3A, 0x8F, 0x73]) if _scenario_id == 0x35 \
+		else PackedByteArray([0x10, 0x3A, 0x8F, 0xF0])
+	if raw != expected_record or offset != expected_offset:
 		return _failure(Status.UNSUPPORTED_OPERATION,
-			"Only the first source-owned scenario-$35 record at byte +3 is supported.",
+			"Only the first preserved event record for scenario-$%02X is supported." % _scenario_id,
 			{"source_byte_offset": offset, "record_bytes": raw, "cursor_advanced": false})
 	var assignments: Dictionary = token.get("ram_assignments", {})
 	for address_variant in assignments:

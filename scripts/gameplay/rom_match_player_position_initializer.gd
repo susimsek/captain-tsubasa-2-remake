@@ -16,6 +16,7 @@ const HOME_SIDE := 0
 const AWAY_SIDE := 11
 const RECORD_TABLE_BASE := 0x0300
 const RECORD_SIZE := 0x0C
+const STACK_PAGE_SIZE := 0x0100
 const X_RECORD_OFFSET := 0x06
 const Y_RECORD_OFFSET := 0x08
 
@@ -171,6 +172,110 @@ func initialize_positions(match_index: int, formation_002c: int, formation_002e:
 		possession_side_05fb, source_context, "")
 
 
+## Executes the source-owned `$DAF2 JSR $DC07` callee from a live scheduler
+## boundary and returns its ordered RAM/stack writes and `$DAF5` CPU state.
+## This is an instruction-derived routine model, not a capture-state importer.
+func execute_from_live_call(boundary: Dictionary, match_context: Dictionary) -> Dictionary:
+	if not _configured:
+		return _execution_failure("Configure the hash-checked ROM source spans first.")
+	var ram_variant: Variant = boundary.get("ram_image", PackedByteArray())
+	var stack_variant: Variant = boundary.get("stack_page", PackedByteArray())
+	if not ram_variant is PackedByteArray or ram_variant.size() != 0x0800 \
+			or not stack_variant is PackedByteArray or stack_variant.size() != 0x0100:
+		return _execution_failure("The live `$DAF2` boundary must provide complete scheduler RAM and stack images.")
+	if String(boundary.get("rom_sha256", "")) != EXPECTED_ROM_SHA256 \
+			or int(boundary.get("slot_base", -1)) != 0x05 \
+			or int(boundary.get("active_task_slot", -1)) != 0x05 \
+			or int(boundary.get("pc", -1)) != 0xDAF2 \
+			or int(boundary.get("sp", -1)) != 0x50 \
+			or int(boundary.get("bank_low", -1)) != 0x1C \
+			or int(boundary.get("bank_high", -1)) != 0x1D:
+		return _execution_failure("The position initializer requires the live slot-$05 `$DAF2` / SP `$50` / bank `$1C/$1D` boundary.")
+	var ram := (ram_variant as PackedByteArray).duplicate()
+	var initial_context: Dictionary = match_context.get("source_context", {})
+	if int(match_context.get("match_index", -1)) != 0 \
+			or int(ram[0x002C]) != int(match_context.get("formation_002c", -1)) \
+			or int(ram[0x002E]) != int(match_context.get("formation_002e", -1)) \
+			or int(ram[0x05FB]) != int(match_context.get("possession_side_05fb", -1)):
+		return _execution_failure("Live `$002C/$002E/$05FB` inputs disagree with the decoded match-zero context.")
+	var decoded: Dictionary = initialize_positions(0, ram[0x002C], ram[0x002E],
+		ram[0x05FB], initial_context)
+	if not bool(decoded.get("ok", false)):
+		return _execution_failure(String(decoded.get("error", "ROM position tables could not be decoded.")))
+	var positions: Array = decoded.get("positions", [])
+	if positions.size() != GLOBAL_RECORD_COUNT:
+		return _execution_failure("The source tables did not resolve all 22 player records.")
+	var writes: Array[Dictionary] = []
+	var home_base := int(ram[0x002C]) * FORMATION_ROW_STRIDE
+	var away_base := int(ram[0x002E]) * FORMATION_ROW_STRIDE
+	_write_ram(ram, writes, 0xDC0F, 0x003A, (ram[0x002C] * 3) & 0xFF)
+	_write_ram(ram, writes, 0xDC16, 0x003A, home_base)
+	_write_ram(ram, writes, 0xDC20, 0x003B, (ram[0x002E] * 3) & 0xFF)
+	_write_ram(ram, writes, 0xDC27, 0x003B, away_base)
+	for position_variant in positions:
+		var position: Dictionary = position_variant
+		var slot := int(position.get("global_slot", -1))
+		var record_address := int(position.get("record_address", -1))
+		_write_ram(ram, writes, 0xCD81, 0x0034, record_address & 0xFF)
+		_write_ram(ram, writes, 0xCD86, 0x0035, (record_address >> 8) & 0xFF)
+		var table_base_address := 0x003A if slot < TEAM_PLAYER_COUNT else 0x003B
+		var increment_pc := 0xDC31 if slot < TEAM_PLAYER_COUNT else 0xDC40
+		var table_base := int(ram[table_base_address])
+		_write_ram(ram, writes, increment_pc, table_base_address, (table_base + 1) & 0xFF)
+		_write_ram(ram, writes, 0xDC61, record_address + Y_RECORD_OFFSET, int(position.get("y", -1)))
+		_write_ram(ram, writes, 0xDC66, record_address + X_RECORD_OFFSET, int(position.get("x", -1)))
+		if slot == TEAM_PLAYER_COUNT:
+			_write_ram(ram, writes, 0xDC74, record_address + 0x07, 0)
+	var expected_last_pointer := _record_address_for_slot(GLOBAL_RECORD_COUNT - 1)
+	if int(ram[0x0034]) | (int(ram[0x0035]) << 8) != expected_last_pointer:
+		return _execution_failure("The source pointer loop did not finish on player record 21.")
+	var stack := (stack_variant as PackedByteArray).duplicate()
+	var stack_writes: Array[Dictionary] = []
+	# JSR/RTS and the routine's balanced PHA/PLA pairs leave these final bytes
+	# behind in the NES stack page even though SP returns to its entry value.
+	_stack_write(stack, stack_writes, 0xDAF2, 0x50, 0xDA)
+	_stack_write(stack, stack_writes, 0xDAF2, 0x4F, 0xF4)
+	_stack_write(stack, stack_writes, 0xDC0B, 0x4E, (ram[0x002C] * 2) & 0xFF)
+	_stack_write(stack, stack_writes, 0xDC1C, 0x4E, (ram[0x002E] * 2) & 0xFF)
+	for slot in range(GLOBAL_RECORD_COUNT):
+		_stack_write(stack, stack_writes, 0xDC2B, 0x4E, slot)
+		_stack_write(stack, stack_writes, 0xDC2C, 0x4D, 0xDC)
+		_stack_write(stack, stack_writes, 0xDC2C, 0x4C, 0x2E)
+		_stack_write(stack, stack_writes, 0xDC34, 0x4E, slot)
+		_stack_write(stack, stack_writes, 0xDC4C, 0x4D, 0xDC)
+		_stack_write(stack, stack_writes, 0xDC4C, 0x4C, 0x4E)
+		_stack_write(stack, stack_writes, 0xDC69, 0x4E, slot)
+	for stack_offset in STACK_PAGE_SIZE:
+		ram[0x0100 + stack_offset] = stack[stack_offset]
+	var last_position: Dictionary = positions[GLOBAL_RECORD_COUNT - 1]
+	var entry_p := int(boundary.get("p", 0x20)) & 0xFF
+	var return_p := (entry_p & 0x3C) | 0x23 # final CMP #$16: C/Z=1, N=0; ADC has no overflow.
+	var return_known_mask := (int(boundary.get("p_known_mask", 0)) | 0xE3 | 0x20) & 0xFF
+	return {
+		"ok": true,
+		"status": "returned_to_slot05_caller_DAF5",
+		"rom_sha256": EXPECTED_ROM_SHA256,
+		"source_manifest": MANIFEST_PATH,
+		"source_manifest_sha256": MANIFEST_SHA256,
+		"source_hashes": get_source_status().get("source_hashes", {}),
+		"entry": {"pc": 0xDAF2, "sp": 0x50, "return_word": 0xDAF4,
+			"slot_base": 0x05, "bank_low": 0x1C, "bank_high": 0x1D},
+		"registers": {"pc": 0xDAF5, "sp": 0x50, "a": 0x16,
+			"x": int(last_position.get("x", -1)), "y": 0x06,
+			"p": return_p, "p_known_mask": return_known_mask},
+		"ram_image": ram,
+		"stack_page": stack,
+		"memory_writes": writes,
+		"stack_writes": stack_writes,
+		"positions": positions.duplicate(true),
+		"scratch_after": {"$0034": int(ram[0x0034]), "$0035": int(ram[0x0035]),
+			"$003A": int(ram[0x003A]), "$003B": int(ram[0x003B])},
+		"ppu_bus_events": [], "apu_register_writes": [],
+		"source_cycle_timing_modeled": false,
+		"error": "",
+	}
+
+
 func get_source_status() -> Dictionary:
 	var hashes: Dictionary = {}
 	for source_path_variant in _source_bytes.keys():
@@ -229,6 +334,26 @@ func _result(ok: bool, positions: Array, match_index: int, home_formation: int,
 		"source_context": source_context.duplicate(true),
 		"error": message,
 	}
+
+
+func _write_ram(ram: PackedByteArray, writes: Array[Dictionary], pc: int,
+		address: int, value: int) -> void:
+	var byte_value := value & 0xFF
+	ram[address] = byte_value
+	writes.append({"pc": pc, "address": address, "value": byte_value})
+
+
+func _stack_write(stack: PackedByteArray, writes: Array[Dictionary], pc: int,
+		address: int, value: int) -> void:
+	var offset := address & 0xFF
+	var byte_value := value & 0xFF
+	stack[offset] = byte_value
+	writes.append({"pc": pc, "address": 0x0100 | offset, "value": byte_value})
+
+
+func _execution_failure(message: String) -> Dictionary:
+	error_message = message
+	return {"ok": false, "error": message}
 
 
 func _sha256(bytes: PackedByteArray) -> String:

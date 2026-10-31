@@ -1,0 +1,18 @@
+{
+  "schema": "ct2-slot09-cbf1-sound-queue-consumer-v1",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "runtime_rom_dependency": false,
+  "dependencies": [
+    {
+      "manifest": "res://reference/rom_extract/gameplay/fresh_daaa_continuation/manifest.json",
+      "file": "fixed_sound_queue_CBF1_CC01.bin",
+      "bank": "0x1E",
+      "window": "fixed",
+      "cpu_start": "0xCBF1",
+      "cpu_end_exclusive": "0xCC02",
+      "file_offset": "0x03CC01",
+      "length": 17,
+      "sha256": "fc6689183aa19a053b44b44571a373ebb48b3bf940f299fb10623c61da4791ce"
+    }
+  ]
+}

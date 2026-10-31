@@ -65,11 +65,13 @@ into gameplay.
 The `$0700` event at `$812C` is emitted by this bounded evaluator only after
 all required earlier return receipts are present and the verified instruction
 sequence reaches the store. Its event contains the store and post-store PCs,
-queue ID, ROM hash, and unknown source frame/cycle. The executor does not run a
-general 6502, helper bodies, the `$82B5` yield loop, the nested task stack, or
-the CPU/NMI scheduler, and it is not connected to `KickoffRouteRuntime`.
-Verifier receipts are fixtures for the interface contract; they do not prove
-that those helper bodies ran in the live route.
+queue ID, ROM hash, and unknown source frame/cycle. The broad evaluator does
+not run a general 6502, helper bodies, the `$82B5` yield loop, the nested task
+stack, or the CPU/NMI scheduler, and its full caller projection remains
+separate from `KickoffRouteRuntime`. Verifier receipts for that broader
+interface do not prove those helper bodies ran in the live route. The bounded
+`$82E2-$82EC` caller tail has since been connected independently; see the
+live integration note below.
 
 ## Trace comparison and remaining boundary
 
@@ -83,9 +85,9 @@ as described in [`first_match_audio_source.md`](first_match_audio_source.md).
 These timing and register-write records are validation references only; the
 component does not read them or use them to schedule its event.
 
-The production route still needs a real source-owned continuation from the
-ID-1 `$82B5` return and live callers for the bounded `$C4B9`, `$A20F`, and
-`$A20C` executors. The isolated `$A20C` component follows the `$A20F` result
+The production route now applies the shared `$82B5` post-cleanup tail and
+reaches the ID-1 caller at `$80F1`. It still needs live callers for the bounded
+`$C4B9`, `$A20F`, and `$A20C` executors. The isolated `$A20C` component follows the `$A20F` result
 through the real `$A8B6 RTS->$8112` continuation. The `$8114 JSR $8920` prefix
 now runs through the real `$9DEE` and `$8938->$C4B9` RTS returns, then stops at
 `$893B LDA $78 / BNE $893B`. `$78` and its resume event are not sourced, so the
@@ -107,6 +109,27 @@ The verifier compares the projected queue ID/PC and ID-2 table result with
 the source-stepper queue record and checks the retained muted FCEUX hook
 boundary. It does not validate full runtime integration, queue-to-APU latency,
 PCM parity, or NES hardware timing.
+
+## Live post-cleanup tail — 31 Oct 2026
+
+`RomFreshKickoffCallerContinuation.execute_cutscene_wait_post_cleanup()` now
+byte-checks the helper return at `$82E2`, verifies the enclosing ID-1 or ID-2
+JSR to `$82B5`, and executes the bounded `LDA #$00`, four zero-page stores, and
+`RTS`. The recorded ID-1 route writes zero to `$0044/$0045/$007A/$007B` at the
+ROM instruction PCs and reaches `$80F1`; all four values match the frame-7258
+FCEUX RAM snapshot. This tail does not emulate the stack or cycle phase. The
+caller at `$80F1`, automatic ID-2 dispatch, and the later fresh-match handoff
+remain outside the production route.
+
+The CPU return contract now carries every upstream-known P bit through this
+tail and the `$80F1-$80F7` caller prefix. The cleanup `LDA #$00` and stores set
+N/Z; `$80F1 LDA #$C0` and `$80F5 LDX #$02` update N/Z again, while the source
+instructions preserve I and the other status bits. The focused verifier checks
+that both known I=0 and known I=1 survive to the `$80F7` mapper-call boundary.
+This is flag propagation only: the production route still supplies no
+source-derived I bit, so it does not establish the interrupt-enable state at
+`$8114`. The focused caller verifier and recorded-input Select-wait integration
+verifier both pass with the production route's existing partial status input.
 
 ## Return-contract audit follow-up — 28 Oct 2026
 
@@ -131,6 +154,10 @@ and [`verify_rom_fresh_match_normalize_executor.gd`](../../../tools/diagnostics/
 
 Return-contract status for this caller chain:
 
+The current component-by-component return coverage and first unresolved
+`$8920` wait are summarized in the
+[`2026-10-29 caller return-chain audit`](fresh_kickoff_caller_return_chain_audit_20261029.md).
+
 | Call or wait | Executable source evidence | Remaining production boundary |
 |---|---|---|
 | `$C4B9` mapper helper | Hash-checked helper executes the 15-byte body and RTS for five checked caller sites, including fresh setup `$8938`. | The live caller must supply its event, registers, `$0022`, and JSR stack; no production mapper update occurs. |
@@ -138,7 +165,7 @@ Return-contract status for this caller chain:
 | `$9BA0` (both cleanup sites) | Its `JSR $99F0; JSR $98A0; JMP $9B7F` chain is identified; the handoff planner emits unapplied effect plans. | Child CPU/PPU and state effects are not executed by a hash-bound helper; named planner receipts are not source execution. |
 | `$A20C` | Hash-checked bounded execution reaches `$A8B6 RTS->$8112`; all 256 `$E4` candidates prove the fresh `$26=0` branch and output invariant. | The isolated contract is not supplied by the production route. The subsequent `$8920` call is only executed to its `$78` wait boundary so far. |
 | `$8920` | Hash-checked caller prefix executes `$8920->$9DEE->$8925`, derives `$BF00`, and executes `$8938->$C4B9` to its real RTS with bank `$06` selected. | At `$893B`, the ROM reads `$78` and loops while nonzero. No source-owned `$78` value or scheduler/resume event is available; do not seed endpoint RAM or assume a delay. The 19-byte copy, bank restore and `$8920 RTS->$8117` remain unexecuted. |
-| `$A006` / `$A009` | Their bank-$01 vectors and caller roles are known. | Their target bodies and return effects are not packaged as executable, hash-checked components. |
+| `$A006` / `$A009` | `$A006`'s bank-$01 vector and `$A4EB-$A610` body are preserved and hash-checked; an entry-only executor verifies `$811C->$A006->$A4EB`. Both caller roles and vectors are known. | The `$A4EB` body effects and `$811F` return are not executed. `$A009`'s target body remains un-packaged. |
 | `$C572` | The fixed jump to `$DB62` and ROM-table stamina formula are documented; the player-state provider computes energy values. | The provider derives data but does not execute indirect record writes or return on a source CPU stack. |
 | `$8464` cutscene dispatch | Cutscene IDs, scripts, and dispatcher/task-install behavior are researched; the cutscene VM executes script semantics. | Script execution is not the dispatcher plus worker/task installation and JSR return. No source-owned scheduler event connects them here. |
 | `$82B5` waits | Its bytes, natural-end/Select predicates, cleanup stores, and `$0700` stop store are checked. | `$9FA8` yields, input/NMI-ready events, stack continuation, and actual resumption are not run by the caller projection; a fixed elapsed delay is not a valid substitute. |

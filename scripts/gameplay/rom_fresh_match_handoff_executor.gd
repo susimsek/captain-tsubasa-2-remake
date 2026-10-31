@@ -73,6 +73,28 @@ static func source_span_specs() -> Dictionary:
 	return SOURCE_SPANS.duplicate(true)
 
 
+## Plans only the shared $82B5 return prefix for either title cutscene. It
+## stops at the live $82DF->$9BA0 call and never accepts a synthetic helper
+## receipt as execution evidence.
+func plan_cutscene_wait_cleanup(cutscene_id: int, completion_kind: String) -> Dictionary:
+	if not _configured and not configure_from_project_sources():
+		return _refused(completion_kind, error_message)
+	if cutscene_id not in [1, 2]:
+		return _refused(completion_kind, "Expected title cutscene ID 1 or 2.")
+	if completion_kind != "natural" and completion_kind != "select":
+		return _refused(completion_kind, "Unsupported completion kind; expected natural or select.")
+	var result := _new_result(completion_kind)
+	result["cutscene_id"] = cutscene_id
+	result["caller_return_pc_after_helper"] = 0x80F1 if cutscene_id == 1 else 0x815D
+	_append_cutscene_cleanup_writes(result)
+	result["source_path"].append_array([0x82C6, 0x82DF])
+	_accept_helper_result(result, [], 0)
+	result["status"] = "blocked_on_helper"
+	result["ok"] = true
+	result["next_step"] = "Execute the live $9BA0 effects before returning to the caller."
+	return result
+
+
 ## Loads project-owned source bytes only; the ROM and emulator are not runtime
 ## inputs. The task-slot initializer is loaded from its existing verified span.
 func configure_from_project_sources() -> bool:

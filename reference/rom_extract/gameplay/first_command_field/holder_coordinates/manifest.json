@@ -6,15 +6,14 @@
     "fixed_bank_1f_cpu_c000_file_base": "0x03C010"
   },
   "coordinate_chain": [
-    "E0F6 calls E6EC during field setup; call return-address convention is checked only as trace validation.",
-    "E6EC reads the current holder slot from $0441 and calls $CD7C, which writes its record pointer to $0034/$0035 from the $CD89 table.",
-    "E6F2 loads Y=6 and reads ($34),Y into $0635; E6FA loads Y=8 and reads ($34),Y into $0637.",
-    "For fresh match-0 route context, the existing ROM position initializer derives these record fields from $DC87/$DCB3 and $CDC9. This resolver accepts an explicit holder slot and never selects it."
+    "E0F6 calls E6EC during field setup; this source package validates the call and callee instruction paths.",
+    "E6EC reads holder slot $0441, calls $CD7C to write its record pointer to $0034/$0035, then reads record offsets +$06 and +$08.",
+    "E6EC calls $CDE2 with the copied X/Y in registers and stores the returned tile index at $05FE.",
+    "Initial record coordinates derive from the match-zero ROM position tables; holder selection remains caller-owned live logic."
   ],
   "runtime_boundary": {
-    "holder_slot": "caller-owned source-derived live $0441 value; not derived by this helper",
-    "dynamic_movement": "not modeled; coordinates are from the match-0 initial formation records",
-    "callback_state": "$05CD/$05CE callback placement and the scheduling of $F0B5 remain separate caller-owned route state",
+    "holder_slot": "caller-owned live $0441 value produced by source logic",
+    "dynamic_movement": "not modeled by this initial-coordinate copy",
     "captures_used_as_runtime_inputs": false
   },
   "entries": [
@@ -36,7 +35,17 @@
       "size_bytes": 29,
       "sha256": "3bf0cf8593e6eccf77d32044c666a39713134e8120a2e3e7deba3541bb6fbf8c",
       "raw_hex": "AD 41 04 20 7C CD A0 06 B1 34 8D 35 06 AA A0 08 B1 34 8D 37 06 A8 20 E2 CD 8D FE 05 60",
-      "source_role": "Loads current holder index $0441, resolves record via $CD7C, copies record +6/+8 into $0635/$0637."
+      "source_role": "Loads holder slot $0441, resolves its record through $CD7C, copies +6/+8, and calls $CDE2."
+    },
+    {
+      "path": "bank_1f_cde2_coordinate_index_helper.bin",
+      "prg_bank": "$1F",
+      "cpu_address": "$CDE2",
+      "file_offset": "0x03CDF2",
+      "size_bytes": 38,
+      "sha256": "e5f6dcb9f5d2451ba1770add2906daa504befaf7800e3bfe2e1b163708e58a83",
+      "raw_hex": "8A 38 E9 30 90 1D C9 A0 B0 19 4A 4A 4A AA 98 38 E9 50 90 0F C9 60 B0 0B 4A 4A 4A CA 30 07 18 69 0C D0 F8 A9 FF 60",
+      "source_role": "Validates holder X/Y and calculates the field tile index returned to $E6EC."
     }
   ]
 }

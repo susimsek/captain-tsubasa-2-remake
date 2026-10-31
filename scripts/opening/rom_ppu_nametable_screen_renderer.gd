@@ -47,6 +47,7 @@ var _ppu_memory: Dictionary = {}
 var _ppu_memory_bytes := PackedByteArray()
 var _nametable_ram_power_on := PackedByteArray()
 var _background_palette := PackedByteArray()
+var _source_background_palette := PackedByteArray()
 var _chr := PackedByteArray()
 var _decoded_chr_pixels := PackedByteArray()
 var _chr_banks: Array[int] = [60, 61, 62, 63]
@@ -272,6 +273,11 @@ func get_background_palette_bytes() -> PackedByteArray:
 	return _background_palette.duplicate()
 
 
+## Return the unfaded palette loaded from the active ROM-derived profile.
+func get_source_background_palette_bytes() -> PackedByteArray:
+	return _source_background_palette.duplicate()
+
+
 ## In the NES, a sprite with OAM priority bit 5 set is visible only through
 ## transparent background pixels. The caller draws its sprite layer below this
 ## node; this mode makes color-index-zero background pixels transparent.
@@ -346,6 +352,7 @@ func set_background_profile(background_id: int,
 	_active_data_root = project_data_root
 	_chr_banks = selected_banks
 	_background_palette = selected_palette
+	_source_background_palette = selected_palette.duplicate()
 	_tile_row_blit_cache.clear()
 	_tile_row_byte_cache.clear()
 	_tile_row_chunk_byte_cache.clear()

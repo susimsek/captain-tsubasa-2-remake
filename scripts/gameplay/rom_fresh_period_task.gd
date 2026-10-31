@@ -143,6 +143,7 @@ func execute_fresh_match_zero(source_inputs: Dictionary) -> Dictionary:
 			"sp": _sp, "pc": _pc,
 		},
 		"scheduler_dispatch": source_inputs.get("scheduler_dispatch", {}).duplicate(true),
+		"ram_image": _ram_image(),
 		"ram": ram_result,
 		"writes": _writes.duplicate(true),
 		"instructions": _instructions.duplicate(true),
@@ -173,15 +174,19 @@ func _validate_caller_inputs(source_inputs: Dictionary) -> bool:
 
 func _reset_execution_state(source_inputs: Dictionary) -> void:
 	_ram.clear()
+	var source_ram: Variant = source_inputs.get("ram_image", PackedByteArray())
+	if source_ram is PackedByteArray and source_ram.size() == RAM_SIZE:
+		for address in range(RAM_SIZE):
+			_ram[address] = int(source_ram[address])
 	_ram[0x0027] = int(source_inputs["period_0027"])
 	_ram[0x002B] = int(source_inputs["opponent_id_002b"])
-	_a = 0
-	_x = 0
 	var scheduler_dispatch: Variant = source_inputs.get("scheduler_dispatch", {})
+	_a = int(scheduler_dispatch.get("a", 0)) if scheduler_dispatch is Dictionary else 0
+	_x = int(scheduler_dispatch.get("x", 0)) if scheduler_dispatch is Dictionary else 0
 	_y = int(scheduler_dispatch.get("y", source_inputs.get("entry_y", 0))) \
 			if scheduler_dispatch is Dictionary else int(source_inputs.get("entry_y", 0))
 	_sp = int(source_inputs["entry_sp"])
-	_pc = CODE_START
+	_pc = int(source_inputs.get("entry_pc", CODE_START))
 	_zero = false
 	_carry = false
 	_writes.clear()
@@ -320,6 +325,14 @@ func _read_ram(address: int) -> int:
 		_fail("Slot-$05 path read caller-owned RAM `$%04X` without an explicit source input." % address)
 		return -1
 	return int(_ram[address])
+
+
+func _ram_image() -> PackedByteArray:
+	var image := PackedByteArray()
+	image.resize(RAM_SIZE)
+	for address in range(RAM_SIZE):
+		image[address] = int(_ram.get(address, 0)) & 0xFF
+	return image
 
 
 func _read_code_byte(address: int) -> int:

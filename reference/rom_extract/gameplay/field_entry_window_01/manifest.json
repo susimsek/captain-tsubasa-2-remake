@@ -1,0 +1,236 @@
+{
+  "schema": "ct2-field-entry-window-01-rom-sources-v1",
+  "source_rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "size_bytes": 393232,
+    "runtime_dependency": false
+  },
+  "bank_mapping": {
+    "bank_18_cpu_8000_file_base": "0x030010",
+    "fixed_cpu_c000_file_base": "0x03C010"
+  },
+  "resources": [
+    {
+      "path": "descriptor_01_pointer.bin",
+      "cpu_address": "0xB3D1",
+      "file_offset": "0x0333E1",
+      "size_bytes": 2,
+      "sha256": "accbbfd498e294cb0ec1047d516f6d35959b8eb5489383366cb620e32143fa20",
+      "meaning": "ROM descriptor-table entry for window descriptor $01"
+    },
+    {
+      "path": "descriptor_01.bin",
+      "cpu_address": "0xB464",
+      "file_offset": "0x033474",
+      "size_bytes": 25,
+      "sha256": "f6812eef1a546a57f38689c72882108c959ac740e3ffea93288355cc6765bb82",
+      "meaning": "ROM header and four progress/column/token-stream records for descriptor $01"
+    },
+    {
+      "path": "descriptor_01_row_00.bin",
+      "cpu_address": "0xBBE0",
+      "file_offset": "0x033BF0",
+      "size_bytes": 3,
+      "sha256": "47e95b03911de543f1f251f12b38d11389dfca4b50b97065336b5b070e2ac5b7",
+      "meaning": "Descriptor-$01 row 0 token, operand, and ROM terminator"
+    },
+    {
+      "path": "descriptor_01_row_01.bin",
+      "cpu_address": "0xBD9C",
+      "file_offset": "0x033DAC",
+      "size_bytes": 3,
+      "sha256": "57363e3984f12148feb77f14c81048d8aaeb1a754576bea2cd507d4fb7250e92",
+      "meaning": "Descriptor-$01 row 1 token, operand, and ROM terminator"
+    },
+    {
+      "path": "descriptor_01_row_02.bin",
+      "cpu_address": "0xBBE3",
+      "file_offset": "0x033BF3",
+      "size_bytes": 3,
+      "sha256": "ff4579caac8640e812546cc7649a99a939843eb1f972ccb5c5b715278c5dbd47",
+      "meaning": "Descriptor-$01 row 2 token, operand, and ROM terminator"
+    },
+    {
+      "path": "descriptor_01_row_03.bin",
+      "cpu_address": "0xBD9F",
+      "file_offset": "0x033DAF",
+      "size_bytes": 3,
+      "sha256": "55535becc5335f960faf89b9118f0677f4a009dffd35466781512590f9f40291",
+      "meaning": "Descriptor-$01 row 3 token, operand, and ROM terminator"
+    },
+    {
+      "path": "token_dispatch_vectors_E0_F0_89BA_89DC.bin",
+      "cpu_address": "0x89BA",
+      "file_offset": "0x0309CA",
+      "size_bytes": 34,
+      "sha256": "74f4bd039c15b503a6b4d4a71652c4c957a179f05cf105c142c04eb740759ebe",
+      "meaning": "$ED/$EE dispatch vectors from the ROM token table"
+    },
+    {
+      "path": "token_parser_8986_89BA.bin",
+      "cpu_address": "0x8986",
+      "file_offset": "0x030996",
+      "size_bytes": 52,
+      "sha256": "46ac5f0183f5e0d90c90f248768b6df75bae9c5300a679cc83dfc21efb53888e",
+      "meaning": "ROM row parser: consumes a control token and its one-byte operand"
+    },
+    {
+      "path": "ed_text_loop_8A56_8A86.bin",
+      "cpu_address": "0x8A56",
+      "file_offset": "0x030A66",
+      "size_bytes": 48,
+      "sha256": "9c5386e88d06defe81879fed5bfd38a6005a0ce63f2e3abb7e40a5d07680e8c5",
+      "meaning": "ROM inline-text scan, $C524 conversion, and $8C9F character emission"
+    },
+    {
+      "path": "ed_team_handler_8AE7_8B0A.bin",
+      "cpu_address": "0x8AE7",
+      "file_offset": "0x030AF7",
+      "size_bytes": 35,
+      "sha256": "3d325dde06bcd128e916552a6ad5ceb1c29ee01b9d7a413cea018743e390a662",
+      "meaning": "$ED handler: selects $002A/$002B, length, and ROM team-name stream"
+    },
+    {
+      "path": "ed_team_name_lengths_8B0A_8B0E.bin",
+      "cpu_address": "0x8B0A",
+      "file_offset": "0x030B1A",
+      "size_bytes": 4,
+      "sha256": "162d345b5049ca5f2c7cf2c65f9e41cefda1e189df4eb4927530c8edbbc4b499",
+      "meaning": "Team-name output lengths for source team IDs 0 through 3"
+    },
+    {
+      "path": "ee_numeric_handler_8B2F_8B48.bin",
+      "cpu_address": "0x8B2F",
+      "file_offset": "0x030B3F",
+      "size_bytes": 25,
+      "sha256": "ae8a2a4125cb75968151ad77665a895dc7718501a0203a198dc68eb283fc2c48",
+      "meaning": "$EE handler: selects $0628/$0629 and enters ROM decimal formatter"
+    },
+    {
+      "path": "decimal_formatter_8C55_8C85.bin",
+      "cpu_address": "0x8C55",
+      "file_offset": "0x030C65",
+      "size_bytes": 48,
+      "sha256": "5e8434b7ea9df80165514fcbde32a3800ac76e8ddd3d12c13c5e2428dedf836b",
+      "meaning": "ROM decimal formatting path; value zero emits no digit tile"
+    },
+    {
+      "path": "character_buffer_writer_8C85_8CA5.bin",
+      "cpu_address": "0x8C85",
+      "file_offset": "0x030C95",
+      "size_bytes": 32,
+      "sha256": "2eddef720bfa62f995abd530c095e2953cc0555fd7aa8971bce35277e8ec97f7",
+      "meaning": "ROM character-buffer writer and decimal output wrapper"
+    },
+    {
+      "path": "fixed_text_helper_vector_C524_C527.bin",
+      "cpu_address": "0xC524",
+      "file_offset": "0x03C534",
+      "size_bytes": 3,
+      "sha256": "ec16977c3bfaa36e30d39a6e50ef3a1478d7c5a122f029c905be8413dc0a3b2f",
+      "meaning": "ROM text-byte conversion helper vector"
+    },
+    {
+      "path": "fixed_team_name_dispatch_C53C_C53F.bin",
+      "cpu_address": "0xC53C",
+      "file_offset": "0x03C54C",
+      "size_bytes": 3,
+      "sha256": "6419d5a470082bb95466023cfc1b7b935f42415f3a318be99c4c612ea9bfd9e5",
+      "meaning": "ROM team-name lookup dispatch vector"
+    },
+    {
+      "path": "fixed_text_converter_CBC2_CBF1.bin",
+      "cpu_address": "0xCBC2",
+      "file_offset": "0x03CBD2",
+      "size_bytes": 47,
+      "sha256": "840a83b978d52de7009769a5ef383299928a7af77f34d3e639d5393bef43d129",
+      "meaning": "ROM character converter used by the $ED string loop"
+    },
+    {
+      "path": "fixed_team_name_lookup_F30F_F329.bin",
+      "cpu_address": "0xF30F",
+      "file_offset": "0x03F31F",
+      "size_bytes": 26,
+      "sha256": "f9dc5864adabc5db33189a020b140fc4ecaad375427c97fe23b3be1b65771b92",
+      "meaning": "ROM lookup routine mapping team-name selector to a string pointer"
+    },
+    {
+      "path": "descriptor_frame_family_selector_B3BD.bin",
+      "cpu_address": "0xB3BD",
+      "file_offset": "0x0333CD",
+      "size_bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "meaning": "Packed ROM window-family selector; descriptor-$01 uses bits 2-3"
+    },
+    {
+      "path": "fixed_team_name_pointer_entries_76_79_F415_F41D.bin",
+      "cpu_address": "0xF415",
+      "file_offset": "0x03F425",
+      "size_bytes": 8,
+      "sha256": "2fd1c75895a73ff63801ef6dd3a323f534e580940547a06f96e5f2d8ec4f739a",
+      "meaning": "ROM name-pointer entries for fresh-match team IDs 0-3"
+    },
+    {
+      "path": "team_00_name_stream.bin",
+      "cpu_address": "0xF776",
+      "file_offset": "0x03F786",
+      "size_bytes": 6,
+      "sha256": "43d56de68e6197feddf34fcb5ebf127fbd8efb3c00b8fde7232e136a9056bdea",
+      "meaning": "ROM team-name string for team ID 0; $ED emits its first three bytes"
+    },
+    {
+      "path": "team_03_name_stream.bin",
+      "cpu_address": "0xF785",
+      "file_offset": "0x03F795",
+      "size_bytes": 4,
+      "sha256": "745a7e5ca32bdfed0aedce940c1856891d98b5862887050acb83db3adc13ae77",
+      "meaning": "ROM team-name string for team ID 9; $ED emits its first three bytes"
+    }
+  ],
+  "shared_frame_family": {
+    "path_from_project_root": "reference/rom_extract/gameplay/menus/first_action_menu/window_3x3_tile_ids.bin",
+    "cpu_address": "0x8D9E",
+    "file_offset": "0x030DAE",
+    "size_bytes": 9,
+    "sha256": "dcb1f10d1a9a0fa616fa2e065790ce038722b09968d265e7901770b3bf9133e0",
+    "raw_hex": "9c a8 9d aa 00 ab 9e a9 9f"
+  },
+  "packet_contract": {
+    "builder": "FirstActionMenuRomLayout.build_packets plus ROM $ED/$EE substitutions",
+    "packet_bytes": "payload length, PPU address low, PPU address high, payload tiles",
+    "descriptor_id": "0x01",
+    "descriptor_cpu": "0xB464",
+    "supported_fresh_match_inputs": {
+      "$002A": "0x00",
+      "$002B": "0x03",
+      "$0628": "0x00",
+      "$0629": "0x00"
+    },
+    "ed_handlers": "$89BA vector -> $8AE7; IDs 0 and 3 resolve through $F30F to ROM strings; $8B0A length table emits three characters",
+    "ee_handlers": "$89BA vector -> $8B2F; reads $0628/$0629 and then $003C at $8C55; value zero may emit tile $33 when the $003C early-return is not taken",
+    "team_name_outputs": [
+      {
+        "team_id": 0,
+        "selector": "0x76",
+        "string_resource": "team_00_name_stream.bin",
+        "source_prefix_hex": "53 41 4F",
+        "converted_tile_ids_hex": "DF CD DB"
+      },
+      {
+        "team_id": 3,
+        "selector": "0x79",
+        "string_resource": "team_03_name_stream.bin",
+        "source_prefix_hex": "46 4C 55",
+        "converted_tile_ids_hex": "D2 D8 E1"
+      }
+    ],
+    "source_input_producers": {
+      "$002A/$002B": "hash-checked RomFreshMatchSelectorExecutor through $A20F->$A86E->$A8B6 RTS",
+      "$0628": "fresh setup caller $A2AF invokes the hash-checked $AA06 zero-fill over $0468-$06FF",
+      "$0629": "hash-checked RomFreshPeriodTask $D11E->$D182 writes fresh period zero"
+    },
+    "missing_caller_input": "$003C is not present in the hash-checked selector, fresh setup zero-fill, or fresh-period results; EE rows remain unqueueable until sourced.",
+    "unsupported": "Other team IDs and nonzero $0628/$0629 values are refused; no later map/palette/OAM/raster work is included."
+  }
+}

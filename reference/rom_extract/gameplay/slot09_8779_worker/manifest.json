@@ -1,0 +1,70 @@
+{
+  "schema": "ct2-slot09-8779-worker-source-v1",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "header": "iNES 1.0; 16-byte header; no trainer",
+    "mapper": 4,
+    "submapper": 0
+  },
+  "runtime_rom_dependency": false,
+  "trace_state_included": false,
+  "mapping": "iNES PRG begins at file offset 0x0010. Fixed bank $1F maps CPU $E000-$FFFF from file 0x03E010; fixed bank $1E maps CPU $C000-$DFFF from 0x03C010; switchable bank $18 maps CPU $8000-$9FFF from 0x030010.",
+  "supported_branch": {
+    "entry_pc": "0x8779",
+    "condition": "live $0534 == 0",
+    "branch_pc": "0x877C",
+    "target_pc": "0x87A3",
+    "exit_kind": "RTS to caller return PC $EBC5"
+  },
+  "spans": [
+    {
+      "file": "fixed_root_slot09_after_86f8_EBB3_EBC5.bin",
+      "cpu_start": "0xEBB3",
+      "cpu_end_exclusive": "0xEBC5",
+      "bank": "0x1F",
+      "window": "fixed",
+      "file_offset": "0x03EBC3",
+      "length": 18,
+      "sha256": "5b1a5142b268e834aafe619d51b6c51a80e71c99ec269641ecb61cc6c0d50883",
+      "bytes": "48 a5 22 a9 18 85 24 a9 19 85 25 20 2d ce 68 20 06 80",
+      "description": "Caller continuation after the $86F8 RTS: saves A, selects banks $18/$19, calls $8006, then stops at return address $EBC5."
+    },
+    {
+      "file": "bank18_slot09_worker_vector_8006_8009.bin",
+      "cpu_start": "0x8006",
+      "cpu_end_exclusive": "0x8009",
+      "bank": "0x18",
+      "window": "low",
+      "file_offset": "0x030016",
+      "length": 3,
+      "sha256": "ec20595812bf088382eaa136f2bbf5cf9429467653f948041a7684a34e1b4fab",
+      "bytes": "4c 79 87",
+      "description": "Bank-$18 vector for the second slot-$09 worker: JMP $8779."
+    },
+    {
+      "file": "bank18_slot09_worker_8779_87A4.bin",
+      "cpu_start": "0x8779",
+      "cpu_end_exclusive": "0x87A4",
+      "bank": "0x18",
+      "window": "low",
+      "file_offset": "0x030789",
+      "length": 43,
+      "sha256": "407f2feb4cedb61c07aab10b9b39e7775d9891b04afeaa16b43ad459aeeab511",
+      "bytes": "ad 34 05 f0 25 10 1b 29 7f 8d 34 05 f0 1c 38 e9 01 0a aa bd 1c ad 85 7b bd 1d ad 85 7c a9 00 8d 35 05 ad 35 05 f0 04 ce 35 05 60",
+      "description": "Worker prefix including the supported live $0534==0 branch and its RTS at $87A3; excludes subsequent worker at $87E6."
+    },
+    {
+      "file": "fixed_mapper_helper_CE2D_CE4A.bin",
+      "cpu_start": "0xCE2D",
+      "cpu_end_exclusive": "0xCE4A",
+      "bank": "0x1E",
+      "window": "fixed",
+      "file_offset": "0x03CE3D",
+      "length": 29,
+      "sha256": "6a815aa4ebad9e014531c5590616d6ec5596be7aa1a31c1542057062f25eb64c",
+      "bytes": "a5 22 09 06 85 23 8d 00 80 a5 24 8d 01 80 a5 22 09 07 85 23 8d 00 80 a5 25 8d 01 80 60",
+      "description": "Fixed-bank MMC3 helper used by the $EBB3 caller to reselect bank pair $18/$19."
+    }
+  ]
+}

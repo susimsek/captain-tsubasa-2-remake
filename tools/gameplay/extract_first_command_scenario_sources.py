@@ -46,7 +46,7 @@ EVENT_RECORDS = {
 # its exclusive end boundary. The target table is not ordered by pointer value.
 POINTER_ENTRY_IDS = (0x1E, 0x35, 0x36, 0x44, 0x15)
 
-# Fixed-bank caller bytes at CPU $E233 establish the scenario-$1E root.
+# Fixed-bank caller bytes establish the preserved scenario roots.
 ENTRY_ROOTS = {
     "scenario_1E": {
         "cpu_address": 0xE233,
@@ -54,6 +54,13 @@ ENTRY_ROOTS = {
         "expected_bytes": bytes.fromhex("A9 1E 20 B0 CB"),
         "scenario_id": 0x1E,
         "description": "Immediate scenario ID $1E followed by JSR $CBB0.",
+    },
+    "scenario_36_fresh_kickoff": {
+        "cpu_address": 0xDB0E,
+        "file_offset": 0x03DB1E,
+        "expected_bytes": bytes.fromhex("A9 36 20 B0 CB"),
+        "scenario_id": 0x36,
+        "description": "Fresh-match caller loads scenario ID $36 and calls fixed-bank $CBB0.",
     },
 }
 
@@ -223,6 +230,7 @@ def main() -> None:
             "The extracted scenario bytes are preserved without interpretation or rewriting.",
             "The listed event-record anchors are source byte indexes only; they do not encode frame timing or establish runtime semantics.",
             "Scenario $1E is rooted by the byte sequence A9 1E 20 B0 CB at fixed-bank CPU $E233 / file 0x03E243.",
+            "Fresh-match scenario $36 is rooted by A9 36 20 B0 CB at fixed-bank CPU $DB0E / file 0x03DB1E.",
         ],
     }
     (OUTPUT_DIR / "manifest.json").write_text(

@@ -49,6 +49,33 @@
       "meaning": "Decrements the source countdown once at this field-loop callsite; no frame cadence is synthesized by the scenario runtime."
     },
     {
+      "path": "reference/rom_extract/gameplay/scenario_task_runtime/fixed_scenario_actor_worker_seed_ED15_ED2C.bin",
+      "cpu_address": "$ED15",
+      "file_offset": "0x03ED25",
+      "length_bytes": 24,
+      "sha256": "61ef48dd58901f95f2c20f7f4a8bc1bb850221cb403f6bfbd52a65a12e33f551",
+      "bytes_hex": "C9 FF F0 14 8D EA 05 A2 11 A9 C8 95 01 A9 18 95 02 A9 7F A0 FF 20 E7 CA",
+      "meaning": "When scenario parameter $0529 is not $FF, stores it at $05EA, initializes slot $11 for bank $18 with stack pointer $C8, and calls $CAE7 to seed the actor task."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/scenario_task_runtime/bank18_actor_worker_entry_8000_804A.bin",
+      "cpu_address": "$8000",
+      "file_offset": "0x030010",
+      "length_bytes": 74,
+      "sha256": "2187af6881ea2f4e7eb16c0c5550bb24ead076be918d429d8ab63564ed8fd46c",
+      "bytes_hex": "4C 0F 80 4C F8 86 4C 79 87 4C E6 87 4C 51 88 2C 3F 06 10 03 4C 12 C5 A9 20 85 5F A9 92 85 60 AD EA 05 0A 90 02 E6 60 A8 B1 5F AA C8 B1 5F 85 60 86 5F A9 00 8D E9 05 8D E5 05 8D E4 05 8D F4 05 A9 01 8D E3 05 A9 01 20 15 C5",
+      "meaning": "Bank-$18 task entry jumps to $800F; this bounded setup reads the selected actor-parameter pointer, clears worker state, sets $05E3, and calls $C515 at $8047."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/scenario_task_runtime/bank18_actor_parameter_73_pointer_9306.bin",
+      "cpu_address": "$9306",
+      "file_offset": "0x031316",
+      "length_bytes": 2,
+      "sha256": "03f3c4278cc253614b622fa856993e8b325eb061a29e54685038771778377938",
+      "bytes_hex": "42 9F",
+      "meaning": "ROM pointer selected by scenario actor parameter $73 through the bank-$18 table at $9220."
+    },
+    {
       "path": "reference/rom_extract/gameplay/first_command_scenarios/scenario_pointer_35.bin",
       "cpu_address": "$B7CD",
       "file_offset": "0x020A39",

@@ -35,6 +35,30 @@ const EXPECTED_SEGMENTS := {
 		"length": 0x54E,
 		"sha256": "90caefd89c50a5696347adba35d47b1b428829c4983051da11226f6bab1f1fa7",
 	},
+	"early_actor_descriptor_pointers_83f0_83f5": {
+		"path": "reference/rom_extract/gameplay/actor_oam/bank16_early_actor_descriptor_pointers_83f0_83f5.bin",
+		"cpu_start": 0x83F0,
+		"length": 0x06,
+		"sha256": "c657102f38fc6bb3b6fdf8231ab95316f8eee01c64c9af2bda3a344876340b4f",
+	},
+	"early_actor_descriptor_b8_bb21_bb61": {
+		"path": "reference/rom_extract/gameplay/actor_oam/bank16_early_actor_descriptor_B8_BB21_BB61.bin",
+		"cpu_start": 0xBB21,
+		"length": 0x41,
+		"sha256": "7e9cdcd5dbe2e732c0bdb4ba4a05328a26b36ce447d336702eaffdf46888b7dc",
+	},
+	"early_actor_descriptor_b9_bb62_bb6c": {
+		"path": "reference/rom_extract/gameplay/actor_oam/bank16_early_actor_descriptor_B9_BB62_BB6C.bin",
+		"cpu_start": 0xBB62,
+		"length": 0x0B,
+		"sha256": "f8c2fe9650548e50d75b37eaca01d2a5e924e5f858718e6f0933cb816ebc615a",
+	},
+	"early_actor_descriptor_ba_bb6d_bb7b": {
+		"path": "reference/rom_extract/gameplay/actor_oam/bank16_early_actor_descriptor_BA_BB6D_BB7B.bin",
+		"cpu_start": 0xBB6D,
+		"length": 0x0F,
+		"sha256": "40b0a4a2fd857fff6c29536666d2d2104acb9bf7ad2ce092eacd95aa62785803",
+	},
 }
 
 const OAM_BYTES_REQUIRED := 64 * 4
@@ -238,15 +262,15 @@ func _draw_actor(
 					if oam_index + 4 > OAM_BYTES_REQUIRED:
 						return {"ok": false, "error": "sprite stream exceeds the 64-entry OAM shadow"}
 					if (x16 >> 8) != 0:
-						# The source hides only Y; remaining tuple bytes retain caller state.
+						# The source hides only Y and leaves the OAM cursor in place.
 						output_oam[oam_index] = 0xF8
 					else:
 						output_oam[oam_index] = screen_y
 						output_oam[oam_index + 1] = tile_id
 						output_oam[oam_index + 2] = (x_attribute_code & 0x03) | sprite_flip
 						output_oam[oam_index + 3] = x16 & 0xFF
-					oam_index += 4
-					sprite_count += 1
+						oam_index += 4
+						sprite_count += 1
 					stream_offset += 2
 			_:
 				return {"ok": false, "error": "unsupported sprite opcode %d at $%04X" % [opcode, pointer + stream_offset]}

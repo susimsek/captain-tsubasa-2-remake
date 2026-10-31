@@ -52,6 +52,15 @@ const CALLS_AFTER_MATCH_MUSIC := [
 	{"caller_pc": 0x8142, "target_pc": 0xA009, "return_pc": 0x8145, "call_id": "prematch_dispatch_setup_a009"},
 	{"caller_pc": 0x8157, "target_pc": 0x8464, "return_pc": 0x815A, "call_id": "dispatch_table_cutscene", "cutscene_id_from_rom_table": true},
 ]
+const CUTSCENE_POST_CLEANUP_BYTES := [
+	0xA9, 0x00, 0x85, 0x44, 0x85, 0x45, 0x85, 0x7A, 0x85, 0x7B, 0x60,
+]
+const ID1_POST_CLEANUP_CALLER_BYTES := [
+	0xA9, 0xC0, # $80F1 LDA #$C0
+	0x85, 0xE0, # $80F3 STA $E0
+	0xA2, 0x02, # $80F5 LDX #$02
+	0x20, 0xB9, 0xC4, # $80F7 JSR $C4B9
+]
 
 var error_message := ""
 var _configured := false
@@ -101,6 +110,139 @@ func configure_from_project_sources() -> bool:
 		return false
 	_configured = true
 	return true
+
+
+## Executes the bounded ROM stores immediately after the shared waiter's
+## `$9BA0` helper. The enclosing caller JSR is checked so the RTS destination
+## comes from ROM bytes; this does not emulate the 6502 stack or cycle timing.
+func execute_cutscene_wait_post_cleanup(helper_return_pc: int,
+		caller_return_pc: int, cleanup_cpu_contract: Dictionary) -> Dictionary:
+	if not _configured and not configure_from_project_sources():
+		return _refused(error_message)
+	if helper_return_pc != 0x82E2:
+		return _refused("The cleanup helper must return to the source instruction at $82E2.")
+	var caller_call_pc := 0x80EE if caller_return_pc == 0x80F1 else 0x815A if caller_return_pc == 0x815D else -1
+	if caller_call_pc < 0:
+		return _refused("The shared waiter return must match the ID-1 or ID-2 ROM caller JSR.")
+	var caller_source: PackedByteArray = _sources[CALLER_FILE]
+	var caller_offset := caller_call_pc - 0x80DF
+	if caller_source.slice(caller_offset, caller_offset + 3) != PackedByteArray([0x20, 0xB5, 0x82]):
+		return _refused("The caller source no longer contains the expected JSR $82B5.")
+	if caller_call_pc + 3 != caller_return_pc:
+		return _refused("The caller return PC does not follow its source JSR.")
+	var wait_source: PackedByteArray = _sources[WAIT_FILE]
+	var offset := helper_return_pc - 0x82B5
+	if wait_source.slice(offset, offset + CUTSCENE_POST_CLEANUP_BYTES.size()) != PackedByteArray(CUTSCENE_POST_CLEANUP_BYTES):
+		return _refused("The packaged $82E2-$82EC post-cleanup instruction bytes changed.")
+	var pc := helper_return_pc
+	var accumulator := -1
+	var source_path: Array[int] = []
+	var writes: Array[Dictionary] = []
+	if wait_source[offset] != 0xA9:
+		return _refused("Expected the source LDA immediate at $82E2.")
+	accumulator = wait_source[offset + 1]
+	source_path.append(pc)
+	pc += 2
+	offset += 2
+	while pc < 0x82EC:
+		if wait_source[offset] != 0x85:
+			return _refused("Expected a source zero-page STA at $%04X." % pc)
+		var address := int(wait_source[offset + 1])
+		if address not in [0x44, 0x45, 0x7A, 0x7B]:
+			return _refused("Unexpected caller cleanup address $%02X." % address)
+		source_path.append(pc)
+		writes.append({"source_pc": pc, "address": address, "value": accumulator})
+		pc += 2
+		offset += 2
+	if wait_source[offset] != 0x60:
+		return _refused("The post-cleanup source block no longer ends in RTS at $82EC.")
+	var cleanup_p_mask := int(cleanup_cpu_contract.get("p_known_mask", -1))
+	var cleanup_p_value := int(cleanup_cpu_contract.get("p_known_value", -1))
+	if cleanup_p_mask < 0 or cleanup_p_mask > 0xFF \
+			or cleanup_p_value < 0 or cleanup_p_value > 0xFF:
+		return _refused("The cleanup helper needs an explicit bounded processor-status contract.")
+	if int(cleanup_cpu_contract.get("return_pc", -1)) != helper_return_pc \
+			or int(cleanup_cpu_contract.get("a", -1)) != 0 \
+			or int(cleanup_cpu_contract.get("x", -1)) != 0 \
+			or int(cleanup_cpu_contract.get("y", -1)) != 0 \
+			or (cleanup_p_mask & 0x82) != 0x82 \
+			or (cleanup_p_value & cleanup_p_mask & 0x82) != 0x02 \
+			or int(cleanup_cpu_contract.get("sp_delta", 1)) != 0:
+		return _refused("The cleanup helper's source-derived CPU return contract is missing or inconsistent.")
+	source_path.append(pc)
+	pc += 1
+	source_path.append(caller_return_pc)
+	var caller_status := "returned_to_caller"
+	var pending_call := {}
+	var cpu_output_contract := {
+		"pc": caller_return_pc,
+		"a": 0x00,
+		"x": 0x00,
+		"y": 0x00,
+		"p_known_mask": cleanup_p_mask,
+		"p_known_value": cleanup_p_value & cleanup_p_mask,
+		"p_other_bits": "preserved from caller context",
+		"sp": "preserved; absolute value is not modeled",
+		"provenance": "ROM cleanup helper $98A0->$9B7F and caller $82E2-$82EC",
+	}
+	var final_source_pc := caller_return_pc
+	if caller_return_pc == 0x80F1:
+		var kickoff_offset := _offset(0x80F1)
+		if caller_source.slice(kickoff_offset, kickoff_offset + ID1_POST_CLEANUP_CALLER_BYTES.size()) \
+				!= PackedByteArray(ID1_POST_CLEANUP_CALLER_BYTES):
+			return _refused("The ID-1 caller bytes $80F1-$80F9 differ from the supported ROM prefix.")
+		# Execute the source instructions through the mapper-helper call entry.
+		# The helper itself needs caller-owned $0022 and an actual task stack, so
+		# neither is fabricated from reset state or an emulator snapshot.
+		source_path.append_array([0x80F3, 0x80F5, 0x80F7])
+		writes.append({"source_pc": 0x80F3, "address": 0x00E0, "value": 0xC0})
+		caller_status = "stopped_at_source_call_entry"
+		final_source_pc = 0x80F7
+		var call_event_id := "fresh_kickoff_id1_rom_call_80F7_C4B9"
+		var logical_frame := {
+			"kind": "rom_jsr",
+			"caller_pc": 0x80F7,
+			"target_pc": 0xC4B9,
+			"return_pc": 0x80FA,
+			"return_word": 0x80F9,
+			"source_event_id": call_event_id,
+		}
+		pending_call = {
+			"caller_pc": 0x80F7,
+			"target_pc": 0xC4B9,
+			"return_pc": 0x80FA,
+			"call_id": "select_bank_02_before_match_lookup",
+			"source_event_id": call_event_id,
+			"logical_stack_frame": logical_frame,
+			"required_source_state": ["ROM-derived_ram_0022"],
+		}
+		cpu_output_contract = {
+			"pc": final_source_pc,
+			"a": 0xC0,
+			"x": 0x02,
+			"y": 0x00,
+			"p_known_mask": cleanup_p_mask | 0x82,
+			"p_known_value": (cleanup_p_value & cleanup_p_mask) & 0x7D,
+			"p_other_bits": "preserved from caller context",
+			"sp": "preserved; absolute value is not modeled",
+			"provenance": "ROM cleanup helper $98A0->$9B7F and caller $82E2-$82EC/$80F1-$80F7",
+		}
+	return {
+		"ok": true,
+		"status": caller_status,
+		"source_path": source_path,
+		"helper_return_pc": helper_return_pc,
+		"caller_call_pc": caller_call_pc,
+		"caller_return_pc": caller_return_pc,
+		"final_source_pc": final_source_pc,
+		"ram_writes": writes,
+		"rom_sha256": ROM_SHA256,
+		"executes_6502": false,
+		"models_stack_or_cycle_phase": false,
+	"cleanup_cpu_input_contract": cleanup_cpu_contract.duplicate(true),
+		"cpu_output_contract": cpu_output_contract,
+		"pending_call": pending_call,
+	}
 
 
 ## Projects the decoded KICK OFF caller. Each unmodeled JSR return must be

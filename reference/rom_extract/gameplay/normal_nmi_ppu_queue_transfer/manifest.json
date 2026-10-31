@@ -1,0 +1,90 @@
+{
+  "schema": "rom-normal-nmi-ppu-queue-transfer-sources-v1",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "format": "iNES 1.0",
+  "mapper": 4,
+  "prg_rom_size_bytes": 262144,
+  "chr_rom_size_bytes": 131072,
+  "trainer_bytes": 0,
+  "prg_mapping": "MMC3 PRG bank $1E is mapped at CPU $C000-$DFFF for these spans; PRG bank data begins after the 16-byte iNES header.",
+  "decoded_behavior": {
+    "normal_nmi_call": {
+      "call_site_pc": "0xC799",
+      "target_pc": "0xC8FB",
+      "call_bytes": "20 FB C8",
+      "source_condition": "Normal NMI route; the source selects it when $001B.6 is clear."
+    },
+    "secondary_queue_caller_gate": {
+      "entry_pc": "0xC8FB",
+      "bytes": "AD 98 04 F0 51",
+      "behavior": "LDA $0498; BEQ $C951. A nonzero primary transfer count takes the primary-queue path and does not enter the secondary consumer."
+    },
+    "primary_queue_consumer": {
+      "entry_pc": "0xC900",
+      "range": "$C900-$C950",
+      "queue_count": "$0498 is decremented before indexing; X resolves to 3 * (old count - 1) for supported counts.",
+      "record_format": ["bank selector", "buffer pointer low", "buffer pointer high"],
+      "pointer_load": "The record pointer is copied to zero-page $77/$78. A negative pointer high byte takes the mapper-switch path at $C91B.",
+      "packet_format": ["length byte; zero terminates", "PPU address low", "PPU address high", "exactly length payload bytes"],
+      "ppu_bus_order_per_packet": [
+        "$C93A reads $2002",
+        "$C93D writes address high to $2006",
+        "$C941 writes address low to $2006",
+        "$C947 writes each payload byte to $2007"
+      ],
+      "source_ram_writes": ["$0498 := $0498 - 1", "$0077 := pointer low", "$0078 := pointer high"],
+      "runtime_consumer_scope": "The Godot source-byte consumer supports observed nonnegative pointers into CPU RAM and up to four queue records in $0499-$04A4. Bank-switched pointers fail closed."
+    },
+    "secondary_queue_consumer": {
+      "entry_pc": "0xC951",
+      "end_pc_inclusive": "0xC981",
+      "ready_check": "LDA $0515; BPL $C981; bit 7 clear returns without transfer.",
+      "ready_clear": "LDX #$00; STX $0515 before reading the first packet byte.",
+      "packet_format": [
+        "length byte at $04A5,X; zero terminates the packet list",
+        "address low byte",
+        "address high byte",
+        "exactly length payload bytes"
+      ],
+      "ppu_bus_order_per_packet": [
+        "$C96A reads $2002",
+        "$C96D writes address high to $2006",
+        "$C971 writes address low to $2006",
+        "$C978 writes each payload byte to $2007"
+      ],
+      "source_ram_writes": ["$0515 := $00"],
+      "ppu_state_effects": "The component emits the source bus events. PPUSTATUS latch behavior, PPUADDR interpretation, PPUDATA increment, nametable mirroring, and memory effects remain with the caller-owned PPU model."
+    }
+  },
+  "entries": [
+    {
+      "path": "normal_nmi_c8fb_transfer_gate_and_consumer.bin",
+      "role": "The $0498 gate and the complete $C951 secondary-queue consumer, including the intervening primary-queue path.",
+      "cpu_address": "0xC8FB",
+      "cpu_end_exclusive": "0xC982",
+      "prg_bank": "0x1E",
+      "prg_bank_window": "$C000-$DFFF",
+      "prg_bank_size_bytes": 8192,
+      "prg_bank_file_offset": "0x03C010",
+      "file_offset": "0x03C90B",
+      "size_bytes": 135,
+      "sha256": "7509e02000e7dde21037b3c3532265f784744e51fa0aa03ee5edeb778e2aecb7",
+      "bytes_hex": "ad 98 04 f0 51 ce 98 04 38 e9 01 0a 6d 98 04 aa bd 99 04 a8 bd 9a 04 85 77 bd 9b 04 85 78 10 11 a2 06 29 20 f0 01 e8 8a 0d 22 00 8d 00 80 8c 01 80 a0 00 b1 77 f0 1e aa c8 b1 77 48 c8 b1 77 2c 02 20 8d 06 20 68 8d 06 20 c8 b1 77 8d 07 20 c8 ca d0 f7 f0 de 60 ad 15 05 10 2b a2 00 8e 15 05 bd a5 04 f0 21 a8 e8 bd a5 04 48 e8 bd a5 04 2c 02 20 8d 06 20 68 8d 06 20 e8 bd a5 04 8d 07 20 e8 88 d0 f6 f0 da 60"
+    },
+    {
+      "path": "normal_nmi_call_c799_to_c8fb.bin",
+      "role": "Normal NMI path JSR $C8FB call site; the caller's path selection is separately source-owned.",
+      "cpu_address": "0xC799",
+      "cpu_end_exclusive": "0xC79C",
+      "prg_bank": "0x1E",
+      "prg_bank_window": "$C000-$DFFF",
+      "prg_bank_size_bytes": 8192,
+      "prg_bank_file_offset": "0x03C010",
+      "file_offset": "0x03C7A9",
+      "size_bytes": 3,
+      "sha256": "77d15140839e5c0213db71f8555d4e6d19b5a903c8bdbc85f39058c5baedce8a",
+      "bytes_hex": "20 fb c8"
+    }
+  ]
+}

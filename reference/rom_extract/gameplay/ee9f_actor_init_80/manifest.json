@@ -1,0 +1,124 @@
+{
+  "schema": "ct2-ee9f-actor-init-80-source-v1",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "mapper": 4,
+    "submapper": 0
+  },
+  "runtime_rom_dependency": false,
+  "trace_state_included": false,
+  "scope": "One live slot-$01 `$CA52->$EE9F` call from `$053A=$80/$053C=$8F` through `$F5 $0A`, `$F4` selectors, five `$F1` constructors, `$F0`, and the return to `$EEB1`. The executor stops before `$EEB1` executes.",
+  "dependencies": [
+    {
+      "manifest": "reference/rom_extract/gameplay/ee9f_empty_actor_call/manifest.json",
+      "purpose": "Existing checked $EE9F prologue, $8000-$8083 gate, and mapper helper."
+    },
+    {
+      "manifest": "reference/rom_extract/gameplay/first_command_actors/manifest.json",
+      "purpose": "Existing actor animation stream provenance and structural decoder."
+    },
+    {
+      "manifest": "reference/rom_extract/gameplay/actor_packet_constructor/manifest.json",
+      "purpose": "Existing ROM-derived `$F1` motion/appearance/actor pointer tables and record constructor."
+    },
+    {
+      "manifest": "reference/rom_extract/gameplay/slot09_eb8b_continuation/manifest.json",
+      "purpose": "Reused `$C530->$CC02` palette-fill source bytes."
+    },
+    {
+      "manifest": "reference/rom_extract/gameplay/slot09_86f8_worker/manifest.json",
+      "purpose": "Reused `$C533->$CCD2` inline-record append source bytes."
+    }
+  ],
+  "spans": [
+    {
+      "file": "bank14_animation_dispatch_8084_8164.bin",
+      "bank": "$14",
+      "cpu_start": "0x8084",
+      "cpu_end_exclusive": "0x8164",
+      "file_offset": "0x028094",
+      "length": 224,
+      "sha256": "ceed933768c37a2ec41eb1d842271629033a76c2964a4e4c5e957351c1e90040",
+      "bytes": "38e9f02009c5a280aa802b81388142815381ae83bd836f817c819581a9816868a9008d3a0560a005b14c291c4aaabde488853abde588853ba00098913ac8c015d0f9a001b14ca2b4863ea2a10a9001e8863fa8b13eaac8b13ea002913a888a913aa002b14ca247863ea2ac0a9001e8863fa8b13eaac8b13ea004913a888a913aa003b14ca008913aa004b14ca00c913aa005b14caa2903853c053c0980a000913aa90620cf8360a9008d3e05a9018d3d054ccf83a9008d3d05a9014ccf83a001b14c999304c8c005d0f6a9054ccf83a001b14c100620ba814c6481a2102030c5",
+      "description": "ROM source required by the bounded first-call actor initialization branch"
+    },
+    {
+      "file": "bank14_f5_tail_8164_8171.bin",
+      "bank": "$14",
+      "cpu_start": "0x8164",
+      "cpu_end_exclusive": "0x8171",
+      "file_offset": "0x028174",
+      "length": 13,
+      "sha256": "f58ff4484a0b641cf7c6ae2177af87f4e2d86bcfac612857cb676ab248e731aa",
+      "bytes": "2033c5006c04a9024ccf83a001",
+      "description": "F5 `$C533` inline bytes, stream advance, and the following F1 handler prefix"
+    },
+    {
+      "file": "bank14_animation_pointer_8F_90_8A86.bin",
+      "bank": "$14",
+      "cpu_start": "0x8A86",
+      "cpu_end_exclusive": "0x8A8A",
+      "file_offset": "0x028A96",
+      "length": 4,
+      "sha256": "5472f22efccee0df74f7c3315e6f6286cd3059738f62de03ad91518f5ed752bf",
+      "bytes": "8598ab98",
+      "description": "ROM source required by the bounded first-call actor initialization branch"
+    },
+    {
+      "file": "bank14_stream_advance_83CF_83D9.bin",
+      "bank": "$14",
+      "cpu_start": "0x83CF",
+      "cpu_end_exclusive": "0x83D9",
+      "file_offset": "0x0283DF",
+      "length": 10,
+      "sha256": "1bc0ccc250cbd3437f1876e7ecf97fc99b1749a0407e2843420b8c19c9bdd078",
+      "bytes": "18654c854c9002e64d60",
+      "description": "ROM source required by the bounded first-call actor initialization branch"
+    },
+    {
+      "file": "fixed_dispatch_C509_C50C.bin",
+      "bank": "$1F",
+      "cpu_start": "0xC509",
+      "cpu_end_exclusive": "0xC50C",
+      "file_offset": "0x03C519",
+      "length": 3,
+      "sha256": "3b507ee4745afd5b11dda219b523c39c7e9a8881d856592d8908bf535fd63441",
+      "bytes": "4c99cb",
+      "description": "ROM source required by the bounded first-call actor initialization branch"
+    },
+    {
+      "file": "fixed_dispatch_CB99_CBB0.bin",
+      "bank": "$1F",
+      "cpu_start": "0xCB99",
+      "cpu_end_exclusive": "0xCBB0",
+      "file_offset": "0x03CBA9",
+      "length": 23,
+      "sha256": "1f8058f9fd70aeec319a32433feb0c102c72e0f5131571a0da8bf89ef84a2d54",
+      "bytes": "0aa8688536688537c8b13648c8b13685376885366c3600",
+      "description": "ROM source required by the bounded first-call actor initialization branch"
+    },
+    {
+      "file": "fixed_palette_vectors_C530_C536.bin",
+      "bank": "$1E",
+      "cpu_start": "0xC530",
+      "cpu_end_exclusive": "0xC536",
+      "file_offset": "0x03C540",
+      "length": 6,
+      "sha256": "a8e8cc65722c34d77be8b617a0bd428012a3d4d94e4bc854e170a0be25363193",
+      "bytes": "4c02cc4cd2cc",
+      "description": "ROM vectors for the reused `$C530` palette fill and `$C533` inline record append"
+    },
+    {
+      "file": "fixed_palette_table_FC44_FC50.bin",
+      "bank": "$1F",
+      "cpu_start": "0xFC44",
+      "cpu_end_exclusive": "0xFC50",
+      "file_offset": "0x03FC54",
+      "length": 12,
+      "sha256": "249458e73da7f4ef10e9919831c71d8aeb5fde9fd0c829dfa096dd23ba03921b",
+      "bytes": "0f0f360f30360f17360f3130",
+      "description": "ROM palette lookup row selected by the live `$F5 $0A` handler"
+    }
+  ]
+}

@@ -255,6 +255,126 @@ func execute_from_selector_return(selector_result: Dictionary) -> Dictionary:
 	}
 
 
+## Executes the same bounded continuation when the selector returns a logical
+## source-call stack. Absolute SP and stack-page bytes remain unmodeled.
+func execute_from_logical_selector_return(selector_result: Dictionary) -> Dictionary:
+	if not _configured and not configure_from_project_sources():
+		return _failure(error_message)
+	var check := _validate_logical_selector_result(selector_result)
+	if not bool(check.get("ok", false)):
+		return _failure(String(check.get("error", "Logical selector result is invalid.")))
+	var source_event_id := String(check["source_event_id"])
+	var registers: Dictionary = check["registers"].duplicate(true)
+	var ram_after: Dictionary = check["ram_after"].duplicate(true)
+	var writes: Array[Dictionary] = []
+	var source_path: Array[int] = []
+	var cycles := 0
+
+	# Execute ROM caller bytes $80FD-$810B before the second bank-$02 call.
+	registers["pc"] = SELECTOR_RETURN_PC
+	registers["a"] = 0
+	registers["p"] = _set_nz(int(registers.get("p_known_value", 0)), 0)
+	var known_mask := int(registers.get("p_known_mask", 0)) | 0xC3
+	registers["p_known_mask"] = known_mask
+	registers["p_known_value"] = int(registers["p"]) & known_mask
+	source_path.append_array([0x80FD, 0x80FF, 0x8101, 0x8103])
+	for store: Dictionary in [
+		{"pc": 0x80FF, "address": 0x0028},
+		{"pc": 0x8101, "address": 0x0029},
+		{"pc": 0x8103, "address": 0x0027},
+	]:
+		ram_after[int(store["address"])] = 0
+		writes.append({"source_pc": int(store["pc"]), "address": int(store["address"]), "value": 0})
+	cycles += 2 + 3 + 3 + 3
+	registers["a"] = 1
+	registers["p"] = _set_nz(int(registers["p"]), 1)
+	registers["p_known_value"] = int(registers["p"]) & known_mask
+	ram_after[0x0700] = 1
+	writes.append({"source_pc": 0x8109, "address": 0x0700, "value": 1})
+	registers["x"] = 2
+	registers["p"] = _set_nz(int(registers["p"]), 2)
+	registers["p_known_value"] = int(registers["p"]) & known_mask
+	cycles += 2 + 4 + 2
+	registers["pc"] = MAPPER_CALLER_PC
+	source_path.append_array([0x8105, 0x8107, 0x810A, MAPPER_CALLER_PC])
+
+	var mapper_event_id := source_event_id + ":810C-C4B9"
+	var mapper_frame := {
+		"kind": "rom_jsr", "caller_pc": MAPPER_CALLER_PC,
+		"target_pc": 0xC4B9, "return_pc": MAPPER_RETURN_PC,
+		"return_word": MAPPER_CALLER_PC + 2, "source_event_id": mapper_event_id,
+	}
+	var mapper_call := {
+		"caller_pc": MAPPER_CALLER_PC, "target_pc": 0xC4B9,
+		"return_pc": MAPPER_RETURN_PC, "source_event_id": mapper_event_id,
+		"logical_stack_frame": mapper_frame,
+	}
+	var mapper_cpu := registers.duplicate(true)
+	mapper_cpu["pc"] = 0xC4B9
+	var mapper_result: Dictionary = _mapper_helper.execute_logical_source_call(mapper_call, mapper_cpu, ram_after)
+	if not bool(mapper_result.get("ok", false)):
+		return _failure("Caller `$810C->$C4B9` did not return from its ROM helper: " + String(mapper_result.get("error", "unknown error")))
+	var mapper_registers: Dictionary = mapper_result.get("return_registers", {}).duplicate(true)
+	var mapper_ram: Dictionary = mapper_result.get("ram_after", {}).duplicate(true)
+	var mapper_bus_writes: Array = mapper_result.get("mapper_bus_writes", [])
+	var expected_select := 0x07 | int(mapper_ram.get(0x0022, -1))
+	if not _mapper_selected_value(mapper_bus_writes, expected_select) \
+			or int(mapper_registers.get("pc", -1)) != MAPPER_RETURN_PC \
+			or int(mapper_registers.get("a", -1)) != expected_select \
+			or int(mapper_registers.get("x", -1)) != 2 \
+			or int(mapper_registers.get("y", -1)) != 0x84 \
+			or (int(mapper_registers.get("p_known_mask", 0)) & 0x82) != 0x82 \
+			or (int(mapper_registers.get("p_known_value", 0)) & 0x82) != _nz_bits(expected_select):
+		return _failure("The `$810C` helper did not return the source-derived `$810F` bank-$02 contract.")
+	cycles += 6 + int(mapper_result.get("cpu_cycles", -1))
+	source_path.append_array([0xC4B9, 0xC4BB, 0xC4BD, 0xC4BF, 0xC4C1, 0xC4C4, 0xC4C7, MAPPER_RETURN_PC])
+
+	var normalize_event_id := source_event_id + ":810F-A20C"
+	var normalize_call := {
+		"caller_pc": NORMALIZE_CALLER_PC, "target_pc": NORMALIZE_ENTRY_PC,
+		"return_pc": NORMALIZE_RETURN_PC,
+		"source_event_id": normalize_event_id,
+		"logical_stack_frame": {
+			"kind": "rom_jsr", "caller_pc": NORMALIZE_CALLER_PC,
+			"target_pc": NORMALIZE_ENTRY_PC, "return_pc": NORMALIZE_RETURN_PC,
+			"return_word": NORMALIZE_CALLER_PC + 2,
+			"source_event_id": normalize_event_id,
+		},
+	}
+	var normalize_entry: Dictionary = mapper_registers.duplicate(true)
+	normalize_entry["pc"] = NORMALIZE_ENTRY_PC
+	var normalize_result := _execute_logical_normalize(normalize_call,
+		normalize_entry, mapper_ram)
+	if not bool(normalize_result.get("ok", false)):
+		return normalize_result
+	cycles += 6 + int(normalize_result["cpu_cycles"])
+	source_path.append_array(normalize_result.get("source_path", []))
+	source_path.append(NORMALIZE_RETURN_PC)
+	writes.append_array(mapper_result.get("ram_writes", []))
+	writes.append_array(normalize_result.get("ram_writes", []))
+	return {
+		"ok": true,
+		"status": "returned",
+		"source_event_id": source_event_id,
+		"source_rom_sha256": ROM_SHA256,
+		"source_span_hashes": _source_hashes(),
+		"source_path": source_path,
+		"caller_ram_writes": writes,
+		"caller_ram_after": normalize_result["ram_after"],
+		"caller_mapper_bus_writes": mapper_bus_writes,
+		"mapper_helper_receipt": mapper_result.get("source_return_receipt", {}),
+		"normalize_source_return_receipt": normalize_result.get("source_return_receipt", {}),
+		"e4_branch_proof": normalize_result.get("e4_branch_proof", {}),
+		"return_registers": normalize_result["return_registers"],
+		"stack_after": [],
+		"stack_model": "logical_source_jsr_frames",
+		"cpu_cycles_without_interrupts_from_80FD": cycles,
+		"live_mapper_updated": false,
+		"trace_state_used": false,
+		"emulator_data_used": false,
+	}
+
+
 func _validate_selector_result(selector_result: Dictionary) -> Dictionary:
 	if not bool(selector_result.get("ok", false)) \
 			or String(selector_result.get("source_rom_sha256", "")) != ROM_SHA256:
@@ -297,6 +417,142 @@ func _validate_selector_result(selector_result: Dictionary) -> Dictionary:
 		return {"ok": false, "error": "The outer `$80FA` JSR stack continuation was not preserved at `$80FD`."}
 	return {"ok": true, "source_event_id": source_event_id, "registers": registers,
 		"ram_after": ram_after, "stack_after": stack}
+
+
+func _validate_logical_selector_result(selector_result: Dictionary) -> Dictionary:
+	if not bool(selector_result.get("ok", false)) \
+			or String(selector_result.get("source_rom_sha256", "")) != ROM_SHA256 \
+			or bool(selector_result.get("trace_state_used", true)) \
+			or bool(selector_result.get("emulator_data_used", true)) \
+			or bool(selector_result.get("physical_stack_mode", true)):
+		return {"ok": false, "error": "A successful ROM-only logical result from the fresh `$A20F` selector is required."}
+	var receipt: Dictionary = selector_result.get("source_return_receipt", {})
+	if int(receipt.get("caller_pc", -1)) != 0x80FA \
+			or int(receipt.get("target_pc", -1)) != 0xA20F \
+			or int(receipt.get("return_pc", -1)) != SELECTOR_RETURN_PC \
+			or String(receipt.get("stack_model", "")) != "logical_source_jsr_frames" \
+			or String(receipt.get("status", "")) != "returned":
+		return {"ok": false, "error": "The source return does not identify the logical `$80FA->$A20F->$80FD` selector call."}
+	var source_event_id := String(receipt.get("source_event_id", "")).strip_edges()
+	if source_event_id.is_empty():
+		return {"ok": false, "error": "The source call identity must continue across the caller setup prefix."}
+	var hashes: Dictionary = selector_result.get("source_span_hashes", {})
+	for required_id: String in ["title_caller", "selector_code", "home_team_match_table"]:
+		if String(hashes.get(required_id, "")) != String(SOURCE_EXPECTATIONS[required_id]["sha256"]):
+			return {"ok": false, "error": "The logical selector receipt omits checked `%s` source." % required_id}
+	var registers: Dictionary = selector_result.get("return_registers", {})
+	if int(registers.get("pc", -1)) != SELECTOR_RETURN_PC \
+			or int(registers.get("a", -1)) != 3 \
+			or int(registers.get("x", -1)) != 0 \
+			or int(registers.get("y", -1)) != 0x84 \
+			or (int(registers.get("p_known_mask", 0)) & 0xC3) != 0xC3:
+		return {"ok": false, "error": "The logical selector CPU return contract differs from the fresh match-zero source path."}
+	var ram_after: Dictionary = selector_result.get("ram_after", {})
+	for address: int in [0x0022, 0x0023, 0x0025, 0x0026, 0x002A, 0x002B]:
+		if not ram_after.has(address):
+			return {"ok": false, "error": "Logical selector state lacks caller RAM `$%04X`." % address}
+	var mapper_value := 0x07 | int(ram_after[0x0022])
+	if int(ram_after[0x0023]) != mapper_value \
+			or int(ram_after[0x0025]) != 2 \
+			or int(ram_after[0x0026]) != FRESH_MATCH_INDEX \
+			or int(ram_after[0x002A]) != 0 \
+			or int(ram_after[0x002B]) != 3:
+		return {"ok": false, "error": "Logical selector mapper/RAM state differs from the fresh match-zero source contract."}
+	var stack_variant: Variant = selector_result.get("stack_after")
+	if not stack_variant is Array or not stack_variant.is_empty():
+		return {"ok": false, "error": "The logical selector must return after consuming its source JSR frame."}
+	return {"ok": true, "source_event_id": source_event_id, "registers": registers,
+		"ram_after": ram_after, "stack_after": stack_variant, "logical_stack_mode": true}
+
+
+func _execute_logical_normalize(source_call: Dictionary, entry_registers: Dictionary,
+		ram_before: Dictionary) -> Dictionary:
+	if int(source_call.get("caller_pc", -1)) != NORMALIZE_CALLER_PC \
+			or int(source_call.get("target_pc", -1)) != NORMALIZE_ENTRY_PC \
+			or int(source_call.get("return_pc", -1)) != NORMALIZE_RETURN_PC:
+		return _failure("Normalization call does not match ROM `$810F JSR $A20C`.")
+	var source_event_id := String(source_call.get("source_event_id", ""))
+	var frame_variant: Variant = source_call.get("logical_stack_frame", {})
+	if not frame_variant is Dictionary:
+		return _failure("Normalization call requires a logical source JSR frame.")
+	var frame: Dictionary = frame_variant
+	if String(frame.get("kind", "")) != "rom_jsr" \
+			or int(frame.get("caller_pc", -1)) != NORMALIZE_CALLER_PC \
+			or int(frame.get("target_pc", -1)) != NORMALIZE_ENTRY_PC \
+			or int(frame.get("return_pc", -1)) != NORMALIZE_RETURN_PC \
+			or int(frame.get("return_word", -1)) != NORMALIZE_CALLER_PC + 2 \
+			or String(frame.get("source_event_id", "")) != source_event_id:
+		return _failure("Logical normalization frame does not match the checked `$810F->$A20C->$8112` call.")
+	if int(entry_registers.get("pc", -1)) != NORMALIZE_ENTRY_PC:
+		return _failure("Logical normalization PC does not match the `$A20C` entry.")
+	if int(ram_before.get(0x0026, -1)) != FRESH_MATCH_INDEX:
+		return _failure("Only source-derived fresh match index `$0026=0` is supported.")
+	var expected_select := 0x07 | int(ram_before.get(0x0022, -1))
+	if int(entry_registers.get("x", -1)) != 2 \
+			or int(entry_registers.get("a", -1)) != expected_select \
+			or int(ram_before.get(0x0023, -1)) != expected_select \
+			or int(ram_before.get(0x0025, -1)) != 2:
+		return _failure("The `$A20C` entry does not follow the ROM `$810C->$C4B9` mapper result.")
+	var entry_p_mask := int(entry_registers.get("p_known_mask", 0))
+	var entry_p_value := int(entry_registers.get("p_known_value", -1))
+	if (entry_p_mask & 0x82) != 0x82 or entry_p_value < 0 or entry_p_value > 0xFF \
+			or (entry_p_value & 0x82) != _nz_bits(expected_select):
+		return _failure("The logical `$A20C` entry has no source-known mapper-helper N/Z contract.")
+	var branch_proof := _prove_e4_branch_invariance(int(ram_before[0x0026]),
+			entry_p_value, int(_sources["home_team_match_table"][0]))
+	if not bool(branch_proof.get("ok", false)):
+		return _failure("The `$E4`-independent branch proof failed: " + String(branch_proof.get("error", "unknown error")))
+
+	var registers := entry_registers.duplicate(true)
+	var ram_after := ram_before.duplicate(true)
+	var home_team := int(_sources["home_team_match_table"][0])
+	var match_index := int(ram_after[0x0026])
+	var writes: Array[Dictionary] = [
+		{"source_pc": 0xA8AD, "address": 0x002A, "value": home_team},
+		{"source_pc": 0xA8B4, "address": 0x002B, "value": (match_index + 3) & 0xFF},
+	]
+	ram_after[0x002A] = home_team
+	ram_after[0x002B] = (match_index + 3) & 0xFF
+	registers["pc"] = NORMALIZE_RTS_PC
+	registers["x"] = match_index
+	registers["a"] = (match_index + 3) & 0xFF
+	registers["p"] = int(branch_proof["return_flags"])
+	var final_known_mask := entry_p_mask | 0xC3
+	registers["p_known_mask"] = final_known_mask
+	registers["p_known_value"] = int(registers["p"]) & final_known_mask
+	var returned_pc := int(frame["return_word"]) + 1
+	if returned_pc != NORMALIZE_RETURN_PC:
+		return _failure("The logical `$A8B6 RTS` did not return to `$8112`.")
+	registers["pc"] = NORMALIZE_RETURN_PC
+	var source_path: Array[int] = [NORMALIZE_ENTRY_PC, NORMALIZE_BODY_PC, 0xA857,
+		NORMALIZE_BRANCH_PC, NORMALIZE_TAIL_PC, 0xA8AA, 0xA8AD, 0xA8AF,
+		0xA8B1, 0xA8B2, 0xA8B4, NORMALIZE_RTS_PC]
+	var cycles := 38
+	return {
+		"ok": true,
+		"status": "returned",
+		"source_return_receipt": {
+			"caller_pc": NORMALIZE_CALLER_PC,
+			"target_pc": NORMALIZE_ENTRY_PC,
+			"return_pc": NORMALIZE_RETURN_PC,
+			"status": "returned",
+			"source_event_id": source_event_id,
+			"source_execution": "hash_checked_symbolic_branch_6502_subset_with_logical_rts",
+			"rts_pc": NORMALIZE_RTS_PC,
+			"stack_model": "logical_source_jsr_frame",
+			"post_registers": registers.duplicate(true),
+		},
+		"entry_registers": entry_registers.duplicate(true),
+		"return_registers": registers,
+		"ram_after": ram_after,
+		"ram_writes": writes,
+		"stack_after": [],
+		"source_path": source_path,
+		"cpu_cycles": cycles,
+		"e4_branch_proof": branch_proof,
+		"trace_state_used": false,
+		"emulator_data_used": false,
+	}
 
 
 func _execute_normalize(source_call: Dictionary, entry_registers: Dictionary,
@@ -431,6 +687,29 @@ func _mapper_selected_bank_two(bus_writes: Array) -> bool:
 			continue
 		var write: Dictionary = write_variant
 		if int(write.get("address", -1)) == 0x8000 and int(write.get("value", -1)) == 0x87:
+			select_seen = true
+		if select_seen and int(write.get("address", -1)) == 0x8001 and int(write.get("value", -1)) == 2:
+			data_seen = true
+	return select_seen and data_seen
+
+
+func _nz_bits(value: int) -> int:
+	var result := 0
+	if (value & 0x80) != 0:
+		result |= 0x80
+	if (value & 0xFF) == 0:
+		result |= 0x02
+	return result
+
+
+func _mapper_selected_value(bus_writes: Array, expected_value: int) -> bool:
+	var select_seen := false
+	var data_seen := false
+	for write_variant in bus_writes:
+		if not write_variant is Dictionary:
+			continue
+		var write: Dictionary = write_variant
+		if int(write.get("address", -1)) == 0x8000 and int(write.get("value", -1)) == expected_value:
 			select_seen = true
 		if select_seen and int(write.get("address", -1)) == 0x8001 and int(write.get("value", -1)) == 2:
 			data_seen = true

@@ -77,6 +77,46 @@ The route therefore has neither a source-owned `$812C` event nor the live
 completion, `$A626` entry, a menu action, and the observed frame 7409 are not
 safe substitutes for that event.
 
+## 2026-10-29 live-route integration audit
+
+The newly advanced Godot route now source-executes the post-cutscene-2 match
+task path through slot `$09` to `$86F8`, then takes the live `$0532=0` path back
+to `$EBB3`. This is later than the `$812C` caller block: it does not execute or
+validate the missing pre-ID-2 caller path. In
+`KickoffRouteRuntime`, production audio commands still enter through the
+cutscene `$ED` presenter event and `RomSoundQueueWriteEvent`; the direct
+`$812C` write is not connected. `RomFreshKickoffCallerContinuation.get_status()`
+also reports `live_runtime_integrated=false`.
+
+The existing component is useful as a ROM-byte projection, but cannot yet be
+fed to production without inventing returns. Before it emits `$812C`, it
+requires named return receipts for these caller sites:
+
+```text
+$80E6->$9BA0   $80EB->$8464   $82DF->$9BA0
+$80F7->$C4B9   $80FA->$A20F   $810C->$C4B9
+$810F->$A20C   $8114->$8920   $8119->$C4B9
+$811C->$A006   $811F->$C572
+```
+
+The projection checks each receipt's caller/target/return PCs and a non-empty
+event ID, but does not execute those helper bodies, the `$82B5` scheduler wait,
+the nested stack, or CPU/NMI timing. Its accepted `$26`/`$E0` state at `$8145`
+must therefore be supplied by an actual source-owned caller continuation; a
+trace RAM sample or a manually assembled receipt list is not enough. After the
+store, the same component also expects returns from `$813F->$C4B9` and
+`$8142->$A009` before it derives the `$83DC[$26]` cutscene-2 dispatch. The
+caller-span manifest already covers the `$8122-$812F` bytes (CPU `$8122` maps
+to bank-$00 file offset `0x000132`; the store at `$812C` is offset
+`0x00013C`), so a new asset extraction is unnecessary.
+
+The audio presenter already accepts ROM-derived BGM `$55` and has timing
+entries for its two route occurrences. Once live execution reaches `$812C`,
+the production consumer can forward the actual stored X value and its source
+event time. Until then, do not start the second `$55` from the later `$86F8`
+boundary or from a Godot frame count; that would place the same track at the
+wrong point in the ROM route.
+
 The next required source event is the fresh KICK OFF caller resuming after
 `$82B5` returns, with its new-game setup continuation and `$26` supplied by
 modeled source state. A source runner must carry that continuation through
