@@ -1,6 +1,7 @@
 extends SceneTree
 
 const HELPER_SCRIPT := preload("res://scripts/gameplay/rom_fixed_mapper_select_helper.gd")
+const SHADOW_STATE_SCRIPT := preload("res://scripts/gameplay/rom_mapper_shadow_source_state.gd")
 
 
 func _initialize() -> void:
@@ -84,8 +85,44 @@ func _initialize() -> void:
 	if bool(rejected.get("ok", true)):
 		_fail("Helper accepted a malformed stack page.")
 		return
-	print("PASS: ROM `$C4B9-$C4C7` executes for all five verified caller sites; return state, JSR/RTS stack balance, MMC3 writes, flags, and 25-cycle source cost match the decoded bytes.")
-	print("LIMIT: caller execution, helper dispatch timing, and applying mapper writes to the live route remain outside this component.")
+	var shadow_builder: Variant = SHADOW_STATE_SCRIPT.new()
+	var shadow_state: Dictionary = shadow_builder.derive_fresh_kickoff_id1()
+	if not bool(shadow_state.get("ok", false)) or int(shadow_state.get("value", -1)) != 0:
+		_fail("Fresh KICK OFF `$0022` was not derived from reset/initializer ROM stores: %s" % String(shadow_state.get("error", "wrong value")))
+		return
+	var logical_event_id := "verifier_fresh_kickoff_id1_80F7_C4B9"
+	var logical_call := {
+		"caller_pc": 0x80F7, "target_pc": 0xC4B9, "return_pc": 0x80FA,
+		"source_event_id": logical_event_id,
+		"logical_stack_frame": {
+			"kind": "rom_jsr", "caller_pc": 0x80F7, "target_pc": 0xC4B9,
+			"return_pc": 0x80FA, "return_word": 0x80F9,
+			"source_event_id": logical_event_id,
+		},
+	}
+	var logical_result: Dictionary = helper.execute_logical_source_call(logical_call, {
+		"pc": 0xC4B9, "a": 0xC0, "x": 0x02, "y": 0x00,
+		"p_known_mask": 0x82, "p_known_value": 0x00,
+	}, {0x0022: int(shadow_state["value"])})
+	if not bool(logical_result.get("ok", false)):
+		_fail("Logical source call did not execute `$80F7->$C4B9->$80FA`: %s" % String(logical_result.get("error", "unknown error")))
+		return
+	var logical_cpu: Dictionary = logical_result.get("return_registers", {})
+	var logical_writes: Array = logical_result.get("mapper_bus_writes", [])
+	if int(logical_result.get("cpu_cycles", -1)) != 25 \
+			or int(logical_cpu.get("pc", -1)) != 0x80FA \
+			or int(logical_cpu.get("a", -1)) != 0x07 \
+			or int(logical_cpu.get("x", -1)) != 0x02 \
+			or int(logical_cpu.get("y", -1)) != 0 \
+			or int(logical_cpu.get("p_known_mask", -1)) != 0x82 \
+			or int(logical_cpu.get("p_known_value", -1)) != 0 \
+			or logical_writes.size() != 2 \
+			or int(logical_writes[0].get("value", -1)) != 0x07 \
+			or int(logical_writes[1].get("value", -1)) != 0x02:
+		_fail("Logical source call returned a different CPU/mapper contract: %s" % logical_result)
+		return
+	print("PASS: ROM `$C4B9-$C4C7` executes for all five verified physical caller fixtures and the live fresh KICK OFF logical call; reset-derived `$0022`, return address, partial flags, MMC3 writes, and 25-cycle helper cost match the decoded bytes.")
+	print("LIMIT: physical stack placement, later `$80FA->$A20F` selector execution, mapper application to live rendering, and hardware timing remain outside this component.")
 	quit(0)
 
 

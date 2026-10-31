@@ -169,6 +169,23 @@ func tick_appearance_only(source_record: PackedByteArray) -> TickResult:
 	return result
 
 
+## Advances only the source motion stream, for the ROM's `$0615.6` branch that
+## skips appearance but still calls the `$84DC` updater.
+func tick_motion_only(source_record: PackedByteArray) -> TickResult:
+	var result := TickResult.new()
+	result.actor_record = source_record.duplicate()
+	if not is_configured:
+		result.error = "Configure the hash-checked ROM actor source before ticking."
+		return result
+	if result.actor_record.size() != ACTOR_RECORD_BYTES:
+		result.error = "A ROM actor record must contain exactly 21 bytes."
+		return result
+	if not _tick_motion(result.actor_record, result):
+		return result
+	result.ok = true
+	return result
+
+
 func _tick_appearance(record: PackedByteArray, result: TickResult) -> bool:
 	var timer := int(record[APPEARANCE_TIMER_OFFSET])
 	if timer != 0:

@@ -37,6 +37,8 @@ func _verify_cutscene(cutscene_id: int) -> void:
 	var emitted_glyphs_by_event: Dictionary = {}
 	var wait_records: Array[Dictionary] = []
 	var completed_wait_records: Array[Dictionary] = []
+	var screen_fade_levels: Dictionary = {}
+	var completed_screen_off_events: Array[int] = []
 	var checked_eb_hold := false
 	var first_eb_event := [-1]
 	var finish_counter := [0]
@@ -59,6 +61,15 @@ func _verify_cutscene(cutscene_id: int) -> void:
 	)
 	vm.wait_completed.connect(func(kind: String, event: Dictionary) -> void:
 		completed_wait_records.append({"kind": kind, "event_index": int(event["event_index"]), "tick_end": vm.scheduler_tick_index})
+	)
+	vm.screen_fade_palette_step_requested.connect(func(event: Dictionary, level: int) -> void:
+		var event_index := int(event["event_index"])
+		if not screen_fade_levels.has(event_index):
+			screen_fade_levels[event_index] = []
+		(screen_fade_levels[event_index] as Array).append(level)
+	)
+	vm.screen_off_clear_completed.connect(func(event: Dictionary) -> void:
+		completed_screen_off_events.append(int(event["event_index"]))
 	)
 	vm.cutscene_finished.connect(func(_id: int) -> void:
 		finish_counter[0] += 1
@@ -123,12 +134,66 @@ func _verify_cutscene(cutscene_id: int) -> void:
 		var event_index := int(started["event_index"])
 		var next_event_index := event_index + 1
 		var is_final_text_wait: bool = started["kind"] == "text_speed" and (wait_index + 1 == wait_records.size() or int(wait_records[wait_index + 1]["event_index"]) != event_index)
-		if (started["kind"] != "text_speed" or is_final_text_wait) and next_event_index < event_dispatch_ticks.size():
+		var later_wait_for_same_event := false
+		for later_wait_index in range(wait_index + 1, wait_records.size()):
+			if int(wait_records[later_wait_index]["event_index"]) == event_index:
+				later_wait_for_same_event = true
+				break
+		if not later_wait_for_same_event and (started["kind"] != "text_speed" or is_final_text_wait) and next_event_index < event_dispatch_ticks.size():
 			_check(event_dispatch_ticks[next_event_index] == int(completed["tick_end"]), "cutscene %d source byte boundary after event %d" % [cutscene_id, event_index])
+
+	var expected_screen_on_events: Array[int] = []
+	var expected_screen_off_events: Array[int] = []
+	var expected_fade_levels: Dictionary = {}
+	var model_palette_level := 0
+	for event_variant in expected_events:
+		if not event_variant is Dictionary:
+			continue
+		var kind := str(event_variant.get("kind", ""))
+		var event_index := int(event_variant.get("event_index", -1))
+		var expected_levels: Array[int] = []
+		if kind == "screen_on":
+			expected_screen_on_events.append(event_index)
+			while model_palette_level < 15:
+				model_palette_level += 1
+				expected_levels.append(model_palette_level)
+		if kind == "screen_off_clear":
+			expected_screen_off_events.append(event_index)
+			while model_palette_level > 0:
+				model_palette_level -= 1
+				expected_levels.append(model_palette_level)
+		if kind == "screen_on" or kind == "screen_off_clear":
+			expected_fade_levels[event_index] = expected_levels
+	var pre_wait_count := 0
+	var fade_wait_count := 0
+	var off_pre_wait_count := 0
+	var fade_down_wait_count := 0
+	for wait in wait_records:
+		if wait["kind"] == "screen_on_pre_wait":
+			pre_wait_count += 1
+		elif wait["kind"] == "screen_on_fade_up":
+			fade_wait_count += 1
+		elif wait["kind"] == "screen_off_pre_wait":
+			off_pre_wait_count += 1
+		elif wait["kind"] == "screen_off_fade_down":
+			fade_down_wait_count += 1
+	_check(pre_wait_count == expected_screen_on_events.size(), "cutscene %d E9 handler runs one source $02 pre-wait per event" % cutscene_id)
+	_check(fade_wait_count == expected_fade_wait_count(expected_fade_levels, expected_screen_on_events), "cutscene %d E9 handler yields once per modeled fade-up pass" % cutscene_id)
+	_check(off_pre_wait_count == expected_screen_off_events.size(), "cutscene %d EA handler runs one source pre-wait per event" % cutscene_id)
+	_check(fade_down_wait_count == expected_fade_wait_count(expected_fade_levels, expected_screen_off_events), "cutscene %d EA handler yields once per modeled fade-down pass" % cutscene_id)
+	_check(completed_screen_off_events == expected_screen_off_events, "cutscene %d EA clear follows its complete source fade-down" % cutscene_id)
+	for event_index in expected_fade_levels:
+		var actual_levels: Array = screen_fade_levels.get(event_index, [])
+		_check(actual_levels == expected_fade_levels[event_index], "cutscene %d fade event %d follows its ROM-derived palette levels" % [cutscene_id, event_index])
 
 	_check(_has_wait(wait_records, "compact_pause", 80, 3) if cutscene_id == 1 else _has_wait(wait_records, "compact_pause"), "cutscene %d executes compact D8-DF waits" % cutscene_id)
 	_check(_has_wait(wait_records, "text_speed", 8, 7) if cutscene_id == 1 else _has_wait(wait_records, "text_speed", 8), "cutscene %d applies text-speed delays as scheduler ticks" % cutscene_id)
 	_check(_has_wait(wait_records, "fc_handler", 4), "cutscene %d executes FC as four scheduler ticks" % cutscene_id)
+	_check(_has_wait(wait_records, "screen_on_pre_wait", 2), "cutscene %d executes E9's two-tick source pre-wait" % cutscene_id)
+	_check(_has_wait(wait_records, "screen_on_fade_up", 1), "cutscene %d executes E9's one-tick palette-fade yields" % cutscene_id)
+	if not expected_screen_off_events.is_empty():
+		_check(_has_wait(wait_records, "screen_off_pre_wait", 1), "cutscene %d executes EA's one-tick source pre-wait" % cutscene_id)
+		_check(_has_wait(wait_records, "screen_off_fade_down", 1), "cutscene %d executes EA's one-tick palette-fade yields" % cutscene_id)
 	_check(_has_wait(wait_records, "wait_for_input", -1), "cutscene %d executes EB as indefinite fresh-A wait" % cutscene_id)
 	if cutscene_id == 1:
 		_check(_has_wait(wait_records, "pause_frames", 1), "cutscene 1 executes F6 01")
@@ -139,6 +204,13 @@ func _verify_cutscene(cutscene_id: int) -> void:
 
 	print("cutscene %d: %d decoded events, %d scheduler ticks, %d waits, %d text runs" % [cutscene_id, emitted_indices.size(), vm.scheduler_tick_index, wait_records.size(), expected_glyph_event_count])
 	vm.queue_free()
+
+
+func expected_fade_wait_count(expected_levels: Dictionary, event_indices: Array[int]) -> int:
+	var count := 0
+	for event_index in event_indices:
+		count += (expected_levels[event_index] as Array).size()
+	return count
 
 
 func _check(condition: bool, label: String) -> void:

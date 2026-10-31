@@ -5,7 +5,7 @@ The original long-form progress history is preserved verbatim as a
 historical Turkish progress entries retained as a raw archive; it is not a
 current status source. The Markdown documentation remains in English.
 
-Use the root GOAL.md for the current objective and status, PLANS.md for work
+Use the root GOALS.md for the current objective and status, PLANS.md for work
 order, and the focused reports under reference/ for technical evidence. Older
 progress entries may describe retired prototypes or superseded findings.
 Their project-relative paths were written from the reference/ directory.

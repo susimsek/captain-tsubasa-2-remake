@@ -18,6 +18,22 @@ func _verify() -> bool:
 	var continuation: Variant = CONTINUATION_SCRIPT.new()
 	if not continuation.configure_from_project_sources():
 		return _fail("Could not configure the hash-checked caller source: " + continuation.error_message)
+	for interrupt_bit: int in [0x00, 0x04]:
+		var cleanup_contract := {
+			"return_pc": 0x82E2, "a": 0, "x": 0, "y": 0,
+			"p_known_mask": 0x86,
+			"p_known_value": 0x02 | interrupt_bit,
+			"sp_delta": 0,
+		}
+		var cleanup_result: Dictionary = continuation.execute_cutscene_wait_post_cleanup(
+			0x82E2, 0x80F1, cleanup_contract)
+		if not bool(cleanup_result.get("ok", false)):
+			return _fail("The ROM caller rejected a valid cleanup status contract: " + String(cleanup_result.get("error", "unknown error")))
+		var caller_cpu: Dictionary = cleanup_result.get("cpu_output_contract", {})
+		if int(caller_cpu.get("p_known_mask", -1)) != 0x86 \
+				or int(caller_cpu.get("p_known_value", -1)) != interrupt_bit \
+				or int(caller_cpu.get("pc", -1)) != 0x80F7:
+			return _fail("The `$80F1-$80F7` ROM prefix did not preserve the known I bit while updating N/Z: %s" % caller_cpu)
 	var status: Dictionary = continuation.get_status()
 	if bool(status.get("does_execute_6502", true)) \
 			or bool(status.get("does_execute_helper_bodies", true)) \

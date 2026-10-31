@@ -1,0 +1,77 @@
+{
+  "schema": "ct2-fresh-kickoff-1b6-cold-start-producer-v1",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "header": "iNES 1.0; 16-byte header; no trainer",
+    "mapper": 4,
+    "submapper": 0,
+    "prg_rom_size_bytes": 262144,
+    "chr_rom_size_bytes": 131072
+  },
+  "runtime_rom_dependency": false,
+  "trace_state_included": false,
+  "mapping": "Offsets include the 16-byte iNES header. Fixed bank $1E maps CPU $C000-$DFFF from file offset 0x03C010.",
+  "existing_checked_spans_reused": [
+    {
+      "manifest": "reference/rom_extract/gameplay/fresh_kickoff_entry_context/manifest.json",
+      "spans": [
+        "$FFFC reset vector",
+        "$C503 reset jump",
+        "$C64E reset prefix"
+      ]
+    },
+    {
+      "manifest": "reference/rom_extract/gameplay/fresh_kickoff_audio_wait_inputs_20261029/manifest.json",
+      "spans": [
+        "$C64E-$C679 cold RAM clear",
+        "$C41E JMP $A200",
+        "$A200-$A22A mode setter"
+      ]
+    },
+    {
+      "manifest": "reference/rom_extract/gameplay/fresh_kickoff_caller/manifest.json",
+      "spans": [
+        "$C4B9-$C4C7 mapper bank selector"
+      ]
+    }
+  ],
+  "spans": [
+    {
+      "file": "fixed_reset_tail_C67A_C6BE.bin",
+      "cpu_start": "0xC67A",
+      "cpu_end_exclusive": "0xC6BE",
+      "bank": "0x1E",
+      "window": "fixed",
+      "file_offset": "0x03C68A",
+      "length": 68,
+      "sha256": "67b813ea10823b567758336a7dc96e3eca11d6800ea7d6c6e2186076e8e3d3d4",
+      "bytes": "a9 08 85 20 a9 06 85 21 8d 01 20 a9 00 8d 10 40 a9 40 8d 17 40 ad 02 20 a9 10 aa 8d 06 20 8d 06 20 49 00 ca d0 f5 a9 00 8d 22 00 20 35 cb 20 8b cb a9 00 8d 69 04 a9 00 8d 69 04 8d 00 e0 58 a9 00 4c fe ce",
+      "description": "Cold-reset continuation through CLI; LDA #$00; JMP $CEFE. The earlier reset/vector bytes are reused from existing checked manifests."
+    },
+    {
+      "file": "fixed_setup_helper_CEFE_CF1F.bin",
+      "cpu_start": "0xCEFE",
+      "cpu_end_exclusive": "0xCF1F",
+      "bank": "0x1E",
+      "window": "fixed",
+      "file_offset": "0x03CF0E",
+      "length": 33,
+      "sha256": "39e08d07dea9aaecf0e7e69a5f29bfb673b8d682387c78a8ee3a70c699bde5e7",
+      "bytes": "48 a9 00 8d 69 04 a9 00 8d 69 04 8d 00 e0 20 8b cb 20 35 cb a5 20 29 7f 8d 00 20 85 20 68 4c 00 c4",
+      "description": "Reset setup helper; after timer/IRQ and PPU setup it restores A and jumps to $C400."
+    },
+    {
+      "file": "fixed_mapper_wrapper_C400_C41E.bin",
+      "cpu_start": "0xC400",
+      "cpu_end_exclusive": "0xC41E",
+      "bank": "0x1E",
+      "window": "fixed",
+      "file_offset": "0x03C410",
+      "length": 30,
+      "sha256": "b202c40966101d2332de8c9ac85dac12ad69665579e933455b8572760f91292d",
+      "bytes": "a8 a9 08 85 20 8d 00 20 a9 1e 85 21 8d 01 20 a9 00 85 22 a2 00 20 b2 c4 a2 02 20 b9 c4 98",
+      "description": "Mode/mapper wrapper prefix; calls mapper helpers, including the existing checked $C4B9 bank-$02 selector, then falls through to the separately checked JMP $A200 at $C41E."
+    }
+  ]
+}

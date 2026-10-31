@@ -1,13 +1,15 @@
 -- Muted, bounded task-boundary trace for the fresh-start command route.
--- Warm from power-on once, save a signature-checked anonymous state at frame
--- 8399, then capture frames 8400-8953 twice. No numbered slot is used.
+-- Warm from power-on once, save a signature-checked anonymous checkpoint, and
+-- capture the selected tail twice. No numbered slot is used.
 
 local ROOT = assert(os.getenv("CT2_PROJECT_ROOT"), "missing project root")
 local OPENING_INPUT = ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local ROUTE_INPUT = ROOT .. "/reference/diagnostics/kickoff_select_test_20261027/post_title_inputs.csv"
 local OUT = assert(os.getenv("CT2_TASK_BOUNDARY_TRACE_OUTPUT_DIR"), "missing output directory")
-local LAST_FRAME = 8953
-local CHECKPOINT_FRAME = 8399
+local LAST_FRAME = tonumber(os.getenv("CT2_TRACE_LAST_FRAME")) or 8953
+local CHECKPOINT_FRAME = tonumber(os.getenv("CT2_TRACE_CHECKPOINT_FRAME")) or 8399
+assert(CHECKPOINT_FRAME >= 8399 and CHECKPOINT_FRAME < LAST_FRAME,
+	"trace checkpoint must be at/after the verified frame-8399 checkpoint and before the last frame")
 os.execute("mkdir -p " .. string.format("%q", OUT))
 
 local function read_inputs(path, route_format)
@@ -82,14 +84,14 @@ local function bank(pc)
 end
 
 local metadata = output("metadata.txt")
-metadata:write("source_frames=0-" .. LAST_FRAME .. "\ninstrumented_frames=8400-" .. LAST_FRAME .. "\n")
+metadata:write("source_frames=0-" .. LAST_FRAME .. "\ninstrumented_frames=" .. (CHECKPOINT_FRAME + 1) .. "-" .. LAST_FRAME .. "\n")
 local rom_hash = "unavailable"
 pcall(function() rom_hash = rom.gethash("sha256") or rom_hash end)
 metadata:write("rom_sha256=" .. tostring(rom_hash) .. "\n")
 metadata:write("emulator=FCEUX 2.7.0; NTSC; NewPPU; audio muted\n")
 metadata:write("hooks=handoff $C557/$C6BE/$C6E8/$A2AF/$AA06; task $CBB0/$C50F/$CAE7/$CA97/$CAB6/$CAB9/$CAD4/$CB0F/$CAF7; scenario $10:$803F/$8097 and $0523-$0529; callback $0B:$814C/$81A7/$81BC/$8327/$8525; workers $EC94/$EC9A/$ECF8/$ECFA/$ED01/$ED06/$ED0F/$ED15/$ED2D/$ED5B/$ED5F; actor entry $14:$800F/$80AA; bank18 $8852/$88B9; no $CAAE idle-spin hook\n")
 metadata:write("task_snapshot=slot $0011 plus seven 4-byte records $0015-$002C; all 256 stack-page bytes and each record's saved-SP window at every selected event; mapper shadows $0024/$0025; X/Y/A/P/SP and mapped PRG banks\n")
-metadata:write("save_state=anonymous in-memory at source frame 8399, signature checked after both loads; no numbered slots\n")
+metadata:write("save_state=anonymous in-memory at source frame " .. CHECKPOINT_FRAME .. ", signature checked after both loads; no numbered slots\n")
 metadata:flush()
 
 local event_header = "sequence,pass,frame,emulator_frame,cycle_from_frame_start,cycle_absolute,kind,pc,prg_bank,a,x,y,p,sp,current_task_base_0000,current_task_record_0000_0003,task_slots_0011_002c,task_stack_windows_by_saved_sp,stack_page_0100_01ff,mapper_shadow_0024_0025,mapper_select,prg_map,ready_latch_001b,scenario_0516_0518,wait_0519,record_fields_0523_0529,callback_ptr_0052_0053,stream_index_003a,stream_bytes_0_2,scenario_pc_005d_005e,continuation_depth_0522,continuation_words_051a_0521,worker_053a_053d,animation_ptr_004c_004d,shared_05cc_05ce,actor_worker_0011_0014"
@@ -286,7 +288,7 @@ for pass = 1, 2 do
 	events = output("task_events" .. (pass == 1 and "" or "_repeat") .. ".csv", event_header)
 	writes = output("task_writes" .. (pass == 1 and "" or "_repeat") .. ".csv", write_header)
 	attach()
-	for frame = 8400, LAST_FRAME do
+	for frame = CHECKPOINT_FRAME + 1, LAST_FRAME do
 		frame_now = frame
 		joypad.set(1, inputs[frame])
 		frame_cycle_start = debugger.getcyclescount()
@@ -301,7 +303,7 @@ for pass = 1, 2 do
 	metadata:flush()
 end
 
-metadata:write("complete=true\nreplays=2, same anonymous frame-8399 checkpoint\n")
+metadata:write("complete=true\nreplays=2, same anonymous frame-" .. CHECKPOINT_FRAME .. " checkpoint\n")
 metadata:close()
 pcall(memory.registerwrite, 0x8000, 1, nil)
 pcall(memory.registerwrite, 0x8001, 1, nil)

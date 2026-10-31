@@ -318,22 +318,32 @@ func _load_original_palette() -> void:
 	# Their animation records live under gameplay/animations/kickoff, separate
 	# from the cold-start extract, so derive the palette from that byte-preserved
 	# record and the original nine-entry table rather than falling back to gray.
-	if not timing_resource_path.contains("gameplay/animations/kickoff"):
+	var palette_bytes := get_gameplay_source_palette_bytes()
+	if palette_bytes.size() != 16:
 		return
-	var palette_id := animation_id.trim_prefix("0x").hex_to_int()
-	var record_path := "res://reference/rom_extract/gameplay/animations/kickoff/animation_%02X.bin" % palette_id
-	var record := FileAccess.get_file_as_bytes(record_path)
-	var palette_table := FileAccess.get_file_as_bytes("res://reference/rom_extract/intro/sprite_palette_table_00_3F.bin")
-	if record.is_empty() or palette_table.size() != 0x40 * 16 or record[0] >= 0x40:
-		return
-	for palette_index in 16:
-		var nes_color := int(palette_table[int(record[0]) * 16 + palette_index]) & 0x3F
+	for nes_color_variant in palette_bytes:
+		var nes_color := int(nes_color_variant) & 0x3F
 		var color_offset := nes_color * 3
 		sprite_palette_rgb.append(Color(
 			float(_nes_rgb_palette[color_offset]) / 255.0,
 			float(_nes_rgb_palette[color_offset + 1]) / 255.0,
 			float(_nes_rgb_palette[color_offset + 2]) / 255.0,
 			1.0))
+
+
+## Returns the palette row selected by this KICK OFF animation's ROM record.
+## The gameplay cutscene's E9 fade uses these original bytes before conversion.
+func get_gameplay_source_palette_bytes() -> PackedByteArray:
+	if not timing_resource_path.contains("gameplay/animations/kickoff"):
+		return PackedByteArray()
+	var palette_id := animation_id.trim_prefix("0x").hex_to_int()
+	var record_path := "res://reference/rom_extract/gameplay/animations/kickoff/animation_%02X.bin" % palette_id
+	var record := FileAccess.get_file_as_bytes(record_path)
+	var palette_table := FileAccess.get_file_as_bytes("res://reference/rom_extract/intro/sprite_palette_table_00_3F.bin")
+	if record.is_empty() or palette_table.size() != 0x40 * 16 or record[0] >= 0x40:
+		return PackedByteArray()
+	var start := int(record[0]) * 16
+	return palette_table.slice(start, start + 16)
 
 
 func set_fade_palette_bytes(palette_bytes: PackedByteArray) -> void:

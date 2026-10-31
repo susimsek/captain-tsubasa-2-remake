@@ -1,0 +1,20 @@
+{
+  "schema": "ct2-fresh-daf5-receiver-setup-v1",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "mapping": "iNES PRG starts at file offset 0x0010; fixed CPU window $C000-$DFFF maps bank $1E. $DAF5 maps to file offset 0x03DB05.",
+  "scope": "One ROM-derived caller span, fixed-bank $DAF5-$DB0E, ending after the JSR $E6EC call transfers control and before the callee executes.",
+  "spans": [
+    {
+      "file": "fixed_receiver_selection_DAF5_DB0E.bin",
+      "bank": "0x1E",
+      "window": "fixed",
+      "cpu_start": "0xDAF5",
+      "cpu_end_exclusive": "0xDB0E",
+      "file_offset": "0x03DB05",
+      "length": 25,
+      "sha256": "c57c49c5a00e1a91f54394dc2bad024a1f8ceaf0d6bd2961268c62866f4ab22a",
+      "source_role": "After the fresh-match $DC07 position initializer returns, derive a receiver index from $00E2 & $07, fold indices 5..7 by subtracting 5, read its offset from $DC82, add $05FB, store the selected slot at $05FC, and call $E6EC.",
+      "bytes": "ad e2 00 29 07 c9 05 90 02 e9 05 aa bd 82 dc 18 6d fb 05 8d fc 05 20 ec e6"
+    }
+  ]
+}

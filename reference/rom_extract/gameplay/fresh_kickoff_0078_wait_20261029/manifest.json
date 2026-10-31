@@ -1,0 +1,126 @@
+{
+  "schema": "ct2-fresh-kickoff-0078-wait-source-v1",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "header": "iNES 1.0; 16-byte header; no trainer",
+    "mapper": 4,
+    "prg_rom_size_bytes": 262144,
+    "chr_rom_size_bytes": 131072
+  },
+  "runtime_rom_dependency": false,
+  "capture_bytes_included": false,
+  "mapping": "Offsets include the 16-byte iNES header. Bank $00 at $8000 maps from file 0x000010; physical bank $02 and $06 at $A000 map from 0x004010 and 0x00C010; fixed bank $1E at $C000 maps from 0x03C010; fixed bank $1F at $E000 maps from 0x03E010.",
+  "spans": [
+    {
+      "file": "reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/bank00_preset_copy_tail_893F_895C.bin",
+      "cpu_start": "$893F",
+      "cpu_end_exclusive": "$895D",
+      "file_offset": "0x00094F",
+      "length": 30,
+      "sha256": "a59af362a985b858db682fb6f99cb85c8e817eb403c25df5484cb87076877001",
+      "bytes": "a000b1ec8d7900a9008d7a00c8a212b1ec997b00c8cad0f7a6ea20b9c460",
+      "purpose": "bank $00 at CPU $8000; continuation through real RTS to caller $8117"
+    },
+    {
+      "file": "reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/bank02_nmi_irq_setup_A000_A13E.bin",
+      "cpu_start": "$A000",
+      "cpu_end_exclusive": "$A13F",
+      "file_offset": "0x004010",
+      "length": 319,
+      "sha256": "89820a1c55e52fb9fcdb123eeed89945d187eaf4aaf5688d1869ffca612c5350",
+      "bytes": "a9008d0320a9028d1440ad2806f04e2c29067049a9008d0120a200a080bde8051004293fa0848c0020a8bdea058d0620bde9058d0620bdeb058d0720e888d0f6e8e8e8bde805d0d3a9008d2806a93f8d0620a9008d06208d06208d0620a5218d0120a579100da57b8d0620a57a8d06204c91a046204620a5454a2620a57b4a2620a5208d0020a57a8d0520a644ca8e0520a01620cba1a579f0100a8d00c08d01c08d01e0a904857810058d00e08578a9028d0080a59e8d0180a9038d0080a59f8d0180a9048d0080a5a08d0180a9058d0080a5a18d0180a202a9048540b51b8541a9018d1640a9008d1640a008bd15404a263f2901053f853f88d0f1c541f007c640d0db4c13a1b51b453f253f951da53f951bcad0c718a5e1698385e1a5e2690d85e2a5e3691185e3a90085468547a51b0980851be63a60a9b085d0a9ac85",
+      "purpose": "physical PRG bank $02 mapped at CPU $A000; NMI-side PPU/raster setup and RTS"
+    },
+    {
+      "file": "reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/bank02_irq_event_consumer_A160_A1E1.bin",
+      "cpu_start": "$A160",
+      "cpu_end_exclusive": "$A1E2",
+      "file_offset": "0x004170",
+      "length": 130,
+      "sha256": "50a0bf6f80ee2c2ca1e1f2034e6328b6f447a73838bb833fb0041fc9455b191a",
+      "bytes": "8d00e08d01e0a678b5781021a00688d0fdb579b47a8c06208d0620a52029fc8d0020a9008d05208d05204ca8a1a00288d0fd4620b57a4a2620a5208d0020b5798d0520a9008d0520b578297ff012e013f00ee678e678e6780a8d00c08d01c0608d00e08578a01820cba160b678a90005228d00808e0180b679a90105228d00808e01",
+      "purpose": "physical PRG bank $02 mapped at CPU $A000; IRQ event cursor, terminal clear, and CHR-pair helper"
+    },
+    {
+      "file": "reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/fixed_nmi_dispatch_C76E_C774.bin",
+      "cpu_start": "$C76E",
+      "cpu_end_exclusive": "$C775",
+      "file_offset": "0x03C77E",
+      "length": 7,
+      "sha256": "d7d53b9d4b7243c6595b273e93d542e9760310c8592b5ec885b56f2a532bed86",
+      "bytes": "241b50034c21c4",
+      "purpose": "fixed PRG bank $1E at CPU $C000; NMI route selected by bit 6 of $001B"
+    },
+    {
+      "file": "reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/fixed_raster_nmi_service_C421_C472.bin",
+      "cpu_start": "$C421",
+      "cpu_end_exclusive": "$C473",
+      "file_offset": "0x03C431",
+      "length": 82,
+      "sha256": "d02f695858c9d88a1cfadc63b71504cf467590449806820851d9feaab71b8673",
+      "bytes": "243b304d38663b853c863d843ea52209078d0080a9028d01802000a0a52209068d0080a90c8d0180200080a52209068d0080a5248d0180a52209078d0080a5258d0180a5238d0080a43ea63da53c463b4048",
+      "purpose": "fixed PRG bank $1E at CPU $C000; maps bank $02 and calls $A000; RTI boundary"
+    },
+    {
+      "file": "reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/fixed_irq_dispatch_C821_C827.bin",
+      "cpu_start": "$C821",
+      "cpu_end_exclusive": "$C828",
+      "file_offset": "0x03C831",
+      "length": 7,
+      "sha256": "5e94774bfa2074975596f0f7b9468f6c2c13d47f943936edb5f2a0ac8fb3b883",
+      "bytes": "241b50034c78c4",
+      "purpose": "fixed PRG bank $1E at CPU $C000; IRQ route selected by bit 6 of $001B"
+    },
+    {
+      "file": "reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/fixed_raster_irq_service_C478_C4AD.bin",
+      "cpu_start": "$C478",
+      "cpu_end_exclusive": "$C4AE",
+      "file_offset": "0x03C488",
+      "length": 54,
+      "sha256": "3bd224939351f06a7ff6e8138b52b8d8744c40b92bc955fe4b28e68b82c6917d",
+      "bytes": "243b303238663b853c863d843ea52209078d0080a9028d01802060a1a52209078d0080a5258d0180a5238d0080a43ea63da53c463b40",
+      "purpose": "fixed PRG bank $1E at CPU $C000; maps bank $02, calls $A160, restores registers, RTI"
+    },
+    {
+      "file": "reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/fixed_vector_trampolines_C500_C508.bin",
+      "cpu_start": "$C500",
+      "cpu_end_exclusive": "$C509",
+      "file_offset": "0x03C510",
+      "length": 9,
+      "sha256": "4cacda47b1a9af1bdc11c78e5dc06357d5e8dfa4819ecf8f9c98bfe15b79151f",
+      "bytes": "4c6ec74c4ec64c21c8",
+      "purpose": "fixed PRG bank $1F at CPU $E000; NMI and IRQ vector jump targets"
+    },
+    {
+      "file": "reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/fixed_nmi_irq_vectors_FFFA_FFFF.bin",
+      "cpu_start": "$FFFA",
+      "cpu_end_exclusive": "$10000",
+      "file_offset": "0x04000A",
+      "length": 6,
+      "sha256": "72925dda7194399d7eb27eb4a7d41a2b4d4b8be47b049bc1fd06f95f6627edec",
+      "bytes": "00c5f0ff06c5",
+      "purpose": "physical PRG bank $1F vector table; NMI, reset, and IRQ/BRK vectors"
+    },
+    {
+      "file": "reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/bank06_preset_record_BF00_BF12.bin",
+      "cpu_start": "$BF00",
+      "cpu_end_exclusive": "$BF13",
+      "file_offset": "0x00DF10",
+      "length": 19,
+      "sha256": "d6fd62f5ce537d90ea3ea45841b17f34d727bcbc4128748cba14fb87c0ffd9d1",
+      "bytes": "00000000000000000000000000000000000000",
+      "purpose": "physical PRG bank $06 mapped at CPU $A000; 19-byte record copied only after the wait"
+    },
+    {
+      "file": "reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/bank02_mapper_pair_tail_A1E2_A1E4.bin",
+      "cpu_start": "$A1E2",
+      "cpu_end_exclusive": "$A1E4",
+      "file_offset": "0x0041F2",
+      "length": 2,
+      "sha256": "322d846034eb1504f862d69cc84c8c42cf29fe205cae5962a7bf54618672d0ba",
+      "bytes": "8060",
+      "purpose": "physical PRG bank $02 mapped at CPU $A000; final STA $8001 operand and RTS for the $A1CB mapper-pair helper"
+    }
+  ]
+}

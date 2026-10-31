@@ -1,0 +1,31 @@
+{
+  "schema": "ct2-slot09-ebd7-root-checks-v1",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "header": "iNES 1.0; 16-byte header; no trainer",
+    "mapper": 4,
+    "submapper": 0
+  },
+  "runtime_rom_dependency": false,
+  "trace_state_included": false,
+  "spans": [
+    {
+      "file": "fixed_root_slot09_loop_EB86_EC07.bin",
+      "cpu_start": "0xEB86",
+      "cpu_end_exclusive": "0xEC08",
+      "bank": "0x1F",
+      "file_offset": "0x03EB96",
+      "description": "Fixed-bank slot-$09 loop through its $EC05 backedge; source-owned $CB0F yield begins after the live zero-counter branch.",
+      "length": 130,
+      "sha256": "91ee3ddc0110b7575a472103de8f5e4d1391a60efebe557b4f4238940d74f917",
+      "bytes": "a9 01 20 0f cb a5 21 29 1e ae 39 05 f0 05 a5 21 4d 39 05 85 21 20 08 ec 20 85 ed 48 a5 22 a9 18 85 24 a9 19 85 25 20 2d ce 68 20 03 80 48 a5 22 a9 18 85 24 a9 19 85 25 20 2d ce 68 20 06 80 48 a5 22 a9 18 85 24 a9 19 85 25 20 2d ce 68 20 09 80 ad 2e 05 f0 29 ce 2e 05 d0 24 ad 2f 05 c9 7e 90 11 c9 7f f0 07 ad 27 00 c9 04 f0 12 20 93 d0 4c 05 ec 2c 3f 06 10 04 c9 63 d0 03 20 f1 cb 4c 86 eb"
+    }
+  ],
+  "consumer": {
+    "class": "RomSlot09Ebd7RootZeroCounterExecutor",
+    "file": "scripts/gameplay/rom_slot09_ebd7_root_zero_counter_executor.gd",
+    "supported_live_branch": "At $EBD7, $052E==0; BEQ $EC05, JMP $EB86, LDA #$01, JSR $CB0F.",
+    "stop_boundary": "$CB0F entry before task-save handler execution"
+  }
+}

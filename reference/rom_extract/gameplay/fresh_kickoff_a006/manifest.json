@@ -1,0 +1,35 @@
+{
+  "schema": "ct2-fresh-kickoff-a006-source-v1",
+  "rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "mapping": "The iNES header is 16 bytes. PRG bank $01 is the second 8 KiB bank and maps to CPU $A000-$BFFF when selected in MMC3 register 7.",
+  "scope": "Preserves the `$A006` bank-$01 vector and its complete `$A4EB-$A610` target body. The runtime entry executor only performs the verified JMP; the body has additional helpers and wait/scheduler behavior and is not yet implemented by that executor.",
+  "spans": [
+    {
+      "id": "a006_vector",
+      "file": "bank01_prematch_setup_vector_A006_A009.bin",
+      "cpu_start": "$A006",
+      "cpu_end_exclusive": "$A009",
+      "file_offset": "0x002016",
+      "length": 3,
+      "rom_offset": 8214,
+      "bank_mapping": "PRG bank $01 at CPU $A000-$BFFF",
+      "sha256": "d823d82f6c345fe92558a284727617cdea76ce9d9c6b32bdd01e44a18bfd8af3",
+      "bytes": "4ceba4"
+    },
+    {
+      "id": "a4eb_body",
+      "file": "bank01_prematch_setup_body_A4EB_A610.bin",
+      "cpu_start": "$A4EB",
+      "cpu_end_exclusive": "$A611",
+      "file_offset": "0x0024FB",
+      "length": 294,
+      "rom_offset": 9467,
+      "bank_mapping": "PRG bank $01 at CPU $A000-$BFFF",
+      "sha256": "1897387554b3047615392719f5a00c32f4ceb24e56645c64fe7d8a11a3ed3587",
+      "bytes": "a26aa06b206f9ba27aa07b20749b207f9ba005a2b320c0b0a90085448545a0ccb971b2999c03c8d0f7a626bdd1bc29f04a4a4aaabcf3bcbdf4bcaa20279da626bdd1bc290f0aaabc64bdbd65bdaaa90785e8a92285e920509da52aa0d0a221203ca6a924c52ba52be900a050a222203ca6a900857ba900858ea92e858fa904a237207a99a2f0a90120a89fa51e3003cad0f420f09920a098a90085ed85eca90b2011a6a526c9109009a91685eda90a2011a6a5e4c526b00ea526c906f067c90cf063c910f05fa5ecf05ba626bdf9b320648420a982a90085ed85eaa6edbd5606203cc5a5ea0aaabd58bc85e8bd59bc85e9a430a63120509de6eae6edc6ecf01fa5edc90bd0d520a389a94485e6a92285e7a008a21820e898a90085ea4cc6a520a38920f09960"
+    }
+  ]
+}

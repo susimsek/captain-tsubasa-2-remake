@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Preserve selector-correct ROM metatiles for field maps $36 and $56."""
+"""Preserve selector-correct ROM metatiles for field maps $36, $42, and $56."""
 
 from __future__ import annotations
 
@@ -43,6 +43,15 @@ MAPS = {
             "AD AD AD AD AD AD AD AD "
             "AE AE AE AE AE AE AE AE "
             "AF AF AF AF AF AF AF AF"
+        ),
+    },
+    0x42: {
+        "selector": 0x01,
+        "expected_map_hex": (
+            "14 14 14 14 14 14 14 14 "
+            "33 33 33 33 33 33 33 33 "
+            "15 16 15 EA EB 16 15 16 "
+            "14 14 14 14 14 14 14 14"
         ),
     },
 }
@@ -92,32 +101,33 @@ def main() -> None:
         map_offset = BLOCK_MAP_TABLE_OFFSET + map_id * 0x20
         block_map = rom[map_offset : map_offset + 0x20]
         expected_map = bytes.fromhex(str(metadata["expected_map_hex"]))
-        record_offset = int(metadata["animation_record_offset"])
-        animation_record = rom[record_offset : record_offset + 3]
-        expected_record = bytes.fromhex(str(metadata["expected_record_hex"]))
         selected = decode_selector(selector_table, map_id)
         if selected != int(metadata["selector"]):
             raise SystemExit(f"Map ${map_id:02X} selector changed: ${selected:02X}")
         if block_map != expected_map:
             raise SystemExit(f"Map ${map_id:02X} bytes differ from the audited target ROM.")
-        if animation_record != expected_record:
-            raise SystemExit(f"Animation ${int(metadata['animation_id']):02X} record changed.")
+        if "animation_id" in metadata:
+            record_offset = int(metadata["animation_record_offset"])
+            animation_record = rom[record_offset : record_offset + 3]
+            expected_record = bytes.fromhex(str(metadata["expected_record_hex"]))
+            if animation_record != expected_record:
+                raise SystemExit(f"Animation ${int(metadata['animation_id']):02X} record changed.")
 
-        animation_filename = f"background_animation_{int(metadata['animation_id']):02X}_record.bin"
-        write_preserved(OUTPUT_DIR / animation_filename, animation_record)
-        entries.append({
-            "path": animation_filename,
-            "file_offset": f"0x{record_offset:06X}",
-            "cpu_address": f"0x{0x8000 + (record_offset - 0x016010):04X}",
-            "prg_bank": "0x0B",
-            "size_bytes": len(animation_record),
-            "sha256": sha256(animation_record),
-            "animation_id": f"0x{int(metadata['animation_id']):02X}",
-            "block_map_id": f"0x{map_id:02X}",
-            "selector": f"0x{selected:02X}",
-            "raw_hex": animation_record.hex(" ").upper(),
-            "source": "background-animation record: wait, opcode $00, metatile-map ID",
-        })
+            animation_filename = f"background_animation_{int(metadata['animation_id']):02X}_record.bin"
+            write_preserved(OUTPUT_DIR / animation_filename, animation_record)
+            entries.append({
+                "path": animation_filename,
+                "file_offset": f"0x{record_offset:06X}",
+                "cpu_address": f"0x{0x8000 + (record_offset - 0x016010):04X}",
+                "prg_bank": "0x0B",
+                "size_bytes": len(animation_record),
+                "sha256": sha256(animation_record),
+                "animation_id": f"0x{int(metadata['animation_id']):02X}",
+                "block_map_id": f"0x{map_id:02X}",
+                "selector": f"0x{selected:02X}",
+                "raw_hex": animation_record.hex(" ").upper(),
+                "source": "background-animation record: wait, opcode $00, metatile-map ID",
+            })
 
         map_filename = f"block_map_{map_id:02X}_selector_{selected:02X}.bin"
         write_preserved(OUTPUT_DIR / map_filename, block_map)
@@ -130,7 +140,7 @@ def main() -> None:
             "sha256": sha256(block_map),
             "block_map_id": f"0x{map_id:02X}",
             "selector": f"0x{selected:02X}",
-            "source": "8x4 metatile map selected by bank-$0B $8525",
+            "source": "8x4 metatile map selected by bank-$0B $8525 or callback map ID",
         })
 
         for metatile_id in sorted(set(block_map)):
@@ -195,6 +205,7 @@ def main() -> None:
             "attribute_formula": "file=0x017BF4+(selector<<8)+metatile_id",
             "map_36": "background animation $45 record at bank-$0B $8A2A; selector $01",
             "map_56": "background animation $70 record at bank-$0B $8B38; selector $02",
+            "map_42": "callback event $3A supplies map ID $42 to bank-$0B $8525; selector $01",
         },
         "entries": entries,
     }

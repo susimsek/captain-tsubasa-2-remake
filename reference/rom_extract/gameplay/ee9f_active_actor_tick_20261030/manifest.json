@@ -1,0 +1,89 @@
+{
+  "schema": "ct2-ee9f-active-actor-boundary-source-v1",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "header": "iNES 1.0; no trainer",
+    "mapper": 4,
+    "submapper": 0
+  },
+  "runtime_rom_dependency": false,
+  "trace_state_included": false,
+  "scope": "Animation $8F F5/F4 dispatch through five F1 constructors, F0 return to $EEB1, and fixed-bank source control flow through the first actor renderer return at $EF38. The route trace validates record state but does not hook the actor call PCs.",
+  "spans": [
+    {
+      "file": "bank14_f4_f5_handlers_8142_816f.bin",
+      "prg_bank": "$14",
+      "cpu_start": "$8142",
+      "cpu_end_exclusive": "$816F",
+      "file_offset": "0x028152",
+      "length_bytes": 45,
+      "sha256": "54f386219f148111d8335f5ea59c79e54acb9005e0dccb0c1ad623f26577010f",
+      "purpose": "ROM source for the animation-$8F setup path"
+    },
+    {
+      "file": "fixed_service_stubs_C530_C536.bin",
+      "prg_bank": "$1E",
+      "cpu_start": "$C530",
+      "cpu_end_exclusive": "$C536",
+      "file_offset": "0x03C540",
+      "length_bytes": 6,
+      "sha256": "a8e8cc65722c34d77be8b617a0bd428012a3d4d94e4bc854e170a0be25363193",
+      "purpose": "ROM source for the animation-$8F setup path"
+    },
+    {
+      "file": "fixed_f5_helper_CC02_CC46.bin",
+      "prg_bank": "$1E",
+      "cpu_start": "$CC02",
+      "cpu_end_exclusive": "$CC46",
+      "file_offset": "0x03CC12",
+      "length_bytes": 68,
+      "sha256": "9fa6a2837a6bcf360ccc1df464b2242fe4a287330b8173c4415718e7fc9cfc68",
+      "purpose": "ROM source for the animation-$8F setup path"
+    },
+    {
+      "file": "fixed_f5_helper_CCD2_CCE2.bin",
+      "prg_bank": "$1E",
+      "cpu_start": "$CCD2",
+      "cpu_end_exclusive": "$CCE2",
+      "file_offset": "0x03CCD2",
+      "length_bytes": 16,
+      "sha256": "80511fcb5d3f51e528a412d2cb5d3cc34f703277e88101d0ce80601031a453b8",
+      "purpose": "ROM source for the animation-$8F setup path"
+    }
+  ],
+  "shared_sources": [
+    {
+      "path": "reference/rom_extract/gameplay/ee9f_actor_init_80/bank14_animation_dispatch_8084_8164.bin",
+      "purpose": "Existing bank-$14 command dispatch table, F0/F1 handlers, and F5 entry prefix; hash is in the linked source manifest."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/first_command_actors/route_animation_8F.bin",
+      "purpose": "Pointer-bounded animation-$8F stream; hash is in first_command_actors/manifest.json."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/ee9f_empty_actor_call/fixed_actor_loop_EE9F_EF80.bin",
+      "purpose": "Fixed-bank caller/actor-loop span, including $EEB1 and the $EF38 post-render continuation; hash is in ee9f_empty_actor_call/manifest.json."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/actor_packet_constructor/manifest.json",
+      "purpose": "ROM table provenance consumed by the existing $F1 record constructor."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/actor_state_interpreter/manifest.json",
+      "purpose": "ROM script spans consumed by the bounded actor state interpreter."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/actor_oam/manifest.json",
+      "purpose": "ROM sprite-engine spans consumed by the OAM builder."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/task_context/fixed_task_yield_save_CB0F.bin",
+      "purpose": "Shared task-save routine called by fixed helper $CCD2; its standalone source manifest pins the bytes."
+    }
+  ],
+  "validation_trace": {
+    "path": "reference/diagnostics/first_command_scenario_timing_20261028_045844_utc/",
+    "role": "Muted, two-pass FCEUX behavioral validation only; no trace bytes or state are runtime inputs."
+  }
+}

@@ -14,6 +14,9 @@ OUT = pathlib.Path("reference/rom_extract/gameplay/fresh_daaa_continuation")
 SPANS = [
     ("fixed_reset_ram_clear_C64E_C679.bin", 0x1E, 0xC64E, 0xC67A, "fixed"),
     ("fixed_daaa_to_first_bank18_entry_DAAA_DACC.bin", 0x1E, 0xDAAA, 0xDACC, "fixed"),
+    ("fixed_scenario_wait_DADD_DAE9.bin", 0x1E, 0xDADD, 0xDAE9, "fixed"),
+    ("fixed_scenario_input_exit_DAE9_DAF2.bin", 0x1E, 0xDAE9, 0xDAF2, "fixed"),
+    ("fixed_position_initializer_call_DAF2_DAF5.bin", 0x1E, 0xDAF2, 0xDAF5, "fixed"),
     ("fixed_sound_queue_CBF1_CC01.bin", 0x1E, 0xCBF1, 0xCC02, "fixed"),
     ("fixed_branch_dispatch_DB24_DB62.bin", 0x1E, 0xDB24, 0xDB62, "fixed"),
     ("fixed_bank18_wrapper_EF7F_EF99.bin", 0x1F, 0xEF7F, 0xEF99, "fixed"),
@@ -67,7 +70,11 @@ def main() -> int:
                 "file_offset": f"0x{offset:06X}",
                 "length": len(data),
                 "sha256": hashlib.sha256(data).hexdigest(),
-                "description": "Hash-checked ROM code/data for the synchronous fresh match-zero continuation to the first bank-$18 worker entry.",
+                "description": {
+                    "fixed_scenario_wait_DADD_DAE9.bin": "Scenario-$35 caller after $CBC1 returns: loads delay 1, calls the $CB0F task-yield routine, and tests held A/B at $001C.",
+                    "fixed_scenario_input_exit_DAE9_DAF2.bin": "Set-A/B branch after the scenario wait: ROM reads $05FB, adds 8, and writes initial ball holder $0441 before the $DC07 position initializer call.",
+                    "fixed_position_initializer_call_DAF2_DAF5.bin": "ROM JSR at the scenario-$36 setup caller: requests fixed-bank match-position initializer $DC07 and returns to $DAF5.",
+                }.get(name, "Hash-checked ROM code/data for the synchronous fresh match-zero continuation to the first bank-$18 worker entry."),
                 "bytes": data.hex(" "),
             }
         )
@@ -75,7 +82,7 @@ def main() -> int:
         "schema": "ct2-fresh-daaa-continuation-source-v2",
         "rom_sha256": ROM_SHA256,
         "mapping": "iNES PRG starts at file offset 0x0010; fixed $C000-$DFFF maps bank $1E and $E000-$FFFF maps bank $1F; switchable 8 KiB slot-$8000/$A000 windows use the MMC3 bank pair.",
-        "scope": "Synchronous source-byte execution from $DAAA through fresh selector dispatch, bank-$1C match-zero setup, and the first $EF7F wrapper into bank-$18:$800C. Stops at the asynchronous worker entry.",
+        "scope": "Source-byte execution from $DAAA through fresh selector dispatch, bank-$1C match-zero setup, and the first $EF7F wrapper into bank-$18:$800C; also packages the scenario-$35 A/B poll exit through the $DAF2 call to the $DC07 position initializer. Both asynchronous source-task boundaries remain outside this executor.",
         "spans": entries,
         "limitations": [
             "This package stops at bank-$18:$800C; the worker's later $8886/$C515 yield, scheduler/NMI cadence, and continuation are not executed.",

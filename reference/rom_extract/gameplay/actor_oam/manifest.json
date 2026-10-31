@@ -45,6 +45,46 @@
       "length_bytes": 1358,
       "sha256": "90caefd89c50a5696347adba35d47b1b428829c4983051da11226f6bab1f1fa7",
       "purpose": "descriptor $00/$04/$0A stream roots, selector tables, jump targets, and compact OAM runs"
+    },
+    {
+      "name": "early_actor_descriptor_pointers_83f0_83f5",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_early_actor_descriptor_pointers_83f0_83f5.bin",
+      "bank": "0x16",
+      "cpu_start": "0x83F0",
+      "file_offset": "0x02C400",
+      "length_bytes": 6,
+      "sha256": "c657102f38fc6bb3b6fdf8231ab95316f8eee01c64c9af2bda3a344876340b4f",
+      "purpose": "descriptor $B8/$B9/$BA pointers, resolving to $BB21/$BB62/$BB6D"
+    },
+    {
+      "name": "early_actor_descriptor_b8_bb21_bb61",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_early_actor_descriptor_B8_BB21_BB61.bin",
+      "bank": "0x16",
+      "cpu_start": "0xBB21",
+      "file_offset": "0x02FB31",
+      "length_bytes": 65,
+      "sha256": "7e9cdcd5dbe2e732c0bdb4ba4a05328a26b36ce447d336702eaffdf46888b7dc",
+      "purpose": "descriptor $B8 compact OAM runs and end opcode"
+    },
+    {
+      "name": "early_actor_descriptor_b9_bb62_bb6c",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_early_actor_descriptor_B9_BB62_BB6C.bin",
+      "bank": "0x16",
+      "cpu_start": "0xBB62",
+      "file_offset": "0x02FB72",
+      "length_bytes": 11,
+      "sha256": "f8c2fe9650548e50d75b37eaca01d2a5e924e5f858718e6f0933cb816ebc615a",
+      "purpose": "descriptor $B9 compact OAM run and end opcode"
+    },
+    {
+      "name": "early_actor_descriptor_ba_bb6d_bb7b",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_early_actor_descriptor_BA_BB6D_BB7B.bin",
+      "bank": "0x16",
+      "cpu_start": "0xBB6D",
+      "file_offset": "0x02FB7D",
+      "length_bytes": 15,
+      "sha256": "40b0a4a2fd857fff6c29536666d2d2104acb9bf7ad2ce092eacd95aa62785803",
+      "purpose": "descriptor $BA compact OAM runs and end opcode"
     }
   ]
 }

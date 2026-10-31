@@ -1,8 +1,9 @@
 extends RefCounted
 class_name RomFreshDaaaContinuation
 ## Byte-bounded 6502 continuation for the source-owned fresh slot-$05 task.
-## Executes the synchronous match-zero dispatch and stops at bank-$18:$800C,
-## before that worker's yield/scheduler continuation.
+## Executes the synchronous match-zero dispatch and the scenario-$35 A/B wait
+## exit through the checked $DC07 call request. It does not model asynchronous
+## worker yields, NMI cadence, or the called position initializer here.
 
 const ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
 const SOURCE_ROOT := "res://reference/rom_extract/gameplay/fresh_daaa_continuation/"
@@ -13,6 +14,9 @@ const END_BANK := 0x18
 const SOURCE_FILES := {
 	"fixed_reset_ram_clear_C64E_C679.bin": {"bank": 0x1E, "start": 0xC64E, "end": 0xC67A},
 	"fixed_daaa_to_first_bank18_entry_DAAA_DACC.bin": {"bank": 0x1E, "start": 0xDAAA, "end": 0xDACC},
+	"fixed_scenario_wait_DADD_DAE9.bin": {"bank": 0x1E, "start": 0xDADD, "end": 0xDAE9},
+	"fixed_scenario_input_exit_DAE9_DAF2.bin": {"bank": 0x1E, "start": 0xDAE9, "end": 0xDAF2},
+	"fixed_position_initializer_call_DAF2_DAF5.bin": {"bank": 0x1E, "start": 0xDAF2, "end": 0xDAF5},
 	"fixed_sound_queue_CBF1_CC01.bin": {"bank": 0x1E, "start": 0xCBF1, "end": 0xCC02},
 	"fixed_branch_dispatch_DB24_DB62.bin": {"bank": 0x1E, "start": 0xDB24, "end": 0xDB62},
 	"fixed_bank18_wrapper_EF7F_EF99.bin": {"bank": 0x1F, "start": 0xEF7F, "end": 0xEF99},
@@ -49,6 +53,7 @@ var _y := 0
 var _p := FLAG_U
 var _sp := 0
 var _pc := 0
+var _entry_pc := 0
 var _write_trace_pc := 0
 var _bank_low := 0
 var _bank_high := 1
@@ -109,6 +114,153 @@ func execute_synchronous_prefix(period_result: Dictionary) -> Dictionary:
 	if not _validate_period_result(period_result):
 		return {}
 	_reset_from_period_result(period_result)
+	return _execute_to_worker_entry()
+
+
+## Continues from the live `$CBC1 RTS->$DADD` return after the scenario-$35
+## queue. It preserves caller state and executes the ROM's `LDA #$01` through
+## the `$DADF` callsite; the scheduler owns the `$CB0F` task-yield routine.
+func execute_after_scenario_return(return_result: Dictionary) -> Dictionary:
+	error_message = ""
+	if not _configured:
+		_fail("Configure hash-checked $DAAA sources before execution.")
+		return {}
+	var entry: Dictionary = return_result.get("entry", {})
+	var registers: Dictionary = return_result.get("registers", {})
+	var mapper: Dictionary = return_result.get("mapper", {})
+	var ram: Variant = return_result.get("ram_image", PackedByteArray())
+	var stack: Variant = return_result.get("stack_page", PackedByteArray())
+	var call_contract: Dictionary = return_result.get("call_contract", {})
+	var caller_request: Dictionary = call_contract.get("caller_request", {})
+	if not bool(return_result.get("ok", false)) \
+			or String(return_result.get("status", "")) != "returned_to_source_caller" \
+			or String(return_result.get("source_manifest", "")) != "res://reference/rom_extract/gameplay/scenario_task_runtime/manifest.json" \
+			or int(entry.get("slot_base", -1)) != 0x05 \
+			or int(entry.get("call_pc", -1)) != 0xCBC1 \
+			or int(entry.get("expected_return_pc", -1)) != 0xDADD \
+			or int(registers.get("pc", -1)) != 0xDADD \
+			or int(registers.get("sp", -1)) != 0x50 \
+			or int(caller_request.get("return_word", -1)) != 0xDADC \
+			or not ram is PackedByteArray or ram.size() != RAM_SIZE \
+			or not stack is PackedByteArray or stack.size() != 0x100 \
+			or int(mapper.get("bank_low", -1)) != 0x1C \
+			or int(mapper.get("bank_high", -1)) != 0x1D:
+		_fail("Input is not the live ROM-derived `$CBC1->$DADD` continuation.")
+		return {}
+	_reset_from_scenario_return(return_result)
+	var instruction_limit := 16
+	while _pc != 0xDADF and _instructions.size() < instruction_limit:
+		if not _execute_one():
+			return {}
+	if _pc != 0xDADF:
+		_fail("Scenario-$35 caller did not reach the checked `$DADF->$CB0F` yield callsite.")
+		return {}
+	return {
+		"ok": true,
+		"status": "scenario35_wait_yield_callsite_ready",
+		"rom_sha256": ROM_SHA256,
+		"source_manifest": MANIFEST_PATH,
+		"entry_pc": _entry_pc,
+		"exit_pc": _pc,
+		"exit_sp": _sp,
+		"exit_bank": _current_bank_for_pc(_pc),
+		"registers": {"a": _a, "x": _x, "y": _y, "p": _p, "sp": _sp, "pc": _pc},
+		"mapper": {"bank_low": _bank_low, "bank_high": _bank_high, "register_select": _mmc3_select},
+		"ram_image": _ram.duplicate(),
+		"stack_page": _ram.slice(0x0100, 0x0200),
+		"writes": _writes.duplicate(true),
+		"mapper_writes": _mapper_writes.duplicate(true),
+		"calls": _calls.duplicate(true),
+		"instructions": _instructions.duplicate(true),
+		"instruction_count": _instructions.size(),
+		"call_request": {"callsite_pc": 0xDADF, "target_pc": 0xCB0F,
+			"return_pc": 0xDAE2, "return_minus_one": 0xDAE1},
+		"scope": "ROM-byte scenario caller prefix to its scheduler yield callsite",
+	}
+
+
+## Replays the live `$DAE2` wait test after the scheduler's real RTS dispatch.
+## A zero `$001C & $C0` result repeats the source yield at `$DADF`. A set bit
+## executes the ROM branch that assigns `$0441 = $05FB + 8`, then stops before
+## the verified `$DAF2 JSR $DC07` so the position initializer remains a caller.
+func execute_scenario35_wait_resume(dispatch: Dictionary, boundary: Dictionary) -> Dictionary:
+	error_message = ""
+	if not _configured:
+		_fail("Configure hash-checked scenario sources before resuming the wait loop.")
+		return {}
+	var ram: Variant = boundary.get("ram_image", PackedByteArray())
+	var stack: Variant = boundary.get("stack_page", PackedByteArray())
+	if not bool(dispatch.get("ok", false)) \
+			or int(dispatch.get("slot_base", -1)) != 0x05 \
+			or int(dispatch.get("pc", -1)) != 0xDAE2 \
+			or int(dispatch.get("sp", -1)) != 0x50 \
+			or String(dispatch.get("resume_path", "")) != "yielded_rts" \
+			or int(dispatch.get("bank_low", -1)) != 0x1C \
+			or int(dispatch.get("bank_high", -1)) != 0x1D \
+			or int(boundary.get("active_task_slot", -1)) != 0x05 \
+			or int(boundary.get("pc", -1)) != 0xDAE2 \
+			or not ram is PackedByteArray or ram.size() != RAM_SIZE \
+			or not stack is PackedByteArray or stack.size() != 0x100 \
+			or ram.slice(0x0100, 0x0200) != stack:
+		_fail("Scenario-$35 wait resume requires the live slot-$05 `$DAE2` dispatch RAM/stack boundary.")
+		return {}
+	_reset_from_scenario_wait_dispatch(dispatch, boundary)
+	var instruction_limit := 8
+	while _pc != 0xDADF and _pc != 0xDAE9 and _instructions.size() < instruction_limit:
+		if not _execute_one():
+			return {}
+	if _pc not in [0xDADF, 0xDAE9]:
+		_fail("Scenario-$35 wait test did not reach `$DADF` or the checked `$DAE9` input exit.")
+		return {}
+	var wait_condition_set := _pc == 0xDAE9
+	var call_request: Dictionary = {}
+	if wait_condition_set:
+		while _pc != 0xDAF2 and _instructions.size() < instruction_limit:
+			if not _execute_one():
+				return {}
+		if _pc != 0xDAF2:
+			_fail("Set-input scenario wait path did not reach `$DAF2` within the bounded ROM span.")
+			return {}
+		var call_bytes: PackedByteArray = _sources["fixed_position_initializer_call_DAF2_DAF5.bin"]
+		if call_bytes.size() != 3 or int(call_bytes[0]) != 0x20:
+			_fail("The `$DAF2` source instruction is not a three-byte JSR.")
+			return {}
+		var target_pc := int(call_bytes[1]) | (int(call_bytes[2]) << 8)
+		if target_pc != 0xDC07:
+			_fail("The `$DAF2` ROM call no longer targets position initializer `$DC07`.")
+			return {}
+		call_request = {
+			"kind": "rom_jsr_request",
+			"source_pc": 0xDAF2,
+			"target_pc": target_pc,
+			"return_pc": 0xDAF5,
+			"return_minus_one": 0xDAF4,
+			"source_bytes": call_bytes.duplicate(),
+		}
+	return {
+		"ok": true,
+		"status": "scenario35_input_exit_dc07_callsite_ready" if wait_condition_set else "scenario35_wait_yield_callsite_ready",
+		"rom_sha256": ROM_SHA256,
+		"source_manifest": MANIFEST_PATH,
+		"entry_pc": 0xDAE2,
+		"exit_pc": _pc,
+		"exit_sp": _sp,
+		"registers": {"a": _a, "x": _x, "y": _y, "p": _p, "sp": _sp, "pc": _pc},
+		"mapper": {"bank_low": _bank_low, "bank_high": _bank_high, "register_select": _mmc3_select},
+		"ram_image": _ram.duplicate(),
+		"stack_page": _ram.slice(0x0100, 0x0200),
+		"writes": _writes.duplicate(true),
+		"instructions": _instructions.duplicate(true),
+		"instruction_count": _instructions.size(),
+		"wait_flags": int(_ram[0x001C]) & 0xC0,
+		"input_exit_taken": wait_condition_set,
+		"ball_holder_slot_0441": int(_ram[0x0441]) if wait_condition_set else -1,
+		"position_initializer_call_request": call_request,
+		"scope": "ROM-byte scenario-$35 wait loop through its zero-input scheduler yield or set-input `$DAF2->$DC07` call request; `$DC07` is not executed here",
+	}
+
+
+func _execute_to_worker_entry() -> Dictionary:
 	var instruction_limit := 4096
 	while not _at_end_boundary() and _instructions.size() < instruction_limit:
 		if not _execute_one():
@@ -120,7 +272,7 @@ func execute_synchronous_prefix(period_result: Dictionary) -> Dictionary:
 		"ok": true,
 		"rom_sha256": ROM_SHA256,
 		"source_manifest": MANIFEST_PATH,
-		"entry_pc": 0xDAAA,
+		"entry_pc": _entry_pc,
 		"exit_pc": _pc,
 		"exit_sp": _sp,
 		"exit_bank": _current_bank_for_pc(_pc),
@@ -136,7 +288,8 @@ func execute_synchronous_prefix(period_result: Dictionary) -> Dictionary:
 		"calls": _calls.duplicate(true),
 		"instructions": _instructions.duplicate(true),
 		"instruction_count": _instructions.size(),
-		"scope": "ROM-byte execution through fresh selector $DB34 and bank-$1C match-zero setup; stops at the first bank-$18:$800C worker entry",
+		"source_context": {"entry_pc": _entry_pc, "entry_bank": _current_bank_for_pc(_entry_pc)},
+		"scope": "ROM-byte continuation to the first bank-$18:$800C worker entry",
 		"next_source_call": {"pc": 0x800C, "bank": 0x18, "target": 0x8851},
 		"runtime_integrated": false,
 		"precondition_gaps": ["The earlier route has not yet been source-executed to prove every reset-zero RAM byte remains unchanged at $DAAA.", "The bank-$18 worker yield at $8886/$C515 and its task/NMI continuation are outside this synchronous component."],
@@ -157,10 +310,18 @@ func _validate_period_result(period_result: Dictionary) -> bool:
 	if not dispatch_variant is Dictionary:
 		return _fail("$DAAA continuation requires its ROM-derived scheduler dispatch context.")
 	var dispatch: Dictionary = dispatch_variant
+	var source_context_variant: Variant = period_result.get("source_context", {})
+	var source_context: Dictionary = source_context_variant if source_context_variant is Dictionary else {}
+	var resumed_after_scenario := String(source_context.get("source_event", "")) \
+		== "ROM-byte slot-$05 `$CBC1 RTS->$D11E` live continuation"
+	var expected_entry_sp := 0x50 if resumed_after_scenario else 0x52
+	var expected_bank_low := 0x1C if resumed_after_scenario else 0x00
+	var expected_bank_high := 0x1D if resumed_after_scenario else 0x01
 	if not bool(dispatch.get("ok", false)) or int(dispatch.get("slot_base", -1)) != 0x05 \
-			or int(dispatch.get("pc", -1)) != 0xD11E or int(dispatch.get("sp", -1)) != 0x52 \
+			or int(dispatch.get("pc", -1)) != 0xD11E or int(dispatch.get("sp", -1)) != expected_entry_sp \
 			or int(dispatch.get("source_return_word", -1)) != 0xD11D \
-			or int(dispatch.get("bank_low", -1)) != 0x00 or int(dispatch.get("bank_high", -1)) != 0x01:
+			or int(dispatch.get("bank_low", -1)) != expected_bank_low \
+			or int(dispatch.get("bank_high", -1)) != expected_bank_high:
 		return _fail("The scheduler dispatch is not the checked fresh slot-$05 source state.")
 	var registers_variant: Variant = period_result.get("registers", {})
 	if not registers_variant is Dictionary:
@@ -171,15 +332,21 @@ func _validate_period_result(period_result: Dictionary) -> bool:
 			return _fail("$DAAA task result omits register %s." % key)
 	if int(registers["pc"]) != 0xDAAA or int(registers["sp"]) != 0x50:
 		return _fail("$DAAA task result registers disagree with the bounded source handoff.")
-	var source_context: Variant = period_result.get("source_context", {})
-	if not source_context is Dictionary or String(source_context.get("kind", "")) != "caller_owned_decoded_game_logic":
+	if not source_context_variant is Dictionary \
+			or String(source_context.get("kind", "")) != "caller_owned_decoded_game_logic":
 		return _fail("$DAAA continuation requires named decoded-game-logic context, not trace state.")
+	if resumed_after_scenario and not period_result.get("ram_image", PackedByteArray()) is PackedByteArray:
+		return _fail("Resumed `$DAAA` continuation requires its source-derived live RAM image.")
 	return true
 
 
 func _reset_from_period_result(period_result: Dictionary) -> void:
 	_ram.resize(RAM_SIZE)
-	_ram.fill(0) # ROM reset baseline; writes between reset and $DAAA are not modeled by this isolated slice.
+	var source_ram: Variant = period_result.get("ram_image", PackedByteArray())
+	if source_ram is PackedByteArray and source_ram.size() == RAM_SIZE:
+		_ram = source_ram.duplicate()
+	else:
+		_ram.fill(0) # Initial route baseline; earlier pre-$DAAA writes are not part of this slice.
 	_writes.clear()
 	_mapper_writes.clear()
 	_calls.clear()
@@ -203,17 +370,57 @@ func _reset_from_period_result(period_result: Dictionary) -> void:
 	_p |= FLAG_U
 	_sp = int(regs["sp"]) & 0xFF
 	_pc = 0xDAAA
+	_entry_pc = 0xDAAA
 	_bank_low = int(dispatch["bank_low"]) & 0xFF
 	_bank_high = int(dispatch["bank_high"]) & 0xFF
-	_mmc3_select = 0x07
+	_mmc3_select = int(dispatch.get("mapper_select", 0x07)) & 0x07
 	# The bootstrap's preserved slot-$05 return word is installed by the ROM
 	# scheduler seed and remains below SP after RomFreshPeriodTask executes TXS.
 	var return_bytes: Array = dispatch.get("source_return_bytes", [])
 	if return_bytes.size() == 2:
 		_ram[0x0151] = int(return_bytes[0]) & 0xFF
 		_ram[0x0152] = int(return_bytes[1]) & 0xFF
-	_ram[0x0024] = _bank_low
-	_ram[0x0025] = _bank_high
+	if not source_ram is PackedByteArray or source_ram.size() != RAM_SIZE:
+		_ram[0x0024] = _bank_low
+		_ram[0x0025] = _bank_high
+
+
+func _reset_from_scenario_return(return_result: Dictionary) -> void:
+	_ram = (return_result["ram_image"] as PackedByteArray).duplicate()
+	_writes.clear()
+	_mapper_writes.clear()
+	_calls.clear()
+	_instructions.clear()
+	var registers: Dictionary = return_result["registers"]
+	var mapper: Dictionary = return_result["mapper"]
+	_a = int(registers.get("a", 0)) & 0xFF
+	_x = int(registers.get("x", 0)) & 0xFF
+	_y = int(registers.get("y", 0)) & 0xFF
+	_p = int(registers.get("p", FLAG_U)) | FLAG_U
+	_sp = int(registers["sp"]) & 0xFF
+	_pc = 0xDADD
+	_entry_pc = _pc
+	_bank_low = int(mapper["bank_low"]) & 0xFF
+	_bank_high = int(mapper["bank_high"]) & 0xFF
+	_mmc3_select = int(mapper.get("register_select", 0x07)) & 0x07
+
+
+func _reset_from_scenario_wait_dispatch(dispatch: Dictionary, boundary: Dictionary) -> void:
+	_ram = (boundary["ram_image"] as PackedByteArray).duplicate()
+	_writes.clear()
+	_mapper_writes.clear()
+	_calls.clear()
+	_instructions.clear()
+	_a = int(dispatch.get("a", 0)) & 0xFF
+	_x = int(dispatch.get("x", 0)) & 0xFF
+	_y = int(dispatch.get("y", 0)) & 0xFF
+	_p = int(boundary.get("p", FLAG_U)) | FLAG_U
+	_sp = int(dispatch.get("sp", 0)) & 0xFF
+	_pc = 0xDAE2
+	_entry_pc = _pc
+	_bank_low = int(dispatch.get("bank_low", 0)) & 0xFF
+	_bank_high = int(dispatch.get("bank_high", 1)) & 0xFF
+	_mmc3_select = int((boundary.get("mapper", {}) as Dictionary).get("select", 0x07)) & 0x07
 
 
 func _execute_one() -> bool:
@@ -224,6 +431,21 @@ func _execute_one() -> bool:
 		return false
 	_write_trace_pc = (_pc + _opcode_length(opcode)) & 0xFFFF
 	match opcode:
+		0x01: # ORA (zero page,X)
+			var zero_page_pointer := (_read_cpu(_pc + 1) + _x) & 0xFF
+			if _pc + 1 > 0xFFFF:
+				return _fail("ORA indexed-indirect operand escaped address space.")
+			var target_low := _read_cpu(zero_page_pointer)
+			var target_high := _read_cpu((zero_page_pointer + 1) & 0xFF)
+			if target_low < 0 or target_high < 0:
+				return false
+			var target := target_low | (target_high << 8)
+			var value := _read_cpu(target)
+			if value < 0:
+				return false
+			_a = (_a | value) & 0xFF
+			_set_nz(_a)
+			_pc += 2
 		0xA2: # LDX #imm
 			_x = _read_cpu(_pc + 1)
 			_set_nz(_x)
@@ -582,6 +804,15 @@ func _verify_boundaries() -> bool:
 		0xA9, 0x00, 0x20, 0x7F, 0xEF])
 	if caller != expected_caller:
 		return _fail("The packaged $DAAA-to-first-wrapper caller bytes changed.")
+	if (_sources["fixed_scenario_wait_DADD_DAE9.bin"] as PackedByteArray) \
+			!= PackedByteArray([0xA9, 0x01, 0x20, 0x0F, 0xCB, 0xAD, 0x1C, 0x00, 0x29, 0xC0, 0xF0, 0xF4]):
+		return _fail("The scenario-$35 `$DADD->$DAE9` wait and yield bytes changed.")
+	if (_sources["fixed_scenario_input_exit_DAE9_DAF2.bin"] as PackedByteArray) \
+			!= PackedByteArray([0xAD, 0xFB, 0x05, 0x18, 0x69, 0x08, 0x8D, 0x41, 0x04]):
+		return _fail("The scenario-$35 set-input exit no longer derives `$0441 = $05FB + 8` from ROM bytes.")
+	if (_sources["fixed_position_initializer_call_DAF2_DAF5.bin"] as PackedByteArray) \
+			!= PackedByteArray([0x20, 0x07, 0xDC]):
+		return _fail("The source `$DAF2` instruction no longer requests `$DC07`.")
 	if (_sources["fixed_sound_queue_CBF1_CC01.bin"] as PackedByteArray).size() != 17 \
 			or (_sources["fixed_record_reset_CF4F_CF71.bin"] as PackedByteArray)[34] != 0x60 \
 			or (_sources["fixed_record_pointer_CD7C_CD88.bin"] as PackedByteArray)[12] != 0x60 \

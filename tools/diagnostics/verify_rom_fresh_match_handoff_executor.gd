@@ -21,6 +21,15 @@ func _verify_handoff_executor() -> bool:
 			or bool(status.get("does_execute_presentation_helpers", true)) \
 			or bool(status.get("does_apply_effects_to_live_ram", true)):
 		return _fail("The handoff executor must report its bounded write-plan-only scope.")
+	for cutscene_id in [1, 2]:
+		var cleanup_plan: Dictionary = executor.plan_cutscene_wait_cleanup(cutscene_id, "select")
+		var expected_caller_pc := 0x80F1 if cutscene_id == 1 else 0x815D
+		if String(cleanup_plan.get("status", "")) != "blocked_on_helper" \
+				or int(cleanup_plan.get("pending_source_pc", -1)) != 0x82DF \
+				or String(cleanup_plan.get("pending_helper_id", "")) != "cutscene_cleanup_9ba0" \
+				or int(cleanup_plan.get("caller_return_pc_after_helper", -1)) != expected_caller_pc \
+				or bool(cleanup_plan.get("audio_stop_request", {}).get("applied", true)):
+			return _fail("Cutscene ID %d must share the ROM cleanup and stop at the correct caller boundary." % cutscene_id)
 
 	var natural_blocked: Dictionary = executor.execute_cutscene2_return("natural")
 	if not bool(natural_blocked.get("ok", false)) \

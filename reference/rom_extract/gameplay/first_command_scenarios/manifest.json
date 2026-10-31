@@ -204,11 +204,24 @@
       "bytes_hex": "A9 1E 20 B0 CB",
       "sha256": "c555582aed5266d64dff580f1eba839b61b132d49e110feed0abf0c1babfdc74",
       "description": "Immediate scenario ID $1E followed by JSR $CBB0."
+    },
+    {
+      "name": "scenario_36_fresh_kickoff",
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/entry_root_scenario_36_fresh_kickoff.bin",
+      "prg_bank_listing": "$FF",
+      "cpu_address": "0xDB0E",
+      "file_offset": "0x03DB1E",
+      "scenario_id": "$36",
+      "length_bytes": 5,
+      "bytes_hex": "A9 36 20 B0 CB",
+      "sha256": "e5d260e080d1d429cc5e76b4685426857a78b3bc6739f9b923cc5cb3e538ed94",
+      "description": "Fresh-match caller loads scenario ID $36 and calls fixed-bank $CBB0."
     }
   ],
   "format_notes": [
     "The extracted scenario bytes are preserved without interpretation or rewriting.",
     "The listed event-record anchors are source byte indexes only; they do not encode frame timing or establish runtime semantics.",
-    "Scenario $1E is rooted by the byte sequence A9 1E 20 B0 CB at fixed-bank CPU $E233 / file 0x03E243."
+    "Scenario $1E is rooted by the byte sequence A9 1E 20 B0 CB at fixed-bank CPU $E233 / file 0x03E243.",
+    "Fresh-match scenario $36 is rooted by A9 36 20 B0 CB at fixed-bank CPU $DB0E / file 0x03DB1E."
   ]
 }

@@ -1,0 +1,170 @@
+{
+  "schema": "ct2-field-ppu-baseline-transition-audit-v1",
+  "source_rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "size_bytes": 393232
+  },
+  "audit_mode": "static ROM/resource/code inspection; no emulator execution",
+  "rom_spans": [
+    {
+      "name": "field_entry_E0DF_through_E349",
+      "cpu_start": "0xE0DF",
+      "cpu_end_exclusive": "0xE349",
+      "file_offset": "0x03E0EF",
+      "size_bytes": 618,
+      "sha256": "dc3cd54d809ec4a80dffc8959dd365ecfc994e926dafcfdd7b20d1afc6117523",
+      "existing_hash_source": "reference/rom_extract/gameplay/first_match_player_state/manifest.json"
+    },
+    {
+      "name": "field_setup_E233_to_E267",
+      "cpu_start": "0xE233",
+      "cpu_end_exclusive": "0xE267",
+      "file_offset": "0x03E243",
+      "size_bytes": 52,
+      "sha256": "0a81f41867f50f3bf581df9ab31e761fd905ee81e15a4a8310b1c4bf653190bc"
+    },
+    {
+      "name": "scenario_1E_stream",
+      "cpu_start": "0xB7DA",
+      "cpu_end_exclusive": "0xB7E4",
+      "file_offset": "0x0237EA",
+      "size_bytes": 10,
+      "sha256": "383f2248d753ef12b325c98238ee1c0eaa96c693ca427a5885536e1c16f1a496",
+      "event_at_file_offset": "0x0237EF",
+      "event_bytes_hex": "07 45 90 F0",
+      "existing_hash_source": "reference/rom_extract/gameplay/first_command_scenarios/manifest.json"
+    },
+    {
+      "name": "background_animation_45_record",
+      "cpu_start": "0x8A2A",
+      "file_offset": "0x016A3A",
+      "size_bytes": 3,
+      "bytes_hex": "06 00 36",
+      "sha256": "a338daef97f1529da31483000bbdc227e53a40852662a5671b8a2ff7c57c1d90",
+      "existing_hash_source": "reference/rom_extract/gameplay/first_command_field/page_correct_map_sources/manifest.json"
+    },
+    {
+      "name": "map_36_selector_01",
+      "cpu_start": "0x9224",
+      "file_offset": "0x017234",
+      "size_bytes": 32,
+      "sha256": "fe786bcee977d21f7351d0275263ed940942626bdca02ff94c25745ade5998b0",
+      "existing_hash_source": "reference/rom_extract/gameplay/first_command_field/page_correct_map_sources/manifest.json"
+    },
+    {
+      "name": "map_36_chr_pair_entry",
+      "cpu_start": "0x875A",
+      "file_offset": "0x01676A",
+      "size_bytes": 2,
+      "bytes_hex": "00 3C",
+      "sha256": "505114fe537172ea35e17ca1a7516edac516a89b31f983f7c6387d5d2bb462aa",
+      "table_base_cpu": "0x86EE",
+      "table_index": "0x36"
+    },
+    {
+      "name": "map_placement_handler_8327_8360",
+      "cpu_start": "0x8327",
+      "cpu_end_exclusive": "0x8360",
+      "file_offset": "0x016337",
+      "size_bytes": 57,
+      "sha256": "e3ed67bcd4a760f0f8324b4d46ca08100ef6d1b578af495da8475b7e66096853",
+      "existing_hash_source": "reference/rom_extract/gameplay/first_command_field/packet_producer/manifest.json"
+    },
+    {
+      "name": "candidate_background_01_palette_bytes",
+      "file_offset": "0x00D030",
+      "size_bytes": 16,
+      "sha256": "996d64ef39760531bba1128e07cbf1ace481d77fd540bb9e0ec066660340eefd",
+      "note": "Candidate palette resource only; the active field-entry loader is unproven."
+    }
+  ],
+  "existing_resource_manifests": [
+    {
+      "path": "reference/rom_extract/gameplay/first_match_player_state/manifest.json",
+      "sha256": "6fb28423d3111f3d3691af6634aed74ec1d71a4c8cd7f258362a9a26d639d4d9"
+    },
+    {
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/manifest.json",
+      "sha256": "31c038cd375b05454b9392bae5a91b7fc6ecd835b269b7cd800cdb5da9f9b03d"
+    },
+    {
+      "path": "reference/rom_extract/gameplay/first_command_field/page_correct_map_sources/manifest.json",
+      "sha256": "50cac6f04764f2bd033de1f0f2f1ecfee9bd4d21d534144f67302d59cacb9665"
+    },
+    {
+      "path": "reference/rom_extract/gameplay/first_command_field/packet_producer/manifest.json",
+      "sha256": "f50ede65ee752c67bae30126e71fe97d681ec79859dbc2926406a22c2fb34362"
+    },
+    {
+      "path": "reference/rom_extract/gameplay/normal_nmi_ppu_queue_transfer/manifest.json",
+      "sha256": "f027c535a9fb046d691f9ee0647ec33413ebad4f77c376826d65238aa0747e54"
+    }
+  ],
+  "descriptor_00_packet_slice": {
+    "source_resource_manifest": {
+      "path": "reference/rom_extract/gameplay/field_entry_window_00/manifest.json",
+      "sha256": "fe9d47fff258a2ee092969b2a5c64d0bce24a99193e89f63954408fc3407dd00"
+    },
+    "production_consumable_component": {
+      "path": "scripts/gameplay/rom_field_entry_window_packet_source.gd",
+      "sha256": "d80a53ae924344c9d105cf246174accc88cf188fe7801493cd0251211867b632"
+    },
+    "offline_extractor": {
+      "path": "tools/gameplay/extract_field_entry_window_00.py",
+      "sha256": "37e769259c39dfffbe5a79e0a87c9f40d84896aaf80fc2da54c7d03583c2df1f"
+    },
+    "focused_verifier": {
+      "path": "tools/diagnostics/verify_rom_field_entry_window_00_packets.gd",
+      "sha256": "9999ffc02761fbb5b30af4a8b380aff72b8789fe2aceb8e575c22d606f43d79b",
+      "command": "godot --headless --path . --script tools/diagnostics/verify_rom_field_entry_window_00_packets.gd",
+      "result": "passed",
+      "asserted_packet_count": 5,
+      "queue_submission_ready_with_supported_fresh_period_result": true,
+      "queue_submission_ready_without_or_with_tampered_inputs": false,
+      "resolved_tokens": ["0xEF->$8B48", "0xF0->$8B8B"],
+      "source_output_clock_row_tiles": "36 33 77 33 33",
+      "runtime_route_wired": false
+    },
+    "packet_builder_dependency": {
+      "path": "scripts/gameplay/first_action_menu_rom_layout.gd",
+      "sha256": "6f4d742d4f00081e1f83837c0d8617ca5b14bba0a7078271817da5128576d903"
+    },
+    "source_input_producer": [
+      {
+        "path": "scripts/gameplay/rom_fresh_period_task.gd",
+        "sha256": "b60b89bf98bd637baa86aa607d12da0cdb0c42a8e6f80d6d914d21f386117900"
+      },
+      {
+        "path": "scripts/gameplay/rom_fresh_kickoff_entry_context_builder.gd",
+        "sha256": "a085fe2de852f6f86e74021a79da290762cd82213cb5da5215164aecd9be7ddf"
+      }
+    ],
+    "report": {
+      "path": "reference/rom_extract/gameplay/field_ppu_baseline_transition_20261029.md",
+      "sha256": "812d8bd1b51215d9ed909bb5b97355c91aee6b0c5cde11a99a835a8c0a5a2c59"
+    }
+  },
+  "godot_consumer_files": [
+    {
+      "path": "scripts/gameplay/first_match_field_candidate_presenter.gd",
+      "sha256": "d4862d9a8d3469f23f330edf01f5b0802acd10c05cf6b263dacf5f5cd1bed6d1"
+    },
+    {
+      "path": "scripts/gameplay/first_command_field_packet_producer.gd",
+      "sha256": "79d108203b177d4bd4465cb1871b83fb6bed6ff6fc4d942dc7a3801c23d9aa7b"
+    },
+    {
+      "path": "scripts/opening/rom_ppu_nametable_screen_renderer.gd",
+      "sha256": "e991a78df8659af3a72fac9fd7bbc46a6085711cb92e35ba6b468f2574a6272d"
+    },
+    {
+      "path": "scripts/gameplay/kickoff_cutscene_visuals.gd",
+      "sha256": "be86530038974a6e9a87a4de3d3a6e06a563ef8d9b32efd36a93bd8c472069e3"
+    },
+    {
+      "path": "scripts/gameplay/kickoff_route_runtime.gd",
+      "sha256": "19f1d5842c2408d870db007d7583ea6b20765f8c5c072fb0fd3a7f276ab007c1"
+    }
+  ]
+}

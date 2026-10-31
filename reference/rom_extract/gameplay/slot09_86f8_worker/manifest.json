@@ -1,0 +1,58 @@
+{
+  "schema": "ct2-slot09-86f8-worker-source-v1",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "header": "iNES 1.0; 16-byte header; no trainer",
+    "mapper": 4,
+    "submapper": 0
+  },
+  "runtime_rom_dependency": false,
+  "trace_state_included": false,
+  "spans": [
+    {
+      "file": "bank18_slot09_worker_86F8_8778.bin",
+      "cpu_start": "0x86F8",
+      "cpu_end_exclusive": "0x8779",
+      "bank": "0x18",
+      "file_offset": "0x030708",
+      "length": 129,
+      "sha256": "ae998967ec1bb0e39ffcc72c8670a393946cfe233ad6845dc524870bd3264d23",
+      "bytes": "ad 32 05 f0 25 10 1b 29 7f 8d 32 05 f0 1c 38 e9 01 0a aa bd 6e ad 85 79 bd 6f ad 85 7a a9 00 8d 33 05 ad 33 05 f0 04 ce 33 05 60 a0 00 b1 79 29 07 aa b1 79 4a 4a 4a d0 0b e0 00 f0 30 e0 01 f0 32 c8 d0 e9 8d 33 05 b1 79 29 07 85 3a c8 b1 79 aa c8 b1 79 9d 6f 04 c8 c6 3a d0 f2 98 18 65 79 85 79 90 02 e6 7a 20 33 c5 00 6c 04 60 a9 00 8d 32 05 60 c8 b1 79 aa c8 b1 79 85 7a 86 79 4c 23 87",
+      "description": "First slot-$09 bank-$18 worker body; includes all worker branches through the jump-to-stream loop; excludes the following worker at $8779."
+    },
+    {
+      "file": "bank19_slot09_worker_pointer_entry_AD6E.bin",
+      "cpu_start": "0xAD6E",
+      "cpu_end_exclusive": "0xAD70",
+      "bank": "0x19",
+      "file_offset": "0x032D7E",
+      "length": 2,
+      "sha256": "c8f33227c8180de1bf13f0f7aa7646a8b71d34414b68798f29adcd0121288dc8",
+      "bytes": "f6 ad",
+      "description": "First pointer entry read when worker $0532 contains reset marker $81."
+    },
+    {
+      "file": "fixed_inline_record_append_vector_C533.bin",
+      "cpu_start": "0xC533",
+      "cpu_end_exclusive": "0xC536",
+      "bank": "0x1E",
+      "file_offset": "0x03C543",
+      "length": 3,
+      "sha256": "447b2945aa7e5040be16cfa5135a9b4be42dac48166c962c6ae65c11fd443e74",
+      "bytes": "4c d2 cc",
+      "description": "Fixed-bank handler-table entry reached by the worker JSR $C533."
+    },
+    {
+      "file": "fixed_inline_record_append_handler_CCD2_CD0C.bin",
+      "cpu_start": "0xCCD2",
+      "cpu_end_exclusive": "0xCD0D",
+      "bank": "0x1E",
+      "file_offset": "0x03CCE2",
+      "length": 59,
+      "sha256": "7c23b91502ce9ebf01c18cbf401030f35181dbdc359d245cc7d7d57dd2cbc37b",
+      "bytes": "ba bd 01 01 85 75 48 bd 02 01 85 76 68 18 69 03 9d 01 01 90 03 fe 02 01 98 48 ad 98 04 0a 6d 98 04 aa a0 01 b1 75 9d 99 04 c8 b1 75 9d 9a 04 c8 b1 75 9d 9b 04 ee 98 04 68 a8 60",
+      "description": "Handler reached through $C533; copies three inline bytes into $0499-$049B indexed by $0498 and advances the stacked return address."
+    }
+  ]
+}

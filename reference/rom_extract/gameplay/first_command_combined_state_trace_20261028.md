@@ -47,7 +47,7 @@ loop and bank-`$14:$800F` animation tick per source frame in frames 8461–8953;
 the same eight `$EC94` wait loads; eight `$C50F` callback task starts; and
 the root `$FB` depth transition `$00 → $FE → $00` for the four fresh-route
 scenario streams. These results agree with the focused actor, scheduler, and
-continuation notes linked from `GOAL.md`; they do not add a route-integrated
+continuation notes linked from `GOALS.md`; they do not add a route-integrated
 Godot scheduler.
 
 This pass did not hook bank `$18` `$8852/$88B9`, the `$D575/$D5C3` first-panel

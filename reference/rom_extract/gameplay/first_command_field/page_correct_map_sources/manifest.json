@@ -16,7 +16,8 @@
     "tile_record_formula": "window_offset=(selector<<12)+(metatile_id<<4); bank=0x12+(window_offset>>13); cpu=0xA000+(window_offset&0x1FFF); file=0x024010+window_offset",
     "attribute_formula": "file=0x017BF4+(selector<<8)+metatile_id",
     "map_36": "background animation $45 record at bank-$0B $8A2A; selector $01",
-    "map_56": "background animation $70 record at bank-$0B $8B38; selector $02"
+    "map_56": "background animation $70 record at bank-$0B $8B38; selector $02",
+    "map_42": "callback event $3A supplies map ID $42 to bank-$0B $8525; selector $01"
   },
   "entries": [
     {
@@ -50,7 +51,7 @@
       "sha256": "fe786bcee977d21f7351d0275263ed940942626bdca02ff94c25745ade5998b0",
       "block_map_id": "0x36",
       "selector": "0x01",
-      "source": "8x4 metatile map selected by bank-$0B $8525"
+      "source": "8x4 metatile map selected by bank-$0B $8525 or callback map ID"
     },
     {
       "path": "map_36_metatile_2B_tiles.bin",
@@ -242,7 +243,7 @@
       "sha256": "143cbcbd41f3cd9749f511378403362196682e6077d13c07d48ca507083a5fa1",
       "block_map_id": "0x56",
       "selector": "0x02",
-      "source": "8x4 metatile map selected by bank-$0B $8525"
+      "source": "8x4 metatile map selected by bank-$0B $8525 or callback map ID"
     },
     {
       "path": "map_56_metatile_15_tiles.bin",
@@ -386,6 +387,161 @@
       "metatile_id": "0xAF",
       "block_map_id": "0x56",
       "selector": "0x02",
+      "source": "selector-derived attribute byte read by bank-$0B $85C2"
+    },
+    {
+      "path": "block_map_42_selector_01.bin",
+      "file_offset": "0x0173B4",
+      "cpu_address": "0x93A4",
+      "prg_bank": "0x0B",
+      "size_bytes": 32,
+      "sha256": "0a9b49db69d34648c87f480c6eb6c5a015e4880e231f0f46b896391719f4b1ae",
+      "block_map_id": "0x42",
+      "selector": "0x01",
+      "source": "8x4 metatile map selected by bank-$0B $8525 or callback map ID"
+    },
+    {
+      "path": "map_42_metatile_14_tiles.bin",
+      "file_offset": "0x025150",
+      "cpu_address": "0xB140",
+      "prg_bank": "0x12",
+      "size_bytes": 16,
+      "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb",
+      "metatile_id": "0x14",
+      "block_map_id": "0x42",
+      "selector": "0x01",
+      "source": "selector-derived 4x4 tile-ID record consumed by bank-$0B $85C2"
+    },
+    {
+      "path": "map_42_metatile_14_attribute.bin",
+      "file_offset": "0x017D08",
+      "cpu_address": "0x9CF8",
+      "prg_bank": "0x0B",
+      "size_bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "metatile_id": "0x14",
+      "block_map_id": "0x42",
+      "selector": "0x01",
+      "source": "selector-derived attribute byte read by bank-$0B $85C2"
+    },
+    {
+      "path": "map_42_metatile_15_tiles.bin",
+      "file_offset": "0x025160",
+      "cpu_address": "0xB150",
+      "prg_bank": "0x12",
+      "size_bytes": 16,
+      "sha256": "18b013f1362799dbb2a4ee3c0ba84ce6d236b7c82a89793899db4919d3dfab9f",
+      "metatile_id": "0x15",
+      "block_map_id": "0x42",
+      "selector": "0x01",
+      "source": "selector-derived 4x4 tile-ID record consumed by bank-$0B $85C2"
+    },
+    {
+      "path": "map_42_metatile_15_attribute.bin",
+      "file_offset": "0x017D09",
+      "cpu_address": "0x9CF9",
+      "prg_bank": "0x0B",
+      "size_bytes": 1,
+      "sha256": "aa7225e7d5b0a2552bbb58880b3ec00c286995b801a7aeb69281e76a8b4908de",
+      "metatile_id": "0x15",
+      "block_map_id": "0x42",
+      "selector": "0x01",
+      "source": "selector-derived attribute byte read by bank-$0B $85C2"
+    },
+    {
+      "path": "map_42_metatile_16_tiles.bin",
+      "file_offset": "0x025170",
+      "cpu_address": "0xB160",
+      "prg_bank": "0x12",
+      "size_bytes": 16,
+      "sha256": "f396045da5b50769278c8d36c46ec034d65d6776cec27d49d6b15581ea6a4050",
+      "metatile_id": "0x16",
+      "block_map_id": "0x42",
+      "selector": "0x01",
+      "source": "selector-derived 4x4 tile-ID record consumed by bank-$0B $85C2"
+    },
+    {
+      "path": "map_42_metatile_16_attribute.bin",
+      "file_offset": "0x017D0A",
+      "cpu_address": "0x9CFA",
+      "prg_bank": "0x0B",
+      "size_bytes": 1,
+      "sha256": "aa7225e7d5b0a2552bbb58880b3ec00c286995b801a7aeb69281e76a8b4908de",
+      "metatile_id": "0x16",
+      "block_map_id": "0x42",
+      "selector": "0x01",
+      "source": "selector-derived attribute byte read by bank-$0B $85C2"
+    },
+    {
+      "path": "map_42_metatile_33_tiles.bin",
+      "file_offset": "0x025340",
+      "cpu_address": "0xB330",
+      "prg_bank": "0x12",
+      "size_bytes": 16,
+      "sha256": "c1b0c2097d76922820e5daf5ca095f8aa1ff51948ee1201dd5fed705fadb58fe",
+      "metatile_id": "0x33",
+      "block_map_id": "0x42",
+      "selector": "0x01",
+      "source": "selector-derived 4x4 tile-ID record consumed by bank-$0B $85C2"
+    },
+    {
+      "path": "map_42_metatile_33_attribute.bin",
+      "file_offset": "0x017D27",
+      "cpu_address": "0x9D17",
+      "prg_bank": "0x0B",
+      "size_bytes": 1,
+      "sha256": "bceef655b5a034911f1c3718ce056531b45ef03b4c7b1f15629e867294011a7d",
+      "metatile_id": "0x33",
+      "block_map_id": "0x42",
+      "selector": "0x01",
+      "source": "selector-derived attribute byte read by bank-$0B $85C2"
+    },
+    {
+      "path": "map_42_metatile_EA_tiles.bin",
+      "file_offset": "0x025EB0",
+      "cpu_address": "0xBEA0",
+      "prg_bank": "0x12",
+      "size_bytes": 16,
+      "sha256": "f053daa04e3c5a86cba482abca9fec2aaa68f6ef5048ed9730ea6c8d83ccfd23",
+      "metatile_id": "0xEA",
+      "block_map_id": "0x42",
+      "selector": "0x01",
+      "source": "selector-derived 4x4 tile-ID record consumed by bank-$0B $85C2"
+    },
+    {
+      "path": "map_42_metatile_EA_attribute.bin",
+      "file_offset": "0x017DDE",
+      "cpu_address": "0x9DCE",
+      "prg_bank": "0x0B",
+      "size_bytes": 1,
+      "sha256": "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89",
+      "metatile_id": "0xEA",
+      "block_map_id": "0x42",
+      "selector": "0x01",
+      "source": "selector-derived attribute byte read by bank-$0B $85C2"
+    },
+    {
+      "path": "map_42_metatile_EB_tiles.bin",
+      "file_offset": "0x025EC0",
+      "cpu_address": "0xBEB0",
+      "prg_bank": "0x12",
+      "size_bytes": 16,
+      "sha256": "a2d2d606a7c02d92acce0f45be5610ef4163d77ac44ba18f33541aa074df431a",
+      "metatile_id": "0xEB",
+      "block_map_id": "0x42",
+      "selector": "0x01",
+      "source": "selector-derived 4x4 tile-ID record consumed by bank-$0B $85C2"
+    },
+    {
+      "path": "map_42_metatile_EB_attribute.bin",
+      "file_offset": "0x017DDF",
+      "cpu_address": "0x9DCF",
+      "prg_bank": "0x0B",
+      "size_bytes": 1,
+      "sha256": "a8100ae6aa1940d0b663bb31cd466142ebbdbd5187131b92d93818987832eb89",
+      "metatile_id": "0xEB",
+      "block_map_id": "0x42",
+      "selector": "0x01",
       "source": "selector-derived attribute byte read by bank-$0B $85C2"
     }
   ]

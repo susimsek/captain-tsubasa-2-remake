@@ -53,6 +53,56 @@
       "cpu_end_exclusive": "0xEC34",
       "file_offset": "0x03EC18",
       "role": "Fixed scenario-start path; calls bank-10 reader then clears $0522 at $EC2E"
+    },
+    {
+      "path": "fixed_scenario_finish_dispatch_C51B_C51D.bin",
+      "size_bytes": 3,
+      "sha256": "5b312ff9181495afda470931d5318fb5926ffb53600a7208dbd9e22b7c035f85",
+      "prg_bank": "fixed bank $1E",
+      "cpu_start": "0xC51B",
+      "cpu_end_exclusive": "0xC51E",
+      "file_offset": "0x03C52B",
+      "role": "Scenario F0 finish call vector; jumps to $CB02"
+    },
+    {
+      "path": "fixed_scenario_task_delay_increment_CB02_CB0C.bin",
+      "size_bytes": 11,
+      "sha256": "d3b6aa196eb016728ca4f136afe446ead03d794aaf405a8b2a1d45dd3c8e5a79",
+      "prg_bank": "fixed bank $1E",
+      "cpu_start": "0xCB02",
+      "cpu_end_exclusive": "0xCB0D",
+      "file_offset": "0x03CB12",
+      "role": "Conditionally increments task delay slot $05 during F0 scenario termination"
+    },
+    {
+      "path": "bank10_scenario_opcode_dispatch_80a9_80ce.bin",
+      "size_bytes": 38,
+      "sha256": "b22a45b7a2f1c6edc80a9fd896bac16792341761384fe9cb56e8525738465cb3",
+      "prg_bank": "$10",
+      "cpu_start": "0x80A9",
+      "cpu_end_exclusive": "0x80CF",
+      "file_offset": "0x0200B9",
+      "role": "Scenario opcode dispatch and inline F0-FF handler address table"
+    },
+    {
+      "path": "fixed_scenario_opcode_dispatch_vector_C509_C50B.bin",
+      "size_bytes": 3,
+      "sha256": "3b507ee4745afd5b11dda219b523c39c7e9a8881d856592d8908bf535fd63441",
+      "prg_bank": "fixed bank $1E",
+      "cpu_start": "0xC509",
+      "cpu_end_exclusive": "0xC50C",
+      "file_offset": "0x03C519",
+      "role": "Scenario opcode table dispatch vector to $CB99"
+    },
+    {
+      "path": "fixed_scenario_opcode_table_dispatch_CB99_CBAF.bin",
+      "size_bytes": 23,
+      "sha256": "1f8058f9fd70aeec319a32433feb0c102c72e0f5131571a0da8bf89ef84a2d54",
+      "prg_bank": "fixed bank $1E",
+      "cpu_start": "0xCB99",
+      "cpu_end_exclusive": "0xCBB0",
+      "file_offset": "0x03CBA9",
+      "role": "Dispatches through the byte table following each scenario opcode callsite"
     }
   ]
 }

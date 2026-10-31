@@ -66,7 +66,7 @@ cite the concrete `$A2AF -> $AA06` clear and `$D11E -> $D14F` write above.
 The earlier caveat in
 [`fresh_kickoff_position_context/source_audit.md`](fresh_kickoff_position_context/source_audit.md)
 that the opening-to-kickoff `$0629` transition is unresolved is superseded.
-The `GOAL.md` status should remove `$0629` from caller-owned/unresolved route
+The `GOALS.md` status should remove `$0629` from caller-owned/unresolved route
 inputs while retaining unresolved live callback history, `$05CD/$05CE`, RNG,
 and gameplay field-loop integration. This audit resolves the selector
 boundary only; it does not claim that the first command panel is production

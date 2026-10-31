@@ -109,10 +109,60 @@ func _initialize() -> void:
 	if bool(result.get("live_mapper_updated", true)):
 		_fail("The bounded executor must report mapper bus effects without mutating a live mapper.")
 		return
+	var logical_event_id := "verifier_fresh_kickoff_logical_selector_80FA_A20F"
+	var logical_selector_call := {
+		"caller_pc": 0x80FA, "target_pc": 0xA20F, "return_pc": 0x80FD,
+		"source_event_id": logical_event_id,
+		"logical_stack_frame": {
+			"kind": "rom_jsr", "caller_pc": 0x80FA, "target_pc": 0xA20F,
+			"return_pc": 0x80FD, "return_word": 0x80FC,
+			"source_event_id": logical_event_id,
+		},
+	}
+	var logical_selector: Dictionary = selector.execute_source_call(logical_selector_call, {
+		"pc": 0xA20F, "a": 0x07, "x": 2, "y": 0,
+		"p_known_mask": 0x82, "p_known_value": 0,
+	}, {0x0022: 0, 0x0023: 0x07, 0x0025: 2, 0x0026: 0})
+	if not bool(logical_selector.get("ok", false)):
+		_fail("Live-shaped logical selector fixture failed: " + String(logical_selector.get("error", "unknown error")))
+		return
+	var logical_result: Dictionary = normalize.execute_from_logical_selector_return(logical_selector)
+	if not bool(logical_result.get("ok", false)):
+		_fail("Logical caller continuation failed through `$8112`: " + String(logical_result.get("error", "unknown error")))
+		return
+	var logical_registers: Dictionary = logical_result.get("return_registers", {})
+	var logical_ram: Dictionary = logical_result.get("caller_ram_after", {})
+	var logical_mapper_writes: Array = logical_result.get("caller_mapper_bus_writes", [])
+	var logical_proof: Dictionary = logical_result.get("e4_branch_proof", {})
+	var logical_return_stack: Array = logical_result.get("stack_after", [])
+	if int(logical_registers.get("pc", -1)) != 0x8112 \
+			or int(logical_registers.get("a", -1)) != 3 \
+			or int(logical_registers.get("x", -1)) != 0 \
+			or int(logical_registers.get("y", -1)) != 0x84 \
+			or int(logical_registers.get("p_known_mask", -1)) != 0xC3 \
+			or int(logical_registers.get("p_known_value", -1)) != 0 \
+			or int(logical_ram.get(0x0022, -1)) != 0 \
+			or int(logical_ram.get(0x0023, -1)) != 0x07 \
+			or int(logical_ram.get(0x0025, -1)) != 2 \
+			or int(logical_ram.get(0x0027, -1)) != 0 \
+			or int(logical_ram.get(0x0028, -1)) != 0 \
+			or int(logical_ram.get(0x0029, -1)) != 0 \
+			or int(logical_ram.get(0x002A, -1)) != 0 \
+			or int(logical_ram.get(0x002B, -1)) != 3 \
+			or int(logical_ram.get(0x0700, -1)) != 1 \
+			or logical_mapper_writes.size() != 2 \
+			or int(logical_mapper_writes[0].get("value", -1)) != 0x07 \
+			or int(logical_mapper_writes[1].get("value", -1)) != 2 \
+			or logical_return_stack.size() != 0 \
+			or String(logical_result.get("stack_model", "")) != "logical_source_jsr_frames" \
+			or int(logical_proof.get("candidate_values_checked", -1)) != 256 \
+			or int(logical_result.get("cpu_cycles_without_interrupts_from_80FD", -1)) != 94:
+		_fail("Logical continuation state differs from ROM-derived `$80FD-$8112`: %s" % logical_result)
+		return
 
-	print("PASS: A20F return + source caller `$80FD-$810F` + `$C4B9` + `$A20C->$A855->$A8A8->$A8B6 RTS` returns to `$8112` with exact registers, writes, and stack.")
+	print("PASS: physical-stack fixture and ROM-derived logical frames both run the `$80FD-$8112` caller/mapper/normalizer path with checked writes and RTS contracts.")
 	print("PASS: all 256 possible `$E4` bytes take the same `$26=0` branch and produce identical return flags; no `$E4` value or trace state was supplied.")
-	print("LIMIT: verifier event identity is a fixture; the bounded component is not connected to the live route and does not establish the full caller/task/NMI path.")
+	print("LIMIT: logical mode omits absolute SP/stack-page data; the `$8112->$8920` task/NMI wait and later caller remain outside this component.")
 	quit(0)
 
 

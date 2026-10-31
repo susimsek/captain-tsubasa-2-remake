@@ -10,6 +10,7 @@
 *.sav
 *.srm
 *.state
+*.fc[0-9]
 *.nsf
 *.NSF
 /reference/diagnostics/

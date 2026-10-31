@@ -96,8 +96,36 @@ def main() -> None:
         def __init__(self, *args, **kwargs):
             self.a117_updates: list[dict] = []
             self.c9c5_updates: list[dict] = []
+            self.current_c9c5_call: dict | None = None
             self.receiver_selection: dict | None = None
             super().__init__(*args, **kwargs)
+
+        def __getitem__(self, addr: int) -> int:
+            requested = addr & 0xFFFF
+            value = super().__getitem__(addr)
+            pc = self.current_instruction_pc
+            if pc == 0xC9C5 and requested == 0xC9C5:
+                self.current_c9c5_call = {
+                    "source_frame": self.source_frame,
+                    "source_cycle": self.cpu_cycles,
+                    "e1_before": self.ram[0x00E1],
+                    "e2_before": self.ram[0x00E2],
+                    "e3_before": self.ram[0x00E3],
+                    "incoming_carry": self.cpu.p & 1,
+                    "operands": {},
+                }
+            for instruction_pc, label in (
+                (0xC9C8, "0300_x"),
+                (0xC9CB, "0700_x"),
+                (0xC9DC, "0780_x"),
+            ):
+                if pc == instruction_pc and self.current_c9c5_call is not None:
+                    self.current_c9c5_call["operands"][label] = {
+                        "x": self.cpu.x,
+                        "cpu_address": requested,
+                        "value": value,
+                    }
+            return value
 
         def __setitem__(self, addr: int, value: int) -> None:
             addr &= 0xFFFF
@@ -117,11 +145,21 @@ def main() -> None:
                     "state_after": list(state),
                 })
             elif ram_addr == 0xE1 and pc == 0xC9E5 and bank == 30:
-                self.c9c5_updates.append({
+                row = {
                     "source_frame": self.source_frame,
                     "source_cycle": self.cpu_cycles,
                     "state_after": list(state),
-                })
+                }
+                call = self.current_c9c5_call
+                if call is None or len(call["operands"]) != 3:
+                    raise RuntimeError("C9C5 source execution did not read all three indexed operands.")
+                row["state_before"] = [
+                    call["e1_before"], call["e2_before"], call["e3_before"]
+                ]
+                row["incoming_carry"] = call["incoming_carry"]
+                row["operands"] = call["operands"]
+                self.c9c5_updates.append(row)
+                self.current_c9c5_call = None
             elif ram_addr == 0x05FC and pc == 0xDB08 and bank == 30:
                 self.receiver_selection = {
                     "source_frame": self.source_frame,
@@ -157,7 +195,7 @@ def main() -> None:
 
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     document = {
-        "schema": "ct2-kickoff-rom-rng-replay-v1",
+        "schema": "ct2-kickoff-rom-rng-replay-v2",
         "route_identity": "turkish-fresh-kickoff-capture-20261027",
         "source_rom_sha256": EXPECTED_ROM_SHA256,
         "source_stepper_sha256": sha256(STEPPER_PATH.read_bytes()),
@@ -198,7 +236,26 @@ def main() -> None:
                     for row in c9_updates
                 ],
                 "state_layout": "[source_frame, source_cpu_cycle, E1, E2, E3]",
-                "limitation": "Per-call results are ROM-stepper-derived for this fixed input route; the routine's $0300/$0700/$0780 RAM operands are not generalized for arbitrary input histories.",
+                "source_operands_each_call": [
+                    [
+                        row["source_frame"], row["source_cycle"],
+                        *row["state_before"], row["incoming_carry"],
+                        row["operands"]["0300_x"]["x"],
+                        row["operands"]["0300_x"]["cpu_address"],
+                        row["operands"]["0300_x"]["value"],
+                        row["operands"]["0700_x"]["x"],
+                        row["operands"]["0700_x"]["cpu_address"],
+                        row["operands"]["0700_x"]["value"],
+                        row["operands"]["0780_x"]["x"],
+                        row["operands"]["0780_x"]["cpu_address"],
+                        row["operands"]["0780_x"]["value"],
+                        *row["state_after"],
+                    ]
+                    for row in c9_updates
+                ],
+                "source_operands_layout": "[frame, commit_cycle, E1_before, E2_before, E3_before, incoming_carry, X0300, address0300, value0300, X0700, address0700, value0700, X0780, address0780, value0780, E1_after, E2_after, E3_after]",
+                "source_operands_cycle_basis": "commit_cycle is the source-stepper CPU cycle at the $C9E5 E1 store; the diagnostic read trace separately records each operand-read cycle.",
+                "limitation": "Operands and results are ROM-stepper-derived for this fingerprinted input route. The rows are not a generic substitute for live operand writers under arbitrary input histories.",
             },
         },
         "receiver_selection": {
