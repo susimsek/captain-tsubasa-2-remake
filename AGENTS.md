@@ -2,6 +2,21 @@
 
 This file contains durable repository instructions. `GOALS.md` is the source of truth for the current objective and progress; `PLANS.md` defines the work sequence. Detailed research, measurements, and trace results belong in focused project documents, not in this always-used guide.
 
+## Table of Contents
+
+1. [Tools and source use](#tools-and-source-use)
+2. [Quick reference](#quick-reference)
+3. [Project constraints](#project-constraints)
+4. [ROM evidence and runtime assets](#rom-evidence-and-runtime-assets)
+5. [Godot implementation](#godot-implementation)
+6. [Documentation language](#documentation-language)
+7. [Verification and quality](#verification-and-quality)
+8. [Workflow](#workflow)
+9. [Collaboration and change discipline](#collaboration-and-change-discipline)
+10. [Changes and review](#changes-and-review)
+    1. [Pull Request and Commit Guidelines](#pull-request-and-commit-guidelines)
+    2. [Review Process & What Reviewers Look For](#review-process--what-reviewers-look-for)
+
 ## Tools and source use
 
 - Work as a senior gameplay/tools engineer. Base decisions on project evidence and make material assumptions explicit.
