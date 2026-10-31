@@ -2,6 +2,20 @@
 
 This file contains durable repository instructions. `GOALS.md` is the source of truth for the current objective and progress; `PLANS.md` defines the work sequence. Detailed research, measurements, and trace results belong in focused project documents, not in this always-used guide.
 
+## Table of Contents
+
+1. [Tools and source use](#tools-and-source-use)
+2. [Quick reference](#quick-reference)
+3. [Project constraints](#project-constraints)
+4. [ROM evidence and runtime assets](#rom-evidence-and-runtime-assets)
+5. [Godot implementation](#godot-implementation)
+6. [Documentation language](#documentation-language)
+7. [Verification and quality](#verification-and-quality)
+8. [Workflow](#workflow)
+9. [Collaboration and change discipline](#collaboration-and-change-discipline)
+10. [Pull Request and Commit Guidelines](#pull-request-and-commit-guidelines)
+11. [Review Process & What Reviewers Look For](#review-process--what-reviewers-look-for)
+
 ## Tools and source use
 
 - Work as a senior gameplay/tools engineer. Base decisions on project evidence and make material assumptions explicit.
@@ -85,9 +99,7 @@ documentation.
 - Give concise progress updates on multi-step work. Do not claim implementation or verification that has not happened.
 - Do not commit, publish, distribute, or message others unless explicitly requested.
 
-## Changes and review
-
-### Pull Request and Commit Guidelines
+## Pull Request and Commit Guidelines
 
 - Keep each change focused on one coherent behavior, evidence update, or project-maintenance task. Avoid unrelated refactors and noisy fixup commits.
 - Use **Conventional Commits** with a short subject and optional scope, for example `feat(gameplay): trace kickoff handoff`:
@@ -106,7 +118,7 @@ documentation.
 - Do not run tests or validation commands unless requested. Report configured CI accurately: a clean headless import and short main-scene launch do not establish gameplay fidelity.
 - Exclude the ROM, emulator states, screenshots or WAV captures, generated diagnostics, local exports, build output, and credentials. Runtime assets must follow the ROM provenance rules above.
 
-### Review Process & What Reviewers Look For
+## Review Process & What Reviewers Look For
 
 - Check that the diff is focused and advances the active goal without extending its stop point. A diagnostic executor or isolated menu component does not prove the production route reaches that behavior.
 - Trace important behavior from ROM bytes and source logic through its production Godot consumer to an observable route result. Label ROM-confirmed facts, emulator observations, external leads, and assumptions distinctly.
