@@ -1,0 +1,124 @@
+{
+  "schema": "slot15-callback-f2-position-map-v1",
+  "rom_filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_mapping": {
+    "bank_0b_file_base": "0x016010",
+    "bank_0b_cpu_base": "0x8000",
+    "route": "callback $72 F2 remains mapped through $824D; callback $01 F0 selects vector row zero at $81CC, then `$82F7` and `$81D5-$824C` choose a map before `$832B->$8525`",
+    "runtime_rom_dependency": false,
+    "emulator_captures_used_as_runtime_inputs": false
+  },
+  "entries": [
+    {
+      "path": "bank_0b_control_dispatch_81bc_81cc.bin",
+      "cpu_start": "0x81BC",
+      "cpu_end_exclusive": "0x81CC",
+      "file_offset": "0x0161CC",
+      "prg_bank": "0x0B",
+      "size_bytes": 16,
+      "sha256": "3b2227a888e3fd009e9424dc707ff4bf84e3b67780bb2b7bcaca1637a5ec58aa",
+      "raw_hex": "A2 00 8E 25 05 29 0F 20 09 C5 CC 81 76 82 4D 82",
+      "source": "F2 control subdispatch and its inline handler vector."
+    },
+    {
+      "path": "bank_0b_control_map_entry_81cc_81d5.bin",
+      "cpu_start": "0x81CC",
+      "cpu_end_exclusive": "0x81D5",
+      "file_offset": "0x0161DC",
+      "prg_bank": "0x0B",
+      "size_bytes": 9,
+      "sha256": "f226d993329fa907bdb11ff0bc336fb19e5307928e469347f2ee24a811718528",
+      "raw_hex": "20 F7 82 BD D5 81 4C 2B 83",
+      "source": "Control-vector row zero; derives a field-position index and selects a map from the ROM table at $81D5."
+    },
+    {
+      "path": "bank_0b_control_map_lookup_81d5_824d.bin",
+      "cpu_start": "0x81D5",
+      "cpu_end_exclusive": "0x824D",
+      "file_offset": "0x0161E5",
+      "prg_bank": "0x0B",
+      "size_bytes": 120,
+      "sha256": "ae4dd691e5f708b402cf886d6b83abad73c5119bf80d75d40d78b1f70d2524cf",
+      "raw_hex": "0A 0C 0E 0E 0E 12 10 10 12 12 1E 1A 0E 0E 0E 12 10 10 12 12 15 1A 0E 0E 0E 12 10 10 12 12 17 1B 0F 0F 0F 13 11 11 13 13 1F 1B 0F 0F 0F 13 11 11 13 13 0B 0D 0F 0F 0F 13 11 11 13 13 00 00 02 02 00 04 04 04 06 08 00 00 02 02 00 04 04 04 1B 1F 00 00 02 02 00 04 04 04 1B 17 01 01 03 03 01 05 05 05 1A 15 01 01 03 03 01 05 05 05 1A 1E 01 01 03 03 01 05 05 05 07 09",
+      "source": "120-byte ROM map lookup table used by control callback `$01` vector row zero."
+    },
+    {
+      "path": "bank_0b_position_map_entry_82f7_82fe.bin",
+      "cpu_start": "0x82F7",
+      "cpu_end_exclusive": "0x82FE",
+      "file_offset": "0x016307",
+      "prg_bank": "0x0B",
+      "size_bytes": 7,
+      "sha256": "8b82b02a9c95a0a72f19fa02665f4d5214f1bb5cf50d7937e02d2ceea5d887af",
+      "raw_hex": "AC FB 05 20 FE 82 60",
+      "source": "ROM wrapper that loads `$05FB`, calls the shared coordinate-index helper, and returns to `$81CC`."
+    },
+    {
+      "path": "bank_0b_position_map_handler_824d_827f.bin",
+      "cpu_start": "0x824D",
+      "cpu_end_exclusive": "0x827F",
+      "file_offset": "0x01625D",
+      "prg_bank": "0x0B",
+      "size_bytes": 50,
+      "sha256": "6f616bc8cc0ef15e25703cedee73678fc54678bf3ee085d381448fb1285e7181",
+      "raw_hex": "AD 41 04 20 0C C5 AD 38 06 20 36 C5 8A A0 06 38 F1 34 AC FB 05 F0 05 49 FF 18 69 01 AA 10 04 98 49 0B A8 20 FE 82 4C 79 82 20 F7 82 BD 7F 82 4C 2B 83",
+      "source": "Position-relative map selector through the jump to $832B."
+    },
+    {
+      "path": "bank_0b_position_map_lookup_827f_82f7.bin",
+      "cpu_start": "0x827F",
+      "cpu_end_exclusive": "0x82F7",
+      "file_offset": "0x01628F",
+      "prg_bank": "0x0B",
+      "size_bytes": 120,
+      "sha256": "0afc2355fe2554eb66a383d198c828fc379167aa1a7bd6bc0d030e032279e7bf",
+      "raw_hex": "0E 0E 10 10 10 12 10 10 12 12 0C 0C 10 10 10 12 10 10 12 12 1A 0C 10 10 10 12 10 10 12 12 1B 0D 11 11 11 13 11 11 13 13 0D 0D 11 11 11 13 11 11 13 13 0F 0F 11 11 11 13 11 11 13 13 00 00 02 02 00 02 02 02 04 04 00 00 02 02 00 02 02 02 06 06 00 00 02 02 00 02 02 02 06 1B 01 01 03 03 01 03 03 03 07 1A 01 01 03 03 01 03 03 03 07 07 01 01 03 03 01 03 03 03 05 05",
+      "source": "ROM map-ID lookup table indexed by the holder-relative field position."
+    },
+    {
+      "path": "bank_0b_position_map_index_helper_82fe_8327.bin",
+      "cpu_start": "0x82FE",
+      "cpu_end_exclusive": "0x8327",
+      "file_offset": "0x01630E",
+      "prg_bank": "0x0B",
+      "size_bytes": 41,
+      "sha256": "114b9799d2d9f076eb4cff9311613157ff63809527ec8e643468821abb310359",
+      "raw_hex": "AD 37 06 38 E9 50 29 F0 4A 85 3A 4A 4A 65 3A 85 3A AD 35 06 38 E9 30 29 F0 4A 4A 4A 4A 65 3A AA 98 F0 05 8A 18 69 3C AA 60",
+      "source": "ROM field-coordinate to map-table-index helper."
+    },
+    {
+      "path": "bank_0b_event_72_control_f2.bin",
+      "cpu_start": "0x8B3E",
+      "cpu_end_exclusive": "0x8B3F",
+      "file_offset": "0x016B4E",
+      "prg_bank": "0x0B",
+      "size_bytes": 1,
+      "sha256": "966c7c47125c74575a9a1153b799faf55be33a04e3d9f98760a3eeac377103df",
+      "raw_hex": "F2",
+      "source": "Callback-$72's source control byte."
+    },
+    {
+      "path": "bank_0b_map_00_chr_pair_86ee_86f0.bin",
+      "cpu_start": "0x86EE",
+      "cpu_end_exclusive": "0x86F0",
+      "file_offset": "0x0166FE",
+      "prg_bank": "0x0B",
+      "size_bytes": 2,
+      "sha256": "cab590fcde8cf68ac09914f68ae356b7ca9587e2366db966ad506569d6603a19",
+      "raw_hex": "3C 4A",
+      "source": "Map-$00 CHR selector pair read by the shared $8525 worker."
+    },
+    {
+      "path": "bank_0b_map_0e_chr_pair_870a_870c.bin",
+      "cpu_start": "0x870A",
+      "cpu_end_exclusive": "0x870C",
+      "file_offset": "0x01671A",
+      "prg_bank": "0x0B",
+      "size_bytes": 2,
+      "sha256": "cab590fcde8cf68ac09914f68ae356b7ca9587e2366db966ad506569d6603a19",
+      "raw_hex": "3C 4A",
+      "source": "Map-$0E CHR selector pair read by the shared $8525 worker."
+    }
+  ]
+}

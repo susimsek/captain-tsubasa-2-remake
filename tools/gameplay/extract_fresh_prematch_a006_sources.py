@@ -25,6 +25,16 @@ SPANS = [
         "bank_mapping": "PRG bank $01 at CPU $A000-$BFFF",
     },
     {
+        "id": "a009_prematch_dispatch_entry",
+        "file": "bank01_prematch_dispatch_entry_A009_A00C.bin",
+        "cpu_start": "$A009",
+        "cpu_end_exclusive": "$A00C",
+        "file_offset": "0x002019",
+        "length": 3,
+        "rom_offset": 0x2019,
+        "bank_mapping": "PRG bank $01 at CPU $A000-$BFFF",
+    },
+    {
         "id": "a4eb_body",
         "file": "bank01_prematch_setup_body_A4EB_A610.bin",
         "cpu_start": "$A4EB",
@@ -67,7 +77,7 @@ def main() -> int:
             "sha256": ROM_SHA256,
         },
         "mapping": "The iNES header is 16 bytes. PRG bank $01 is the second 8 KiB bank and maps to CPU $A000-$BFFF when selected in MMC3 register 7.",
-        "scope": "Preserves the `$A006` bank-$01 vector and its complete `$A4EB-$A610` target body. The runtime entry executor only performs the verified JMP; the body has additional helpers and wait/scheduler behavior and is not yet implemented by that executor.",
+        "scope": "Preserves the `$A006` bank-$01 vector and its complete `$A4EB-$A610` target body, plus the `$A009->$A64C` fresh prematch-dispatch JMP. The runtime entry executor only performs verified control transfers; target bodies remain separately bounded.",
         "spans": SPANS,
     }
     (OUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")

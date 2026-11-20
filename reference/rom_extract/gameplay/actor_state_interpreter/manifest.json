@@ -55,14 +55,113 @@
       "runtime_rom_dependency": false
     },
     {
-      "name": "fresh_actor_appearance_roots_B30E_B313.bin",
+      "name": "fresh_actor_appearance_sequence_B30E_B315.bin",
       "file_offset": 176926,
-      "length_bytes": 6,
+      "length_bytes": 8,
       "cpu_start": "$B30E",
-      "cpu_end_exclusive": "$B314",
+      "cpu_end_exclusive": "$B316",
       "prg_bank": "$14",
-      "purpose": "First source $F7 descriptor-hold command at each of animation-$8F appearance roots $B30E/$B310/$B312.",
-      "sha256": "91f6198e377498f48b5bd9fd659fd6a7fbcd76f417abf679e2ef16bdee9228d2",
+      "purpose": "Animation-$8F appearance roots `$B30E/$B310/$B312`: source `$F7` shared-selector writes followed by `$F6 $04` descriptor hold.",
+      "sha256": "57431468f0d18accdab301e3a1ca93d09c45a8db6f1049e8668286291dcafa72",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "slot11_actor_appearance_sequence_B2E0_B30D.bin",
+      "file_offset": 176880,
+      "length_bytes": 46,
+      "cpu_start": "$B2E0",
+      "cpu_end_exclusive": "$B30E",
+      "prg_bank": "$14",
+      "purpose": "Slot-$11 actor appearance stream from `$B2E0` through `$B30D`, including timed descriptor pairs and source `$F4/$F5/$F7` commands.",
+      "sha256": "4205a3a6d3cc2555f1b00e47ceeae9921e51eb422c12f09b0b63ecde03c38e4e",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "appearance_pair_B537_B538.bin",
+      "file_offset": 177479,
+      "length_bytes": 2,
+      "cpu_start": "$B537",
+      "cpu_end_exclusive": "$B539",
+      "prg_bank": "$14",
+      "purpose": "Frame-8663 route actor appearance pair: wait 4 actor updates, set descriptor $7D, then advance to $B539.",
+      "sha256": "ac3dd553691cfc83e2d0c9e5aa3033a0577ee305ae7ead73be1cd5708ac21595",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "appearance_sequence_B539_B5AB.bin",
+      "file_offset": 177481,
+      "length_bytes": 115,
+      "cpu_start": "$B539",
+      "cpu_end_exclusive": "$B5AC",
+      "prg_bank": "$14",
+      "purpose": "Continuation of the frame-8663 route actor stream, including its timed descriptor pairs and local F6/F3/F8 commands through the next source span at $B5AC.",
+      "sha256": "71395ce43a704960a998018087add1fe2f6f618fc72eb385af5129c661ebe2f0",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "scenario_36_animation_4E_appearance_AF5F_AF60.bin",
+      "file_offset": 175983,
+      "length_bytes": 2,
+      "cpu_start": "$AF5F",
+      "cpu_end_exclusive": "$AF61",
+      "prg_bank": "$14",
+      "purpose": "Initial animation-$4E actor appearance command: $F7 holds descriptor $B7; the script pointer is not advanced on this command.",
+      "sha256": "9cfd8ffe4aa61b6edb3ce004a5a9abe416ccdab9d90f177bbec3197615f6fcfd",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "animation_66_appearance_AF81_AF94.bin",
+      "file_offset": 176017,
+      "length_bytes": 19,
+      "cpu_start": "$AF81",
+      "cpu_end_exclusive": "$AF94",
+      "prg_bank": "$14",
+      "purpose": "Animation-$66 appearance script: set horizontal flip, emit the timed descriptor pair at $AF82, then source F1/F7 and F3 commands.",
+      "sha256": "60c29f39eba84271190bd6c544e2302871fd0a691d968e415175427c40f65b16",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "scenario_1C_animation_7A_appearance_AF11_AF12.bin",
+      "file_offset": 175905,
+      "length_bytes": 2,
+      "cpu_start": "$AF11",
+      "cpu_end_exclusive": "$AF13",
+      "prg_bank": "$14",
+      "purpose": "Scenario-$1C animation-$7A F1 appearance index $1D: ROM `$AC47` resolves to `$AF11`, where `$F7 $14` holds descriptor `$14`.",
+      "sha256": "3e2a438a1a6f8a2b41460d685c0453bbd4b5f4dc82fb26d51987f7d1ae032913",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "scenario_1C_animation_7A_appearance_AF13_AF1A.bin",
+      "file_offset": 175907,
+      "length_bytes": 8,
+      "cpu_start": "$AF13",
+      "cpu_end_exclusive": "$AF1B",
+      "prg_bank": "$14",
+      "purpose": "Scenario-$1C animation-$7A F1 appearance index $1E: ROM `$AC47` resolves to `$AF13`, whose timed pair, `$F2`, and `$F3 $AF13` form a self-loop.",
+      "sha256": "8d20c58f02bb52efbec6ceb3f5c0d5c717afa09dcfac5f72194fdac1b4293abe",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "scenario_1C_animation_7A_appearance_AFDB_AFE2.bin",
+      "file_offset": 176107,
+      "length_bytes": 8,
+      "cpu_start": "$AFDB",
+      "cpu_end_exclusive": "$AFE3",
+      "prg_bank": "$14",
+      "purpose": "Scenario-$1C live animation-$7A appearance path: three timed descriptors `$15/$16/$17`, followed by ROM `$F7 $15` hold.",
+      "sha256": "ca0b7aa48f8b4b20c274cdf7ea139bd94e24d6411aa06aedb8631346828a8e2a",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "scenario_1C_animation_7A_appearance_AF23_AF25.bin",
+      "file_offset": 175923,
+      "length_bytes": 3,
+      "cpu_start": "$AF23",
+      "cpu_end_exclusive": "$AF26",
+      "prg_bank": "$14",
+      "purpose": "Scenario-$1C live animation-$7A appearance index `$22` resolved by ROM `$AC47`: timed descriptor `$1D`, then ROM `$F0` hold.",
+      "sha256": "1ba1825c6b7038c2d78b602a3a7d7ce9490e8b0c98b4ac52ee9c92c10eed12a0",
       "runtime_rom_dependency": false
     },
     {
@@ -77,6 +176,17 @@
       "runtime_rom_dependency": false
     },
     {
+      "name": "animation_66_motion_A692_A699.bin",
+      "file_offset": 173730,
+      "length_bytes": 7,
+      "cpu_start": "$A692",
+      "cpu_end_exclusive": "$A699",
+      "prg_bank": "$14",
+      "purpose": "Animation-$66 actor motion: its first ROM $01 fixed-point step and following $00 hold command.",
+      "sha256": "9f1f35e832dde821c89483f639dd5f7c59692637d858fc40385bb54cbb2f8c60",
+      "runtime_rom_dependency": false
+    },
+    {
       "name": "fresh_actor_motion_roots_A723_A734.bin",
       "file_offset": 173875,
       "length_bytes": 18,
@@ -85,6 +195,127 @@
       "prg_bank": "$14",
       "purpose": "Fresh animation-$8F motion roots: timed fixed-point $01 commands and self-targeting $04 loop jumps at $A723/$A72C.",
       "sha256": "c68a7d28f793918e44b5b1362ba62a9ab07001d8f1ea2d9177672dd544b0d10e",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "slot11_actor_motion_sequence_A865_A86B.bin",
+      "file_offset": 174197,
+      "length_bytes": 7,
+      "cpu_start": "$A865",
+      "cpu_end_exclusive": "$A86C",
+      "prg_bank": "$14",
+      "purpose": "Slot-$11 route motion root: source $01 duration/velocity packet at $A865 followed by the $00 hold at $A86B.",
+      "sha256": "65eaf22a3ed5bcf5f3c15794d7a247998076950f1e5b6e818630446db47089d5",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "motion_command_03_A96E_A973.bin",
+      "file_offset": 174462,
+      "length_bytes": 6,
+      "cpu_start": "$A96E",
+      "cpu_end_exclusive": "$A974",
+      "prg_bank": "$14",
+      "purpose": "Frame-8663 route motion command $03: load a 60-update fixed-point velocity packet and set actor motion flag $10.",
+      "sha256": "070a2a73ec593855c684bcffed54024678247eb2791225270800611bc0131dbc",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "scenario_36_animation_4C_appearance_B43E_B43F.bin",
+      "file_offset": 177230,
+      "length_bytes": 2,
+      "cpu_start": "$B43E",
+      "cpu_end_exclusive": "$B440",
+      "prg_bank": "$14",
+      "purpose": "Scenario-$36 animation-$4C actor appearance pair: set descriptor $7D with a three-update timer.",
+      "sha256": "73e9fd069fa62aaaa639c7aeaede40153dc5f44ec1cbc398ca83b11f70320255",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "scenario_36_animation_4C_appearance_B440_B470.bin",
+      "file_offset": 177232,
+      "length_bytes": 49,
+      "cpu_start": "$B440",
+      "cpu_end_exclusive": "$B471",
+      "prg_bank": "$14",
+      "purpose": "Scenario-$36 animation-$4C continuation: timed descriptor pairs, local offsets, flips, and the source $F3 loop at $B46E->$B462.",
+      "sha256": "d1d6fd4e587eb100a03da9f0d3938de255df0b8a20cdc9787c66fdabf37a99ab",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "scenario_36_animation_4C_motion_A79B_A7A0.bin",
+      "file_offset": 173995,
+      "length_bytes": 6,
+      "cpu_start": "$A79B",
+      "cpu_end_exclusive": "$A7A1",
+      "prg_bank": "$14",
+      "purpose": "Scenario-$36 animation-$4C motion command $03: load a 50-update fixed-point velocity packet.",
+      "sha256": "c0dc4422d717c9f1b17e4c53af92eae754d7debb337333447a3f8bf9550f9051",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "scenario_36_animation_E6_appearance_B01E_B0BA.bin",
+      "file_offset": 176174,
+      "length_bytes": 156,
+      "cpu_start": "$B01E",
+      "cpu_end_exclusive": "$B0BA",
+      "prg_bank": "$14",
+      "purpose": "Scenario-$36 animation-$E6 appearance script roots and shared command loops.",
+      "sha256": "0c2fd8b94a88e80668eebde45c6db9849222428952d609a80be87c4a519d6948",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "scenario_36_animation_E6_motion_A6C7_A6D5.bin",
+      "file_offset": 173783,
+      "length_bytes": 14,
+      "cpu_start": "$A6C7",
+      "cpu_end_exclusive": "$A6D5",
+      "prg_bank": "$14",
+      "purpose": "Scenario-$36 animation-$E6 motion roots $A6C7/$A6CE and their zero-hold operands.",
+      "sha256": "02024591d4bf91c9854c9f052f68b68f8a1467b262866585786791c306bb3e05",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "scenario_1C_animation_7A_motion_A6D5_A6DB.bin",
+      "file_offset": 173797,
+      "length_bytes": 7,
+      "cpu_start": "$A6D5",
+      "cpu_end_exclusive": "$A6DC",
+      "prg_bank": "$14",
+      "purpose": "Scenario-$1C animation-$7A F1 motion index $64: ROM `$A1B4` resolves to `$A6D5`, a timed `$01` step followed by `$00` hold.",
+      "sha256": "912f0675f3e4746a851bac12caaa38578e30531f952789edec3a43f67aa5c158",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "scenario_1C_animation_7A_motion_A6DC_A6E2.bin",
+      "file_offset": 173804,
+      "length_bytes": 7,
+      "cpu_start": "$A6DC",
+      "cpu_end_exclusive": "$A6E3",
+      "prg_bank": "$14",
+      "purpose": "Scenario-$1C animation-$7A F1 motion index $65: ROM `$A1B4` resolves to `$A6DC`, a timed `$01` step followed by `$00` hold.",
+      "sha256": "6107cd3acf7812fa2724fdfb900f23a00d171bb8b7153dd4daf84df194f6c4c7",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "scenario_1C_animation_7A_motion_A6E3_A6E9.bin",
+      "file_offset": 173811,
+      "length_bytes": 7,
+      "cpu_start": "$A6E3",
+      "cpu_end_exclusive": "$A6EA",
+      "prg_bank": "$14",
+      "purpose": "Live scenario-$1C animation-$7A F1 motion index `$66` from ROM `$A1B4`: timed `$01` step at `$A6E3` followed by `$00` hold.",
+      "sha256": "e7924ca949656222eb4e3c63cd03ec3dc92e3a2935c00ef42665c6e4f5a33a42",
+      "runtime_rom_dependency": false
+    },
+    {
+      "name": "scenario_1C_pass_motion_A95C_A966.bin",
+      "file_offset": 174444,
+      "length_bytes": 11,
+      "cpu_start": "$A95C",
+      "cpu_end_exclusive": "$A967",
+      "prg_bank": "$14",
+      "purpose": "Live PASS actor motion index `$A7` resolved by ROM `$A1B4`: `$03` packet, `$00` hold, and the full pointer-bounded entry bytes.",
+      "sha256": "b23a445c2705fe05f18f3ead4e5cc57f839081d75824e9f1f1b591582bb523cc",
       "runtime_rom_dependency": false
     }
   ]

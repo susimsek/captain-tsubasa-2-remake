@@ -8,7 +8,7 @@
   },
   "runtime_rom_dependency": false,
   "trace_state_included": false,
-  "scope": "One live slot-$01 `$CA52->$EE9F` call from `$053A=$80/$053C=$8F` through `$F5 $0A`, `$F4` selectors, five `$F1` constructors, `$F0`, and the return to `$EEB1`. The executor stops before `$EEB1` executes.",
+  "scope": "Live slot-$01 `$CA52->$EE9F` actor setup and first-match field actor work, including the source `$062D.7` player-marker branch for the verified fresh-start low-nibble modes 0 and 1. Other marker modes remain out of scope until their source inputs are observed and implemented.",
   "dependencies": [
     {
       "manifest": "reference/rom_extract/gameplay/ee9f_empty_actor_call/manifest.json",
@@ -17,6 +17,10 @@
     {
       "manifest": "reference/rom_extract/gameplay/first_command_actors/manifest.json",
       "purpose": "Existing actor animation stream provenance and structural decoder."
+    },
+    {
+      "manifest": "reference/rom_extract/gameplay/first_command_field/player_record_positions/manifest.json",
+      "purpose": "ROM pointer table resolving the live `$0441` holder slot to its player record."
     },
     {
       "manifest": "reference/rom_extract/gameplay/actor_packet_constructor/manifest.json",
@@ -29,6 +33,10 @@
     {
       "manifest": "reference/rom_extract/gameplay/slot09_86f8_worker/manifest.json",
       "purpose": "Reused `$C533->$CCD2` inline-record append source bytes."
+    },
+    {
+      "manifest": "reference/rom_extract/gameplay/scenario36_fd00_mirror/manifest.json",
+      "purpose": "ROM `$C536->$CDC9` div-12 helper used by field-marker mode one to derive its OAM coordinates."
     }
   ],
   "spans": [
@@ -110,15 +118,180 @@
       "description": "ROM vectors for the reused `$C530` palette fill and `$C533` inline record append"
     },
     {
-      "file": "fixed_palette_table_FC44_FC50.bin",
+      "file": "fixed_palette_table_FC38_FC50.bin",
       "bank": "$1F",
-      "cpu_start": "0xFC44",
+      "cpu_start": "0xFC38",
       "cpu_end_exclusive": "0xFC50",
-      "file_offset": "0x03FC54",
+      "file_offset": "0x03FC48",
+      "length": 24,
+      "sha256": "58a59654ad8e2b645032765c7ac634bf700459d40a6fc06def33577f9b731c05",
+      "bytes": "0f 10 30 0f 30 00 31 30 10 0f 30 00 0f 0f 36 0f 30 36 0f 17 36 0f 31 30",
+      "description": "ROM palette rows selected by live `$F5 $09` and `$F5 $0A` handlers."
+    },
+    {
+      "file": "bank14_f5_player_palette_81BA_82AF.bin",
+      "bank": "$14",
+      "cpu_start": "0x81BA",
+      "cpu_end_exclusive": "0x82AF",
+      "file_offset": "0x0281CA",
+      "length": 245,
+      "sha256": "a93d0f002b1a3c2c52fe2c14a7f94c10742b6ff2400f01f807fc67482d9a0ad4",
+      "bytes": "297f2009c5cf81e981db81e181bc827f837f83d581ad41044cec81adfc054cec81adfb054cec81adfb05490b4cec81ad4204853a200cc5206a82a000b134f007208282a200f012ad2b0038e903a202a43af004c00bd002a204853aa000843ba80a263b0a263b653a853aa900653b853b18a53a7d6482853aa53b7d6582853ba000b13ac848a2008a2903f017c901f00ec902f00568484c5a82b13ac8d002a90f9d7f04e8e010d0df68600cb8c7b667b7a000b13408aabdf08828d008a63ae00bd002a9048d460560a201853bc901f00ca200c90f9006c917b002a2028a2009c5a082a382ad82a53b60a901ae2a00f002a97660a900",
+      "description": "Bank-$14 `$F5 $80` selector, holder/player palette resolver, and ordinary-player palette-index branch"
+    },
+    {
+      "file": "bank14_f8_redirect_816F_817C.bin",
+      "bank": "$14",
+      "cpu_start": "0x816F",
+      "cpu_end_exclusive": "0x817C",
+      "file_offset": "0x02817F",
+      "length": 13,
+      "sha256": "298b3571e8e151db41ba18f0b69f4ad21d2a079bc24f3606ac02b038b9519967",
+      "bytes": "a001b14caac8b14c864c854d60",
+      "description": "F8 absolute stream redirect command handler"
+    },
+    {
+      "file": "bank14_f6_actor_remove_83AE_83BD.bin",
+      "bank": "$14",
+      "cpu_start": "0x83AE",
+      "cpu_end_exclusive": "0x83BD",
+      "file_offset": "0x0283BE",
+      "length": 15,
+      "sha256": "9491d3c17008fc33fb0f9d7b15779b8a368dec51a8d7aa37182a1038cb76ac75",
+      "bytes": "a001b14caaa9009d4705a9024ccf83",
+      "description": "F6 actor-record active-flag removal handler"
+    },
+    {
+      "file": "bank14_field_marker_renderer_8624_86DB.bin",
+      "bank": "$14",
+      "cpu_start": "0x8624",
+      "cpu_end_exclusive": "0x86DB",
+      "file_offset": "0x028634",
+      "length": 183,
+      "sha256": "7ddd0958ed7c2601d1fa368e3a7fb02e2f65e25294028a4032bf4b56e8257a82",
+      "bytes": "ad 2d 06 29 0f c9 05 d0 03 4c 61 88 20 53 87 a9 00 85 46 a5 46 d0 03 4c cf 86 c9 0b d0 03 4c cf 86 20 db 86 b0 03 4c cf 86 a6 3b a0 06 b1 34 c9 34 b0 02 a9 34 c9 cc 90 02 a9 cc 48 ad 2d 06 29 0f a8 68 18 79 da 88 9d 03 02 a0 08 b1 34 c9 54 b0 02 a9 54 c9 ac 90 02 a9 ac 48 ad 2d 06 29 0f a8 68 18 79 df 88 9d 00 02 a9 03 9d 02 02 2c 15 06 10 11 ad fb 05 f0 0c a5 46 c9 0b b0 06 20 f2 86 4c b5 86 a5 46 cd 41 04 d0 06 20 1d 88 4c c4 86 c9 0b 90 02 e9 01 18 69 11 c9 20 90 02 69 0f 9d 01 02 e8 e8 e8 e8 86 3b e6 48 e6 46 a5 46 c9 16 f0 03 4c 37 86 60",
+      "description": "Source loop that writes route-time field-player marker sprites."
+    },
+    {
+      "file": "bank14_field_marker_filters_86DB_871F.bin",
+      "bank": "$14",
+      "cpu_start": "0x86DB",
+      "cpu_end_exclusive": "0x871F",
+      "file_offset": "0x0286EB",
+      "length": 68,
+      "sha256": "6e7ec14e25fcfb03924a04a94717f04191bccbb6edb17770a80425de51d2c040",
+      "bytes": "20 0c c5 ad 2d 06 29 0f 20 09 c5 1d 87 1d 87 1f 87 3b 87 1d 87 00 00 a5 46 cd fd 05 d0 23 ad 2e 06 d0 11 a0 07 ad 2d 06 49 40 8d 2d 06 70 02 a0 04 8c 2e 06 ce 2e 06 a5 46 2c 2d 06 70 03 18 69 0b 60 38 60",
+      "description": "Player-record and mode-zero visibility dispatch used by the marker loop."
+    },
+    {
+      "file": "bank14_field_marker_mode_table_8753_8768.bin",
+      "bank": "$14",
+      "cpu_start": "0x8753",
+      "cpu_end_exclusive": "0x8768",
+      "file_offset": "0x028763",
+      "length": 21,
+      "sha256": "4a2d98dac6c9f9458e20126c19c5b9d92a0bc65439cda55a0b670fe28c6085d4",
+      "bytes": "ad 2d 06 29 0f 20 09 c5 67 87 68 87 71 87 84 87 67 87 00 00 60",
+      "description": "Inline mode dispatch and its source return target."
+    },
+    {
+      "file": "bank14_field_marker_oam_writer_87E7_881D.bin",
+      "bank": "$14",
+      "cpu_start": "0x87E7",
+      "cpu_end_exclusive": "0x881D",
+      "file_offset": "0x0287F7",
+      "length": 54,
+      "sha256": "d689034b7f37f9c39c3d19a39234a7d24a7286696b9fa5242e91101732270c3b",
+      "bytes": "8a 18 69 fd a6 3b 9d 03 02 98 18 69 c7 9d 00 02 a9 3c ac 2d 06 c0 83 08 a0 01 28 d0 04 a0 03 a9 11 9d 01 02 98 9d 02 02 e8 e8 e8 e8 86 3b e6 48 a9 01 8d 32 05 60",
+      "description": "ROM OAM position, tile, and attribute writer for a field marker."
+    },
+    {
+      "file": "bank14_field_marker_holder_blink_881D_8861.bin",
+      "bank": "$14",
+      "cpu_start": "0x881D",
+      "cpu_end_exclusive": "0x8861",
+      "file_offset": "0x02882D",
+      "length": 68,
+      "sha256": "417c3c20f61a58d985c34003632f22c5a5b4e60b7a945729db65a117ecc187f3",
+      "bytes": "ac 40 06 d0 12 ac 41 06 c8 c0 03 d0 02 a0 00 8c 41 06 a9 04 8d 40 06 a9 00 ac fb 05 08 ac 41 06 28 d0 07 98 18 69 03 a8 a9 80 2c 37 06 30 02 49 80 1d 02 02 9d 02 02 b9 5b 88 ce 40 06 60 36 37 3d 3d 37 36",
+      "description": "Source-selected holder-marker blink and tile table."
+    },
+    {
+      "file": "bank14_field_marker_position_offsets_88DA_88E4.bin",
+      "bank": "$14",
+      "cpu_start": "0x88DA",
+      "cpu_end_exclusive": "0x88E4",
+      "file_offset": "0x0288EA",
+      "length": 10,
+      "sha256": "9f9a63359392b862a5f366d1169f9be8fc6920da2c2b2fbc84e24a64240f7d1f",
+      "bytes": "1d fd fd fd fd 2c c7 c7 c7 c7",
+      "description": "ROM mode-indexed marker position offsets."
+    },
+    {
+      "file": "fixed_record_pointer_vector_C50C_C50F.bin",
+      "bank": "$1E",
+      "cpu_start": "0xC50C",
+      "cpu_end_exclusive": "0xC50F",
+      "file_offset": "0x03C51C",
+      "length": 3,
+      "sha256": "71f4bb6ccdc5573bcfceef2422fe8636bc1dd1068675da3d860282d577e78b44",
+      "bytes": "4c 7c cd",
+      "description": "ROM fixed-bank vector from `$C50C` to the player-record resolver."
+    },
+    {
+      "file": "fixed_record_pointer_resolver_CD7C_CD89.bin",
+      "bank": "$1E",
+      "cpu_start": "0xCD7C",
+      "cpu_end_exclusive": "0xCD89",
+      "file_offset": "0x03CD8C",
+      "length": 13,
+      "sha256": "8d7d8153252420175055aa5ef041e0e9dd85f99bb9dae8e24200e9549487ed24",
+      "bytes": "0a a8 b9 89 cd 85 34 b9 8a cd 85 35 60",
+      "description": "ROM fixed-bank resolver for the 22 match player-record pointers."
+    },
+    {
+      "file": "bank14_animation_pointer_entries_00_01_8968.bin",
+      "bank": "$14",
+      "cpu_start": "0x8968",
+      "cpu_end_exclusive": "0x896C",
+      "file_offset": "0x028978",
+      "length": 4,
+      "sha256": "f6ac0c09de712c717a47f603036bb9daa7e9b534bd3891ca06987fc32841fbd8",
+      "bytes": "488b5c8b",
+      "description": "Animation IDs $00/$01 pointer entries; ID $00 resolves to $8B48 and following ID $01 bounds the stream at $8B5C."
+    },
+    {
+      "file": "bank14_animation_00_stream_8B48_8B5C.bin",
+      "bank": "$14",
+      "cpu_start": "0x8B48",
+      "cpu_end_exclusive": "0x8B5C",
+      "file_offset": "0x028B58",
+      "length": 20,
+      "sha256": "078e47a4949689c08670624ef54e480a5705db28ebe3f8263599b275cc41d340",
+      "bytes": "f50bf41f000000f600f615f62af63ff654f669f0",
+      "description": "Pointer-bounded animation-$00 stream selected by the scenario-$38 record $01 $34 $00 $F0."
+    },
+    {
+      "file": "fixed_palette_row_FC50_FC5C.bin",
+      "bank": "$1F",
+      "cpu_start": "0xFC50",
+      "cpu_end_exclusive": "0xFC5C",
+      "file_offset": "0x03FC60",
       "length": 12,
-      "sha256": "249458e73da7f4ef10e9919831c71d8aeb5fde9fd0c829dfa096dd23ba03921b",
-      "bytes": "0f0f360f30360f17360f3130",
-      "description": "ROM palette lookup row selected by the live `$F5 $0A` handler"
+      "sha256": "72819f2c36672a1ebd02b00f71e34ec3d55d0825b2cb496ac7e7a06625181ff7",
+      "bytes": "3631300718280000000f3011",
+      "description": "Palette row selected by ROM animation command $F5 $0B through $CC02."
+    },
+    {
+      "file": "bank14_field_marker_mode1_8768_8771.bin",
+      "bank": "$14",
+      "cpu_start": "0x8768",
+      "cpu_end_exclusive": "0x8771",
+      "file_offset": "0x028778",
+      "length": 9,
+      "sha256": "13625db542d3c47bef0ac10643e3e85e5d80c7a0d104151e97da775c4264cbab",
+      "bytes": "ad 24 06 20 36 c5 4c e7 87",
+      "description": "Mode-1 marker dispatch from `$0624` through `$C536` to the ROM OAM writer."
     }
   ]
 }

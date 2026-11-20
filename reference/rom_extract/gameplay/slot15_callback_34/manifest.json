@@ -1,0 +1,109 @@
+{
+  "schema": "slot15-callback-34-map-2d-rom-sources-v1",
+  "source_rom_filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_rom_size_bytes": 393232,
+  "runtime_rom_dependency": false,
+  "capture_or_screenshot_bytes_included": false,
+  "bank_mapping": {
+    "mapper": "MMC3",
+    "prg_bank_size_bytes": 8192,
+    "prg_bank": "$0B",
+    "cpu_window": "0x8000-0x9FFF",
+    "file_window_base": "0x016010",
+    "file_offset_formula": "0x10 + (PRG bank * 0x2000) + (CPU address - 0x8000)",
+    "semantics": "All listed CPU addresses are in the same switchable 8 KiB PRG bank-$0B window."
+  },
+  "callback_selector": {
+    "callback_id": "$34",
+    "pointer_table_cpu_address": "0x87F6",
+    "entry_formula": "table CPU address + 2 * callback ID",
+    "entry_cpu_address": "0x885E",
+    "entry_file_offset": "0x01686E",
+    "pointer_bytes_hex": "E1 89",
+    "pointer_target_cpu_address": "0x89E1",
+    "pointer_target_file_offset": "0x0169F1",
+    "script_bytes_hex": "02 00 2D"
+  },
+  "map_2d_resolution": {
+    "map_id": "$2D",
+    "packed_selector_table_cpu_address": "0x8B42",
+    "selector_byte_cpu_address": "0x8B4D",
+    "selector_byte_file_offset": "0x016B5D",
+    "selector_byte_hex": "6A",
+    "selector_formula": "(byte >> (2 * (map ID & 3))) & 3, using table[map ID >> 2]",
+    "resolved_selector": "0x02",
+    "chr_pair_table_cpu_address": "0x86EE",
+    "chr_pair_cpu_address": "0x8748",
+    "chr_pair_file_offset": "0x016758",
+    "chr_pair_hex": "00 02",
+    "map_block_cpu_address": "0x9104",
+    "map_block_file_offset": "0x017114",
+    "map_block_length_bytes": 32,
+    "map_block_address_formula": "0x8B64 + ((map ID >> 3) << 8) + ((map ID & 7) << 5)",
+    "map_block_sha256": "5f2a7c9e9b42fa9860e062f8df1ee57caf1d255424d85ff884c6158f1cf8e1e9",
+    "neighboring_block_note": "CPU 0x9064 / file 0x017074 is map ID 0x28 under the same formula; it is not map-$2D runtime data."
+  },
+  "source_spans": [
+    {
+      "path": "reference/rom_extract/gameplay/slot15_callback_34/callback_34_script_pointer.bin",
+      "prg_bank": "$0B",
+      "cpu_address": "0x885E",
+      "file_offset": "0x01686E",
+      "length_bytes": 2,
+      "bytes_hex": "E1 89",
+      "sha256": "f287538c65456d2234e6d47bce379df09af4207af9ac4a1a6dea54486d59a931",
+      "role": "Callback-$34 little-endian script pointer-table entry.",
+      "relationship": "Entry $34 at $87F6 + 2*$34 points to script $89E1."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/slot15_callback_34/callback_34_map_2d_script.bin",
+      "prg_bank": "$0B",
+      "cpu_address": "0x89E1",
+      "file_offset": "0x0169F1",
+      "length_bytes": 3,
+      "bytes_hex": "02 00 2D",
+      "sha256": "530988962b3acfb674a6c3a9b9a16cdb2ae2e81c6f3b2ce3883de4137585dacf",
+      "role": "Three-byte callback-$34 script prefix containing map ID $2D.",
+      "relationship": "Pointer-table target for callback selector $34; bytes are preserved without assigning other operand semantics."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/slot15_callback_34/map_2d_selector_source.bin",
+      "prg_bank": "$0B",
+      "cpu_address": "0x8B4D",
+      "file_offset": "0x016B5D",
+      "length_bytes": 1,
+      "bytes_hex": "6A",
+      "sha256": "189f40034be7a199f1fa9891668ee3ab6049f82d38c68be70f596eab2e1857b7",
+      "role": "Packed map-selector table byte used by map ID $2D.",
+      "relationship": "Map ID $2D selects table index $0B and bit pair 2, resolving byte $6A to selector $02."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/slot15_callback_34/map_2d_chr_pair.bin",
+      "prg_bank": "$0B",
+      "cpu_address": "0x8748",
+      "file_offset": "0x016758",
+      "length_bytes": 2,
+      "bytes_hex": "00 02",
+      "sha256": "fcf0a6c700dd13e274b6fba8deea8dd9b26e4eedde3495717cac8408c9c5177f",
+      "role": "Map-$2D pair from the bank-$0B CHR-selector table.",
+      "relationship": "Two ROM bytes associated with the map-$2D table index; execution timing is not established here."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/slot15_callback_34/map_2d_block.bin",
+      "prg_bank": "$0B",
+      "cpu_address": "0x9104",
+      "file_offset": "0x017114",
+      "length_bytes": 32,
+      "bytes_hex": "00 71 72 72 73 72 74 00 00 75 76 77 78 79 7A 00 00 7B 7C 7D 7E 7F 80 00 00 81 82 82 83 82 84 00",
+      "sha256": "5f2a7c9e9b42fa9860e062f8df1ee57caf1d255424d85ff884c6158f1cf8e1e9",
+      "role": "32-byte bank-$0B source block associated with map $2D.",
+      "relationship": "Raw source span only; exact consumer order and presentation cadence are unresolved."
+    }
+  ],
+  "unresolved_execution_order": [
+    "The extracted spans do not establish when callback $34 runs relative to the map-$2D selector, CHR-pair, or block reads.",
+    "No frame/cycle ordering, PPU write sequence, or APU behavior is derived by this static extraction.",
+    "The 32-byte map-$2D block is preserved from the source address selected by the verified $8525 address formula; live consumer cadence and full presentation remain unverified."
+  ]
+}

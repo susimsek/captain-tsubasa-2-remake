@@ -3,6 +3,7 @@ extends SceneTree
 const CONTEXT_BUILDER := preload("res://scripts/gameplay/rom_fresh_kickoff_entry_context_builder.gd")
 const PERIOD_TASK := preload("res://scripts/gameplay/rom_fresh_period_task.gd")
 const CONTINUATION := preload("res://scripts/gameplay/rom_fresh_daaa_continuation.gd")
+const SOUND_QUEUE_EVENT := preload("res://scripts/gameplay/rom_sound_queue_write_event.gd")
 const TRACE_ROOT := "res://reference/diagnostics/fresh_period_daaa_trace_20261028_135904_utc/"
 
 
@@ -10,7 +11,7 @@ func _init() -> void:
 	if not _verify():
 		quit(1)
 		return
-	print("PASS: ROM-byte fresh match-zero continuation reaches the first bank-$18:$800C worker entry with matching registers, mapper, RAM effects, and trace call boundary.")
+	print("PASS: ROM-byte fresh match-zero continuation reaches the first bank-$18:$800C worker entry; its `$DAAA->$CBF1->$CC01` `$01` write yields a typed queue event and matches the retained FCEUX boundary.")
 	quit(0)
 
 
@@ -67,6 +68,29 @@ func _verify() -> bool:
 			return _fail("At bank-$18:$800C RAM %s=%s; source/trace boundary expects $%02X." % [address, str(ram.get(address, "missing")), int(expected_ram[address])])
 	if String(ram.get("$0700-$0704", "")) != "0100000000":
 		return _fail("$CBF1 did not occupy only the first source sound-queue slot.")
+	var queue_event = SOUND_QUEUE_EVENT.new()
+	if not queue_event.populate_from_fresh_daaa_queue_insert(result, 8460) \
+			or not queue_event.is_valid_fresh_daaa_queue_insert() \
+			or int(queue_event.queue_id) != 0x01 \
+			or int(queue_event.source_caller_pc) != 0xDAAC \
+			or int(queue_event.queue_store_instruction_pc) != 0xCBFE \
+			or int(queue_event.post_store_pc) != 0xCC01 \
+			or int(queue_event.source_frame) != 8460 \
+			or int(queue_event.cpu_cycle) != -1 or bool(queue_event.timing_verified):
+		return _fail("The executed `$DAAA->$CBF1->$CC01` stop request did not produce a typed, source-backed queue event.")
+	var invalid_queue_result := result.duplicate(true)
+	var invalid_writes: Array = invalid_queue_result.get("writes", [])
+	for write_index in invalid_writes.size():
+		if invalid_writes[write_index] is Dictionary \
+				and int((invalid_writes[write_index] as Dictionary).get("trace_pc", -1)) == 0xCC01:
+			var invalid_write: Dictionary = invalid_writes[write_index].duplicate(true)
+			invalid_write["value"] = 0x55
+			invalid_writes[write_index] = invalid_write
+			break
+	invalid_queue_result["writes"] = invalid_writes
+	var rejected_event = SOUND_QUEUE_EVENT.new()
+	if rejected_event.populate_from_fresh_daaa_queue_insert(invalid_queue_result, 8460):
+		return _fail("Fresh DAAA audio event accepted a queue write that differs from executed source RAM.")
 	if not _check_trace_boundary(result):
 		return false
 	return true

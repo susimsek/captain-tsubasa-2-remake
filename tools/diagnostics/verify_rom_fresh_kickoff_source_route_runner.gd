@@ -3,15 +3,20 @@ extends SceneTree
 const CONTEXT_BUILDER := preload("res://scripts/gameplay/rom_fresh_kickoff_entry_context_builder.gd")
 const ROUTE_RUNNER := preload("res://scripts/gameplay/rom_fresh_kickoff_source_route_runner.gd")
 const SCHEDULER := preload("res://scripts/gameplay/rom_gameplay_task_scheduler.gd")
+const VISUALS_SCENE := preload("res://scenes/kickoff_cutscene_visuals.tscn")
 
 
 func _init() -> void:
-	if not _verify():
+	call_deferred("_run")
+
+
+func _run() -> void:
+	if not await _verify():
 		quit(1)
 		return
 	print("PASS: source route runner composes the fresh-match task path through slot-$09 `$EB8B`, executes its three zero branches, and saves `$EB88->$CB0F` before the next external NMI wait.")
-	print("PASS: the live `$EE9F`/`$E3CA` paths yield root slot `$01`; slot `$05` runs both text callbacks, emits the first menu-window packets, and yields at `$C515`.")
-	print("LIMIT: one frame-level NMI edge is supplied; PPU packet consumption, visible field/menu output, cycle timing, and later gameplay remain unresolved.")
+	print("PASS: ROM-source NMI packets reach the Godot nametable renderer in order; CHR-ROM PPUDATA writes follow the read-only cartridge behavior.")
+	print("LIMIT: NMI edges remain caller-supplied; this verifies packet/CHR handling only, not the full route, PPU/IRQ timing, visible field/menu parity, audio, or standalone packaging.")
 	quit(0)
 
 
@@ -153,6 +158,38 @@ func _verify() -> bool:
 			or String(status.get("source_boundary", "")) != "$CB0F save -> scheduler WAIT_FOR_NMI_READY" \
 			or bool(status.get("nmi_cadence_generated", true)):
 		return _fail("Runner status does not retain the root yield boundary and external NMI limitation.")
+
+	var visuals := VISUALS_SCENE.instantiate() as KickoffCutsceneVisuals
+	root.add_child(visuals)
+	await process_frame
+	visuals.prepare_pre_match_meeting_scene()
+	var second_nmi: Dictionary = runner.advance_on_external_nmi(2, 0x88)
+	if not bool(second_nmi.get("ok", false)) \
+			or String(second_nmi.get("secondary_queue", {}).get("status", "")) != "transferred":
+		return _fail("Second source NMI did not transfer the queued ROM menu-window packets: " + str(second_nmi.get("secondary_queue", {})))
+	var ppu_result := visuals.apply_source_ppu_bus_events(
+		second_nmi.get("ppu_bus_events", []), 0x88)
+	if not bool(ppu_result.get("ok", false)) \
+			or not bool(ppu_result.get("unapplied_writes", []).is_empty()) \
+			or int(ppu_result.get("nametable_writes_applied", -1)) != 14 \
+			or visuals.screen.read_nametable_ppu_byte(0x2221) != 0x00 \
+			or visuals.screen.read_nametable_ppu_byte(0x2241) != 0x9C \
+			or visuals.screen.read_nametable_ppu_byte(0x2247) != 0x9D:
+		return _fail("ROM queue PPU writes did not render the expected first two menu-window rows: " + str(ppu_result))
+	var chr_rom_write_result: Dictionary = visuals.apply_source_ppu_bus_events([
+		{"operation": "read", "ppu_register": 0x2002, "source_pc": 0xC947},
+		{"operation": "write", "ppu_register": 0x2006, "value": 0x00, "source_pc": 0xC947},
+		{"operation": "write", "ppu_register": 0x2006, "value": 0x00, "source_pc": 0xC947},
+		{"operation": "write", "ppu_register": 0x2007, "value": 0xFF, "source_pc": 0xC947},
+	], 0x88)
+	if not bool(chr_rom_write_result.get("ok", false)) \
+			or int(chr_rom_write_result.get("ignored_chr_rom_writes", -1)) != 1 \
+			or not bool(chr_rom_write_result.get("unapplied_writes", []).is_empty()) \
+			or int(chr_rom_write_result.get("ppu_address_after", -1)) != 1 \
+			or not visuals.screen.has_verified_source_chr_rom():
+		return _fail("A source PPUDATA write to CHR-ROM did not follow the cartridge's read-only pattern-table behavior: " + str(chr_rom_write_result))
+	visuals.queue_free()
+	await process_frame
 	return true
 
 

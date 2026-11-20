@@ -2,11 +2,12 @@
 
 ## Result
 
-`RomF1ActorRecordConstructor` translates a decoded ROM `$F1` packet from
-animation `$8F` into the 21-byte actor record built by bank `$14` code
-`$80AA–$8127`. It uses hash-checked copies of the `$88E4`, `$A1B4`, and `$AC47`
-pointer-table prefixes; it does not read the ROM, emulator state, actor RAM
-snapshots, or a frame-number fixture at runtime.
+`RomF1ActorRecordConstructor` translates decoded ROM `$F1` packets from
+animations `$8F`, `$4E`, `$66`, and `$E6` into the 21-byte actor record built by bank
+`$14` code `$80AA–$8127`. It uses hash-checked copies of the `$88E4`, `$A1B4`,
+and `$AC47` pointer tables through the largest verified `$66` operands; it
+does not read the ROM, emulator state, actor RAM snapshots, or a frame-number
+fixture at runtime.
 
 The packet fields follow the byte-checked constructor path:
 
@@ -43,6 +44,45 @@ by the manifest hashes. The packet data and constructor mapping agree with
 [`fresh_kickoff_actor_initialization_rom_audit_20261027.md`](../fresh_kickoff_actor_initialization_rom_audit_20261027.md)
 and [`first_command_actor_writer_trace_source_map_20261027.md`](../first_command_actor_writer_trace_source_map_20261027.md).
 
+## Verified animation `$66` packet mapping
+
+The route stream is bank `$14`, CPU `$9441–$9455`, file offset
+`0x029451–0x029465`. Its source order is `$F5 $80`, `$F4 04 05 22 00`, an
+`$F1` packet at `$9448`, a six-tick wait at `$944E`, a second `$F1` packet at
+`$944F`, and `$F0`. The constructor now covers both packets and the expanded
+ROM pointer tables through motion index `$A9` and appearance index `$C4`.
+
+| Packet file offset | Record / base | Motion index → pointer | Appearance index → pointer | Active | packet positions |
+| ---: | --- | --- | --- | ---: | --- |
+| `0x029458` | `$01` / `$055C` | `$5D` → `$A692` | `$31` → `$AF81` | `$80` | `$B0,$D3` |
+| `0x02945F` | `$00` / `$0547` | `$A9` → `$A96E` | `$C4` → `$B537` | `$80` | `$B8,$DB` |
+
+These values are decoded from the animation `$66` ROM packet bytes and the
+pointer entries at `$A1B4 + index*2` and `$AC47 + index*2`. The expanded table
+resources retain the original contiguous entries and are hash-checked by the
+same manifest. No FCEUX RAM or captured screenshot supplied the actor IDs or
+pointer values.
+
+## Verified animation `$E6->$78` packet mapping
+
+The scenario `$36` animation `$E6` redirects from `$A0A5` to `$961A` inside
+the `$78` span. Its six `$F1` packets use indices already covered by the
+hash-checked pointer tables:
+
+| Packet CPU address | Record / base | Motion index → pointer | Appearance index → pointer | Active | Packet positions |
+| ---: | --- | --- | --- | ---: | --- |
+| `$961F` | `$03` / `$0586` | `$62` → `$A6C7` | `$5E` → `$B0B7` | `$81` | `$20,$BB` |
+| `$9625` | `$02` / `$0571` | `$62` → `$A6C7` | `$5D` → `$B0B4` | `$81` | `$20,$BB` |
+| `$962B` | `$01` / `$055C` | `$62` → `$A6C7` | `$5C` → `$B0B1` | `$81` | `$20,$BB` |
+| `$9631` | `$00` / `$0547` | `$63` → `$A6CE` | `$49` → `$B01E` | `$80` | `$A0,$9F` |
+| `$9643` | `$01` / `$055C` | `$00` → `$A38A` | `$85` → `$B2EF` | `$81` | `$08,$BB` |
+| `$964A` | `$01` / `$055C` | `$8E` → `$A865` | `$84` → `$B2E0` | `$81` | `$0C,$BB` |
+
+These pointers come from the existing contiguous `$A1B4/$AC47/$88E4` ROM
+tables. The live actor-init executor additionally applies the `$78` command
+schedule, `$F6` removals, and source waits; the executor's full recorded-route
+parity remains subject to the route verifier and later actor/OAM work.
+
 ## Boundary
 
 This component closes only the source `$F1` packet → zeroed actor-record
@@ -59,3 +99,6 @@ Run the focused source check with:
 ```sh
 godot --headless --path . --script tools/diagnostics/verify_rom_f1_actor_record_constructor.gd
 ```
+
+The diagnostic checks the five `$8F` packets and both `$66` packets against the
+ROM-derived record pointers and 21-byte constructor output.

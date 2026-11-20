@@ -18,6 +18,7 @@
       "$1E",
       "$35",
       "$36",
+      "$38",
       "$44",
       "$15"
     ]
@@ -117,6 +118,41 @@
       ]
     },
     {
+      "scenario_id": "$38",
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/scenario_38.bin",
+      "prg_bank": "$10",
+      "start_pointer_entry_id": "$38",
+      "start_cpu_address": "0xB7C6",
+      "start_pointer_entry": {
+        "table_cpu_address": "0x89BF",
+        "table_file_offset": "0x020A3F",
+        "length_bytes": 2,
+        "bytes_hex": "C6 B7",
+        "sha256": "06c441c4f9845c69b60a2967047bc5e2a878f296f2d6a975b3ed4b537a63aaac"
+      },
+      "end_boundary_pointer_entry_ids": [
+        "$35"
+      ],
+      "end_cpu_address_exclusive": "0xB7CD",
+      "file_offset": "0x0237D6",
+      "end_file_offset_exclusive": "0x0237DD",
+      "length_bytes": 7,
+      "sha256": "63ad2f03483843a538c92e33da4917356fce555fb8b69875b042be85fa77bc76",
+      "bytes_hex": "F7 17 01 34 00 F0 FB",
+      "source_span_method": "scenario-$38 root through the smallest greater valid CPU pointer among all 256 bank-$10 table entries, exclusive",
+      "decoded_scope": {
+        "root_record_file_offset": "0x0237D6",
+        "root_record_length_bytes": 5,
+        "root_record_bytes_hex": "F7 17 01 34 00",
+        "record_selector": "$F7 record selects callback $34, as identified by the existing static source audit",
+        "audit_source": "reference/rom_extract/gameplay/first_pass_action_trace_20261110.md",
+        "unresolved": [
+          "Other root-record operand meanings are not assigned by this extraction.",
+          "Callback $34 implementation, scenario continuation, scheduler return, frame timing, PPU output, and APU output remain unresolved."
+        ]
+      }
+    },
+    {
       "scenario_id": "$44",
       "path": "reference/rom_extract/gameplay/first_command_scenarios/scenario_44.bin",
       "prg_bank": "$10",
@@ -199,11 +235,11 @@
       "prg_bank_listing": "$FF",
       "cpu_address": "0xE233",
       "file_offset": "0x03E243",
-      "scenario_id": "$1E",
       "length_bytes": 5,
       "bytes_hex": "A9 1E 20 B0 CB",
       "sha256": "c555582aed5266d64dff580f1eba839b61b132d49e110feed0abf0c1babfdc74",
-      "description": "Immediate scenario ID $1E followed by JSR $CBB0."
+      "description": "Immediate scenario ID $1E followed by JSR $CBB0.",
+      "scenario_id": "$1E"
     },
     {
       "name": "scenario_36_fresh_kickoff",
@@ -211,17 +247,29 @@
       "prg_bank_listing": "$FF",
       "cpu_address": "0xDB0E",
       "file_offset": "0x03DB1E",
-      "scenario_id": "$36",
       "length_bytes": 5,
       "bytes_hex": "A9 36 20 B0 CB",
       "sha256": "e5d260e080d1d429cc5e76b4685426857a78b3bc6739f9b923cc5cb3e538ed94",
-      "description": "Fresh-match caller loads scenario ID $36 and calls fixed-bank $CBB0."
+      "description": "Fresh-match caller loads scenario ID $36 and calls fixed-bank $CBB0.",
+      "scenario_id": "$36"
+    },
+    {
+      "name": "scenario_36_post_queue_handoff",
+      "path": "reference/rom_extract/gameplay/first_command_scenarios/entry_root_scenario_36_post_queue_handoff.bin",
+      "prg_bank_listing": "$FF",
+      "cpu_address": "0xDB13",
+      "file_offset": "0x03DB23",
+      "length_bytes": 17,
+      "bytes_hex": "AD FC 05 8D 41 04 A9 01 8D FD 05 A2 50 9A 4C DF E0",
+      "sha256": "fc1b091fdb5a999f2bb40cf5b473fdd4963a35e9dba1582e5bc46fe90a840cd9",
+      "description": "After the scenario-$36 queue helper returns at $CBC1, copies $05FC to the ball-holder slot, sets $05FD, resets SP, and jumps to $E0DF."
     }
   ],
   "format_notes": [
     "The extracted scenario bytes are preserved without interpretation or rewriting.",
     "The listed event-record anchors are source byte indexes only; they do not encode frame timing or establish runtime semantics.",
     "Scenario $1E is rooted by the byte sequence A9 1E 20 B0 CB at fixed-bank CPU $E233 / file 0x03E243.",
-    "Fresh-match scenario $36 is rooted by A9 36 20 B0 CB at fixed-bank CPU $DB0E / file 0x03DB1E."
+    "Fresh-match scenario $36 is rooted by A9 36 20 B0 CB at fixed-bank CPU $DB0E / file 0x03DB1E.",
+    "Scenario $38 is rooted at pointer-table file offset 0x020A3F ($B7C6), and ends at the smallest greater valid pointer, $B7CD from entry $35. Its seven-byte stream begins F7 17 01 34 00; the existing static source audit identifies callback selector $34. Callback behavior and timing remain unresolved."
   ]
 }

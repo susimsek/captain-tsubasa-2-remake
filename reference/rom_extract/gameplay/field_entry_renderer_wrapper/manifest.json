@@ -1,0 +1,97 @@
+{
+  "schema": "ct2-field-entry-renderer-wrapper-source-v1",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "mapping": "iNES PRG starts at 0x0010; fixed bank $1F maps CPU $E000-$FFFF.",
+  "scope": "The fresh field-entry descriptor-$00 call at `$E0DF`, descriptor-$01 call at `$E0E4`, fixed-bank field setup from `$E0E9` through `$E349`, and bank-$1C `$8024->$82CA` minimap source; asynchronous renderer workers, NMI, and PPU output remain separate source effects.",
+  "spans": [
+    {
+      "file": "fixed_field_entry_first_wrapper_E0DF_E0E4.bin",
+      "bank": "0x1F",
+      "window": "fixed",
+      "cpu_start": "0xE0DF",
+      "cpu_end_exclusive": "0xE0E4",
+      "file_offset": "0x03E0EF",
+      "length": 5,
+      "sha256": "8988952df5477e6c5bf86bfe4bd64d0116b2ff652bbf50d9d4298708cbdb0d12",
+      "description": "ROM code: LDA #$00 selects descriptor $00, then JSR $EF7F enters the fixed renderer wrapper.",
+      "bytes": "a9 00 20 7f ef"
+    },
+    {
+      "file": "fixed_field_entry_descriptor01_call_E0E4_E0E9.bin",
+      "bank": "0x1F",
+      "window": "fixed",
+      "cpu_start": "0xE0E4",
+      "cpu_end_exclusive": "0xE0E9",
+      "file_offset": "0x03E0F4",
+      "length": 5,
+      "sha256": "a7ab7907c755f42d77ea782327d3f104258f9191dd333779c9af45c2f6db300a",
+      "description": "ROM code: after descriptor $00 returns, LDA #$01 selects descriptor $01 and JSR $EF7F enters the second renderer call.",
+      "bytes": "a9 01 20 7f ef"
+    },
+    {
+      "file": "fixed_field_entry_setup_E0E9_E349.bin",
+      "bank": "0x1F",
+      "window": "fixed",
+      "cpu_start": "0xE0E9",
+      "cpu_end_exclusive": "0xE349",
+      "file_offset": "0x03E0F9",
+      "length": 608,
+      "sha256": "069aa6c733b9de0a6070e280f89277a4ec192f1c551001fb787e9038244806de",
+      "description": "Fixed-bank ROM source from the post-render `$E233` field-setup call through the `$E349` input-loop entry.",
+      "bytes": "20 33 e2 a9 0a 8d 14 06 a9 ff 8d 2a 06 20 ec e6 a0 40 a2 00 8e 4e 04 8e 00 06 ad 41 04 c9 0b 90 04 a2 0b a0 00 8e fb 05 8c 17 05 8a d0 0e 2c 4c 04 10 26 8d 4c 04 8d f1 03 4c 42 e1 a9 00 8d 42 04 20 99 ce 8d fd 05 ad 41 04 20 7c cd a9 05 a0 09 91 34 ad fe 05 8d 17 06 20 67 e2 a9 01 20 0f cb 20 49 e3 ad 14 06 f0 06 ce 14 06 4c 45 e1 a9 0a 8d 14 06 ad 1c 00 29 0f f0 22 48 a2 20 ad 41 04 ac fb 05 f0 05 a2 22 ad fd 05 20 08 ce 68 48 a0 05 20 f5 e8 68 4a 4a a0 07 20 f5 e8 20 ec e6 ad 41 04 c9 0b 90 57 ad fe 05 cd 17 06 f0 4f 8d 17 06 a9 00 8d 21 06 48 a5 22 a9 1c 85 24 a9 1d 85 25 20 2d ce 68 20 06 80 ad 3b 04 c9 02 f0 2e 48 a5 22 a9 1a 85 24 a9 1b 85 25 20 2d ce 68 20 21 80 20 46 cc a9 00 8d 2d 06 8d 15 06 a9 1a 85 24 a9 1b 85 25 20 2d ce a2 50 9a 4c 27 80 a2 00 8e ff 05 e8 8a 20 93 d1 20 7d e2 ee 13 06 20 bc e2 20 07 e4 2c 4b 04 10 1c ad fb 05 d0 17 2c 35 06 10 12 48 a5 22 a9 1a 85 24 a9 1b 85 25 20 2d ce 68 20 39 80 48 a5 22 a9 1a 85 24 a9 1b 85 25 20 2d ce 68 20 33 80 4c 45 e1 a9 1e 20 b0 cb 48 a5 22 a9 1c 85 24 a9 1d 85 25 20 2d ce 68 20 24 80 20 67 e2 a9 80 8d 15 06 8d 2d 06 a9 00 8d 42 06 8d 43 06 a9 02 85 8e a9 01 8d 69 04 60 ad fb 05 f0 0b a9 31 20 7f ef a9 32 20 7f ef 60 a9 30 20 7f ef 60 20 77 cd a0 0a b1 34 d0 1c ae 35 06 ac 37 06 ad fb 05 f0 05 8a 49 ff aa e8 e0 c4 90 08 c0 74 90 04 c0 8c 90 01 60 a9 00 8d 2d 06 8d 15 06 a9 1a 85 24 a9 1b 85 25 20 2d ce a2 50 9a 4c 09 80 ee 18 06 ad 18 06 c9 01 90 4f a9 00 8d 18 06 48 cd 41 04 f0 3c a2 00 20 08 ce a2 02 a0 00 b1 34 a0 01 c9 20 d0 0a a2 01 b1 34 c8 11 34 f0 22 88 8a 18 71 34 aa c8 b1 34 69 00 a8 38 8a e5 32 98 e5 33 90 04 a6 32 a4 33 98 a0 02 91 34 8a 88 91 34 68 18 69 01 c9 0b d0 b6 ad 41 04 c9 0b b0 2c 20 7c cd a2 03 a0 00 b1 34 c9 20 d0 02 a2 05 86 3a a0 01 b1 34 38 e5 3a aa c8 b1 34 e9 00 b0 03 a2 00 8a 91 34 8a 88 91 34 20 67 e2 60"
+    },
+    {
+      "file": "bank1c_minimap_vector_8024_8027.bin",
+      "bank": "0x1C",
+      "window": "switchable-$8000",
+      "cpu_start": "0x8024",
+      "cpu_end_exclusive": "0x8027",
+      "file_offset": "0x038034",
+      "length": 3,
+      "sha256": "3fc1852a2f27a5e7edaa250c130b8897d38a4e534a44a03bdade64ce4a6fb4b0",
+      "description": "ROM jump vector selected by fixed-bank `$E247 JSR $8024`; routes to minimap loader `$82CA`.",
+      "bytes": "4c ca 82"
+    },
+    {
+      "file": "bank1c_minimap_loader_82ca_834a.bin",
+      "bank": "0x1C",
+      "window": "switchable-$8000",
+      "cpu_start": "0x82CA",
+      "cpu_end_exclusive": "0x834A",
+      "file_offset": "0x0382DA",
+      "length": 128,
+      "sha256": "f703a26d854b60578d8174843a44689b39669e1100b659a187c793ede90c15b8",
+      "description": "ROM code for the 12-row minimap setup, including `$C52D` wait helper, `$04A5` packet builder calls, `$0515` buffer handshake, and the `$834A` tile-table pointer.",
+      "bytes": "20 2d c5 a9 00 85 11 85 12 a9 4a 85 61 a9 83 85 62 a9 00 48 a9 01 20 15 c5 ad 15 05 d0 f6 a9 01 8d 15 05 68 48 a2 00 20 0a 83 68 18 69 01 48 20 0a 83 a9 80 8d 15 05 68 18 69 01 c9 0c d0 d4 60 48 a9 18 9d a5 04 a9 40 9d a6 04 68 18 69 11 4a 7e a6 04 4a 7e a6 04 4a 7e a6 04 09 20 9d a7 04 e8 e8 e8 a0 00 b1 61 9d a5 04 e8 c8 c0 18 d0 f5 a9 00 9d a5 04 98 18 65 61 85 61 90 02 e6 62 60"
+    },
+    {
+      "file": "bank1c_minimap_tiles_834a_846a.bin",
+      "bank": "0x1C",
+      "window": "switchable-$8000",
+      "cpu_start": "0x834A",
+      "cpu_end_exclusive": "0x846A",
+      "file_offset": "0x03835A",
+      "length": 288,
+      "sha256": "3b0901589a4bf451e4135e24001a9e3b710d513601294df614984d68acb66235",
+      "description": "ROM tile-ID table read by the minimap row producer: 12 rows \u00d7 24 tiles, before full-pitch drawing replaces the lower-screen area.",
+      "bytes": "00 00 c9 d2 d2 d2 d2 d2 d2 d2 d2 d2 c9 d2 d2 d2 d2 d2 d2 d2 d2 d2 d0 00 00 00 cc ff ff ff ff ff ff ff ff ff cc ff ff ff ff ff ff ff ff ff d0 00 00 00 c9 d2 d2 d2 cc ff ff ff ff ff cc ff ff ff ff ff c9 d2 d2 d2 d0 00 00 00 cc ff ff ff cc ff ff ff ff ff cc ff ff ff ff ff cc ff ff ff d0 00 00 00 c9 d2 cc ff cc ff ff ff c0 c1 c4 c5 ff ff ff ff cc ff c9 d2 d0 00 00 c9 cc ff cc ff cc ff ff ff c2 ff cc c7 ff ff ff ff cc ff cc ff c9 d0 00 c6 cc ff cc ff cc ff ff ff c8 ff cc cd ff ff ff ff cc ff cc ff c6 d0 00 00 c6 c3 cc ff cc ff ff ff ca cb ce cf ff ff ff ff cc ff c6 c3 d0 00 00 00 cc ff ff ff cc ff ff ff ff ff cc ff ff ff ff ff cc ff ff ff d0 00 00 00 c6 c3 c3 c3 cc ff ff ff ff ff cc ff ff ff ff ff c6 c3 c3 c3 d0 00 00 00 cc ff ff ff ff ff ff ff ff ff cc ff ff ff ff ff ff ff ff ff d0 00 00 00 c6 c3 c3 c3 c3 c3 c3 c3 c3 c3 c6 c3 c3 c3 c3 c3 c3 c3 c3 c3 d0 00"
+    },
+    {
+      "file": "fixed_shared_waiter_CC46_CCD2.bin",
+      "bank": "0x1E",
+      "window": "fixed",
+      "cpu_start": "0xCC46",
+      "cpu_end_exclusive": "0xCCD2",
+      "file_offset": "0x03CC56",
+      "length": 140,
+      "sha256": "21a4cd33eb56fe3d4da516e0eff910ff375a8d7c3ff42bfa46dfb691a846d5cc",
+      "description": "Shared ROM wait/PPU-packet helper reached by `$C52D`; covers `$CC50`, `$CCA0`, and `$CCCE` scheduler yields through the source `$CCD1 RTS`.",
+      "bytes": "a9 00 8d f4 05 a9 06 48 a9 01 20 0f cb ad 15 05 d0 f6 a9 01 8d 15 05 a0 4f a2 00 8a 9d a5 04 e8 88 d0 f9 a9 18 8d a5 04 8d c0 04 a9 20 8d a6 04 68 48 09 08 4a 6e a6 04 4a 6e a6 04 09 20 8d a7 04 8d c2 04 ad a6 04 18 69 20 8d c1 04 a9 80 8d 15 05 68 38 e9 01 10 af a9 01 20 0f cb ad 15 05 d0 f6 a9 01 8d 15 05 a9 20 8d a5 04 a9 e0 8d a6 04 a9 23 8d a7 04 a2 00 8a 9d a8 04 e8 e0 21 d0 f8 a9 80 8d 15 05 a9 01 20 0f cb 60"
+    }
+  ],
+  "limitations": [
+    "The packaged fixed-bank span ends at `$E349`, at field-loop input entry; it does not model the complete field loop, NMI cadence, or PPU output.",
+    "The minimap's cooperative row execution and PPU/NMI transfer still require a connected runtime path.",
+    "Emulator traces are comparison evidence only; runtime executes the extracted ROM bytes and decoded fixed wrapper."
+  ]
+}

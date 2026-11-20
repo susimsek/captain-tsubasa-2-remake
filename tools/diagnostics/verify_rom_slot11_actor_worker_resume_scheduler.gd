@@ -58,6 +58,288 @@ func _verify() -> bool:
 			or not bool(saved.get("preexisting_jsr_frame_reused", false)) \
 			or bool(saved.get("source_ram_image_copied", true)):
 		return _fail("Scheduler's `$CB0F` save changed the task record, call frame, scan state, or saved registers.")
+	if not _verify_scenario1c_f0_zero_mode_gate(scheduler):
+		return false
+	if not _verify_scenario1c_f0_inactive_zero_mode_resume():
+		return false
+	if not _verify_scenario1e_actor58_f4_zero_idle_resume():
+		return false
+	return true
+
+
+func _verify_scenario1c_f0_inactive_zero_mode_resume() -> bool:
+	var scheduler = SCHEDULER.new()
+	if not scheduler.configure_from_project_sources() \
+			or not bool(scheduler.initialize_fresh_game_bootstrap().get("ok", false)):
+		return _fail("Scenario-$1C inactive zero-mode scheduler setup failed: " + scheduler.error_message)
+	var ram: PackedByteArray = scheduler._ram.duplicate()
+	var stack: PackedByteArray = scheduler._stack_page.duplicate()
+	ram[0x0000] = 0x11
+	ram[0x0011] = 0x00
+	ram[0x0012] = 0xC6
+	ram[0x0013] = 0x18
+	ram[0x0014] = 0x19
+	ram[0x0022] = 0x00
+	ram[0x005F] = 0x00
+	ram[0x0060] = 0x94
+	ram[0x0063] = 0xD7
+	ram[0x0064] = 0xA2
+	ram[0x0515] = 0x00
+	ram[0x05E3] = 0x00
+	ram[0x05E4] = 0x00
+	ram[0x05E5] = 0x02
+	ram[0x05E6] = 0x0E
+	ram[0x05E7] = 0x02
+	ram[0x05E8] = 0x02
+	ram[0x05E9] = 0x00
+	ram[0x05EA] = 0x00
+	ram[0x05F3] = 0x01
+	ram[0x05F4] = 0x00
+	ram[0x05F5] = 0x01
+	stack[0xC7] = 0x02
+	stack[0xC8] = 0x21
+	stack[0xC9] = 0x49
+	stack[0xCA] = 0x80
+	for offset in 0x100:
+		ram[0x0100 + offset] = stack[offset]
+	scheduler._ram = ram
+	scheduler._stack_page = stack
+	var context = SCHEDULER.TaskContext.new()
+	context.slot_base = 0x11
+	context.ready_delay = 0
+	context.phase = 2
+	context.pending_resume = 0
+	context.program_counter = 0x804A
+	context.stack_pointer = 0xCA
+	context.accumulator = 0x21
+	context.x_register = 0x21
+	context.y_register = 0x02
+	context.status_register = 0x20
+	context.status_known_mask = 0x83
+	context.bank_low = 0x18
+	context.bank_high = 0x19
+	context.mapper_state = {"select": 7, "bank_low": 0x18, "bank_high": 0x19,
+		"bank_registers": {6: 0x18, 7: 0x19}}
+	context.source_label = "synthetic recorded scenario-$1C F0 inactive zero-mode boundary"
+	scheduler._contexts[0x11] = context
+	scheduler._active_task_slot = 0x11
+	var executor = EXECUTOR.new()
+	if not executor.configure_from_project_sources():
+		return _fail("Scenario-$1C inactive zero-mode source setup failed: " + executor.error_message)
+	var boundary: Dictionary = scheduler.get_task_boundary_snapshot(0x11)
+	var worker: Dictionary = executor.execute_from_slot11_animation_countdown_boundary(boundary)
+	if not bool(worker.get("ok", false)) \
+			or String(worker.get("status", "")) != "slot11_actor_scenario1c_f0_inactive_zero_mode_resume_at_8047" \
+			or int(worker.get("exit_pc", -1)) != 0x8047:
+		return _fail("Scenario-$1C inactive zero-mode executor failed: " \
+				+ str(worker.get("reason", worker.get("error", "unknown error"))))
+	var adopted: Dictionary = scheduler.apply_slot11_f5_animation_countdown_result(worker)
+	var saved: Dictionary = adopted.get("saved_boundary", {})
+	if not bool(adopted.get("ok", false)) \
+			or String(adopted.get("status", "")) != "slot11_actor_rom_stream_delay_saved_at_cb0f" \
+			or int(adopted.get("callsite_pc", -1)) != 0x8047 \
+			or int(saved.get("pc", -1)) != 0xCB0F \
+			or int(saved.get("sp", -1)) != 0xC6 \
+			or bool(adopted.get("trace_state_used", true)):
+		return _fail("Scenario-$1C inactive zero-mode adoption failed: " + scheduler.error_message \
+				+ " adoption=" + JSON.stringify({"ok": adopted.get("ok", false),
+					"status": adopted.get("status", ""), "callsite_pc": adopted.get("callsite_pc", -1),
+					"saved": saved, "trace_state_used": adopted.get("trace_state_used", true)}))
+	print("PASS: scenario-$1C F0 inactive worker follows `$804A->$8053 RTS->$A1EB F4=0 RTS->$8047->$CB0F`.")
+	print("LIMIT: this focused boundary fixture is synthetic; full recorded-input replay establishes route reachability.")
+	return true
+
+
+func _verify_scenario1e_actor58_f4_zero_idle_resume() -> bool:
+	var scheduler = SCHEDULER.new()
+	if not scheduler.configure_from_project_sources() \
+			or not bool(scheduler.initialize_fresh_game_bootstrap().get("ok", false)):
+		return _fail("Scenario-$1E actor-$58 idle scheduler setup failed: " + scheduler.error_message)
+	var ram: PackedByteArray = scheduler._ram.duplicate()
+	var stack: PackedByteArray = scheduler._stack_page.duplicate()
+	ram[0x0000] = 0x11
+	ram[0x0011] = 0x00
+	ram[0x0012] = 0xC6
+	ram[0x0013] = 0x18
+	ram[0x0014] = 0x19
+	ram[0x0022] = 0x00
+	ram[0x005D] = 0xE3
+	ram[0x005E] = 0xB7
+	ram[0x005F] = 0x62
+	ram[0x0060] = 0x9A
+	ram[0x0063] = 0xBC
+	ram[0x0064] = 0xA2
+	ram[0x0065] = 0x00
+	ram[0x0515] = 0x80
+	ram[0x0516] = 0x00
+	ram[0x0517] = 0x40
+	ram[0x0518] = 0x1E
+	ram[0x0519] = 0x00
+	ram[0x051A] = 0xE8
+	ram[0x051B] = 0x9B
+	ram[0x051C] = 0x00
+	ram[0x0522] = 0x00
+	ram[0x0523] = 0x07
+	ram[0x0524] = 0x45
+	ram[0x0525] = 0x06
+	ram[0x0526] = 0x00
+	ram[0x0527] = 0x3C
+	ram[0x0528] = 0x90
+	ram[0x0529] = 0xFF
+	ram[0x052A] = 0x00
+	ram[0x05E3] = 0x00
+	ram[0x05E4] = 0x00
+	ram[0x05E5] = 0x0E
+	ram[0x05E6] = 0x0E
+	ram[0x05E7] = 0x02
+	ram[0x05E8] = 0x02
+	ram[0x05E9] = 0x00
+	ram[0x05EA] = 0x58
+	ram[0x05F3] = 0x00
+	ram[0x05F4] = 0x00
+	ram[0x05F5] = 0x01
+	ram[0x0629] = 0x00
+	stack[0xC7] = 0x04
+	stack[0xC8] = 0x04
+	stack[0xC9] = 0x49
+	stack[0xCA] = 0x80
+	for offset in 0x100:
+		ram[0x0100 + offset] = stack[offset]
+	scheduler._ram = ram
+	scheduler._stack_page = stack
+	var context = SCHEDULER.TaskContext.new()
+	context.slot_base = 0x11
+	context.ready_delay = 0
+	context.phase = 2
+	context.pending_resume = 0
+	context.program_counter = 0x804A
+	context.stack_pointer = 0xCA
+	context.accumulator = 0x04
+	context.x_register = 0x04
+	context.y_register = 0x04
+	context.status_register = 0x20
+	context.status_known_mask = 0x83
+	context.bank_low = 0x18
+	context.bank_high = 0x19
+	context.mapper_state = {"select": 7, "bank_low": 0x18, "bank_high": 0x19,
+		"bank_registers": {6: 0x18, 7: 0x19}}
+	context.source_label = "synthetic scenario-$1E actor-$58 F4=0 idle resume boundary"
+	scheduler._contexts[0x11] = context
+	scheduler._active_task_slot = 0x11
+	var executor = EXECUTOR.new()
+	if not executor.configure_from_project_sources():
+		return _fail("Scenario-$1E actor-$58 idle source setup failed: " + executor.error_message)
+	var boundary: Dictionary = scheduler.get_task_boundary_snapshot(0x11)
+	var worker: Dictionary = executor.execute_from_slot11_animation_countdown_boundary(boundary)
+	if not bool(worker.get("ok", false)) \
+			or String(worker.get("status", "")) != "slot11_actor_scenario1e_actor58_inactive_zero_mode_resume_at_8047" \
+			or int(worker.get("exit_pc", -1)) != 0x8047:
+		return _fail("Scenario-$1E actor-$58 F4=0 idle executor failed: " \
+				+ str(worker.get("reason", worker.get("error", "unknown error"))))
+	var adopted: Dictionary = scheduler.apply_slot11_f5_animation_countdown_result(worker)
+	var saved: Dictionary = adopted.get("saved_boundary", {})
+	if not bool(adopted.get("ok", false)) \
+			or String(adopted.get("status", "")) != "slot11_actor_rom_stream_delay_saved_at_cb0f" \
+			or int(adopted.get("callsite_pc", -1)) != 0x8047 \
+			or int(saved.get("pc", -1)) != 0xCB0F \
+			or int(scheduler._ram[0x05F5]) != 0x01 \
+			or scheduler._ram.slice(0x0063, 0x0065) != PackedByteArray([0xBC, 0xA2]) \
+			or int(scheduler._ram[0x0515]) != 0x80 \
+			or bool(adopted.get("trace_state_used", true)):
+		return _fail("Scenario-$1E actor-$58 idle scheduler adoption failed: " + scheduler.error_message \
+				+ " adoption=" + JSON.stringify({"ok": adopted.get("ok", false),
+					"status": adopted.get("status", ""), "callsite_pc": adopted.get("callsite_pc", -1),
+					"saved": saved, "trace_state_used": adopted.get("trace_state_used", true)}))
+	print("PASS: scenario-$1E actor-$58 F4=0 follows `$804A->$8053 RTS->$A1EB RTS->$8047->$CB0F` without advancing `$A2BC` or `$05F5`.")
+	print("LIMIT: this focused boundary fixture is synthetic; only recorded-input route replay establishes production reachability.")
+	return true
+
+
+func _verify_scenario1c_f0_zero_mode_gate(scheduler) -> bool:
+	var ram := PackedByteArray()
+	ram.resize(0x800)
+	var stack := PackedByteArray()
+	stack.resize(0x100)
+	ram[0x0000] = 0x11
+	ram[0x0011] = 0x00
+	ram[0x0012] = 0xC2
+	ram[0x0013] = 0x18
+	ram[0x0014] = 0x19
+	ram[0x005F] = 0x00
+	ram[0x0060] = 0x94
+	ram[0x0022] = 0x00
+	ram[0x0515] = 0x00
+	ram[0x0516] = 0x61
+	ram[0x0517] = 0x40
+	ram[0x0518] = 0x1C
+	ram[0x0519] = 0x26
+	ram[0x05E3] = 0x00
+	ram[0x05E4] = 0x00
+	ram[0x05E5] = 0x02
+	ram[0x05E6] = 0x0E
+	ram[0x05E7] = 0x02
+	ram[0x05E8] = 0x02
+	ram[0x05E9] = 0x00
+	ram[0x05EA] = 0x00
+	ram[0x05F3] = 0x01
+	ram[0x05F4] = 0x00
+	ram[0x05F5] = 0x01
+	ram[0x0063] = 0xD7
+	ram[0x0064] = 0xA2
+	stack[0xC7] = 0x7C
+	stack[0xC8] = 0x80
+	stack[0xC9] = 0x4C
+	stack[0xCA] = 0x80
+	for offset in 0x100:
+		ram[0x0100 + offset] = stack[offset]
+	scheduler._ram = ram.duplicate()
+	scheduler._stack_page = stack.duplicate()
+	scheduler._ram[0x0100 + 0xC7] = 0x7C
+	scheduler._ram[0x0100 + 0xC8] = 0x80
+	scheduler._ram[0x0100 + 0xC9] = 0x4C
+	scheduler._ram[0x0100 + 0xCA] = 0x80
+	var context = SCHEDULER.TaskContext.new()
+	context.slot_base = 0x11
+	context.ready_delay = 0
+	context.phase = 2
+	context.pending_resume = 0
+	context.program_counter = 0x804D
+	context.stack_pointer = 0xCA
+	context.accumulator = 0x80
+	context.x_register = 0x21
+	context.y_register = 0x02
+	context.status_register = 0xA0
+	context.status_known_mask = 0x83
+	context.bank_low = 0x18
+	context.bank_high = 0x19
+	context.mapper_state = {"select": 7, "bank_low": 0x18, "bank_high": 0x19,
+		"bank_registers": {6: 0x18, 7: 0x19}}
+	context.source_label = "synthetic recorded slot-$11 scenario-$1C F0 gate boundary"
+	scheduler._contexts[0x11] = context
+	scheduler._active_task_slot = 0x11
+	var executor = EXECUTOR.new()
+	if not executor.configure_from_project_sources():
+		return _fail("Scenario-$1C F0 gate source setup failed: " + executor.error_message)
+	var worker: Dictionary = executor.execute_from_slot11_f5_animation_gate_boundary(
+		scheduler.get_task_boundary_snapshot(0x11))
+	if not bool(worker.get("ok", false)) \
+			or String(worker.get("status", "")) != "slot11_actor_scenario1c_f0_zero_mode_gate_at_8047" \
+			or int(worker.get("exit_pc", -1)) != 0x8047:
+		return _fail("Scenario-$1C F0 executor boundary failed: " + str(worker.get("reason", worker.get("error", "unknown error"))))
+	var adopted: Dictionary = scheduler.apply_slot11_actor_scenario1c_f0_zero_mode_gate_result(worker)
+	if not bool(adopted.get("ok", false)):
+		return _fail("Scheduler rejected the source-derived scenario-$1C F0 yield: " + scheduler.error_message)
+	var saved: Dictionary = adopted.get("saved_boundary", {})
+	if String(adopted.get("status", "")) != "slot11_actor_scenario1c_f0_zero_mode_gate_saved_at_cb0f" \
+			or int(adopted.get("callsite_pc", -1)) != 0x8047 \
+			or int(saved.get("pc", -1)) != 0xCB0F \
+			or bool(adopted.get("trace_state_used", true)):
+		return _fail("Scenario-$1C F0 adoption did not save its ROM callsite at `$CB0F`: " \
+				+ JSON.stringify({"adoption_status": adopted.get("status", ""),
+					"callsite_pc": adopted.get("callsite_pc", -1), "saved": saved,
+					"trace_state_used": adopted.get("trace_state_used", true)}))
+	print("PASS: scenario-$1C `$F0` zero-mode follows the `$804D->$C560->$A1EB RTS->$8047->$CB0F` source path and scheduler yield.")
+	print("LIMIT: the boundary fixture is synthetic; the recorded-input route remains the production reachability check.")
 	return true
 
 

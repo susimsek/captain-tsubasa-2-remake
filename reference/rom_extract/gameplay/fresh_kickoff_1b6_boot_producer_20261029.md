@@ -63,27 +63,45 @@ disabled audio. The trace is used only as independent
 execution evidence; no screenshots, captured audio, or emulator state is
 included in the source manifest.
 
+## Godot source receipt
+
+`scripts/gameplay/rom_fresh_kickoff_nmi_mode_producer.gd` now validates the
+reset tail, `$CEFE->$C400` setup, `$C4B9` bank-$02 selection, `$C41E->$A200`
+bridge, and `$A21B` setter against their source manifests and hashes. It
+consumes the ROM reset-zero receipt for `$001B` and emits the ROM write at
+`$A228` (`$001B=$40`, post-instruction PC `$A22A`). It also checks the
+bank-$02 `$A133` OR-$80 writer and the fixed-bank `$9F0A` AND-$7F writer; both
+preserve bits 0–6. The production route carries only known mask `$7F`, value
+`$40`, into its sparse RAM ledger; bit 7 remains unknown.
+
+The focused Godot verifier
+[`verify_rom_fresh_kickoff_nmi_mode_producer.gd`](../../../tools/diagnostics/verify_rom_fresh_kickoff_nmi_mode_producer.gd)
+passes its source-hash, reset-precondition, mode-writer invariant, partial-bit
+ledger, and trace-rejection checks. The recorded-input route verifier also
+passes and still stops at `$893B` on frame 7266: it knows `$001B & $7F=$40`,
+while bit 7 and `$003B` remain unknown. The retained muted two-pass
+FCEUX trace independently shows only the `$A135` and `$9F0C` `$001B` writers
+in frames 4693–7409; trace state is not consumed by the runtime.
+
 ## Relation to the `$0078` wait
 
 The prior [`$0078` wait audit](fresh_kickoff_0078_wait_20261029.md) shows that
 the alternate NMI path can service the wait only when `$001B.6` is set and
 `$003B.7` permits the service. The
 [wait-input audit](fresh_kickoff_audio_wait_input_audit_20261029.md) listed
-the setter caller as missing. This report resolves the cold-start producer
-and caller, but the actual value at `$893B` is still unproven: the existing
-KICK OFF trace does not have an `$001B` write hook over the intervening route,
-and it does not source-execute that route through `$8114->$8920`. The later
-`$C6E8` clear remains downstream of that wait on the mapped caller path; it
-does not establish that no other earlier writer ran.
+the setter caller as missing; this report resolves the cold-start caller. The
+later `$C6E8` clear remains downstream of the wait on the mapped caller path.
+The bit-level receipt plus the same-input writer census establish
+`$001B & $7F=$40` at the `$893B` boundary, but not `$001B.7` or the live
+`$003B` guard and interrupt context.
 
-The next required transition is to carry `$001B` from the verified
-cold-start setter through the title/cutscene caller to `$8114`, recording
-every `$001B` write with its PC and the live `$78/$79/$3B` state at the wait.
-Until then, the established fact is “cold-start sets bit 6,” not “the wait
-receives bit 6 set.”
+The next required transition is to produce the NMI/IRQ entry state and
+`$003B` history from ROM-owned events, release the `$0078` wait, and execute
+the `$895C->$8117` return. Do not infer those remaining inputs from the FCEUX
+snapshot.
 
 ## Scope
 
-This report uses the supplied ROM and existing muted trace records only. It
-does not edit or add runtime behavior, does not use emulator audio/screenshots,
-and does not claim a valid `$8920 RTS->$8117` return.
+This report uses the supplied ROM and existing muted trace records only. Its
+Godot source receipt does not use emulator audio/screenshots or trace state as
+a runtime input and does not claim a valid `$8920 RTS->$8117` return.

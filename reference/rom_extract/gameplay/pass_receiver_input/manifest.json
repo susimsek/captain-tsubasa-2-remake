@@ -1,0 +1,84 @@
+{
+  "schema": "ct2-pass-receiver-input-source-v1",
+  "name": "pass_receiver_input_source",
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_rom_size_bytes": 393232,
+  "runtime_source_kind": "ROM-derived instruction/data spans plus live source RAM; no emulator state as input",
+  "mapper": "MMC3",
+  "spans": [
+    {
+      "name": "pass_receiver_handler_and_direction_delta_table",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xD7E8",
+      "cpu_end_exclusive": "0xD8F7",
+      "file_offset": "0x03D7F8",
+      "length_bytes": 271,
+      "resource": "../first_action_menu_input/pass_receiver_handler_D7E8_D8F6.bin",
+      "sha256": "9ccc071c8af66e997b4fe1fe3613af4e764d756c35c6c96118ceba7faf034032",
+      "role": "Contains the $D80F post-input body, $D84E direction delta table, and $D852 selection routine."
+    },
+    {
+      "name": "receiver_candidate_scan",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xD8F7",
+      "cpu_end_exclusive": "0xD979",
+      "file_offset": "0x03D907",
+      "length_bytes": 130,
+      "resource": "pass_receiver_scan_D8F7_D978.bin",
+      "sha256": "516f3edfaef0868e42229d5f75c609596a21991962647d720037cd041c2d079a",
+      "role": "Scans global player slots, compares the ROM-derived $CDE2 tile index to $0624, writes candidate slots, and requests the matching descriptor redraw."
+    },
+    {
+      "name": "player_record_pointer_resolver",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xCD7C",
+      "cpu_end_exclusive": "0xCD89",
+      "file_offset": "0x03CD8C",
+      "length_bytes": 13,
+      "resource": "../fresh_bank18_worker_prefix/fixed_record_pointer_resolver_CD7C_CD89.bin",
+      "sha256": "8d7d8153252420175055aa5ef041e0e9dd85f99bb9dae8e24200e9549487ed24",
+      "role": "Doubles the live global slot and resolves its $0300+$0C*slot player-record address through $CD89."
+    },
+    {
+      "name": "player_record_pointer_table",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xCD89",
+      "cpu_end_exclusive": "0xCDB5",
+      "file_offset": "0x03CD99",
+      "length_bytes": 44,
+      "resource": "../first_command_field/player_record_positions/bank_1f_cd89_record_pointer_table_22.bin",
+      "sha256": "b09fe4a47e9910198fc6b2599caebe85071c4292d6f07f089d8dd7848b2e7185",
+      "role": "Twenty-two little-endian pointers to the live player records at $0300+$0C*slot."
+    },
+    {
+      "name": "coordinate_to_field_tile_helper",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xCDE2",
+      "cpu_end_exclusive": "0xCE08",
+      "file_offset": "0x03CDF2",
+      "length_bytes": 38,
+      "resource": "../first_command_field/holder_coordinates/bank_1f_cde2_coordinate_index_helper.bin",
+      "sha256": "e5f6dcb9f5d2451ba1770add2906daa504befaf7800e3bfe2e1b163708e58a83",
+      "role": "Maps live X/Y record bytes to the field tile index; out-of-field coordinates return $FF."
+    }
+  ],
+  "decoded_poll_contract": {
+    "entry_cpu": "0xD80F",
+    "entry_meaning": "Post-$CB0F input-latch boundary; $001C/$001E are the current polled pad masks.",
+    "direction_mask_order": ["Right", "Left", "Down", "Up"],
+    "direction_delta_bytes_at_D84E": [12, 244, 1, 255],
+    "down_observed_transition": {
+      "cursor_tile_before": 119,
+      "cursor_tile_after": 120,
+      "candidate_slot": 10
+    },
+    "confirm_exit_cpu": "0xD70C",
+    "confirm_selection_branch": "$D852 selects the single live candidate $0431 when $0625=$01, stores $05FC, copies $0624 to $0638, then returns carry set."
+  },
+  "boundary": {
+    "renderer_calls": "Returned as pending source events; EF7F/PPU writes are not executed by this component.",
+    "holder_transfer": "Not executed; the executor stops at $D70C entry.",
+    "cycle_timing": "Not modeled. FCEUX frame/cycle values are validation observations only."
+  }
+}

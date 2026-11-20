@@ -94,6 +94,50 @@ func preset_state() -> Dictionary:
 	}
 
 
+## Materialize the bounded RAM writes performed when the ROM handles E8 $01.
+## The caller provides the already-identified cutscene event; this does not use
+## emulator state or infer any unwritten RAM bytes.
+func e8_source_ram_write_receipt(source_event_id: String,
+		wait_latch_state: Dictionary) -> Dictionary:
+	if not _configured:
+		return {"ok": false, "error": "Configure the ROM E8 preset before requesting its RAM writes."}
+	if source_event_id.is_empty():
+		return {"ok": false, "error": "The ROM E8 preset receipt requires a source event identity."}
+	if not bool(wait_latch_state.get("known", false)) \
+			or int(wait_latch_state.get("value", -1)) != 0:
+		return {"ok": false, "error": "The ROM E8 `$01` loader cannot reach its copy writes without a source-derived `$78=0` wait state."}
+	var wait_latch_writer: Dictionary = wait_latch_state.get("last_write", {})
+	var wait_latch_source_pc := int(wait_latch_writer.get("source_pc", -1))
+	var wait_latch_source_event := String(wait_latch_writer.get("event_id", ""))
+	if wait_latch_source_pc < 0 or wait_latch_source_pc > 0xFFFF \
+			or wait_latch_source_event.is_empty():
+		return {"ok": false, "error": "The E8 `$01` wait state lacks a source-owned `$78=0` write receipt."}
+	var writes: Array[Dictionary] = [
+		{"source_pc": 0x8943, "address": 0x0079, "value": int(_preset[0])},
+		{"source_pc": 0x8948, "address": 0x007A, "value": 0},
+	]
+	for record_index in range(1, 19):
+		writes.append({"source_pc": 0x8950, "address": 0x007B + record_index,
+			"value": int(_preset[record_index])})
+	return {
+		"ok": true,
+		"kind": "rom_e8_preset_ram_writes",
+		"source_rom_sha256": SOURCE_ROM_SHA256,
+		"source_event_id": source_event_id,
+		"wait_latch_precondition": {"address": 0x0078, "value": 0,
+			"source_event_id": wait_latch_source_event,
+			"source_pc": wait_latch_source_pc,
+			"wait_source": "known zero from the live ROM RAM ledger; `$893B` busy-wait has completed"},
+		"source_path": [0x8578, 0x8920, 0x9DEE, 0x8925, 0x893B, 0x893F,
+			0x8943, 0x8948, 0x894E, 0x8950, 0x895C],
+		"preset_file_offset": PRESET_FILE_OFFSET,
+		"preset_sha256": "6f5c11292f773be033e28333f1fb2a1b5c60427f2079018ed1edbf0278441216",
+		"ram_writes": writes,
+		"trace_state_used": false,
+		"emulator_data_used": false,
+	}
+
+
 ## Decode the one camera triple reached by F9 `$0A`. This loads the source
 ## record, but the camera worker starts only after the background loader returns.
 ## Byte 0 is a two-release startup delay; byte 1 encodes a signed Q8.8 step and

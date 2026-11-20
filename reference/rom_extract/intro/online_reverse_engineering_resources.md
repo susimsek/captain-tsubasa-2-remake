@@ -1,6 +1,6 @@
 # Online CT2 reverse-engineering resources checked against this ROM
 
-Last checked: 2026-10-26 (initial review 2026-10-24)
+Last checked: 2026-11-01 (initial review 2026-10-24)
 
 ## Byte-verified disassembly
 
@@ -16,6 +16,12 @@ The local reference ROM has SHA-256 `4f1f74d495e86025a5ad17fec2c171f37a94541a7d8
 A broader coverage audit later counted 117,405 listed byte values across in-ROM annotated ranges (117,394 unique offsets, 117,382 matching and 12 differing). The record counts above are not byte counts; see [`disassembly_coverage_audit.md`](disassembly_coverage_audit.md) for ranges and build-layout limits. The comparison used repository revision [`ec03cf06e6bdae0bcd232e3a423e9d259757dc64`](https://github.com/cyneprepou4uk/Captain-Tsubasa-2-English-Translation/commit/ec03cf06e6bdae0bcd232e3a423e9d259757dc64).
 
 This verifies the corresponding code bytes, not every comment or table interpretation. It is strong evidence that those bank listings can be used to understand the Turkish ROM's common engine routines after confirming the address/bank context. A broader spot-check found non-matching records in `bank_82.asm`, `bank_98.asm`, and `bank_A7.asm`; do not assume every disassembly bank is the same revision or rely on its addresses without byte checks.
+
+### First-match NMI service spot-check — 2026-11-01
+
+For the unresolved `$C421` special-NMI route, the pinned disassembly provides a useful local annotation lead in [`bank_82.asm`](https://github.com/cyneprepou4uk/Captain-Tsubasa-2-English-Translation/blob/ec03cf06e6bdae0bcd232e3a423e9d259757dc64/bank_82.asm) and [`bank_FF.asm`](https://github.com/cyneprepou4uk/Captain-Tsubasa-2-English-Translation/blob/ec03cf06e6bdae0bcd232e3a423e9d259757dc64/bank_FF.asm). Its `02:A000` listing maps to file offset `0x004010`; 284 of the 319 bytes in the local `$A000-$A13E` source span are present as annotated machine bytes, and every listed byte matches the supplied Turkish ROM. Its `FF:C421` listing maps to file offset `0x03C431`; 48 of the 82 bytes in the local `$C421-$C472` span are annotated, again with no listed-byte mismatches. The unlisted bytes are not verified by this spot-check.
+
+The external labels describe `$A000` as the bank-$02 PPU/OAM and queue service, including the `$0628` queue marker, and show the `$C421` `$003B` test/skip branch. These labels help read the already hash-checked local spans; they do not prove the runtime path or its timing. The local source manifests and focused report [`fresh_kickoff_first_nmi_palette_packet_20261101.md`](../gameplay/fresh_kickoff_first_nmi_palette_packet_20261101.md) remain authoritative. This Russian-commented English-translation disassembly is a lead, not a complete byte-identical source for the Turkish ROM.
 
 ### Opening routines matched
 
@@ -547,3 +553,33 @@ WaveHi/filter accumulation and output phase. No FCEUX timing/PCM was used to
 synthesize runtime sound and the active Godot WAV is unchanged. Trace, patch,
 hashes, and metrics: `reference/diagnostics/audio/fceux_dmc_timer_edge_validation_20261026/`
 and `reference/diagnostics/audio/dmc_inner_edge_replay_audit_20261026.md`.
+
+### First-match wait IRQ source lead (`$A160`, checked 2026-11-01)
+
+The pinned public disassembly's [`bank_82.asm`](https://github.com/cyneprepou4uk/Captain-Tsubasa-2-English-Translation/blob/ec03cf06e6bdae0bcd232e3a423e9d259757dc64/bank_82.asm)
+labels the mapped bank-$02 routine at `$A160` as `sub_0x004170` and names the
+`$A1CB` helper. Of the raw byte values annotated in its `$A160-$A1E1` range,
+109/109 match the supplied ROM at the same file offsets. This is a useful
+address and routine-name lead; it does not validate the disassembly's edited
+instruction text or establish interrupt timing.
+
+The repository's assembled translation uses mapper 5 and expanded PRG/CHR,
+while the supplied ROM is mapper 4/MMC3. Its rebuilt source writes MMC5
+registers such as `$5204` and `$5120`; do not transplant those instructions
+into this project. The supplied ROM's hash-checked bytes and local report at
+[`fresh_kickoff_8920_source_clock_runtime_gap_20261029.md`](../gameplay/fresh_kickoff_8920_source_clock_runtime_gap_20261029.md)
+show the target `$A160` path using MMC3 IRQ registers and the `$A1C0/$A1C3`
+terminal branch that disables the IRQ and clears `$0078`. The extracted span
+and bank mapping are in
+[`fresh_kickoff_0078_wait_20261029/manifest.json`](../gameplay/fresh_kickoff_0078_wait_20261029/manifest.json).
+
+This external lead does not close the live Godot gap: the route still needs a
+source-owned IRQ event, CPU/stack state, and PPU/MMC3 event path before the
+`$A1C3` write can release the `$893B` wait.
+
+Focused Japanese and Chinese searches for this `$A160/$A1C3` routine on
+2026-11-01 found no additional independently usable disassembly or RAM/PPU
+trace. The previously listed English-translation repository remains the only
+routine-level external lead found in this pass. Further broad searches are
+unlikely to remove the runtime blocker; work should return to producing and
+carrying source-owned machine state through the live KICK OFF route.

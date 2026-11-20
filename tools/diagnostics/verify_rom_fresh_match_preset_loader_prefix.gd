@@ -26,7 +26,7 @@ func _initialize() -> void:
 		"stack_page": stack,
 	}
 	var selector_result: Dictionary = selector.execute_source_call(selector_call,
-		{"pc": 0xA20F, "sp": entry_sp, "a": 0x87, "x": 2, "y": 0, "p": 0xA4},
+		{"pc": 0xA20F, "sp": entry_sp, "a": 0x87, "x": 2, "y": 0, "p": 0xA0},
 		{0x0022: 0x80, 0x0023: 0x87, 0x0025: 2, 0x0026: 0})
 	if not bool(selector_result.get("ok", false)):
 		_fail("The A20F prerequisite did not return: " + String(selector_result.get("error", "unknown error")))
@@ -65,7 +65,7 @@ func _initialize() -> void:
 			or int(regs.get("a", -1)) != 0x87 \
 			or int(regs.get("x", -1)) != 6 \
 			or int(regs.get("y", -1)) != 0 \
-			or int(regs.get("p", -1)) != 0xA4:
+		or int(regs.get("p", -1)) != 0xA0:
 		_fail("`$8920` prefix CPU state at `$893B` is incorrect: %s" % regs)
 		return
 	var ram: Dictionary = result.get("caller_ram_after", {})
@@ -108,6 +108,35 @@ func _initialize() -> void:
 			or int(mapper_receipts[1].get("caller_pc", -1)) != 0x8938 \
 			or int(mapper_receipts[1].get("return_pc", -1)) != 0x893B:
 		_fail("The genuine nested `$9DEE` and mapper RTS receipts are missing.")
+		return
+	var physical_registers: Dictionary = result.get("boundary_registers", {})
+	var physical_wait_registers := physical_registers.duplicate(true)
+	physical_wait_registers["a"] = 0x04
+	var physical_wait_p_mask := int(physical_registers.get("p_known_mask", 0xFF)) | 0x82
+	var physical_wait_p_value := int(physical_registers.get("p_known_value",
+		int(physical_registers.get("p", 0)))) & int(physical_registers.get("p_known_mask", 0xFF)) & ~0x82
+	physical_wait_registers["p_known_mask"] = physical_wait_p_mask
+	physical_wait_registers["p_known_value"] = physical_wait_p_value
+	var physical_wait_receipt := {
+		"ok": true, "kind": "rom_irq_wait_release",
+		"source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+		"trace_state_used": false, "emulator_data_used": false,
+		"source_event_id": String(result.get("source_event_id", "")) + ":893B_physical_irq_fixture",
+		"interrupt": "IRQ", "wait_pc": 0x893B, "return_pc": 0x893B,
+		"interrupt_stack_balanced": true,
+		"source_path": [0xC506, 0xC821, 0xC478, 0xC491, 0xA160, 0xA1C3, 0xC4AD],
+		"ram_at_wait": {0x001B: 0xC0, 0x0078: 4, 0x0079: 0x40, 0x003B: 0x55},
+		"ram_writes": [{"source_pc": 0xA1C3, "address": 0x0078,
+			"before": 4, "value": 0,
+			"source_event_id": String(result.get("source_event_id", "")) + ":893B_physical_irq_fixture"}],
+		"return_registers": physical_wait_registers,
+	}
+	var physical_tail: Dictionary = preset.execute_after_wait_release(result, physical_wait_receipt)
+	if not bool(physical_tail.get("ok", false)) \
+			or String(physical_tail.get("entry_stack_model", "")) != "physical_stack_page" \
+			or int(physical_tail.get("physical_wait_stack_boundary", {}).get("sp", -1)) != 0xFB \
+			or int(physical_tail.get("physical_wait_stack_boundary", {}).get("outer_return_word", -1)) != 0x8116:
+		_fail("The source-tail consumer did not preserve a checked physical `$893B` stack through its return: " + String(physical_tail.get("error", "contract mismatch")))
 		return
 
 	var logical_event_id := "verifier_fixture_only_logical_80FA_a20f"
@@ -227,6 +256,9 @@ func _initialize() -> void:
 	var continuation_prefix: Dictionary = known_i_result.duplicate(true)
 	continuation_prefix["caller_ram_after"][0x007B] = 0x5A
 	var known_i_registers_for_irq: Dictionary = known_i_result.get("boundary_registers", {})
+	var expected_irq_p_mask := int(known_i_registers_for_irq.get("p_known_mask", 0)) | 0x82
+	var expected_irq_p_value := int(known_i_registers_for_irq.get("p_known_value", 0)) \
+			& int(known_i_registers_for_irq.get("p_known_mask", 0)) & ~0x82
 	var known_i_event_id := String(known_i_result.get("source_event_id", ""))
 	var wait_receipt := {
 		"ok": true,
@@ -242,9 +274,9 @@ func _initialize() -> void:
 		"ram_writes": [{"source_pc": 0xA1C3, "address": 0x0078,
 			"before": 4, "value": 0,
 			"source_event_id": known_i_event_id + ":893B_irq_source_fixture"}],
-		"return_registers": {"pc": 0x893B, "a": 0x07, "x": 0x06, "y": 0x00,
-			"p_known_mask": int(known_i_registers_for_irq.get("p_known_mask", 0)),
-			"p_known_value": int(known_i_registers_for_irq.get("p_known_value", 0))},
+		"return_registers": {"pc": 0x893B, "a": 0x04, "x": 0x06, "y": 0x00,
+			"p_known_mask": expected_irq_p_mask,
+			"p_known_value": expected_irq_p_value},
 	}
 	var resumed_result: Dictionary = preset.execute_after_wait_release(continuation_prefix, wait_receipt)
 	if not bool(resumed_result.get("ok", false)):
@@ -287,7 +319,7 @@ func _initialize() -> void:
 	print("PASS: the same `$8112->$893B` prefix retains one pending JSR, proves SP delta -2, preserves `$0022=$00` and partial P flags, and leaves absolute SP/stack-page bytes unknown.")
 	print("PASS: the prefix stops before unknown `$0078`; a test-only ROM IRQ receipt then drives the hash-checked `$893F-$895C` copy and `$8117` return consumer.")
 	print("PASS: the 19-byte preset record copy preserves `$7B`, restores bank `$02`, consumes both logical RTS frames, and rejects trace-backed release receipts.")
-	print("LIMIT: IRQ receipt is a verifier fixture only. Production PPU/MMC3/CPU interrupt event generation and route integration remain unresolved; this does not prove runtime reachability or exact IRQ timing.")
+	print("LIMIT: IRQ receipts above are verifier fixtures only. Production PPU/MMC3/CPU interrupt event generation and route integration remain unresolved; this does not prove runtime reachability or exact IRQ timing.")
 	quit(0)
 
 

@@ -3,6 +3,7 @@ extends SceneTree
 const CONTEXT_BUILDER := preload("res://scripts/gameplay/rom_fresh_kickoff_entry_context_builder.gd")
 const ROUTE_RUNNER := preload("res://scripts/gameplay/rom_fresh_kickoff_source_route_runner.gd")
 const TASK_SCHEDULER := preload("res://scripts/gameplay/rom_gameplay_task_scheduler.gd")
+const SELECTOR_SCRIPT := preload("res://scripts/gameplay/rom_fresh_match_selector_executor.gd")
 const ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
 const FCEUX_MAP42_FIRST_BATCH_SHA256 := "1af864cf8efad02dfc1f00baf08b8c7e037c5fe931ebc1a64b49ac92b2438d52"
 const FCEUX_MAP42_SECOND_BATCH_SHA256 := "0f0c448f8edac511fe7bf548ed2259a8bd4e581cdfc660221fac97a5912fdd1b"
@@ -17,14 +18,24 @@ const FCEUX_MAP42_CONTINUATION_BATCHES := [
 	{"start": 27, "ids": "14,14,14", "sha256": "1a11dd4a2b10b6f731bae110531aaf6740c40fae73daa53eee3a9b9b81e12b1e", "writes": 51},
 	{"start": 30, "ids": "14,14", "sha256": "247690436ccaeabef5785af9a596a5c0f768bfbba1d4aec05a4bae2a0e004bba", "writes": 34},
 ]
-const WORKER_MANIFEST_SHA256 := "d3f5ba788ea93fb02c6678f88efff9fe19aa303d19440b89c88ad81907a539ad"
+const WORKER_MANIFEST_SHA256 := "4d5670a642fbb6d9e9b8039fb1bb92ee7c2afe2cbee66260e5eb505161a550b8"
 const ROW02_FILE := "bank19_resumed_worker_descriptor01_row02_BBE3_BBE6.bin"
 const ROW03_FILE := "bank19_resumed_worker_descriptor01_row03_BD9F_BDA2.bin"
 const TEAM00_FILE := "fixed_team_00_name_stream_F776_F77C.bin"
+const TEAM03_FILE := "fixed_team_03_name_stream_F785_F789.bin"
+const EXPECTED_TEAM_CONVERTER_INPUTS := [0x46, 0x4C, 0x55, 0x46, 0x4C, 0x55]
+const EXPECTED_AWAY_TEAM_PACKET := [
+	0x07, 0x21, 0x23, 0xAA, 0x46, 0x4C, 0x55, 0x00, 0x33, 0xAB,
+]
+const VISUALS_SCENE := preload("res://scenes/kickoff_cutscene_visuals.tscn")
 
 
 func _init() -> void:
-	var ok := _verify()
+	call_deferred("_run")
+
+
+func _run() -> void:
+	var ok: bool = await _verify()
 	quit(0 if ok else 1)
 
 
@@ -35,6 +46,10 @@ func _verify() -> bool:
 	var context = builder.build_fresh_kickoff_context()
 	if context == null:
 		return _fail("ROM-derived fresh-match context could not be built: " + builder.error_message)
+	var selector_result := _build_selector_result()
+	if selector_result.is_empty():
+		return false
+	context.selector_roster_write_receipt = selector_result
 	var runner = ROUTE_RUNNER.new()
 	if not runner.configure_from_project_sources():
 		return _fail("Source route configuration failed: " + runner.error_message)
@@ -108,6 +123,7 @@ func _verify() -> bool:
 	var found_row02 := false
 	var found_row03 := false
 	var found_team00 := false
+	var found_team03 := false
 	var span_hash_row02 := ""
 	var span_hash_row03 := ""
 	for span_variant in spans:
@@ -121,6 +137,7 @@ func _verify() -> bool:
 			found_row03 = true
 			span_hash_row03 = String(span.get("sha256", ""))
 		found_team00 = found_team00 or String(span.get("file", "")) == TEAM00_FILE
+		found_team03 = found_team03 or String(span.get("file", "")) == TEAM03_FILE
 	if not bool(slot05_result.get("ok", false)) \
 			or String(slot05_result.get("status", "")) != "slot05_saved_and_rescanned" \
 			or int(dispatch.get("pc", -1)) != 0x8889 \
@@ -134,8 +151,9 @@ func _verify() -> bool:
 			or String(worker.get("source_manifest_sha256", "")) != WORKER_MANIFEST_SHA256 \
 			or span_hash_row02 != "ff4579caac8640e812546cc7649a99a939843eb1f972ccb5c5b715278c5dbd47" \
 			or span_hash_row03 != "55535becc5335f960faf89b9118f0677f4a009dffd35466781512590f9f40291" \
-			or not found_row02 or not found_row03 or not found_team00 \
+			or not found_row02 or not found_row03 or not found_team03 \
 			or worker_ram.size() != 0x800 or input_ram.size() != 0x800 \
+			or int(input_ram[0x002B]) != 3 or int(worker_ram[0x002B]) != 3 \
 			or int(input_ram[0x0629]) != 0 or int(worker_ram[0x0629]) != 0 \
 			or adopted_ram != worker_ram or not bool(slot05_result.get("slot05_worker_adopted", false)):
 		return _fail("Live descriptor-$01 row checks failed: %s" % str({
@@ -143,7 +161,8 @@ func _verify() -> bool:
 			"exit_pc": worker.get("exit_pc"), "blocked": blocked,
 			"manifest_match": String(worker.get("source_manifest_sha256", "")) == WORKER_MANIFEST_SHA256,
 			"row02": found_row02, "row02_hash": span_hash_row02,
-			"row03": found_row03, "row03_hash": span_hash_row03, "team00": found_team00,
+			"row03": found_row03, "row03_hash": span_hash_row03,
+			"team00": found_team00, "team03": found_team03,
 			"adopted": slot05_result.get("slot05_worker_adopted"),
 			"adopted_matches_worker": adopted_ram == worker_ram,
 			"post_save_matches_worker": PackedByteArray(slot05_result.get("slot05_post_worker_boundary", {}).get("ram_image", PackedByteArray())) == worker_ram,
@@ -166,12 +185,17 @@ func _verify() -> bool:
 			returned_fc = true
 	if not entered_ed_handler or not returned_fc:
 		return _fail("The live worker trace lacks the ED handler entry at $8AE7 or FC return at $8C52.")
-	print("PASS: slot-$05 record %s dispatched at $8889 and consumed ROM rows $BBE3 ED 01 FC and $BD9F EE 01 FC through `$C515`." % [
+	var converter_result := _verify_text_converter_trace(instructions)
+	if not bool(converter_result.get("ok", false)):
+		return _fail("ROM `$CBC2` text conversion did not follow the checked identity path: %s" % str(converter_result))
+	print("TEXT CONVERTER: both live passes over `$F785` bytes `$46/$4C/$55` take `$CBC6 -> $CBF0` RTS; the accumulator stays unchanged for all six conversions.")
+	print("PASS: slot-$05 record %s dispatched at $8889 and consumed ROM rows $BBE3 ED 01 FC and $BD9F EE 01 FC through `$C515`; live `$002B=3` resolved ROM team text at `$F785`." % [
 		PackedByteArray(live_slot05.get("record", PackedByteArray())).hex_encode()])
 	print("YIELD: worker returned at `$C515`; scheduler adopted its ordered writes and selected slot $%02X. `$0629` remains zero." % [
 		int(slot05_result.get("next_selected_task_slot", -1))])
-	print("PROVENANCE: %s (%s), %s (%s), %s; %d ordered RAM writes." % [
-		ROW02_FILE, span_hash_row02, ROW03_FILE, span_hash_row03, TEAM00_FILE, writes.size()])
+	print("PROVENANCE: %s (%s), %s (%s), team-03 %s; %d ordered RAM writes." % [
+		ROW02_FILE, span_hash_row02, ROW03_FILE, span_hash_row03,
+		TEAM03_FILE, writes.size()])
 	print("DISPATCH: A/X/Y/SP=%02X/%02X/%02X/%02X, banks $18/$19; stack $0140-$014F=%s." % [
 		int(dispatch.get("a", -1)), int(dispatch.get("x", -1)), int(dispatch.get("y", -1)),
 		int(dispatch.get("sp", -1)), input_stack.slice(0x40, 0x50).hex_encode()])
@@ -180,18 +204,84 @@ func _verify() -> bool:
 		int(input_ram[0x002B]), input_ram.slice(0x003E, 0x0040).hex_encode(),
 		worker_ram.slice(0x003E, 0x0040).hex_encode(),
 		int(input_ram[0x003C]), int(worker_ram[0x003C]), int(worker_ram[0x0629])])
-	print("PACKET BYTES: $04A5-$04AE=%s; `$8AE7` ED handler, `$8B2F` EE handler, and `$8C52` FC return observed." % [
-		worker_ram.slice(0x04A5, 0x04AF).hex_encode()])
+	var worker_packet_buffer := worker_ram.slice(0x04A5, 0x05A5)
+	var expected_packet := PackedByteArray(EXPECTED_AWAY_TEAM_PACKET)
+	var worker_packet_match := _find_packet_at_address(worker_packet_buffer, 0x2321)
+	if not bool(worker_packet_match.get("found", false)) \
+			or not bool(worker_packet_match.get("terminated", false)):
+		return _fail("Live ED01/EE01 worker did not build a terminated `$2321` queue record: %s" % str({
+			"worker_prefix": worker_packet_buffer.slice(0, 40).hex_encode(),
+			"match": worker_packet_match,
+			"team_ids": [int(worker_ram[0x002A]), int(worker_ram[0x002B])],
+			"ready_flag": int(worker_ram[0x0515]),
+		}))
+	var worker_packet: PackedByteArray = worker_packet_match.get("packet", PackedByteArray())
+	var worker_packet_exact := worker_packet == expected_packet
+	print("WORKER QUEUE: `$2321` packet %s at packet index %d; ROM-trace expected %s; exact=%s." % [
+		worker_packet.hex_encode(), int(worker_packet_match.get("packet_index", -1)),
+		expected_packet.hex_encode(), str(worker_packet_exact)])
 	var slot09_after_rows: Dictionary = runner.resume_selected_slot09_worker()
 	if not bool(slot09_after_rows.get("ok", false)) \
 			or not bool(slot09_after_rows.get("awaiting_external_nmi", false)):
 		return _fail("Post-row slot-$09 continuation did not reach its source-owned NMI wait.")
+	var pending_queue: Dictionary = runner._scheduler.get_live_nmi_secondary_queue_state()
+	var pending_buffer: PackedByteArray = pending_queue.get("packet_buffer", PackedByteArray())
+	var pending_packet_match := _find_packet_at_address(pending_buffer, 0x2321)
+	if int(pending_queue.get("primary_count_0498", -1)) != 0 \
+			or (int(pending_queue.get("ready_flag_0515", -1)) & 0x80) == 0 \
+			or pending_buffer.slice(0, worker_packet_buffer.size()) != worker_packet_buffer \
+			or not bool(pending_packet_match.get("found", false)) \
+			or PackedByteArray(pending_packet_match.get("packet", PackedByteArray())) != worker_packet:
+		return _fail("The source scheduler did not preserve the worker-built secondary queue until NMI: %s" % str({
+			"primary_count": pending_queue.get("primary_count_0498"),
+			"ready_flag": pending_queue.get("ready_flag_0515"),
+			"packet_match": pending_packet_match,
+			"buffer_prefix": pending_buffer.slice(0, 40).hex_encode(),
+		}))
+	var visuals := VISUALS_SCENE.instantiate() as KickoffCutsceneVisuals
+	root.add_child(visuals)
+	await process_frame
+	visuals.prepare_pre_match_meeting_scene()
 	var nmi_frame := int(runner.get_status().get("last_external_nmi_frame", -1)) + 1
 	var post_row_nmi: Dictionary = runner.advance_on_external_nmi(nmi_frame, 0x88)
 	if not bool(post_row_nmi.get("ok", false)) \
 			or int(post_row_nmi.get("selected_task_slot", -1)) != 0x01 \
 			or int(post_row_nmi.get("next_selected_task_slot", -1)) != 0x05:
 		return _fail("The following caller-labeled NMI did not return slot $01 and select slot $05.")
+	var nmi_queue: Dictionary = post_row_nmi.get("secondary_queue", {})
+	var nmi_bus_events: Array = post_row_nmi.get("ppu_bus_events", [])
+	var packet_index := int(pending_packet_match.get("packet_index", -1))
+	var packet_bus_result := _validate_packet_bus_events(nmi_bus_events, packet_index,
+		worker_packet)
+	if String(nmi_queue.get("status", "")) != "transferred" \
+			or String(nmi_queue.get("branch", "")) != "secondary_queue_consumed" \
+			or int(nmi_queue.get("packet_count", -1)) <= packet_index \
+			or not bool(packet_bus_result.get("ok", false)):
+		return _fail("Normal NMI did not transfer the worker-produced `$2321` packet: %s" % str({
+			"queue": nmi_queue,
+			"packet_index": packet_index,
+			"bus": packet_bus_result,
+		}))
+	var ppu_apply: Dictionary = visuals.apply_source_ppu_bus_events(nmi_bus_events, 0x88)
+	if not bool(ppu_apply.get("ok", false)) \
+			or not (ppu_apply.get("unapplied_writes", []) as Array).is_empty() \
+			or int(ppu_apply.get("nametable_writes_applied", -1)) != int(packet_bus_result.get("nametable_writes", -1)):
+		return _fail("Production PPU bus application rejected or dropped the normal-NMI packet writes: %s" % str(ppu_apply))
+	var worker_payload: PackedByteArray = worker_packet.slice(3, worker_packet.size())
+	for payload_offset in worker_payload.size():
+		if visuals.screen.read_nametable_ppu_byte(0x2321 + payload_offset) != worker_payload[payload_offset]:
+			return _fail("Applied source NMI bytes differ from the live worker packet at `$%04X`." % (0x2321 + payload_offset))
+	if not visuals.present_first_match_field_candidate({}, {}):
+		return _fail("Field candidate could not retain the source PPU overlay: %s" % str(visuals.first_match_field_status))
+	for offset in worker_payload.size():
+		if visuals.screen.read_nametable_ppu_byte(0x2321 + offset) != worker_payload[offset]:
+			return _fail("Field candidate overwrote the source-NMI team packet at `$%04X`." % (0x2321 + offset))
+	print("NMI/PPU: normal secondary queue transferred `$2321` packet %d; renderer applied %d nametable writes and field presentation retained its live payload." % [
+		packet_index, int(ppu_apply.get("nametable_writes_applied", -1))])
+	visuals.queue_free()
+	if not worker_packet_exact:
+		return _fail("Live worker→NMI→renderer plumbing passed, but ROM-derived team tiles differ: expected `%s`, got `%s`." % [
+			expected_packet.hex_encode(), worker_packet.hex_encode()])
 	var next_slot05: Dictionary = runner.resume_selected_slot05_worker()
 	if not bool(next_slot05.get("ok", false)):
 		return _fail("The next live slot-$05 continuation failed: " + str(next_slot05.get("error", runner.error_message)))
@@ -583,9 +673,148 @@ func _verify_remaining_map42_batches(runner: Object) -> bool:
 	return true
 
 
+func _verify_text_converter_trace(instructions: Array) -> Dictionary:
+	var converter_events: Array[Dictionary] = []
+	for instruction_variant in instructions:
+		if not instruction_variant is Dictionary:
+			continue
+		var instruction: Dictionary = instruction_variant
+		var pc := int(instruction.get("pc", -1))
+		if pc in [0xCBC2, 0xCBC4, 0xCBC6, 0xCBF0]:
+			converter_events.append(instruction)
+	var expected_pcs: Array[int] = [0xCBC2, 0xCBC4, 0xCBC6, 0xCBF0]
+	if converter_events.size() != EXPECTED_TEAM_CONVERTER_INPUTS.size() * expected_pcs.size():
+		return {"ok": false, "reason": "unexpected_converter_instruction_count",
+			"count": converter_events.size()}
+	for character_index in EXPECTED_TEAM_CONVERTER_INPUTS.size():
+		var source_byte := int(EXPECTED_TEAM_CONVERTER_INPUTS[character_index])
+		for instruction_index in expected_pcs.size():
+			var event: Dictionary = converter_events[character_index * expected_pcs.size() + instruction_index]
+			var expected_pc := expected_pcs[instruction_index]
+			if int(event.get("pc", -1)) != expected_pc \
+					or int(event.get("a_before", -1)) != source_byte \
+					or int(event.get("a_after", -1)) != source_byte:
+				return {"ok": false, "reason": "converter_register_or_path_mismatch",
+					"character_index": character_index, "expected_pc": "%04X" % expected_pc,
+					"event": event.duplicate(true), "source_byte": "%02X" % source_byte}
+		if int(converter_events[character_index * expected_pcs.size() + 1].get("p_after", -1)) & 1 != 0:
+			return {"ok": false, "reason": "cmp_a0_carry_should_be_clear", "character_index": character_index}
+		var lower_bound_branch: Dictionary = converter_events[character_index * expected_pcs.size() + 2]
+		if int(lower_bound_branch.get("next_pc", -1)) != 0xCBF0 \
+				or int(lower_bound_branch.get("p_before", -1)) & 1 != 0:
+			return {"ok": false, "reason": "ascii_input_did_not_take_identity_return", "character_index": character_index,
+				"branch": lower_bound_branch.duplicate(true)}
+		var return_event: Dictionary = converter_events[character_index * expected_pcs.size() + 3]
+		if int(return_event.get("opcode", -1)) != 0x60:
+			return {"ok": false, "reason": "identity_target_is_not_rts", "character_index": character_index,
+				"return": return_event.duplicate(true)}
+	return {"ok": true, "character_count": EXPECTED_TEAM_CONVERTER_INPUTS.size(),
+		"source_bytes_hex": PackedByteArray(EXPECTED_TEAM_CONVERTER_INPUTS).hex_encode(),
+		"converted_bytes_hex": PackedByteArray(EXPECTED_TEAM_CONVERTER_INPUTS).hex_encode()}
+
+
 func _fail(message: String) -> bool:
 	push_error(message)
 	return false
+
+
+func _find_packet_at_address(buffer: PackedByteArray, expected_address: int) -> Dictionary:
+	var cursor := 0
+	var packet_index := 0
+	var matched_packet: Dictionary = {}
+	while cursor < buffer.size():
+		var length := int(buffer[cursor])
+		if length == 0:
+			matched_packet["found"] = not matched_packet.is_empty()
+			matched_packet["terminated"] = true
+			matched_packet["packet_count"] = packet_index
+			matched_packet["terminator_offset"] = cursor
+			return matched_packet
+		var packet_end := cursor + 3 + length
+		if packet_end > buffer.size():
+			return {"found": false, "terminated": false, "invalid_offset": cursor,
+				"packet_count": packet_index}
+		var packet := buffer.slice(cursor, packet_end)
+		var packet_address := int(packet[1]) | (int(packet[2]) << 8)
+		if packet_address == expected_address:
+			matched_packet = {"found": true, "packet_index": packet_index,
+				"buffer_offset": cursor, "packet": packet,
+				"address": packet_address}
+		cursor = packet_end
+		packet_index += 1
+	matched_packet["found"] = not matched_packet.is_empty()
+	matched_packet["terminated"] = false
+	matched_packet["packet_count"] = packet_index
+	return matched_packet
+
+
+func _validate_packet_bus_events(events: Array, packet_index: int,
+		packet: PackedByteArray) -> Dictionary:
+	if packet_index < 0 or packet.size() < 3 or int(packet[0]) != packet.size() - 3:
+		return {"ok": false, "reason": "invalid_packet_index"}
+	var address_writes: Array[int] = []
+	var packet_data_writes: Array[int] = []
+	var total_nametable_writes := 0
+	for event_variant in events:
+		if not event_variant is Dictionary:
+			return {"ok": false, "reason": "malformed_bus_event"}
+		var event: Dictionary = event_variant
+		if String(event.get("operation", "")) != "write":
+			continue
+		var register := int(event.get("ppu_register", -1))
+		if register == 0x2007:
+			total_nametable_writes += 1
+		if int(event.get("packet_index", -1)) != packet_index:
+			continue
+		if register == 0x2006:
+			address_writes.append(int(event.get("value", -1)))
+		elif register == 0x2007:
+			packet_data_writes.append(int(event.get("value", -1)))
+	var expected_payload: Array[int] = []
+	for index in range(3, packet.size()):
+		expected_payload.append(int(packet[index]))
+	return {
+		"ok": address_writes == [int(packet[2]), int(packet[1])] \
+			and packet_data_writes == expected_payload,
+		"packet_index": packet_index,
+		"ppu_address": (int(packet[2]) << 8) | int(packet[1]),
+		"address_writes": address_writes,
+		"packet_data_writes": packet_data_writes,
+		"nametable_writes": total_nametable_writes,
+	}
+
+
+func _build_selector_result() -> Dictionary:
+	var selector: Variant = SELECTOR_SCRIPT.new()
+	if not selector.configure_from_project_sources():
+		_fail("Could not configure the ROM selector: " + selector.error_message)
+		return {}
+	var stack := PackedByteArray()
+	stack.resize(0x100)
+	stack.fill(0)
+	stack[0xFC] = 0xFC
+	stack[0xFD] = 0x80
+	var source_call := {"caller_pc": 0x80FA, "target_pc": 0xA20F,
+		"return_pc": 0x80FD, "source_event_id": "live_ed01_verifier_selector",
+		"pre_call_sp": 0xFD, "stack_page": stack}
+	var cpu_state := {"pc": 0xA20F, "sp": 0xFB, "a": 0x87,
+		"x": 0x02, "y": 0, "p": 0xA4}
+	var ram_before := {0x0022: 0x80, 0x0023: 0x87, 0x0025: 0x02, 0x0026: 0}
+	var result: Dictionary = selector.execute_source_call(source_call, cpu_state, ram_before)
+	if not bool(result.get("ok", false)):
+		_fail("ROM selector execution failed: " + String(result.get("error", "unknown error")))
+		return {}
+	var team_writes: Dictionary = {}
+	for write_variant in result.get("ram_writes", []):
+		if write_variant is Dictionary:
+			var write: Dictionary = write_variant
+			var address := int(write.get("address", -1))
+			if address in [0x002A, 0x002B]:
+				team_writes[address] = int(write.get("value", -1))
+	if int(team_writes.get(0x002A, -1)) != 0 or int(team_writes.get(0x002B, -1)) != 3:
+		_fail("ROM selector receipt did not produce the supported home/away IDs `$002A=0/$002B=3`.")
+		return {}
+	return result
 
 
 func _sha256_hex(bytes: PackedByteArray) -> String:

@@ -1,7 +1,7 @@
 extends RefCounted
 class_name RomF1ActorRecordConstructor
 ## Constructs the 21-byte actor record written by bank-$14 $80AA for the
-## source F1 packets in fresh-start scenario $35 / animation $8F.
+## source F1 packets from the supported route animations.
 ## It does not schedule packet events, tick appearance/motion, or render OAM.
 
 class ActorRecord:
@@ -24,13 +24,13 @@ const SOURCE_ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c58
 const SOURCE_DIR := "res://reference/rom_extract/gameplay/actor_packet_constructor/"
 const MANIFEST_PATH := SOURCE_DIR + "manifest.json"
 const RECORD_TABLE_NAME := "actor_record_pointer_table_88E4_00_05.bin"
-const MOTION_TABLE_NAME := "motion_pointer_table_A1B4_00_71.bin"
-const APPEARANCE_TABLE_NAME := "appearance_pointer_table_AC47_00_93.bin"
+const MOTION_TABLE_NAME := "motion_pointer_table_A1B4_00_A9.bin"
+const APPEARANCE_TABLE_NAME := "appearance_pointer_table_AC47_00_CD.bin"
 const RECORD_COUNT := 6
 const ACTOR_RECORD_BYTES := 21
-const ROUTE_ANIMATION_ID := 0x8F
-const ROUTE_MOTION_MAX_INDEX := 0x71
-const ROUTE_APPEARANCE_MAX_INDEX := 0x93
+const SUPPORTED_ANIMATION_IDS: Array[int] = [0x8F, 0x90, 0x5C, 0x4E, 0x66, 0x4C, 0xE6, 0x78, 0x7A, 0x8B]
+const ROUTE_MOTION_MAX_INDEX := 0xA9
+const ROUTE_APPEARANCE_MAX_INDEX := 0xCD
 const MOTION_POINTER_MIN := 0x8000
 const MOTION_POINTER_MAX_EXCLUSIVE := 0xC000
 const APPEARANCE_POINTER_MIN := 0x8000
@@ -43,13 +43,13 @@ const RESOURCE_SPECS := {
 		"last_index": 5,
 	},
 	MOTION_TABLE_NAME: {
-		"file_offset": 0x02A1C4, "cpu_address": "$A1B4", "length_bytes": 0xE4,
-		"sha256": "15171701bd415846f98c0bfe2ab119db90987f426bf16908705e0ba868088c11",
+		"file_offset": 0x02A1C4, "cpu_address": "$A1B4", "length_bytes": 0x154,
+		"sha256": "7e7a34cb494ea929ac3f96a6cd70caef36ce9c6f3ce1b3382608ea984042d2c9",
 		"last_index": ROUTE_MOTION_MAX_INDEX,
 	},
 	APPEARANCE_TABLE_NAME: {
-		"file_offset": 0x02AC57, "cpu_address": "$AC47", "length_bytes": 0x128,
-		"sha256": "a0638cdcc481955ac46aac1576d50ec40786c023c4d8f21867b2e4728691453f",
+		"file_offset": 0x02AC57, "cpu_address": "$AC47", "length_bytes": 0x19C,
+		"sha256": "980d493d8251dddc1ccf5a9320b6cbdeb5cc605d09abf990a4223e4a4da78fce",
 		"last_index": ROUTE_APPEARANCE_MAX_INDEX,
 	},
 }
@@ -120,13 +120,13 @@ func configure() -> bool:
 	if _record_table.size() != RECORD_COUNT * 2 \
 			or _motion_table.size() != (ROUTE_MOTION_MAX_INDEX + 1) * 2 \
 			or _appearance_table.size() != (ROUTE_APPEARANCE_MAX_INDEX + 1) * 2:
-		return _fail("F1 actor-record tables do not cover the source-selected $8F indexes.")
+		return _fail("F1 actor-record tables do not cover the supported source-selected animation indexes.")
 	is_configured = true
 	return true
 
 
-## Applies the ROM $80AA constructor to a decoded $F1 event. Only animation
-## $8F is accepted so unsupported later route indexes cannot silently pass.
+## Applies the ROM $80AA constructor to a decoded $F1 event from a bounded
+## route animation. Unsupported stream IDs and out-of-range table indexes fail.
 func construct(event: RomActorAnimationStreamDecoder.SourceEvent) -> ActorRecord:
 	last_error = ""
 	if not is_configured:
@@ -135,9 +135,9 @@ func construct(event: RomActorAnimationStreamDecoder.SourceEvent) -> ActorRecord
 	if event == null or event.kind != RomActorAnimationStreamDecoder.SourceEvent.Kind.ACTOR_PACKET:
 		_fail("Expected a decoded ROM $F1 actor-packet event.")
 		return null
-	if event.selected_animation_id != ROUTE_ANIMATION_ID or event.opcode != 0xF1 \
+	if event.selected_animation_id not in SUPPORTED_ANIMATION_IDS or event.opcode != 0xF1 \
 			or event.raw_bytes.size() != 6 or int(event.raw_bytes[0]) != 0xF1:
-		_fail("The constructor only accepts a complete source $F1 packet from animation $8F.")
+		_fail("The constructor only accepts a complete source $F1 packet from a supported route animation.")
 		return null
 	var motion_index := int(event.raw_bytes[1])
 	var appearance_index := int(event.raw_bytes[2])
@@ -153,7 +153,7 @@ func construct(event: RomActorAnimationStreamDecoder.SourceEvent) -> ActorRecord
 		return null
 	if motion_index < 0 or motion_index > ROUTE_MOTION_MAX_INDEX \
 			or appearance_index < 0 or appearance_index > ROUTE_APPEARANCE_MAX_INDEX:
-		_fail("F1 script index is outside the extracted animation-$8F pointer-table prefixes.")
+		_fail("F1 script index is outside the extracted ROM pointer-table ranges.")
 		return null
 	var record_address := _read_u16(_record_table, actor_index * 2)
 	var motion_address := _read_u16(_motion_table, motion_index * 2)

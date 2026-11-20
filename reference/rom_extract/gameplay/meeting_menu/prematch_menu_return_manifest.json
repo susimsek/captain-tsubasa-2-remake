@@ -1,0 +1,51 @@
+{
+  "schema": "ct2-prematch-menu-return-source-v1",
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_rom_size_bytes": 393232,
+  "mapping": "Offsets include the 16-byte iNES header. Bank $00 at CPU $8000: 0x10 + (CPU-$8000); switchable bank N at CPU $A000: 0x10 + N*0x2000 + (CPU-$A000).",
+  "files": [
+    {
+      "file": "bank00_natural_cutscene_wait_82A9_82B4.bin",
+      "description": "Exact PRG-ROM bytes copied from the supplied ROM for the scene-$56 caller return path.",
+      "prg_bank": 0,
+      "cpu_start": "$82A9",
+      "cpu_end_exclusive": "$82B5",
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x0002B9",
+        "0x0002C5"
+      ],
+      "length_bytes": 12,
+      "sha256": "a5de1ba379876bdf1ff68c417244633c5369e18506648a54ac6efa470d1e2e29",
+      "bytes": "a9 01 20 a8 9f a5 4d 05 4e d0 f5 60"
+    },
+    {
+      "file": "bank00_cutscene_dispatcher_8464_84A5.bin",
+      "description": "Exact PRG-ROM bytes copied from the supplied ROM for the scene-$56 caller return path.",
+      "prg_bank": 0,
+      "cpu_start": "$8464",
+      "cpu_end_exclusive": "$84A5",
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x000474",
+        "0x0004B5"
+      ],
+      "length_bytes": 65,
+      "sha256": "5751805c7996638a8c0683ea13ae991ad88583b1703833048c9b595a9293c6ce",
+      "bytes": "a0 00 c8 c8 d9 ee 8a b0 f9 38 f9 ec 8a be ed 8a 0a 69 00 85 4d a9 00 69 a0 85 4e 86 56 a5 25 85 ed 20 b9 c4 a0 00 b1 4d aa c8 b1 4d 85 4e 86 4d a2 05 a9 c5 95 00 a9 84 95 01 a0 50 a9 00 20 69 9f"
+    },
+    {
+      "file": "bank01_menu_return_tail_A715_A718.bin",
+      "description": "Exact PRG-ROM bytes copied from the supplied ROM for the scene-$56 caller return path.",
+      "prg_bank": 1,
+      "cpu_start": "$A715",
+      "cpu_end_exclusive": "$A719",
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x002725",
+        "0x002729"
+      ],
+      "length_bytes": 4,
+      "sha256": "28348feb92ef3e1b713a5ebced7f9eda134ad83b316442e0a981cb208eab915a",
+      "bytes": "20 a0 9b 60"
+    }
+  ]
+}

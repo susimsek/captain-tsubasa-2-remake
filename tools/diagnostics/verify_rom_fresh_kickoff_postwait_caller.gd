@@ -45,6 +45,9 @@ func _initialize() -> void:
 		_fail("The `$893B` source prefix failed: " + String(waiting_prefix.get("error", "unknown error")))
 		return
 	var registers: Dictionary = waiting_prefix.get("boundary_registers", {})
+	var expected_irq_p_mask := int(registers.get("p_known_mask", 0)) | 0x82
+	var expected_irq_p_value := int(registers.get("p_known_value", 0)) \
+			& int(registers.get("p_known_mask", 0)) & ~0x82
 	var source_id := String(waiting_prefix.get("source_event_id", ""))
 	var release_id := source_id + ":893B_verifier_only_irq_release"
 	var continuation_prefix: Dictionary = waiting_prefix.duplicate(true)
@@ -64,9 +67,9 @@ func _initialize() -> void:
 			"before": 4, "value": 0,
 			"source_event_id": release_id}],
 		"return_registers": {
-			"pc": 0x893B, "a": 0x07, "x": 0x06, "y": 0x00,
-			"p_known_mask": int(registers.get("p_known_mask", 0)),
-			"p_known_value": int(registers.get("p_known_value", 0)),
+			"pc": 0x893B, "a": 0x04, "x": 0x06, "y": 0x00,
+			"p_known_mask": expected_irq_p_mask,
+			"p_known_value": expected_irq_p_value,
 		},
 	}
 	var tail_result: Dictionary = preset.execute_after_wait_release(continuation_prefix, wait_receipt)

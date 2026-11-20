@@ -62,7 +62,7 @@ func _verify_f0_worker_boundary() -> bool:
 			or not unsupported.is_empty() \
 			or not blocked.is_empty() \
 			or String(worker.get("rom_sha256", "")) != ROM_SHA256 \
-			or String(worker.get("source_manifest_sha256", "")) != "afb902c0a8b3780f546ee61b2838e378b272ade79cb4023ac40d3419c165c4dc":
+			or String(worker.get("source_manifest_sha256", "")) != "4d5670a642fbb6d9e9b8039fb1bb92ee7c2afe2cbee66260e5eb505161a550b8":
 		return _fail("Live worker did not reach the `$C515` source yield boundary.")
 	if int(dispatch.get("slot_base", -1)) != 0x05 \
 			or String(dispatch.get("resume_path", "")) != "yielded_rts" \

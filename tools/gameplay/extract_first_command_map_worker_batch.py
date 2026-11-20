@@ -17,6 +17,9 @@ BANK_0B_FILE_BASE = 0x016010
 SPANS = {
     "worker_8572_85c2": (0x8572, 0x85C2),
     "metatile_expand_85c2_86d3": (0x85C2, 0x86D3),
+    "map_2f_chr_pair": (0x874C, 0x874E),
+    "map_36_chr_pair": (0x875A, 0x875C),
+    "map_56_chr_pair": (0x879A, 0x879C),
 }
 
 
@@ -51,7 +54,13 @@ def main() -> None:
             "prg_bank": "0x0B",
             "size_bytes": len(data),
             "sha256": sha256(data),
-            "source": "ROM bytes executed by the resumed slot-$15 map-$42 worker.",
+            "source": ("ROM CHR selector table entry at $874C for callback-$36 map-$2F."
+                       if name == "map_2f_chr_pair"
+                       else "ROM CHR selector table entry for scenario-$44 callback-$70 map-$56."
+                       if name == "map_56_chr_pair"
+                       else "ROM CHR selector table entry for scenario-$1E callback-$45 map-$36."
+                       if name == "map_36_chr_pair"
+                       else "ROM bytes executed by the resumed slot-$15 map-$42 worker."),
         }
         if name in names:
             entries[names[name]] = entry
@@ -61,9 +70,14 @@ def main() -> None:
     mapping = manifest.setdefault("source_mapping", {})
     mapping["map_42_selector"] = "0x01"
     mapping["selector_note"] = "The packed table byte $52 at index $10 yields selector $01 for map $42."
+    mapping["map_2f_selector"] = "The packed table byte $6A at index $0B yields selector $01 for map $2F."
+    mapping["map_2f_chr_pair"] = "$874C contains 3C 4A for callback-$36 map ID $2F."
+    mapping["map_36_selector"] = "0x01"
+    mapping["map_36_chr_pair"] = "$875A contains 00 3C for map $36."
+    mapping["map_56_chr_pair"] = "$879A contains 3C 2E for scenario-$44 callback-$70 map $56."
     manifest["entries"] = entries
     MANIFEST_PATH.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
-    print(f"Preserved {len(SPANS)} bank-$0B worker spans; map-$42 selector is $01.")
+    print(f"Preserved {len(SPANS)} bank-$0B source spans, including map-$2F, map-$36, and map-$56 CHR pairs.")
 
 
 if __name__ == "__main__":

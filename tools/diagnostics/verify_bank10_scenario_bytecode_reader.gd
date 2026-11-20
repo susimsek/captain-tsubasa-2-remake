@@ -154,9 +154,102 @@ func _run() -> void:
 		and int(record_tokens[0].get("ram_assignments", {}).get("$0529", -1)) == 0xFF,
 		"$F0 in field four remains a record transform and resolves to $FF, not a top-level opcode")
 
+	var scenario_1c_missing: Dictionary = READER_SCRIPT.read_project_scenario(0x1C)
+	var scenario_1c_tokens: Array = scenario_1c_missing.get("tokens", [])
+	_check(int(scenario_1c_missing.get("status", -1)) == READER_SCRIPT.ParseStatus.CONTEXT_REQUIRED
+		and int(scenario_1c_missing.get("terminal_status", -1)) == READER_SCRIPT.ParseStatus.EXTERNAL_CONTINUATION_REQUIRED,
+		"scenario $1C reports missing RAM context and its external branch endpoint separately")
+	_check(scenario_1c_tokens.size() == 3
+		and int(scenario_1c_tokens[0].get("opcode", -1)) == 0xFD
+		and int(scenario_1c_tokens[1].get("opcode", -1)) == 0xFA
+		and int(scenario_1c_tokens[2].get("opcode", -1)) == 0xF3,
+		"scenario $1C recognizes FD $00, FA $3E $9F, and F3 $84 in source order")
+	_check(_fd_handler_evidence(scenario_1c_missing, 0x00, 0x8877, 0x020887,
+		[0x77, 0x88], [0xA9, 0x00, 0x85, 0x3B, 0xAD, 0x41, 0x04, 0x20, 0x0C, 0xC5, 0xAD, 0x38, 0x06, 0x20, 0x36, 0xC5]),
+		"scenario $1C FD $00 retains its holder/record/$0638 context requirement")
+	var scenario_1c_fd00: Dictionary = scenario_1c_tokens[0]
+	_check(scenario_1c_fd00.get("required_context", []) == [
+		"RAM $0441", "resolved player-record fields", "RAM $0638"]
+		and not scenario_1c_fd00.has("result"),
+		"FD $00 names holder calculation inputs and does not synthesize its X result")
+	var scenario_1c_fa: Dictionary = scenario_1c_tokens[1]
+	var nested_f3_tokens: Array = scenario_1c_fa.get("f3_dispatch_tokens", [])
+	_check(int(scenario_1c_fa.get("target_cpu_address", -1)) == 0x9F3E
+		and scenario_1c_fa.get("nested_wrapper_bytes", PackedByteArray()) == PackedByteArray([
+			0xF3, 0x10, 0x4A, 0x9F, 0x4B, 0xBB, 0x4B, 0xBB, 0x4B, 0xBB, 0x4B,
+			0xBB, 0xF3, 0x1E, 0x4B, 0xBB, 0x02, 0xB5, 0x4F, 0xB5, 0x50, 0xBB])
+		and nested_f3_tokens.size() == 2
+		and nested_f3_tokens[0].get("inline_pointer_targets", []) == [0x9F4A, 0xBB4B, 0xBB4B, 0xBB4B, 0xBB4B]
+		and nested_f3_tokens[1].get("inline_pointer_targets", []) == [0xBB4B, 0xB502, 0xB54F, 0xBB50],
+		"scenario $1C FA exposes the pinned nested F3 $10/$1E tables without executing external targets")
+	var scenario_1c_f3: Dictionary = scenario_1c_tokens[2]
+	var scenario_1c_alternatives: Array = scenario_1c_f3.get("possible_branch_alternatives", [])
+	_check(scenario_1c_alternatives.size() == 2
+		and scenario_1c_alternatives[0].get("resume_byte_offset", -1) == 9
+		and scenario_1c_alternatives[0].get("f2_target_cpu_address", -1) == 0xB49E
+		and scenario_1c_alternatives[1].get("resume_byte_offset", -1) == 12
+		and scenario_1c_alternatives[1].get("f2_target_cpu_address", -1) == 0xB4B6
+		and str(scenario_1c_f3.get("status", "")) == "context_required",
+		"scenario $1C F3 $84 reports both F2 alternatives without guessing RAM $044E")
+	_check(_has_context_requirement(scenario_1c_missing, "$044E")
+		and _has_context_requirement(scenario_1c_missing, "$043B"),
+		"scenario $1C retains missing $044E and $043B context")
+
+	var scenario_1c_left: Dictionary = READER_SCRIPT.read_project_scenario(0x1C, {"ram_044E": 1})
+	var scenario_1c_left_f3: Dictionary = _find_opcode_token(scenario_1c_left, 0xF3, 5)
+	var scenario_1c_left_f2: Dictionary = _find_opcode_token(scenario_1c_left, 0xF2)
+	_check(int(scenario_1c_left.get("terminal_status", -1)) == READER_SCRIPT.ParseStatus.EXTERNAL_CONTINUATION_REQUIRED
+		and int(scenario_1c_left_f3.get("resume_byte_offset", -1)) == 9
+		and int(scenario_1c_left_f3.get("selected_f2_pointer", -1)) == 0xB49E
+		and int(scenario_1c_left_f2.get("target_cpu_address", -1)) == 0xB49E
+		and int(scenario_1c_left_f2.get("target_file_offset", -1)) == 0x0234AE
+		and str(scenario_1c_left_f2.get("target_prefix_sha256", "")) == "1a650937b1815dc4ab5a30a1da70eb4e3c4bad7059005d1fbb585995936db5e2",
+		"RAM $044E=$01 selects F2 $B49E and returns external-continuation-required")
+
+	var scenario_1c_right: Dictionary = READER_SCRIPT.read_project_scenario(0x1C, {"ram_044E": 2})
+	var scenario_1c_right_f3: Dictionary = _find_opcode_token(scenario_1c_right, 0xF3, 5)
+	var scenario_1c_right_f2: Dictionary = _find_opcode_token(scenario_1c_right, 0xF2)
+	_check(int(scenario_1c_right.get("terminal_status", -1)) == READER_SCRIPT.ParseStatus.EXTERNAL_CONTINUATION_REQUIRED
+		and int(scenario_1c_right_f3.get("resume_byte_offset", -1)) == 12
+		and int(scenario_1c_right_f3.get("selected_f2_pointer", -1)) == 0xB4B6
+		and int(scenario_1c_right_f2.get("target_cpu_address", -1)) == 0xB4B6
+		and int(scenario_1c_right_f2.get("target_file_offset", -1)) == 0x0234C6,
+		"RAM $044E=$02 selects F2 $B4B6 and preserves its external endpoint")
+
+	var scenario_1c_nested_context: Dictionary = READER_SCRIPT.read_project_scenario(0x1C, {
+		"ram_043B": 0, "ram_043C": 2, "ram_0516": 0, "ram_044E": 1,
+	})
+	var nested_fa_token: Dictionary = _find_opcode_token(scenario_1c_nested_context, 0xFA)
+	var nested_selected_tokens: Array = nested_fa_token.get("f3_dispatch_tokens", [])
+	_check(int(nested_selected_tokens[0].get("selected_target_cpu_address", -1)) == 0x9F4A
+		and int(nested_selected_tokens[1].get("selected_target_cpu_address", -1)) == 0xB54F
+		and int(scenario_1c_nested_context.get("ram_state", {}).get("ram_0516", -1)) == 0x04,
+		"supplied $043B/$043C select nested $B54F and apply $0516 bit only with its input")
+	var scenario_1c_missing_043c: Dictionary = READER_SCRIPT.read_project_scenario(0x1C,
+		{"ram_043B": 0, "ram_044E": 1})
+	_check(_has_context_requirement(scenario_1c_missing_043c, "$043C")
+		and int(_find_opcode_token(scenario_1c_missing_043c, 0xFA).get("f3_dispatch_tokens", [])[1].get("status", "") == "conditional_context_required"),
+		"nested RAM $043C is required only after RAM $043B selects the $9F4A branch")
+	var scenario_1c_missing_0516: Dictionary = READER_SCRIPT.read_project_scenario(0x1C,
+		{"ram_043B": 0, "ram_043C": 1, "ram_044E": 1})
+	_check(_has_context_requirement(scenario_1c_missing_0516, "$0516")
+		and int(_find_opcode_token(scenario_1c_missing_0516, 0xFA).get("f3_dispatch_tokens", [])[1].get("selected_target_cpu_address", -1)) == 0xB502,
+		"nonzero nested F3 $1E requires incoming $0516 before applying its bit-$04 write")
+	var scenario_1c_invalid_043b: Dictionary = READER_SCRIPT.read_project_scenario(0x1C,
+		{"ram_043B": 5, "ram_044E": 1})
+	_check(int(scenario_1c_invalid_043b.get("status", -1)) == READER_SCRIPT.ParseStatus.UNSUPPORTED_HANDLER
+		and str(_find_opcode_token(scenario_1c_invalid_043b, 0xFA).get("status", "")) == "unsupported_handler",
+		"nested F3 $10 values outside its five-entry pointer table remain unsupported")
+
+	var scenario_1c_invalid_044e: Dictionary = READER_SCRIPT.read_project_scenario(0x1C,
+		{"ram_044E": 3})
+	_check(int(scenario_1c_invalid_044e.get("status", -1)) == READER_SCRIPT.ParseStatus.UNSUPPORTED_HANDLER
+		and str(_find_opcode_token(scenario_1c_invalid_044e, 0xF3, 5).get("status", "")) == "unsupported_handler",
+		"out-of-span F3 $84 selectors are explicit unsupported outcomes")
+
 	if _failures.is_empty():
-		print("PASS: bank-$10 route records, verified depth-zero root $FB endings, nested/non-route external stops, and existing opcode transforms")
-		print("LIMIT: FD $00 output, callback/worker lifecycle, and nested continuation execution remain unmodeled")
+		print("PASS: bank-$10 records plus scenario-$1C FD/FA/F3/F2 context and continuation outcomes")
+		print("LIMIT: FD $00 output, callback/worker lifecycle, and external branch execution remain unmodeled")
 		quit(0)
 	else:
 		for failure: String in _failures:
@@ -191,6 +284,23 @@ func _has_control_flow_opcode(result: Dictionary, opcode: int) -> bool:
 	for token: Dictionary in result.get("tokens", []):
 		if str(token.get("kind", "")) == "control_flow" \
 				and int(token.get("opcode", -1)) == opcode:
+			return true
+	return false
+
+
+func _find_opcode_token(result: Dictionary, opcode: int, byte_offset: int = -1) -> Dictionary:
+	for token: Dictionary in result.get("tokens", []):
+		if int(token.get("opcode", -1)) != opcode:
+			continue
+		if byte_offset >= 0 and int(token.get("byte_offset", -1)) != byte_offset:
+			continue
+		return token
+	return {}
+
+
+func _has_context_requirement(result: Dictionary, address: String) -> bool:
+	for requirement: String in result.get("context_requirements", []):
+		if requirement.contains(address):
 			return true
 	return false
 

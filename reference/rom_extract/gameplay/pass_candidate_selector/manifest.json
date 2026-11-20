@@ -1,0 +1,223 @@
+{
+  "schema": "ct2-pass-candidate-selector-rom-source-v1",
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "rom_size_bytes": 393232,
+  "ines_header_bytes": 16,
+  "runtime_source_kind": "ROM-derived code and referenced lookup bytes; no emulator state or capture assets",
+  "scope": "PASS candidate selector code from $D77A through its $CF8F helper return, plus only the four directly indexed lookup intervals",
+  "mapping": "PRG bank $1E in CPU window $C000-$DFFF; file offset = 0x10 + (bank * 0x2000) + (CPU address - 0xC000).",
+  "trace_context": {
+    "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "selector_trace": {
+      "emulator": "FCEUX 2.7.0; NTSC/NewPPU; sound disabled and volume 0",
+      "provenance": "A separate disk-save-state continuation from slot 0 at source frame 8399; the selector observation did not begin at clean power-on.",
+      "inputs": {
+        "Down": "source frame 9068",
+        "A": "source frame 9076"
+      },
+      "observed": "This continuation showed the $D77A->$CF8F selector, the $CFA6->$CB0F yield and $CFA9 resume, Down incrementing $0622, and A returning toward $D6B9 before $D6C7->$D7E8.",
+      "route_status": "This selector path diverges from the clean power-on replay and is not evidence for the recorded cold-start PASS route.",
+      "timing_caveat": "Frame labels are FCEUX trace labels and do not establish physical NES sub-frame timing."
+    },
+    "clean_power_on_replay": {
+      "emulator": "FCEUX 2.7.0; NTSC/NewPPU; sound disabled and volume 0",
+      "provenance": "Clean power-on; no disk state loaded.",
+      "input_sources": "opening_reference_capture/input_timeline.csv + kickoff_select_test_20261027/post_title_inputs.csv + first_pass_action_input_edges_20261110.csv",
+      "checkpoint_comparison": "At source frame 8399, RAM matched the retained checkpoint exactly, PPU memory matched outside palette space, and mapped PRG signatures matched. The replay continued from power-on; it did not load that checkpoint.",
+      "selector_path": "The clean power-on trace did not observe the $CF8F selector path.",
+      "action_dispatch": {
+        "source_frame": 9046,
+        "entry": "$D6C7",
+        "cycle_from_frame_start": 13737,
+        "handler": "$D7E8",
+        "cycle_from_frame_start_handler": 13789
+      },
+      "receiver_input": {
+        "down_source_frame": 9068,
+        "poll": {
+          "pc": "$D80F",
+          "cycle_from_frame_start": 10398,
+          "cycle_absolute": 270030194
+        },
+        "cursor_write": {
+          "pc": "$D832",
+          "cycle_from_frame_start": 10450,
+          "address": "$0624",
+          "value": "$78"
+        },
+        "receiver_candidate_scan": {
+          "pc": "$D834",
+          "cycle_from_frame_start": 10458
+        },
+        "a_source_frame": 9076,
+        "confirmation": {
+          "pc": "$D852",
+          "cycle_from_frame_start": 11076,
+          "cycle_absolute": 270269116
+        },
+        "confirmation_return": {
+          "pc": "$D70C",
+          "cycle_from_frame_start": 11128,
+          "cycle_absolute": 270269168
+        }
+      },
+      "next_command_wait": {
+        "source_frame": 9600,
+        "pc": "$D5EA",
+        "bank": "0x1E",
+        "cycle_from_frame_start": 7621,
+        "cycle_absolute": 285870645,
+        "registers": {
+          "A": "$06",
+          "X": "$06",
+          "Y": "$03",
+          "SP": "$4C"
+        },
+        "return_address": "$D567",
+        "mapper_18_19": "0x1A/0x1B",
+        "scenario_0516_0519": "00 2E 00 00"
+      },
+      "final_ram_snapshot": {
+        "source_frame": 10080,
+        "pc_at_wait": "$D5EA",
+        "cycle_from_frame_start": 7389,
+        "cycle_absolute": 300165051,
+        "holder_0441": "$0A",
+        "receiver_count_0430": "$01",
+        "receiver_slot_0431": "$0A",
+        "cursor_0624": "$78",
+        "selectable_count_0625": "$01",
+        "confirmed_slot_05FC": "$0A",
+        "confirmed_cursor_05FE": "$78"
+      }
+    }
+  },
+  "resources": [
+    {
+      "name": "prg1e_D77A_D792",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xD77A",
+      "cpu_end_exclusive": "0xD792",
+      "mapped_cpu_window": "0xC000-0xDFFF",
+      "file_offset": "0x03D78A",
+      "length_bytes": 24,
+      "resource": "prg1e_D77A_D792.bin",
+      "sha256": "4f5265ec0cfe4b77dcd71a510facf8e1ac6200aaa69fb0abe14030de73698e9e"
+    },
+    {
+      "name": "prg1e_CF8F_D002",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xCF8F",
+      "cpu_end_exclusive": "0xD002",
+      "mapped_cpu_window": "0xC000-0xDFFF",
+      "file_offset": "0x03CF9F",
+      "length_bytes": 115,
+      "resource": "prg1e_CF8F_D002.bin",
+      "sha256": "c914ce1fa9321eece0d2783161dada10775477908528cb7cf7410c13052d7cc5"
+    },
+    {
+      "name": "selector_index_d002",
+      "role": "indexed_lookup_table",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xD002",
+      "cpu_end_exclusive": "0xD00A",
+      "mapped_cpu_window": "0xC000-0xDFFF",
+      "file_offset": "0x03D012",
+      "length_bytes": 8,
+      "resource": "prg1e_D002_D00A.bin",
+      "sha256": "273d4b6118c28259fe1c5fcd7f91340305b8d82e04dd69ad77a752be3914524a",
+      "referenced_by": {
+        "cpu_instruction": "0xCF93",
+        "instruction_bytes": "BD 02 D0",
+        "read_expression": "LDA $D002,X",
+        "index_register": "X"
+      }
+    },
+    {
+      "name": "selector_index_d00a",
+      "role": "indexed_lookup_table",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xD00A",
+      "cpu_end_exclusive": "0xD012",
+      "mapped_cpu_window": "0xC000-0xDFFF",
+      "file_offset": "0x03D01A",
+      "length_bytes": 8,
+      "resource": "prg1e_D00A_D012.bin",
+      "sha256": "21a9747077bd34965862693ed15548476e07afb46eac7b5c5160303480ca4f72",
+      "referenced_by": {
+        "cpu_instruction": "0xCFB4",
+        "instruction_bytes": "7D 0A D0",
+        "read_expression": "ADC $D00A,X",
+        "index_register": "X"
+      }
+    },
+    {
+      "name": "selector_index_d012",
+      "role": "indexed_lookup_table",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xD012",
+      "cpu_end_exclusive": "0xD01A",
+      "mapped_cpu_window": "0xC000-0xDFFF",
+      "file_offset": "0x03D022",
+      "length_bytes": 8,
+      "resource": "prg1e_D012_D01A.bin",
+      "sha256": "9db4f5155c3ca0c79272e115ec5697b6065c6b45e13326dc38841c948e096c29",
+      "referenced_by": {
+        "cpu_instruction": "0xCFD3",
+        "instruction_bytes": "DD 12 D0",
+        "read_expression": "CMP $D012,X",
+        "index_register": "X"
+      }
+    },
+    {
+      "name": "selector_index_d01a",
+      "role": "indexed_lookup_table",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xD01A",
+      "cpu_end_exclusive": "0xD022",
+      "mapped_cpu_window": "0xC000-0xDFFF",
+      "file_offset": "0x03D02A",
+      "length_bytes": 8,
+      "resource": "prg1e_D01A_D022.bin",
+      "sha256": "f416921731bc52426ba0666c6d02ad8f1579256b00aa13351d95fb2dd3bd45ea",
+      "referenced_by": {
+        "cpu_instruction": "0xCF99",
+        "instruction_bytes": "BD 1A D0",
+        "read_expression": "LDA $D01A,X",
+        "index_register": "X"
+      }
+    }
+  ],
+  "lookup_bounds_note": "The four referenced table bases are exactly 8 bytes apart; each extraction ends at the next base, and the final interval ends at $D022 where subsequent code begins. The extractor does not claim that every possible X value is bounded to 0..7; the observed route establishes only its recorded live accesses.",
+  "lookup_reads": [
+    {
+      "instruction_cpu": "0xCF93",
+      "instruction_bytes": "BD 02 D0",
+      "read_expression": "LDA $D002,X",
+      "index_register": "X",
+      "table_resource": "selector_index_d002"
+    },
+    {
+      "instruction_cpu": "0xCFB4",
+      "instruction_bytes": "7D 0A D0",
+      "read_expression": "ADC $D00A,X",
+      "index_register": "X",
+      "table_resource": "selector_index_d00a"
+    },
+    {
+      "instruction_cpu": "0xCFD3",
+      "instruction_bytes": "DD 12 D0",
+      "read_expression": "CMP $D012,X",
+      "index_register": "X",
+      "table_resource": "selector_index_d012"
+    },
+    {
+      "instruction_cpu": "0xCF99",
+      "instruction_bytes": "BD 1A D0",
+      "read_expression": "LDA $D01A,X",
+      "index_register": "X",
+      "table_resource": "selector_index_d01a"
+    }
+  ]
+}

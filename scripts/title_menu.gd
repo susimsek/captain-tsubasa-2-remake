@@ -12,6 +12,7 @@ const HANDOFF_QUEUE_SCRIPT := preload("res://scripts/title_rom_handoff_queue.gd"
 @onready var title_background: RomTitleBackgroundRenderer = $TitleBackground
 
 var _selected: int = 0
+var _input_enabled := true
 var _cursor_commit_pending := false
 var _cursor_commit_delay := 0.0
 var _handoff_queue: Variant
@@ -60,7 +61,7 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not visible:
+	if not visible or not _input_enabled:
 		return
 	if event is InputEventKey and event.echo:
 		return
@@ -88,6 +89,10 @@ func _queue_cursor_commit() -> void:
 	if not _cursor_commit_pending:
 		_cursor_commit_delay = 1.0 / NES_FPS
 	_cursor_commit_pending = true
+
+
+func set_input_enabled(enabled: bool) -> void:
+	_input_enabled = enabled
 
 
 func _update_frame() -> void:

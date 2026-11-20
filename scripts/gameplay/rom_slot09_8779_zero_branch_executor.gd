@@ -112,7 +112,7 @@ func configure_from_project_sources() -> bool:
 
 ## Consumes the actual return state produced by RomSlot09Worker86F8ZeroBranchExecutor.
 ## It executes the source caller at $EBB3, mapper helper, vector $8006, and only
-## the live $0534==0 worker branch. It stops at $EBC5 before the next caller call.
+## the live $0534==0/high-bit-normalization worker paths. It stops at $EBC5.
 func execute_from_86f8_worker_result(previous_worker_result: Dictionary) -> Dictionary:
 	error_message = ""
 	if not _configured:
@@ -273,8 +273,26 @@ func get_status() -> Dictionary:
 
 
 func _validate_previous_result(result: Dictionary) -> Dictionary:
+	var previous_status := String(result.get("status", ""))
+	var previous_is_script82 := previous_status == "returned_after_script82"
+	var previous_is_countdown := previous_status == "returned_after_countdown"
+	var previous_is_stream_batch := previous_status == "returned_after_stream_batch"
+	var previous_is_stream_terminator := previous_status == "returned_after_stream_terminator"
+	var previous_is_zero_return := previous_status in ["returned_to_root_caller", "returned_after_stream_terminator"]
+	var countdown_before := int(result.get("countdown_before", -1))
+	var countdown_after := int(result.get("countdown_after", -1))
+	var expected_previous_a := 0
+	if previous_is_script82:
+		expected_previous_a = 7
+	elif previous_is_countdown:
+		expected_previous_a = countdown_before
+	elif previous_is_stream_batch:
+		expected_previous_a = 1 + 2 * int(result.get("stream_pair_count", -1))
+	var expected_previous_zero := previous_is_zero_return \
+			or (previous_is_countdown and countdown_after == 0)
 	if String(result.get("rom_sha256", "")) != ROM_SHA256 \
-			or String(result.get("status", "")) != "returned_to_root_caller" \
+			or not (previous_is_zero_return or previous_is_script82 or previous_is_countdown \
+				or previous_is_stream_batch) \
 			or String(result.get("source_manifest", "")) != PREVIOUS_MANIFEST \
 			or int(result.get("entry_pc", -1)) != 0x86F8 \
 			or int(result.get("exit_pc", -1)) != ROOT_ENTRY \
@@ -285,7 +303,7 @@ func _validate_previous_result(result: Dictionary) -> Dictionary:
 			or bool(result.get("next_worker_executed", true)) \
 			or bool(result.get("next_worker_bytes_read", true)) \
 			or bool(result.get("trace_state_used", true)):
-		return {"ok": false, "reason": "Input is not the live `$86F8->$8722 RTS` result at `$EBB3`."}
+		return {"ok": false, "reason": "Input is not a supported live `$86F8` worker return at `$EBB3`."}
 	var registers_variant: Variant = result.get("registers", {})
 	var mapper_variant: Variant = result.get("mapper", {})
 	var ram_variant: Variant = result.get("ram_image", PackedByteArray())
@@ -307,9 +325,9 @@ func _validate_previous_result(result: Dictionary) -> Dictionary:
 	# part of the dispatch contract.
 	if registers.size() == 0 or ram.size() != RAM_SIZE or stack.size() != STACK_SIZE \
 			or int(registers.get("pc", -1)) != ROOT_ENTRY \
-			or int(registers.get("a", -1)) != 0 \
+			or int(registers.get("a", -1)) != expected_previous_a \
 			or int(registers.get("sp", -1)) != 0x7A \
-			or (int(registers.get("p", -1)) & P_Z) == 0 \
+			or ((int(registers.get("p", -1)) & P_Z) != 0) != expected_previous_zero \
 			or (int(registers.get("p", -1)) & P_N) != 0 \
 			or (int(registers.get("p_known_mask", -1)) & P_NZ_MASK) != P_NZ_MASK \
 			or int(mapper.get("bank_low", -1)) != 0x18 \
@@ -328,6 +346,230 @@ func _validate_previous_result(result: Dictionary) -> Dictionary:
 			int(mapper.get("bank_low", -1)), int(mapper.get("bank_high", -1)), int(mapper.get("select", -1)),
 			int(ram[0x0000]), int(ram[0x0023]), int(ram[0x0024]), int(ram[0x0025]),
 			stack.slice(0x79, 0x7B).hex_encode()]}
+	if previous_is_script82 \
+			and (int(ram[0x0532]) != 0x02 or int(ram[0x0533]) != 0x06 \
+				or ram.slice(0x047C, 0x047F) != PackedByteArray([0x1A, 0x1A, 0x3A]) \
+				or int(ram[0x0498]) < 1):
+		return {"ok": false, "reason": "The `$82` worker return is missing the decoded `$ADFC` stream writes or `$C533` queue append."}
+	if previous_is_countdown:
+		var stream_pointer := int(ram[0x0079]) | (int(ram[0x007A]) << 8)
+		var scenario1e_countdown := int(ram[0x0518]) == 0x1E \
+				and int(result.get("input_ram_0532", -1)) == 0x01 \
+				and int(result.get("output_ram_0532", -1)) == 0x01 \
+				and stream_pointer in [0xADF9, 0xADFC, 0xAE03, 0xAE08, 0xAE0D] \
+				and int(ram[0x0516]) in [0x01, 0x29] \
+				and int(ram[0x0519]) <= 0x07 \
+				and ram.slice(0x0523, 0x052A) == PackedByteArray([0x07, 0x45, 0x06, 0x00, 0x3C, 0x90, 0xFF]) \
+				and int(ram[0x05CE]) == 0x80
+		var scenario1e_countdown_limit := 4 if stream_pointer == 0xADF9 else 6
+		var scenario1e_countdown_valid := scenario1e_countdown \
+				and countdown_before >= 1 and countdown_before <= scenario1e_countdown_limit \
+				and int(result.get("input_ram_0532", -1)) == 0x01 \
+				and int(result.get("output_ram_0532", -1)) == 0x01 \
+				and countdown_after == countdown_before - 1 \
+				and int(ram[0x0533]) == countdown_after
+		var scenario36_countdown_valid := int(ram[0x0518]) == 0x36 \
+				and int(result.get("input_ram_0532", -1)) == 0x02 \
+				and int(result.get("output_ram_0532", -1)) == 0x02 \
+				and countdown_before >= 1 and countdown_before <= 6 \
+				and countdown_after == countdown_before - 1 \
+				and int(ram[0x0533]) == countdown_after \
+				and stream_pointer in [0xAE03, 0xAE08, 0xAE0D]
+		var scenario38_callback34_countdown := int(ram[0x0516]) == 0x29 \
+				and ram.slice(0x0516, 0x051A) == PackedByteArray([0x29, 0x40, 0x38, 0x00]) \
+				and ram.slice(0x0523, 0x052B) == PackedByteArray([0x01, 0x34, 0x02, 0x00, 0x02, 0x00, 0xFF, 0x00]) \
+				and ram.slice(0x05C7, 0x05D3) == PackedByteArray([
+					0x40, 0xA0, 0x00, 0x02, 0x01, 0x2D, 0xA0, 0x80, 0x00, 0x02, 0x00, 0x00]) \
+				and int(ram[0x0522]) == 0x00 and int(ram[0x052B]) == 0x00 \
+				and int(result.get("input_ram_0532", -1)) == 0x17 \
+				and int(result.get("output_ram_0532", -1)) == 0x17 \
+				and int(result.get("input_ram_0533", -1)) == 0x04 \
+				and countdown_before == 0x04 and countdown_after == 0x03 \
+				and int(ram[0x0533]) == 0x03 and stream_pointer == 0xAFE9 \
+				and int(result.get("stream_pointer", -1)) == 0xAFE9 \
+				and int(ram[0x003A]) == 0x01 \
+				and int(ram[0x0498]) == 0x02 \
+				and ram.slice(0x049C, 0x049F) == PackedByteArray([0x00, 0x6C, 0x04]) \
+				and int(ram[0x047F]) == 0x0F
+		var scenario38_live_pass_countdown := ram.slice(0x0516, 0x051A) \
+				== PackedByteArray([0x00, 0x40, 0x38, 0x00]) \
+				and int(ram[0x0441]) == 0x06 \
+				and int(result.get("input_ram_0532", -1)) == 0x01 \
+				and int(result.get("output_ram_0532", -1)) == 0x01 \
+				and int(result.get("input_ram_0533", -1)) == countdown_before \
+				and countdown_before >= 1 and countdown_before <= (3 if stream_pointer in [0xAFE9, 0xAFF4] else (1 if stream_pointer == 0xAFEE else 7)) \
+				and countdown_after == countdown_before - 1 \
+				and int(ram[0x0533]) == countdown_after \
+				and stream_pointer in [0xAFE9, 0xAFEE, 0xAFF1, 0xAFF4] \
+				and int(result.get("stream_pointer", -1)) == stream_pointer \
+				and int(ram[0x0498]) == 0x00 \
+				and ram.slice(0x0499, 0x04A0) \
+				== PackedByteArray([0x00, 0x6C, 0x04, 0x00, 0x6C, 0x04, 0x00]) \
+				and int(ram[0x047F]) == 0x0F
+		if not (scenario1e_countdown_valid or scenario36_countdown_valid \
+				or scenario38_callback34_countdown or scenario38_live_pass_countdown):
+			return {"ok": false, "reason": "The `$86F8` countdown result does not preserve a supported scenario-$1E callback-$45, scenario-$36, scenario-$38 callback-$34, or live PASS field/holder/queue state."}
+	if previous_is_stream_batch:
+		var stream_pointer_before := int(result.get("stream_pointer_before", -1))
+		var stream_pointer_after := int(result.get("stream_pointer_after", -1))
+		var stream_control := int(result.get("stream_control", -1))
+		var stream_pairs := int(result.get("stream_pair_count", -1))
+		var scenario1e_profile := int(ram[0x0518]) == 0x1E \
+				and int(result.get("input_ram_0532", -1)) in [0x01, 0x81] \
+				and int(result.get("output_ram_0532", -1)) == 0x01 \
+				and int(ram[0x0516]) in [0x01, 0x29] \
+				and int(ram[0x0519]) <= 0x07 \
+				and ram.slice(0x0523, 0x052A) == PackedByteArray([0x07, 0x45, 0x06, 0x00, 0x3C, 0x90, 0xFF]) \
+				and int(ram[0x05CE]) == 0x80
+		if scenario1e_profile:
+			var expected_1e_stream: Dictionary = {
+				0xADF6: [0xADF9, 0x21, 1, 4],
+				0xADF9: [0xADFC, 0x09, 1, 1],
+				0xADFC: [0xAE03, 0x33, 3, 6],
+				0xAE03: [0xAE08, 0x32, 2, 6],
+				0xAE08: [0xAE0D, 0x32, 2, 6],
+				0xAE0D: [0xAE03, 0x33, 3, 6],
+			}
+			var expected_1e: Array = expected_1e_stream.get(stream_pointer_before, [])
+			if expected_1e.is_empty() \
+					or int(result.get("countdown_before", -1)) != 0 \
+					or int(result.get("countdown_after", -1)) != int(expected_1e[3]) \
+					or int(ram[0x0533]) != int(expected_1e[3]) \
+					or stream_pointer_after != int(expected_1e[0]) \
+					or (int(ram[0x0079]) | (int(ram[0x007A]) << 8)) != int(expected_1e[0]) \
+					or stream_control != int(expected_1e[1]) \
+					or stream_pairs != int(expected_1e[2]) \
+					or int(ram[0x003A]) != 0 or int(ram[0x0498]) < 1:
+				return {"ok": false, "reason": "The scenario-$1E callback-$45 stream batch differs from its hash-checked `$ADF6->$AE0D` source sequence."}
+			return {"ok": true}
+		var scenario38_profile := int(ram[0x0518]) == 0x38 \
+				and int(ram[0x0516]) == 0x01 and int(ram[0x0519]) == 0x01 \
+				and ram.slice(0x0523, 0x052A) == PackedByteArray([0x01, 0x34, 0x02, 0x00, 0x02, 0x00, 0xFF]) \
+				and int(ram[0x05CC]) == 0x2D
+		if scenario38_profile:
+			if int(result.get("input_ram_0532", -1)) != 0x97 \
+					or int(result.get("output_ram_0532", -1)) != 0x17 \
+				or int(result.get("input_ram_0533", -1)) != 0x06 \
+					or int(result.get("countdown_before", -1)) != 0 \
+					or int(result.get("countdown_after", -1)) != 4 \
+					or int(ram[0x0533]) != 4 \
+					or int(result.get("stream_pointer_before", -1)) != 0xAFE6 \
+					or int(result.get("stream_pointer_after", -1)) != 0xAFE9 \
+					or (int(ram[0x0079]) | (int(ram[0x007A]) << 8)) != 0xAFE9 \
+					or int(result.get("stream_control", -1)) != 0x21 \
+					or int(result.get("stream_pair_count", -1)) != 1 \
+					or int(ram[0x047F]) != 0x0F or int(ram[0x003A]) != 0 \
+					or int(ram[0x0498]) < 1 \
+					or PackedByteArray(result.get("inline_queue_record", PackedByteArray())) != PackedByteArray([0x00, 0x6C, 0x04]):
+				return {"ok": false, "reason": "The scenario-$38 `$97` reset-marker batch differs from `$AD9A->$AFE6` control `$21`, pair `$10/$0F`, and the ROM inline queue record."}
+			return {"ok": true}
+		var scenario38_live_pass_profile := ram.slice(0x0516, 0x051A) \
+				== PackedByteArray([0x00, 0x40, 0x38, 0x00]) \
+				and int(ram[0x0441]) == 0x06
+		if scenario38_live_pass_profile:
+			var scenario38_live_batch_afe9 := int(result.get("stream_pointer_before", -1)) == 0xAFE9
+			var scenario38_live_batch_afee := int(result.get("stream_pointer_before", -1)) == 0xAFEE
+			var scenario38_live_batch_aff1 := int(result.get("stream_pointer_before", -1)) == 0xAFF1
+			var scenario38_live_batch_aff4 := int(result.get("stream_pointer_before", -1)) == 0xAFF4
+			if scenario38_live_batch_afee:
+				if int(result.get("input_ram_0532", -1)) != 0x01 \
+						or int(result.get("output_ram_0532", -1)) != 0x01 \
+						or int(result.get("input_ram_0533", -1)) != 0x00 \
+						or int(result.get("countdown_before", -1)) != 0 \
+						or int(result.get("countdown_after", -1)) != 7 \
+						or int(ram[0x0533]) != 7 \
+						or int(result.get("stream_pointer_after", -1)) != 0xAFF1 \
+						or (int(ram[0x0079]) | (int(ram[0x007A]) << 8)) != 0xAFF1 \
+						or int(result.get("stream_control", -1)) != 0x39 \
+						or int(result.get("stream_pair_count", -1)) != 1 \
+						or int(ram[0x0485]) != 0x30 \
+						or int(ram[0x003A]) != 0 \
+						or int(ram[0x0498]) != 0x01 \
+						or ram.slice(0x0499, 0x049C) != PackedByteArray([0x00, 0x6C, 0x04]) \
+						or PackedByteArray(result.get("inline_queue_record", PackedByteArray())) != PackedByteArray([0x00, 0x6C, 0x04]) \
+						or int(ram[0x047F]) != 0x0F:
+					return {"ok": false, "reason": "The live scenario-$38 PASS `$AFEE` batch differs from control `$39`, one pair, `$AFF1`, countdown `$07`, or its ROM queue record."}
+				return {"ok": true}
+			if scenario38_live_batch_aff1:
+				if int(result.get("input_ram_0532", -1)) != 0x01 \
+						or int(result.get("output_ram_0532", -1)) != 0x01 \
+						or int(result.get("input_ram_0533", -1)) != 0x00 \
+						or int(result.get("countdown_before", -1)) != 0 \
+						or int(result.get("countdown_after", -1)) != 3 \
+						or int(ram[0x0533]) != 3 \
+						or int(result.get("stream_pointer_after", -1)) != 0xAFF4 \
+						or (int(ram[0x0079]) | (int(ram[0x007A]) << 8)) != 0xAFF4 \
+						or int(result.get("stream_control", -1)) != 0x19 \
+						or int(result.get("stream_pair_count", -1)) != 1 \
+						or int(ram[0x0485]) != 0x0F \
+						or int(ram[0x003A]) != 0 \
+						or int(ram[0x0498]) != 0x01 \
+						or ram.slice(0x0499, 0x049C) != PackedByteArray([0x00, 0x6C, 0x04]) \
+						or PackedByteArray(result.get("inline_queue_record", PackedByteArray())) != PackedByteArray([0x00, 0x6C, 0x04]) \
+						or int(ram[0x047F]) != 0x0F:
+					return {"ok": false, "reason": "The live scenario-$38 PASS `$AFF1` batch differs from control `$19`, one pair, `$AFF4`, countdown `$03`, or its ROM queue record."}
+				return {"ok": true}
+			if scenario38_live_batch_aff4:
+				if int(result.get("input_ram_0532", -1)) != 0x01 \
+						or int(result.get("output_ram_0532", -1)) != 0x01 \
+						or int(result.get("input_ram_0533", -1)) != 0x00 \
+						or int(result.get("countdown_before", -1)) != 0 \
+						or int(result.get("countdown_after", -1)) != 7 \
+						or int(ram[0x0533]) != 7 \
+						or int(result.get("selector_redirect_from", -1)) != 0xAFF4 \
+						or int(result.get("selector_redirect_to", -1)) != 0xAFEE \
+						or bool(result.get("selector_arm_appended_queue", true)) \
+						or int(result.get("stream_pointer_after", -1)) != 0xAFF1 \
+						or (int(ram[0x0079]) | (int(ram[0x007A]) << 8)) != 0xAFF1 \
+						or int(result.get("stream_control", -1)) != 0x39 \
+						or int(result.get("stream_pair_count", -1)) != 1 \
+						or int(ram[0x0485]) != 0x30 \
+						or int(ram[0x003A]) != 0 \
+						or int(ram[0x0498]) != 0x01 \
+						or ram.slice(0x0499, 0x049C) != PackedByteArray([0x00, 0x6C, 0x04]) \
+						or PackedByteArray(result.get("inline_queue_record", PackedByteArray())) != PackedByteArray([0x00, 0x6C, 0x04]) \
+						or int(ram[0x047F]) != 0x0F:
+					return {"ok": false, "reason": "The live scenario-$38 PASS `$AFF4->$AFEE` selector cycle differs from its ROM redirect, `$AFEE` batch, or single queue append."}
+				return {"ok": true}
+			if not scenario38_live_batch_afe9:
+				return {"ok": false, "reason": "The live scenario-$38 PASS batch pointer is outside the verified `$AFE9/$AFEE/$AFF1/$AFF4` stream groups."}
+			if int(result.get("input_ram_0532", -1)) != 0x01 \
+					or int(result.get("output_ram_0532", -1)) != 0x01 \
+					or int(result.get("input_ram_0533", -1)) != 0x00 \
+					or int(result.get("countdown_before", -1)) != 0 \
+					or int(result.get("countdown_after", -1)) != 1 \
+					or int(ram[0x0533]) != 1 \
+					or int(result.get("stream_pointer_before", -1)) != 0xAFE9 \
+					or int(result.get("stream_pointer_after", -1)) != 0xAFEE \
+					or (int(ram[0x0079]) | (int(ram[0x007A]) << 8)) != 0xAFEE \
+					or int(result.get("stream_control", -1)) != 0x0A \
+					or int(result.get("stream_pair_count", -1)) != 2 \
+					or int(ram[0x003A]) != 0 \
+					or int(ram[0x0498]) != 0x01 \
+					or ram.slice(0x0499, 0x049C) != PackedByteArray([0x00, 0x6C, 0x04]) \
+					or PackedByteArray(result.get("inline_queue_record", PackedByteArray())) != PackedByteArray([0x00, 0x6C, 0x04]) \
+					or int(ram[0x047F]) != 0x0F:
+				return {"ok": false, "reason": "The live scenario-$38 PASS batch differs from `$AFE9` control `$0A`, two pairs, `$AFEE`, countdown `$01`, empty cursor, palette, holder, or appended queue record."}
+			return {"ok": true}
+		var expected_stream_after := 0xAE08 if stream_pointer_before == 0xAE03 else (0xAE0D if stream_pointer_before == 0xAE08 else 0xAE03)
+		var expected_stream_control := 0x33 if stream_pointer_before == 0xAE0D else 0x32
+		var expected_stream_pairs := 3 if stream_pointer_before == 0xAE0D else 2
+		if int(result.get("input_ram_0532", -1)) != 0x02 \
+				or int(result.get("output_ram_0532", -1)) != 0x02 \
+				or int(result.get("countdown_before", -1)) != 0 \
+				or int(result.get("countdown_after", -1)) != 6 \
+				or int(ram[0x0533]) != 6 \
+				or stream_pointer_before not in [0xAE03, 0xAE08, 0xAE0D] \
+				or stream_pointer_after != expected_stream_after \
+				or (int(ram[0x0079]) | (int(ram[0x007A]) << 8)) != expected_stream_after \
+				or stream_control != expected_stream_control or stream_pairs != expected_stream_pairs \
+				or int(ram[0x003A]) != 0 or int(ram[0x0518]) != 0x36 \
+				or int(ram[0x0498]) < 1:
+			return {"ok": false, "reason": "The scenario-$36 stream batch differs from the checked `$AE03/$AE08/$AE0D` control cycle; scenario1e_profile=%s id/flag/wait=%02X/%02X/%02X marker=%02X->$%02X count=%02X pointer=%04X->$%04X control/pairs=%02X/%d event=%s placement=%02X." % [
+				str(scenario1e_profile), int(ram[0x0518]), int(ram[0x0516]), int(ram[0x0519]),
+				int(result.get("input_ram_0532", -1)), int(result.get("output_ram_0532", -1)),
+				int(ram[0x0533]), stream_pointer_before, stream_pointer_after,
+				stream_control, stream_pairs, ram.slice(0x0523, 0x052A).hex_encode(), int(ram[0x05CE]) ]}
 	return {"ok": true}
 
 

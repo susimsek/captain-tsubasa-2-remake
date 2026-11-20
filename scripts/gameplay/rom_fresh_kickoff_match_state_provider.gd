@@ -22,6 +22,7 @@ const RESOURCE_HASHES := {
 }
 const PROFILE_MAP_SHA256 := "a16ef4a351fe79c6465741d75e3700b1bfe84f6a28ddee5e837aba226cb4ff48"
 const RECORD_POINTERS_SHA256 := "b09fe4a47e9910198fc6b2599caebe85071c4292d6f07f089d8dd7848b2e7185"
+const PLAYER_STAT_PROFILES_SHA256 := "3236a005cc380c17351cf6ebac20f3f090be2a0a67ba6d8849cd8e6bcaf95fff"
 
 var error_message := ""
 var route_identity := ""
@@ -33,12 +34,14 @@ var active_ball_player_slot := -1
 var field_run_timer := FIELD_RUN_TIMER_INITIAL
 var stamina_update_count := 0
 var stamina_regen_skip_counter := 0
+var live_source_energy_boundary_applied := false
 
 var _roster: PackedByteArray = PackedByteArray()
 var _stamina_profiles: PackedByteArray = PackedByteArray()
 var _stamina_value_words: PackedByteArray = PackedByteArray()
 var _profile_map: PackedByteArray = PackedByteArray()
 var _record_pointers: PackedByteArray = PackedByteArray()
+var _player_stat_profiles: PackedByteArray = PackedByteArray()
 var _players: Array[Dictionary] = []
 var _configured := false
 
@@ -134,6 +137,107 @@ func get_player_record(player_slot: int) -> Dictionary:
 	return _players[player_slot].duplicate(true)
 
 
+## Replaces the provider's initial table values with the live slot-$05 RAM only
+## after a source-traced `$D193->$E1F1->$E1F7->$E2BC` return proves the run-cost
+## writes. This rejects emulator/capture state and unverified endpoint values.
+func synchronize_from_verified_live_source(boundary: Dictionary,
+		transition: Dictionary) -> bool:
+	if not _configured:
+		return _fail("Configure the ROM player-state provider before syncing live source records.")
+	var ram_variant: Variant = boundary.get("ram_image", PackedByteArray())
+	var transition_calls: Array = transition.get("source_calls", [])
+	var transition_pcs: Array = transition.get("source_pcs", [])
+	var source_span: Dictionary = transition.get("source_span", {})
+	var writes: Array = transition.get("holder_energy_writes", [])
+	var live_source_records: Array = transition.get("live_player_records", [])
+	if not ram_variant is PackedByteArray:
+		return _fail("Live source boundary has no RAM image.")
+	var ram: PackedByteArray = ram_variant
+	if String(boundary.get("source_rom_sha256", "")) != EXPECTED_ROM_SHA256 \
+			or int(boundary.get("slot_base", -1)) != 0x05 \
+			or int(boundary.get("active_task_slot", -1)) != 0x05 \
+			or int(boundary.get("pc", -1)) != 0xD5EA \
+			or int(boundary.get("bank_low", -1)) != 0x1A \
+			or int(boundary.get("bank_high", -1)) != 0x1B \
+			or ram.size() != 0x800 or ram.slice(0x0100, 0x0200) != boundary.get("stack_page", PackedByteArray()):
+		return _fail("Live source RAM is not the verified unselected `$D5EA` slot-$05 endpoint.")
+	if not bool(transition.get("ok", false)) \
+			or String(transition.get("kind", "")) != "rom_d193_e1f1_e1f7_e2bc_stamina_update" \
+			or String(transition.get("rom_sha256", "")) != EXPECTED_ROM_SHA256 \
+			or int(transition.get("record_address", -1)) < 0 \
+			or int(transition.get("energy_after", -1)) < 0 \
+			or int(transition.get("energy_after", -1)) >= int(transition.get("energy_before", 0)) \
+			or not transition_pcs.has(0xE1F1) or not transition_pcs.has(0xE1F7) \
+			or not transition_pcs.has(0xE2BC) \
+			or String(source_span.get("file", "")) != "fixed_field_entry_setup_E0E9_E349.bin" \
+			or String(source_span.get("sha256", "")) != \
+				"069aa6c733b9de0a6070e280f89277a4ec192f1c551001fb787e9038244806de" \
+			or writes.size() < 2 or live_source_records.size() != _players.size():
+		return _fail("The source worker receipt does not prove the D193-to-E2BC stamina call and energy stores.")
+	var holder_call_seen := false
+	for call_variant in transition_calls:
+		if call_variant is Dictionary and int(call_variant.get("callsite", -1)) == 0xE1F7 \
+				and int(call_variant.get("target", -1)) == 0xE2BC:
+			holder_call_seen = true
+	if not holder_call_seen:
+		return _fail("The source worker receipt omits the `$E1F7->$E2BC` call.")
+	var holder_slot := int(transition.get("player_slot", -1))
+	if holder_slot != active_ball_player_slot or holder_slot < 0 or holder_slot >= _players.size():
+		return _fail("Live stamina receipt targets a different ROM-selected ball holder.")
+	var holder: Dictionary = _players[holder_slot]
+	if int(holder.get("record_address", -1)) != int(transition.get("record_address", -2)) \
+			or int(holder.get("player_id", -1)) != int(transition.get("player_id", -2)):
+		return _fail("Live stamina receipt's player pointer or ID differs from the ROM-derived roster.")
+	var entry_energy := int(transition.get("energy_before", -1))
+	var resulting_energy := int(transition.get("energy_after", -1))
+	var expected_cost := MISUGI_RUN_COST if int(holder["player_id"]) == MISUGI_ID else NORMAL_RUN_COST
+	if resulting_energy != maxi(0, entry_energy - expected_cost):
+		return _fail("ROM `$E2BC` holder run cost differs from the ROM-defined player rule.")
+	if stamina_update_count != 0 or stamina_regen_skip_counter != 0:
+		return _fail("This live-source handoff only supports the first `$E2BC` update from the fresh field state.")
+	var synchronized_players: Array[Dictionary] = []
+	for slot in range(_players.size()):
+		var record: Dictionary = _players[slot]
+		var address := int(record.get("record_address", -1))
+		if address < 0 or address + 3 >= ram.size() \
+				or int(ram[address]) != int(record.get("player_id", -1)) \
+				or int(ram[address + 3]) != int(record.get("level", -1)):
+			return _fail("Live RAM record %d does not match the ROM-derived roster and level." % slot)
+		var energy := int(ram[address + 1]) | (int(ram[address + 2]) << 8)
+		var live_record_variant: Variant = live_source_records[slot]
+		if not live_record_variant is Dictionary:
+			return _fail("The live ROM worker receipt has no player-record row for roster slot %d." % slot)
+		var live_record: Dictionary = live_record_variant
+		if int(live_record.get("slot", -1)) != slot \
+				or int(live_record.get("record_address", -1)) != address \
+				or int(live_record.get("player_id", -1)) != int(record.get("player_id", -1)) \
+				or int(live_record.get("level", -1)) != int(record.get("level", -1)) \
+				or int(live_record.get("energy", -1)) != energy \
+				or String(live_record.get("record_bytes", "")) != ram.slice(address, address + 4).hex_encode():
+			return _fail("Live player record %d differs from the ROM worker's verified RAM output." % slot)
+		var expected_energy := int(record.get("max_energy", -1))
+		if slot == holder_slot:
+			expected_energy = maxi(0, int(record.get("current_energy", -1)) - expected_cost)
+		else:
+			var player_id := int(record.get("player_id", -1))
+			var regeneration := 1 if player_id == MISUGI_ID else 2
+			expected_energy = mini(expected_energy,
+				int(record.get("current_energy", -1)) + regeneration)
+		if energy != expected_energy:
+			return _fail("Live `$E2BC` output for slot %d differs from its ROM-derived cap/regeneration rule." % slot)
+		record["current_energy"] = energy
+		synchronized_players.append(record)
+	if (int(ram[int(holder["record_address"]) + 1]) \
+			| (int(ram[int(holder["record_address"]) + 2]) << 8)) != resulting_energy:
+		return _fail("Live `$D5EA` RAM does not contain the worker's `$E2BC` holder result.")
+	_players = synchronized_players
+	field_run_timer = int(ram[0x0614])
+	stamina_update_count = 1
+	stamina_regen_skip_counter = 1
+	live_source_energy_boundary_applied = true
+	return true
+
+
 ## Call once only when the source field loop reaches `$E14D`, after `$E349`
 ## returned without starting a transition. B/menu entry exits earlier and must
 ## not call this method for that interrupted iteration.
@@ -170,6 +274,7 @@ func get_source_status() -> Dictionary:
 		"field_run_timer": field_run_timer,
 		"stamina_update_count": stamina_update_count,
 		"stamina_regen_skip_counter": stamina_regen_skip_counter,
+		"live_source_energy_boundary_applied": live_source_energy_boundary_applied,
 		"home_roster_slots": _players.size(),
 		"error": error_message,
 	}
@@ -216,7 +321,13 @@ func _load_and_validate_rom_resources() -> bool:
 	_record_pointers = _load_verified_menu_bytes("player_record_pointer_table_22.bin", RECORD_POINTERS_SHA256, 22 * 2)
 	if _record_pointers.is_empty():
 		return false
-	if _roster.size() != 12 or _stamina_profiles.size() != 0x128 or _stamina_value_words.size() != 0xC0:
+	_player_stat_profiles = _load_verified_menu_bytes("player_stat_profiles_00_8c.bin",
+		PLAYER_STAT_PROFILES_SHA256, 0x8D * 0x18)
+	if _player_stat_profiles.is_empty():
+		return false
+	if _roster.size() != 12 or _stamina_profiles.size() != 0x128 \
+			or _stamina_value_words.size() != 0xC0 \
+			or _player_stat_profiles.size() != 0x8D * 0x18:
 		return _fail("ROM-derived player-state tables have unexpected dimensions.")
 	return true
 
@@ -240,7 +351,7 @@ func _build_fresh_home_records() -> bool:
 		if player_id < 1 or player_id > 0x22:
 			return _fail("The match-00 home roster contains an unsupported fresh-start player ID.")
 		var profile_id := int(_profile_map[player_id * 4])
-		var maximum_energy := _calculate_max_stamina(profile_id, 0)
+		var maximum_energy := _calculate_max_stamina(slot, profile_id, 0)
 		if maximum_energy < 0:
 			return _fail("ROM stamina lookup failed for roster slot %d." % slot)
 		var pointer_offset := slot * 2
@@ -257,10 +368,17 @@ func _build_fresh_home_records() -> bool:
 	return true
 
 
-func _calculate_max_stamina(profile_id: int, level: int) -> int:
-	if profile_id < 0 or profile_id >= 0x25 or level < 0 or level > 0xFF:
+func _calculate_max_stamina(home_slot: int, profile_id: int, level: int) -> int:
+	if home_slot < 0 or home_slot >= 11 or profile_id < 0 or profile_id >= 0x25 \
+			or level < 0 or level > 0xFF:
 		return -1
-	var stamina_base_index := int(_stamina_profiles[profile_id * 8])
+	var use_common_profile_row := home_slot == 0 or home_slot == 0x0B \
+		or home_slot == 0x1E or home_slot == 0x1F
+	# `$80D1-$80F6` forms `$9FCE + profile_id * 24` for ordinary
+	# selectors; `$00/$0B/$1E/$1F` instead resolve the shared `$AE86` rows.
+	# The first-action-menu extraction preserves the complete 24-byte rows.
+	var stamina_base_index := int(_stamina_profiles[profile_id * 8]) \
+		if use_common_profile_row else int(_player_stat_profiles[profile_id * 0x18])
 	var value_index := mini(0x5F, stamina_base_index + level)
 	var word_offset := value_index * 2
 	return int(_stamina_value_words[word_offset]) | (int(_stamina_value_words[word_offset + 1]) << 8)
@@ -304,9 +422,11 @@ func _reset() -> void:
 	field_run_timer = FIELD_RUN_TIMER_INITIAL
 	stamina_update_count = 0
 	stamina_regen_skip_counter = 0
+	live_source_energy_boundary_applied = false
 	_roster.clear()
 	_stamina_profiles.clear()
 	_stamina_value_words.clear()
+	_player_stat_profiles.clear()
 	_profile_map.clear()
 	_record_pointers.clear()
 	_players.clear()

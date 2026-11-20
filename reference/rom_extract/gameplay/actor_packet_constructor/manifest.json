@@ -3,7 +3,7 @@
   "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
   "runtime_rom_dependency": false,
   "capture_or_screenshot_bytes_included": false,
-  "scope": "fresh-start scenario $35 animation $8F actor packets",
+  "scope": "fresh-start route actor packets from animations $8F, $4E, $66, and $E6 (via its $78 redirect)",
   "source_mapping": {
     "prg_bank": "$14",
     "cpu_window": "$8000-$BFFF",
@@ -24,28 +24,28 @@
       "purpose": "actor record base pointers selected by F1 packet byte 5 bits 2-4"
     },
     {
-      "name": "motion_pointer_table_A1B4_00_71.bin",
-      "path": "reference/rom_extract/gameplay/actor_packet_constructor/motion_pointer_table_A1B4_00_71.bin",
+      "name": "motion_pointer_table_A1B4_00_A9.bin",
+      "path": "reference/rom_extract/gameplay/actor_packet_constructor/motion_pointer_table_A1B4_00_A9.bin",
       "cpu_address": "$A1B4",
       "file_offset": "0x02A1C4",
       "entry_width_bytes": 2,
       "first_index": 0,
-      "last_index": 113,
-      "length_bytes": 228,
-      "sha256": "15171701bd415846f98c0bfe2ab119db90987f426bf16908705e0ba868088c11",
-      "purpose": "motion script roots selected by F1 packet byte 1; bounded through animation $8F's maximum index $71"
+      "last_index": 169,
+      "length_bytes": 340,
+      "sha256": "7e7a34cb494ea929ac3f96a6cd70caef36ce9c6f3ce1b3382608ea984042d2c9",
+      "purpose": "motion script roots selected by F1 packet byte 1; bounded through animation $66's maximum index $A9"
     },
     {
-      "name": "appearance_pointer_table_AC47_00_93.bin",
-      "path": "reference/rom_extract/gameplay/actor_packet_constructor/appearance_pointer_table_AC47_00_93.bin",
+      "name": "appearance_pointer_table_AC47_00_CD.bin",
+      "path": "reference/rom_extract/gameplay/actor_packet_constructor/appearance_pointer_table_AC47_00_CD.bin",
       "cpu_address": "$AC47",
       "file_offset": "0x02AC57",
       "entry_width_bytes": 2,
       "first_index": 0,
-      "last_index": 147,
-      "length_bytes": 296,
-      "sha256": "a0638cdcc481955ac46aac1576d50ec40786c023c4d8f21867b2e4728691453f",
-      "purpose": "appearance script roots selected by F1 packet byte 2; bounded through animation $8F's maximum index $93"
+      "last_index": 205,
+      "length_bytes": 412,
+      "sha256": "980d493d8251dddc1ccf5a9320b6cbdeb5cc605d09abf990a4223e4a4da78fce",
+      "purpose": "appearance script roots selected by F1 packet byte 2; bounded through scenario $44 animation $5C's maximum index $CD"
     }
   ],
   "record_constructor_source": {

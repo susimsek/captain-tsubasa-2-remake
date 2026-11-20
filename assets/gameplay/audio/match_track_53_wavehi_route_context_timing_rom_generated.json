@@ -1,0 +1,88 @@
+{
+  "schema": "ct2-rom-cue-wavehi-route-context-timing-v1",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "cue": "$53",
+  "source_audio_path": "assets/gameplay/audio/match_track_53_wavehi_route_context_rom_generated.wav",
+  "source_audio_sha256": "57b9753d98a627dab692adea3179ee835ded4c9651f86470130dc5c4acb39b27",
+  "source_input_timeline_sha256": "6cae92ff2b6a77fcc05c34c57c734bbff47930ada172633cb4a4b830cc3e77dc",
+  "source_candidate_sha256": "dfc63d373992ab7e65f628891ed833f2ec63b6d4c2278687add4ccb3cb922f1d",
+  "source_candidate_report_sha256": "91dfb854491b7ca3a90cb38e7ad3f27823aad02b56d5725cb407e6fc1a6981d8",
+  "source_queue_csv_sha256": "e618bba170d38c4642748b05cd4d582a92a8e2a9f9d709624ec554ecca9da999",
+  "sample_rate_hz": 44100,
+  "channels": 1,
+  "bits_per_sample": 16,
+  "source_pcm_sample_count": 566405,
+  "ntsc_cpu_hz": 1789773,
+  "wavehi_renderer_phase_samples": 25,
+  "wavehi_sample_index_formula": "round(source_cycle * 44100 / 1789773) - 25",
+  "captured_pcm_used": false,
+  "captured_wav_used": false,
+  "capture_used_as_event_input": false,
+  "runtime_needs_rom_or_emulator": false,
+  "occurrences": [
+    {
+      "occurrence_index": 0,
+      "queue_id": "$53",
+      "queue_source_frame": 8271,
+      "queue_source_cycle": 246288156,
+      "source_end": {
+        "kind": "source_render_end",
+        "source_frame": 9042,
+        "sample_index": 6634919
+      },
+      "renderer_global_sample_window": [
+        6068514,
+        6634919
+      ],
+      "asset_sample_window": [
+        0,
+        566405
+      ],
+      "stop_tail_source_frames": [
+        8443,
+        8460
+      ],
+      "stop_tail_queue_events": [
+        {
+          "source_frame": 8443,
+          "source_cycle": 251410847,
+          "queue_id": "$01"
+        },
+        {
+          "source_frame": 8460,
+          "source_cycle": 251937939,
+          "queue_id": "$01"
+        }
+      ],
+      "embedded_queue_events": [
+        {
+          "source_frame": 8624,
+          "source_cycle": 256809206,
+          "queue_id": "$66"
+        },
+        {
+          "source_frame": 8664,
+          "source_cycle": 257998382,
+          "queue_id": "$2B"
+        },
+        {
+          "source_frame": 8786,
+          "source_cycle": 261637823,
+          "queue_id": "$2C"
+        }
+      ],
+      "embedded_bgm_queue_events": [
+        {
+          "source_frame": 8607,
+          "source_cycle": 256313396,
+          "queue_id": "$3C"
+        }
+      ],
+      "verification_global_sample_window": [
+        6068514,
+        6569610
+      ],
+      "verification_sample_count": 501096
+    }
+  ]
+}

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Capture the ID-1 Select cleanup counters with muted, checkpointed FCEUX."""
+"""Trace cleanup, wait counters, and route sound/script pointers with muted FCEUX."""
 
 from __future__ import annotations
 
 import csv
+import argparse
 import hashlib
 import json
 import os
@@ -104,47 +105,62 @@ def check_selector_copy_snapshots(output: Path) -> tuple[int, str]:
 
 
 def main() -> None:
+	parser = argparse.ArgumentParser(description=__doc__)
+	parser.add_argument("--validate-output", type=Path,
+		help="validate an existing completed trace directory without launching FCEUX")
+	args = parser.parse_args()
 	for path, expected in EXPECTED.items():
 		if not path.is_file() or digest(path) != expected:
 			raise SystemExit(f"Missing or changed trace input: {path.name}")
-	if not LUA.is_file() or not FCEUX.is_file():
+	if not args.validate_output and (not LUA.is_file() or not FCEUX.is_file()):
 		raise SystemExit("FCEUX or the cleanup-counter Lua trace is unavailable")
-
-	run_id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_utc")
-	output = ROOT / "reference/diagnostics" / f"kickoff_select_cleanup_counters_{run_id}"
-	output.mkdir(parents=True, exist_ok=False)
-	env = os.environ.copy()
-	env.update({"SDL_AUDIODRIVER": "dummy", "CT2_PROJECT_ROOT": str(ROOT),
-		"CT2_SELECT_CLEANUP_TRACE_OUTPUT_DIR": str(output)})
-	command = [str(FCEUX), "--sound", "0", "--volume", "0", "--no-config", "1",
-		"--newppu", "1", "--loadlua", str(LUA), str(ROM)]
-	started = time.monotonic()
-	last_progress, last_progress_at = None, started
-	with (output / "fceux_stdout.txt").open("w", encoding="utf-8") as stdout, \
-			(output / "fceux_stderr.txt").open("w", encoding="utf-8") as stderr:
-		process = subprocess.Popen(command, env=env, stdout=stdout, stderr=stderr)
-		while process.poll() is None:
-			progress_path = output / "progress.txt"
-			if progress_path.is_file():
-				progress = progress_path.read_text(encoding="ascii").strip()
-				if progress and progress != last_progress:
-					print(f"Muted ID-1 cleanup-counter trace: {progress}", flush=True)
-					last_progress, last_progress_at = progress, time.monotonic()
-			if time.monotonic() - started > 300 or time.monotonic() - last_progress_at > 60:
-				process.kill()
-				process.wait()
-				raise SystemExit(f"Trace timed out; last progress={last_progress}; output={output}")
-			time.sleep(0.25)
-
-	metadata = output / "metadata.txt"
-	metadata_text = metadata.read_text(encoding="utf-8") if metadata.is_file() else ""
-	metadata_values = dict(line.split("=", 1) for line in metadata_text.splitlines() if "=" in line)
-	complete = "complete=true" in metadata_text
-	with metadata.open("a", encoding="utf-8") as stream:
-		stream.write("fceux_version=2.7.0\n")
-		stream.write(f"fceux_exit_code={process.returncode}\nelapsed_seconds={time.monotonic() - started:.3f}\n")
-	if process.returncode not in (0, -11) or not complete:
-		raise SystemExit(f"Trace incomplete (exit {process.returncode}); output={output}")
+	if args.validate_output:
+		output = args.validate_output.resolve()
+		if not output.is_dir():
+			raise SystemExit(f"Trace output directory does not exist: {output}")
+		metadata = output / "metadata.txt"
+		metadata_text = metadata.read_text(encoding="utf-8") if metadata.is_file() else ""
+		metadata_values = dict(line.split("=", 1) for line in metadata_text.splitlines() if "=" in line)
+		process_return_code = int(metadata_values.get("fceux_exit_code", "-999"))
+		elapsed_seconds = float(metadata_values.get("elapsed_seconds", "0"))
+		complete = "complete=true" in metadata_text
+	else:
+		run_id = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_utc")
+		output = ROOT / "reference/diagnostics" / f"kickoff_select_cleanup_counters_{run_id}"
+		output.mkdir(parents=True, exist_ok=False)
+		env = os.environ.copy()
+		env.update({"SDL_AUDIODRIVER": "dummy", "CT2_PROJECT_ROOT": str(ROOT),
+			"CT2_SELECT_CLEANUP_TRACE_OUTPUT_DIR": str(output)})
+		command = [str(FCEUX), "--sound", "0", "--volume", "0", "--no-config", "1",
+			"--newppu", "1", "--loadlua", str(LUA), str(ROM)]
+		started = time.monotonic()
+		last_progress, last_progress_at = None, started
+		with (output / "fceux_stdout.txt").open("w", encoding="utf-8") as stdout, \
+				(output / "fceux_stderr.txt").open("w", encoding="utf-8") as stderr:
+			process = subprocess.Popen(command, env=env, stdout=stdout, stderr=stderr)
+			while process.poll() is None:
+				progress_path = output / "progress.txt"
+				if progress_path.is_file():
+					progress = progress_path.read_text(encoding="ascii").strip()
+					if progress and progress != last_progress:
+						print(f"Muted ID-1 cleanup-counter trace: {progress}", flush=True)
+						last_progress, last_progress_at = progress, time.monotonic()
+				if time.monotonic() - started > 300 or time.monotonic() - last_progress_at > 60:
+					process.kill()
+					process.wait()
+					raise SystemExit(f"Trace timed out; last progress={last_progress}; output={output}")
+				time.sleep(0.25)
+		metadata = output / "metadata.txt"
+		metadata_text = metadata.read_text(encoding="utf-8") if metadata.is_file() else ""
+		metadata_values = dict(line.split("=", 1) for line in metadata_text.splitlines() if "=" in line)
+		complete = "complete=true" in metadata_text
+		process_return_code = process.returncode
+		elapsed_seconds = time.monotonic() - started
+		with metadata.open("a", encoding="utf-8") as stream:
+			stream.write("fceux_version=2.7.0\n")
+			stream.write(f"fceux_exit_code={process_return_code}\nelapsed_seconds={elapsed_seconds:.3f}\n")
+	if process_return_code not in (0, -11) or not complete:
+		raise SystemExit(f"Trace incomplete (exit {process_return_code}); output={output}")
 
 	for suffix in ("", "_repeat"):
 		check_snapshot(output / f"frame_snapshots{suffix}.csv")
@@ -176,6 +192,18 @@ def main() -> None:
 		sound_queue_rows = list(csv.DictReader(stream))
 	if not sound_queue_rows:
 		raise SystemExit(f"FCEUX did not capture any sound-queue/bank-state writes; output={output}")
+	script_pointer_path = output / "script_pointer_writes.csv"
+	script_pointer_repeat_path = output / "script_pointer_writes_repeat.csv"
+	script_pointer_hash = normalized_hash(script_pointer_path)
+	if script_pointer_hash != normalized_hash(script_pointer_repeat_path):
+		raise SystemExit(f"Script-pointer writer passes differ; output={output}")
+	with script_pointer_path.open(newline="", encoding="utf-8") as stream:
+		script_pointer_rows = list(csv.DictReader(stream))
+	required_live_pointers = {("$BFD5", "$05"), ("$BFF0", "$05"), ("$A62F", "$03")}
+	observed_live_pointers = {(row["active_pointer"], row["pointer_bank"]) for row in script_pointer_rows}
+	if not required_live_pointers.issubset(observed_live_pointers):
+		missing = sorted(required_live_pointers - observed_live_pointers)
+		raise SystemExit(f"Live script-pointer trace missed queue-event stream roots {missing}; output={output}")
 	stream_buffer_path = output / "stream_buffer_writes.csv"
 	stream_buffer_repeat_path = output / "stream_buffer_writes_repeat.csv"
 	stream_buffer_hash = normalized_hash(stream_buffer_path)
@@ -256,6 +284,44 @@ def main() -> None:
 					"0704": payloads[0][0x0704], "0705": payloads[0][0x0705],
 					"07fc": payloads[0][0x07FC],
 				}
+	nmi_writer_path = output / "nmi_ram_input_writes.csv"
+	nmi_writer_repeat_path = output / "nmi_ram_input_writes_repeat.csv"
+	nmi_writer_hash = normalized_hash(nmi_writer_path)
+	if nmi_writer_hash != normalized_hash(nmi_writer_repeat_path):
+		raise SystemExit(f"NMI RAM input writer passes differ; output={output}")
+	with nmi_writer_path.open(newline="", encoding="utf-8") as stream:
+		nmi_writer_rows = list(csv.DictReader(stream))
+	with (output / "nmi_ram_input_writes_startup.csv").open(newline="", encoding="utf-8") as stream:
+		nmi_writer_startup_rows = list(csv.DictReader(stream))
+	if not nmi_writer_rows or not nmi_writer_startup_rows:
+		raise SystemExit(f"FCEUX did not capture startup and route RAM input writes; output={output}")
+	nmi_entry_cycle = int(target_nmi["cycle"])
+	nmi_required_inputs = (0x001B, 0x001C, 0x001D, 0x0020, 0x0021, 0x0022, 0x0024,
+		0x003B, 0x008E, 0x008F, 0x009E, 0x009F, 0x00A0, 0x00A1, 0x00E1, 0x00E2,
+		0x00E3, 0x0628)
+	nmi_input_writer_state: dict[str, dict[str, object]] = {}
+	target_ram = (output / "frame_7266_C421_ram_pass1.bin").read_bytes()
+	for address in nmi_required_inputs:
+		key = f"${address:04X}"
+		actual = target_ram[address]
+		route_writes = [row for row in nmi_writer_rows if row["address"] == key
+			and int(row["cycle"]) <= nmi_entry_cycle]
+		startup_writes = [row for row in nmi_writer_startup_rows if row["address"] == key]
+		last_route_write = route_writes[-1] if route_writes else None
+		last_startup_write = startup_writes[-1] if startup_writes else None
+		for label, writer in (("startup", last_startup_write), ("route", last_route_write)):
+			if writer is not None and int(writer["value"].replace("$", ""), 16) != actual:
+				if label == "route" or last_route_write is None:
+					raise SystemExit(f"NMI input {key} writer value disagrees with the C421 snapshot; output={output}")
+			nmi_input_writer_state[key] = {
+				"entry_value": actual,
+				"last_startup_write": ({field: last_startup_write[field] for field in
+					("source_frame", "cycle", "bank", "pc_callback", "write_size", "value")}
+					if last_startup_write else None),
+				"last_route_write_before_nmi": ({field: last_route_write[field] for field in
+					("source_frame", "cycle", "bank", "pc_callback", "write_size", "value")}
+					if last_route_write else None),
+			}
 	if not (int(zero_writer["cycle"]) <= int(loop_exit["cycle"]) <= int(post_wait["cycle"]) <= int(a006_call["cycle"])):
 		raise SystemExit(f"The `$78` wait exit does not precede the caller's `$A006` call; output={output}")
 	selector_copy_length, selector_copy_hash = check_selector_copy_snapshots(output)
@@ -271,6 +337,8 @@ def main() -> None:
 		"caller_hook_sha256": caller_hook_hash, "caller_hook_events": len(caller_rows),
 		"caller_hook_required_pcs": sorted(required_caller_pcs),
 		"sound_queue_write_sha256": sound_queue_hash, "sound_queue_write_events": len(sound_queue_rows),
+		"script_pointer_write_sha256": script_pointer_hash, "script_pointer_write_events": len(script_pointer_rows),
+		"live_audio_script_pointers": sorted(required_live_pointers),
 		"stream_buffer_write_sha256": stream_buffer_hash, "stream_buffer_write_events": len(stream_buffer_rows),
 		"stream_buffer_startup_write_events": len(stream_buffer_startup_rows),
 		"a4eb_dispatch_hooks": [{key: row[key] for key in ("source_frame", "cycle", "pc", "bank", "a", "x", "y", "p", "sp", "ram_00ec", "ram_00ed", "dispatch_ptr", "dispatch_byte", "mapper_select", "mapper_r6", "mapper_r7")} for row in stream_hooks],
@@ -281,6 +349,15 @@ def main() -> None:
 		"target_nmi_state": {key: target_nmi[key] for key in ("source_frame", "cycle", "sp", "ram_0700", "ram_0701", "ram_0702", "ram_0703", "ram_0704", "ram_0705", "ram_07fc", "mapper_select", "mapper_r6", "mapper_r7")},
 		"target_sound_call_state": {key: target_sound_call[key] for key in ("source_frame", "cycle", "sp", "ram_0700", "ram_0701", "ram_0702", "ram_0703", "ram_0704", "ram_0705", "ram_07fc", "mapper_select", "mapper_r6", "mapper_r7")},
 		"target_nmi_ram_bytes": target_ram_bytes,
+		"target_nmi_input_writer_trace": {
+			"sha256": nmi_writer_hash,
+			"events": len(nmi_writer_rows),
+			"startup_events": len(nmi_writer_startup_rows),
+			"passes_match": True,
+			"entry_cycle": nmi_entry_cycle,
+			"entry_inputs": nmi_input_writer_state,
+			"diagnostics_only": True,
+		},
 		"target_nmi_snapshot_sha256": nmi_snapshot_hashes,
 		"word_wait_write_sha256": word_wait_hash, "word_wait_write_events": len(word_wait_rows),
 		"mapper_shadow_0022": {
@@ -300,12 +377,12 @@ def main() -> None:
 		"signature_checked_after_both_checkpoint_loads": True,
 		"frame_7258_full_ppu_sha256": clear_ppu_hash,
 		"frame_7258_full_ram_sha256": clear_ram_hash,
-		"fceux_exit_code": process.returncode,
-		"elapsed_seconds": round(time.monotonic() - started, 3),
+		"fceux_exit_code": process_return_code,
+		"elapsed_seconds": round(elapsed_seconds, 3),
 		"audio_muted": True, "diagnostics_only": True,
 	}
 	(output / "validation.json").write_text(json.dumps(validation, indent=2) + "\n", encoding="utf-8")
-	print(f"PASS: identical muted FCEUX counter, caller-hook, sound-queue, NMI RAM/PPU, `$0078`, and `$0022`-writer replays; `$893B->$8117->$A006` confirmed; {validation['elapsed_seconds']:.2f}s; output={output}")
+	print(f"PASS: identical muted FCEUX counter, caller-hook, sound-queue, script-pointer, NMI RAM/PPU and 18-input writer replays; `$893B->$8117->$A006` confirmed; {validation['elapsed_seconds']:.2f}s; output={output}")
 
 
 if __name__ == "__main__":

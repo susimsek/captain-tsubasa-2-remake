@@ -1,0 +1,131 @@
+{
+  "schema": "ct2-rom-cue-wavehi-occurrence-timing-v1",
+  "purpose": "Live queue-driven $55 occurrence playback from ROM-stepper WaveHi PCM; clip boundaries use ROM queue and APU mute events.",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "cue": "$55",
+  "source_timing_path": "reference/rom_extract/gameplay/first_match_cue_timing_rom_stepper_20261027.json",
+  "source_timing_sha256": "31190aaebb79298383e72234ca128c0c28b257557d17daa0dbb0c5eecb700510",
+  "source_queue_events_path": "reference/rom_extract/gameplay/first_match_audio_queue_events_20261027.json",
+  "source_queue_events_sha256": "2d4da33800c01e90cc2c6e9207c3e16943661ed20dfe2bf5193236f5679b365f",
+  "source_audio_path": "assets/gameplay/audio/match_track_55_wavehi_occurrences_rom_generated.wav",
+  "source_audio_sha256": "1cafcd55218fd2896e1c38a277b52bac40297fd177c443f851008d39c17fa832",
+  "sample_rate_hz": 44100,
+  "channels": 1,
+  "bits_per_sample": 16,
+  "source_pcm_sample_count": 2535249,
+  "ntsc_cpu_hz": 1789773,
+  "wavehi_renderer_phase_samples": 25,
+  "wavehi_sample_index_formula": "round(source_cycle * 44100 / 1789773) - 25",
+  "source_input_timeline_sha256": "6cae92ff2b6a77fcc05c34c57c734bbff47930ada172633cb4a4b830cc3e77dc",
+  "captured_pcm_used": false,
+  "captured_wav_used": false,
+  "capture_used_as_event_input": false,
+  "runtime_needs_rom_or_emulator": false,
+  "occurrences": [
+    {
+      "occurrence_index": 0,
+      "queue_source_frame": 4816,
+      "queue_source_cycle": 143396526,
+      "first_pulse1_source_frame": 4817,
+      "first_pulse1_source_cycle": 143429288,
+      "delay_cycles": 32762,
+      "delay_samples": 807,
+      "stop_queue_id": "$01",
+      "stop_queue_source_frame": 7243,
+      "stop_queue_source_cycle": 215674689,
+      "stop_queue_events": [
+        {
+          "source_frame": 7243,
+          "source_cycle": 215674689,
+          "queue_id": "$01"
+        },
+        {
+          "source_frame": 7266,
+          "source_cycle": 216367134,
+          "queue_id": "$01"
+        }
+      ],
+      "first_apu_mute_write": {
+        "source_frame": 7244,
+        "source_cycle": 215704288,
+        "pc": "$866D",
+        "address": "$4000",
+        "value": "$30"
+      },
+      "last_apu_mute_write": {
+        "source_frame": 7268,
+        "source_cycle": 216421444,
+        "pc": "$866D",
+        "address": "$400C",
+        "value": "$30"
+      },
+      "muted_channel_addresses": [
+        "$4000",
+        "$4004",
+        "$4008",
+        "$400C"
+      ],
+      "next_bgm_queue_id": "$55",
+      "next_bgm_queue_source_frame": 7409,
+      "next_bgm_queue_source_cycle": 220630517,
+      "renderer_global_sample_window": [
+        3533265,
+        5436310
+      ],
+      "asset_sample_window": [
+        0,
+        1903045
+      ]
+    },
+    {
+      "occurrence_index": 1,
+      "queue_source_frame": 7409,
+      "queue_source_cycle": 220630517,
+      "first_pulse1_source_frame": 7411,
+      "first_pulse1_source_cycle": 220680808,
+      "delay_cycles": 50291,
+      "delay_samples": 1239,
+      "stop_queue_id": "$01",
+      "stop_queue_source_frame": 8108,
+      "stop_queue_source_cycle": 241434503,
+      "stop_queue_events": [
+        {
+          "source_frame": 8108,
+          "source_cycle": 241434503,
+          "queue_id": "$01"
+        }
+      ],
+      "first_apu_mute_write": {
+        "source_frame": 8109,
+        "source_cycle": 241464199,
+        "pc": "$866D",
+        "address": "$4000",
+        "value": "$30"
+      },
+      "last_apu_mute_write": {
+        "source_frame": 8109,
+        "source_cycle": 241466372,
+        "pc": "$866D",
+        "address": "$400C",
+        "value": "$30"
+      },
+      "muted_channel_addresses": [
+        "$4000",
+        "$4004",
+        "$4008",
+        "$400C"
+      ],
+      "next_bgm_queue_id": "$53",
+      "next_bgm_queue_source_frame": 8271,
+      "next_bgm_queue_source_cycle": 246288156,
+      "renderer_global_sample_window": [
+        5436310,
+        6068514
+      ],
+      "asset_sample_window": [
+        1903045,
+        2535249
+      ]
+    }
+  ]
+}

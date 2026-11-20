@@ -78,8 +78,9 @@ Godot 4.7.2 is pinned by CI. Open the project with godot --path .
 
 ## Collaboration and change discipline
 
-- One owner controls the shared FCEUX instance. Reuse signature-checked checkpoints; do not restart from power-on without need.
-- Do not use sub-agents for this project.
+- Optimize for shortest wall-clock completion of the active goal. Subagents are explicitly allowed and preferred when independent parallel work shortens the schedule, even if that adds token use; use up to ten in parallel when concurrency permits. Give each a bounded deliverable and one owner per edited file; prefer parallel ROM/source audits, menu or asset audits, and verifier design over overlapping implementation. The primary agent owns integration and final verification.
+- One owner controls the shared FCEUX instance; the primary agent owns it by default. Subagents may inspect static ROM bytes and existing traces, but must not operate the shared emulator. For emulator investigations, use a validated save/load checkpoint and confirm the next source event advances; persisted slots may omit live CPU/PPU phase. Do not restart from power-on without need.
+- For faster iteration, capture checkpoints produced by the ordinary-input Godot source route at verified scheduler boundaries. Reuse these only in focused transition verifiers, with ROM/source provenance and the captured PC, mapper, registers, RAM, stack, and input frame. Never use FCEUX RAM or emulator captures to seed Godot runtime state, inject a route endpoint, or replace the full recorded-input route check. Run focused verifiers after individual transition changes and the full route after several bounded changes and before accepting the milestone.
 - As conversation context grows during a long task, proactively tell the user when `/compact` would help and recommend running it. Do not claim to invoke the command unless the client exposes a supported mechanism. Keep the objective, status, decisions, next step, and evidence links clear for compaction. Start a separate chat only for an independent outcome.
 - Keep updates concise. Do not commit, publish, distribute, or message others unless explicitly requested.
 

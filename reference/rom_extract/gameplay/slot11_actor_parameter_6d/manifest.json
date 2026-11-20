@@ -1,0 +1,177 @@
+{
+  "schema": "ct2-slot11-actor-parameter-6d-source-v1",
+  "source_rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "size_bytes": 393232,
+    "format": "iNES",
+    "mapper": 4,
+    "mapper_name": "MMC3",
+    "prg_16k_units": 16,
+    "prg_8k_bank_count": 32
+  },
+  "bank_mapping": {
+    "prg_bank_size_bytes": 8192,
+    "header_bytes": 16,
+    "formula": "0x10 + (8-KiB PRG bank * 0x2000) + (CPU address - 0x8000)",
+    "bank_18_window": "$8000-$9FFF",
+    "file_base": "0x030010"
+  },
+  "runtime_dependency": {
+    "requires_source_rom_at_runtime": false,
+    "source_bytes_are_reference_only": true,
+    "screenshots_or_captured_audio_included": false,
+    "description": "These ROM-derived byte spans preserve provenance for reverse engineering. They do not make the ROM a runtime dependency and are not yet wired as Godot runtime resources."
+  },
+  "actor_parameter": {
+    "actor_parameter": "$6D",
+    "pointer_table_cpu_address": "0x9220",
+    "pointer_table_file_offset": "0x031230",
+    "index": "0x6D",
+    "entry_cpu_address": "0x92FA",
+    "entry_file_offset": "0x03130A",
+    "pointer_bytes_hex": "E3 9B",
+    "target_cpu_address": "0x9BE3",
+    "next_pointer_entry_cpu_address": "0x92FC",
+    "next_pointer_entry_file_offset": "0x03130C",
+    "next_pointer_bytes_hex": "71 9C",
+    "next_target_cpu_address": "0x9C71",
+    "span_boundary_rule": "Exclusive stream end is the next pointer-table entry target, verified greater than the current target."
+  },
+  "initial_decode": {
+    "stream_byte_0": "$F2",
+    "source_worker": "Bank-$18 slot-$11 actor worker; `$806E` reads the byte at the current `$05E5` index, then advances `$05E5`.",
+    "command_vector": "The bank-$18 inline dispatch at `$8087` resolves command `$F2` to `$80B5`; `$80B5` jumps to fixed `$C52D`, which jumps to the `$CC46` waiter containing `$CC50 JSR $CB0F`.",
+    "runtime_evidence": "The muted PASS trace at source frames 9476-9477 records slot-$11 with `$05EA=$6D`, pointer `$9BE3`, and index `$05E5` changing from 0 to 1 by the next scheduler save. The trace is validation evidence, not a runtime seed.",
+    "limit": "The $F4 selector-$01 and selector-$02 handlers and their pointer calculations are now byte-backed. The saved trace ends before either handler executes; the subsequent type-$05 event and visual output remain unverified for actor parameter $6D."
+  },
+  "spans": [
+    {
+      "name": "actor_parameter_6D_pointer_entry",
+      "file": "bank18_actor_parameter_6d_pointer_92fa.bin",
+      "bank": "0x18",
+      "window_start": "0x8000",
+      "cpu_start": "0x92FA",
+      "cpu_end_exclusive": "0x92FC",
+      "file_offset": "0x03130A",
+      "length_bytes": 2,
+      "bytes_hex": "E3 9B",
+      "sha256": "0aebdd98608aa88311ca8ab9bedd486c26160ed4a842df5297fd8572eb568bf4",
+      "role": "Little-endian actor-parameter pointer table entry for index $6D; resolves to $9BE3."
+    },
+    {
+      "name": "actor_parameter_6D_stream",
+      "file": "bank18_actor_parameter_6d_stream_9be3_9c70.bin",
+      "bank": "0x18",
+      "window_start": "0x8000",
+      "cpu_start": "0x9BE3",
+      "cpu_end_exclusive": "0x9C71",
+      "file_offset": "0x031BF3",
+      "length_bytes": 142,
+      "bytes_hex": "F2 F4 01 EA 9B F4 9B F4 02 FE 9B 09 9C 1C 9C 08 9C F4 02 37 9C 46 9C 59 9C 08 9C 01 52 E8 FC 01 76 61 72 21 FC F0 01 62 E8 FC 01 E9 00 FC 01 1B 1A 14 64 69 21 20 20 FC F0 01 72 E8 FC 01 E9 FC 01 EA 20 20 FC 01 E7 20 6F 79 75 6E 63 75 21 20 20 20 FC F0 01 52 E4 2C FC 01 E8 67 65 6C 64 69 20 FC F0 01 62 E4 2C FC 01 E8 20 FC 01 E9 20 6D 61 72 6B 21 FC F0 01 62 E4 FC 01 E8 20 60 20 FC 01 E7 20 6F 79 75 6E 63 75 21 20 20 FC F0",
+      "sha256": "0b787ded174d6496196c978f5b835c4e89c9858a8499617b02bacc5b3f7b7d1e",
+      "role": "Full actor-parameter $6D stream bounded by the next little-endian pointer-table entry at $92FC, which resolves to $9C71."
+    },
+    {
+      "name": "bank18_f4_pointer_handler_80cb_80e9",
+      "file": "../slot11_actor_worker_resume_wait/bank18_actor_worker_resume_804a_80fd.bin",
+      "bank": "0x18",
+      "window_start": "0x8000",
+      "cpu_start": "0x80CB",
+      "cpu_end_exclusive": "0x80EA",
+      "file_offset": "0x0300DB",
+      "length_bytes": 31,
+      "bytes_hex": "AC E5 05 B1 5F 20 EA 80 8A 0A 38 6D E5 05 A8 B1 5F AA C8 B1 5F 86 5F 85 60 A9 00 8D E5 05 60",
+      "sha256": "28db6159947e5533d7a034edf5d15061088113652d5a78e67c2ff326a6b259fd",
+      "role": "F4 selector dispatch and pointer-table transfer; shared code already exists in the slot-$11 worker span.",
+      "provenance": {
+        "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+        "mapping": "0x030010 + (CPU address - 0x8000)",
+        "artifact": {
+          "mode": "shared_existing_artifact",
+          "artifact_cpu_start": "0x804A",
+          "artifact_file_offset": "0x03005A",
+          "artifact_length_bytes": 179,
+          "artifact_sha256": "9c07722c85a0670f8986a7e7a680bc205a587881383fd84276e520806f465c6e",
+          "artifact_byte_offset": "0x0081"
+        }
+      }
+    },
+    {
+      "name": "bank18_f4_selector01_handler_8106_810d",
+      "file": "bank18_actor_f4_selector01_handler_8106_810d.bin",
+      "bank": "0x18",
+      "window_start": "0x8000",
+      "cpu_start": "0x8106",
+      "cpu_end_exclusive": "0x810E",
+      "file_offset": "0x030116",
+      "length_bytes": 8,
+      "bytes_hex": "AE FB 05 F0 02 A2 01 60",
+      "sha256": "543554f20106c3af49e9db047fc997857dde066667f5360f28d4caa8a00d9d70",
+      "role": "Selector $01 handler; returns X=0 for $05FB=0, otherwise X=1.",
+      "provenance": {
+        "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+        "mapping": "0x030010 + (CPU address - 0x8000)",
+        "artifact": {
+          "mode": "new_exact_span_artifact"
+        }
+      }
+    },
+    {
+      "name": "bank18_f4_selector02_handler_810e_811d",
+      "file": "bank18_actor_f4_selector02_handler_810e_811d.bin",
+      "bank": "0x18",
+      "window_start": "0x8000",
+      "cpu_start": "0x810E",
+      "cpu_end_exclusive": "0x811E",
+      "file_offset": "0x03011E",
+      "length_bytes": 16,
+      "bytes_hex": "AE 00 06 F0 08 CA E0 03 90 02 A2 02 60 A2 03 60",
+      "sha256": "290805dbb03488e93873e528ef0a3977e240f967c47de822b4879beed3a6e88c",
+      "role": "Selector $02 handler; derives a four-row pointer index from $0600.",
+      "provenance": {
+        "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+        "mapping": "0x030010 + (CPU address - 0x8000)",
+        "artifact": {
+          "mode": "new_exact_span_artifact"
+        }
+      }
+    }
+  ],
+  "selector_dispatch": {
+    "shared_dispatch": {
+      "callsite_cpu": "0x80EA",
+      "inline_vector_table_cpu": "0x80ED",
+      "inline_vector_table_bytes": "FD 80 06 81 0E 81 1E 81 22 81 38 81 CE 81 E4 81",
+      "shared_worker_artifact": "../slot11_actor_worker_resume_wait/bank18_actor_worker_resume_804a_80fd.bin",
+      "shared_worker_artifact_sha256": "9c07722c85a0670f8986a7e7a680bc205a587881383fd84276e520806f465c6e",
+      "dispatch_helper": "Existing fixed-bank $C509->$CB99 inline-table dispatcher; reused from existing project sources, not duplicated in this package."
+    },
+    "first_selector_01": {
+      "stream_cpu": "0x9BE4",
+      "bytes": "F4 01 EA 9B F4 9B",
+      "handler_cpu": "0x8106",
+      "handler_bytes": "AE FB 05 F0 02 A2 01 60",
+      "selection": "The handler leaves X=0 when $05FB is zero and sets X=1 otherwise. The shared $80CB pointer handler uses X to read a little-endian target from stream offset 3 + 2*X, then clears $05E5.",
+      "targets": {
+        "$05FB=0": "$9BEA via $9BE6-$9BE7 (EA 9B)",
+        "$05FB!=0": "$9BF4 via $9BE8-$9BE9 (F4 9B)"
+      }
+    },
+    "immediate_selector_02_followup": {
+      "stream_at_home_target": "$9BEA: F4 02 FE 9B 09 9C 1C 9C 08 9C",
+      "handler_cpu": "0x810E",
+      "handler_bytes": "AE 00 06 F0 08 CA E0 03 90 02 A2 02 60 A2 03 60",
+      "selection": "$0600=0 returns X=3; otherwise X=min($0600-1,2). The shared pointer handler reads target row 2*X+2 when this F4 command is at $9BEA.",
+      "trace_value_prediction": "The saved trace samples $0600=1, which would select X=0 and target $9BFE via bytes FE 9B at $9BEC-$9BED, if the value persists until this command runs.",
+      "alternate_target_if_selector01_nonzero_and_0600_1": "$9C37 via $9BF6-$9BF7 (37 9C)"
+    },
+    "trace_limit": {
+      "selector_execution_observed": false,
+      "trace": "reference/diagnostics/pass_receiver_waiter_boundaries_20261118_163552_utc/events.csv and events_repeat.csv",
+      "observed_source_frames": "9476-9485",
+      "observed_actor_state": "Slot $11 retains actor parameter $05EA=$6D, pointer $9BE3, and $05E5=1 while the waiter yields; sampled $05FB=$00 and $0600=$01.",
+      "limit": "The saved trace ends before the F4 selector handlers execute. The target paths above are ROM-byte deductions conditional on their RAM inputs still having the recorded values."
+    }
+  }
+}

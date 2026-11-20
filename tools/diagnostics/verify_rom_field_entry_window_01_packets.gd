@@ -4,6 +4,7 @@ const Source = preload("res://scripts/gameplay/rom_field_entry_window_01_packet_
 const Selector = preload("res://scripts/gameplay/rom_fresh_match_selector_executor.gd")
 const EntryBuilder = preload("res://scripts/gameplay/rom_fresh_kickoff_entry_context_builder.gd")
 const PeriodTask = preload("res://scripts/gameplay/rom_fresh_period_task.gd")
+const FieldPresenter = preload("res://scripts/gameplay/first_match_field_candidate_presenter.gd")
 
 
 func _initialize() -> void:
@@ -26,12 +27,15 @@ func _run() -> void:
 	var result: Dictionary = source.build_descriptor_01(selector_result, period_result)
 	assert(bool(result.get("ok", false)), str(source.last_error))
 	assert(bool(result["known_dynamic_inputs_ready"]))
-	assert(not bool(result["source_inputs_ready"]))
-	assert(not bool(result["packet_data_complete"]))
-	assert(not bool(result["queue_submission_ready"]))
+	assert(bool(result["source_inputs_ready"]))
+	assert(bool(result["packet_data_complete"]))
+	assert(bool(result["queue_submission_ready"]))
 	assert(not bool(result["runtime_rom_dependency"]))
 	assert(result["ready_flag_0515"] == "caller-owned; this source does not write it")
-	assert(result["source_inputs"] == {"$002A": 0, "$002B": 3, "$0628": 0, "$0629": 0, "$003C": -1})
+	assert(result["source_inputs"] == {"$002A": 0, "$002B": 3, "$0628": 0, "$0629": 0,
+		"$05C5_first_pass": 0, "$003C_first_pass_by_descriptor_row": [1, 1, 3, 3],
+		"$05C5_at_descriptor_row_commit": [1, 1, 3, 3],
+		"$003C_at_descriptor_row_commit": [0, 0, 0, 0]})
 	var records: Array = result["packet_records"]
 	assert(records.size() == 8)
 	var expected_addresses: Array[int] = [0x22C1, 0x22E1, 0x2301, 0x2321,
@@ -41,19 +45,45 @@ func _run() -> void:
 		var packet: PackedByteArray = records[index]["packet"]
 		assert(packet.size() == 10 and int(packet[0]) == 7)
 	assert(records[1]["packet"] == PackedByteArray([
-		0x07, 0xE1, 0x22, 0xAA, 0xDF, 0xCD, 0xDB, 0x00, 0x00, 0xAB,
+		0x07, 0xE1, 0x22, 0xAA, 0x53, 0x41, 0x4F, 0x00, 0x33, 0xAB,
 	]))
 	assert(records[3]["packet"] == PackedByteArray([
-		0x07, 0x21, 0x23, 0xAA, 0xD2, 0xD8, 0xE1, 0x00, 0x00, 0xAB,
+		0x07, 0x21, 0x23, 0xAA, 0x46, 0x4C, 0x55, 0x00, 0x33, 0xAB,
 	]))
-	assert(not bool(records[1]["complete"]) and not bool(records[3]["complete"]))
-	assert(records[1]["source_token_outputs"].size() == 1)
-	assert(records[3]["source_token_outputs"].size() == 1)
+	assert(bool(records[1]["complete"]) and bool(records[3]["complete"]))
+	assert(records[1]["source_token_outputs"].size() == 2)
+	assert(records[3]["source_token_outputs"].size() == 2)
 	assert(int(result["source_token_outputs"][0]["name_pointer"]) == 0xF776)
-	assert(int(result["source_token_outputs"][1]["name_pointer"]) == 0xF785)
-	assert(int(result["unresolved_source_tokens"].size()) == 2)
-	assert(int(result["complete_packet_records"].size()) == 6)
-	assert(str(result["unresolved_source_tokens"][0]["needs"]).contains("$003C"))
+	assert(int(result["source_token_outputs"][2]["name_pointer"]) == 0xF785)
+	assert(result["source_token_outputs"][0]["emitted_tiles"] == PackedByteArray([0x53, 0x41, 0x4F]))
+	assert(result["source_token_outputs"][2]["source_name_bytes"].slice(0, 3) == PackedByteArray([0x46, 0x4C, 0x55]))
+	assert(result["source_token_outputs"][2]["emitted_tiles"] == PackedByteArray([0x46, 0x4C, 0x55]))
+	assert(str(result["source_token_outputs"][2]["converter_rule"]).contains("$CBC6 BCC +$28 reaches $CBF0 RTS"))
+	assert(int(result["unresolved_source_tokens"].size()) == 0)
+	assert(int(result["complete_packet_records"].size()) == 8)
+	assert(int(result["source_token_outputs"][1]["source_003c"]) == 0)
+	assert(result["source_token_outputs"][1]["emitted_tiles"] == PackedByteArray([0x33]))
+	assert(int(result["source_token_outputs"][3]["source_003c"]) == 0)
+	assert(result["source_token_outputs"][3]["emitted_tiles"] == PackedByteArray([0x33]))
+	assert(result["source_input_missing"]["$003C"].is_empty())
+	var presenter = FieldPresenter.new()
+	var field_packet_set: Dictionary = presenter.build_descriptor_01_packets(
+		selector_result, period_result)
+	assert(bool(field_packet_set.get("ok", false)))
+	assert(bool(field_packet_set.get("queue_submission_ready", false)))
+	assert(not bool(field_packet_set.get("applied_to_ppu", true)),
+		"Descriptor packets must wait for an observed source worker/NMI queue receipt.")
+	assert(str(field_packet_set.get("application_status", "")) == \
+		"awaiting_source_worker_and_nmi_queue_receipt")
+	var presenter_records: Array = field_packet_set.get("packet_records", [])
+	assert(presenter_records.size() == 8)
+	assert(presenter_records[3]["packet"] == PackedByteArray([
+		0x07, 0x21, 0x23, 0xAA, 0x46, 0x4C, 0x55, 0x00, 0x33, 0xAB,
+	]))
+	var missing_field_packet_set: Dictionary = presenter.build_descriptor_01_packets()
+	assert(bool(missing_field_packet_set.get("ok", false)))
+	assert(not bool(missing_field_packet_set.get("packet_data_complete", true)))
+	assert(not bool(missing_field_packet_set.get("applied_to_ppu", true)))
 
 	var wrong_team := selector_result.duplicate(true)
 	(wrong_team["ram_after"] as Dictionary)[0x002B] = 4
@@ -66,7 +96,7 @@ func _run() -> void:
 	var refused_period: Dictionary = source.build_descriptor_01(selector_result, wrong_period)
 	assert(bool(refused_period.get("ok", false)))
 	assert(not bool(refused_period["queue_submission_ready"]), "Unsupported $EE inputs must remain unqueueable.")
-	print("PASS: descriptor-$01 ED team rows derive ROM tiles; EE rows remain unqueueable until ROM caller RAM $003C is sourced. Missing/unsupported inputs fail closed.")
+	print("PASS: descriptor-$01 ED/EE packets derive ROM text and row-commit $003C values; the field presenter exposes the complete source packet set but leaves it unapplied pending the live worker/NMI queue receipt.")
 	quit(0)
 
 

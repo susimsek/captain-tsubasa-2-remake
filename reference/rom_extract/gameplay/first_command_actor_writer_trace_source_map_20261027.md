@@ -74,6 +74,17 @@ actor RAM snapshots. The remaining route-time gap is the worker/NMI release
 phase and the `$0519` wait counter, followed by executing selected appearance
 and motion streams on the ROM actor-update cadence.
 
+The muted OAM draw trace also records actor `$055C` at frame 8664 with
+descriptor `$9F`. The supplied ROM's bank-$16 bytes at `$83BE` are `CC B2`,
+resolving to the descriptor-$9F stream at `$B2CC`. Its initial two compact OAM
+runs emit three sprites, then `$02 $2A $B2` jumps into the shared selector table
+at `$B22A`; selector `$02` resolves to `$B287`, whose `$02 $4B $B2` jump reaches
+the shared `$B24B` stream. The project now packages and hash-checks the `$83BE`
+pointer and `$B2CC-$B2D8` prefix. The focused OAM verifier emits 18 sprites for
+the frame-8664 validation record and matches the first three captured OAM
+entries. The captured record and OAM remain validation evidence; the runtime
+renderer consumes the ROM-derived stream resources.
+
 ## Final lineup already source-decodable
 
 The frame-8907 writers match the known ROM path: scenario `$44` source at file

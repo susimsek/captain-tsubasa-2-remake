@@ -31,7 +31,13 @@ The verifier constructs a **test-only** IRQ wait-release receipt to exercise the
 
 ## Remaining boundary
 
-There is no production producer for the `$893B` wait-release receipt, so this executor is not connected to the live route. The `$A4EB` body remains unexecuted; its helper calls, state mutations, wait conditions, and `$811F` return are still unresolved. Consequently `$811F->$C572`, match initialization, and the first command menu are not yet source-executed by this component.
+This paragraph describes the standalone `$8117->$A4EB` executor above. The
+production route has since advanced through the `$A503` caller and the
+fresh-match-zero `$A611` loop, returning to `$811F` at frame 7409. See the
+[A503 report](fresh_kickoff_a503_entry_20261103.md) and
+[A611 report](fresh_match_a611_setup_20261103.md). The production route still
+does not execute `$811F->$C572`; stamina initialization, later match setup,
+and the first command menu remain open.
 
 ## Correction: `$A4EB` dispatches a ROM stream at `$B305`
 
@@ -80,15 +86,13 @@ These are FCEUX observations with the supplied input sequence, not Godot
 execution or a physical-NES timing claim. The two-pass trace is at
 `reference/diagnostics/kickoff_select_cleanup_counters_20261031_035608_utc/`.
 
-## Godot boundary and next work
+## Superseding Godot status — 3 November 2026
 
-The receipt-gated Godot caller verifier stops at `$A4EB`; it has not executed
-the `$B305` dispatcher or `$A503-$A610` body. The production route stops
-earlier, at `$893B`, because its source-owned NMI/raster-IRQ bridge and wait
-release are not connected. The FCEUX stream, registers, and RAM must not be
-injected as runtime input. First produce the real `$893B->$8117` return from
-ROM-backed interrupt state; then execute the `$B305-$B327` records and their
-helper effects, followed by `$A503-$A610` from source-owned state. The live
-route must then continue through `$811F->$C572` and the post-wait match setup
-toward the field and first command-menu request. The current Godot route does
-not yet reach that menu.
+The boundary above records an earlier intermediate state. The production
+route now executes `$B305-$B327`, the `$A503` text/fade path, and the fresh
+match-zero `$A611` level pass, returning to `$811F` at frame 7409. See the
+[A503 report](fresh_kickoff_a503_entry_20261103.md),
+[A611 report](fresh_match_a611_setup_20261103.md), and
+[B0C0 stream report](fresh_kickoff_b0c0_stream_20261103.md) for current
+verification. `$811F->$C572` is the next unresolved production call. FCEUX
+registers/RAM remain reference data, not runtime inputs.

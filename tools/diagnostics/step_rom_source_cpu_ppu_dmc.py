@@ -108,6 +108,8 @@ class Machine:
         self.ppu_w_toggle = 0
         self.vblank = False
         self.nmi_pending = False
+        self.nmi2_pending = False
+        self.ppu_nmi2_requests: list[dict] = []
         self.irq_pending = False
         self.mmc3_irq_events: list[dict] = []
         self.cpu_interrupt_events: list[dict] = []
@@ -363,7 +365,20 @@ class Machine:
                 old = self.ppu_regs[0]
                 self.ppu_regs[0] = value
                 if self.vblank and not (old & 0x80) and value & 0x80:
-                    self.nmi_pending = True
+                    # Pinned FCEUX PPU B2000 uses TriggerNMI2 for this edge.
+                    # X6502_Run promotes NMI2 to NMI, then executes one
+                    # instruction before servicing it; regular vblank-origin
+                    # NMI continues to use the immediate nmi_pending path.
+                    self.nmi2_pending = True
+                    self.ppu_nmi2_requests.append({
+                        "source_frame": self.source_frame,
+                        "cycle": self.cpu_cycles,
+                        "instruction_pc": f"${self.current_instruction_pc:04X}",
+                        "ppu_line": self.ppu_line,
+                        "ppu_dot": self.ppu_dot,
+                        "old_ppuctrl": f"${old:02X}",
+                        "new_ppuctrl": f"${value:02X}",
+                    })
             elif reg == 0x2001:
                 self.ppu_regs[1] = value
             elif reg == 0x2003:
@@ -661,7 +676,16 @@ class Machine:
             cpu.p = MPU.INTERRUPT | MPU.UNUSED
             self.reset_pending = False
 
-        if self.nmi_pending and not self.jammed:
+        # FCEUX's TriggerNMI2 is a one-instruction promotion step. On the
+        # loop that promotes it, X6502_Run skips both interrupt service paths
+        # and executes the current opcode; the ordinary NMI is accepted at the
+        # following instruction boundary.
+        nmi2_promoted_this_instruction = self.nmi2_pending
+        if nmi2_promoted_this_instruction:
+            self.nmi2_pending = False
+            self.nmi_pending = True
+
+        if not nmi2_promoted_this_instruction and self.nmi_pending and not self.jammed:
             self.cpu_interrupt_events.append({"source_frame": self.source_frame, "cycle": self.cpu_cycles,
                                               "kind": "NMI", "pc_before": f"${cpu.pc:04X}",
                                               "mask_before": int(bool(cpu.p & MPU.INTERRUPT)),
@@ -671,7 +695,7 @@ class Machine:
             self.nmi_pending = False
             if self.cpu_credit <= 0:
                 return
-        elif self.irq_pending and not (self.prev_p & MPU.INTERRUPT) and not self.jammed:
+        elif not nmi2_promoted_this_instruction and self.irq_pending and not (self.prev_p & MPU.INTERRUPT) and not self.jammed:
             self.cpu_interrupt_events.append({"source_frame": self.source_frame, "cycle": self.cpu_cycles,
                                               "kind": "IRQ", "pc_before": f"${cpu.pc:04X}",
                                               "mask_before": int(bool(self.prev_p & MPU.INTERRUPT)),
@@ -1119,6 +1143,7 @@ def main() -> None:
         "apu_write_count": len(machine.events),
         "dmc_dma_reads": len(machine.dmc_events),
         "dmc_dma_output_bytes": sum(1 for e in machine.dmc_events if int(e["index"]) % 4 == 3),
+        "source_ppuctrl_triggernmi2_requests": machine.ppu_nmi2_requests,
         "title_stop_markers": machine.stop_events,
         "nonzero_sound_queue_writes": machine.queue_events,
         "frame_cycle_sum": sum(x["cycle_delta"] for x in machine.frame_stats),

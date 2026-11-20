@@ -12,6 +12,10 @@ const EXPECTED_CALLER_SHA256 := "e5d260e080d1d429cc5e76b4685426857a78b3bc6739f9b
 const SCENARIO_QUEUE_PATH := "res://reference/rom_extract/gameplay/scenario_task_runtime/fixed_scenario_queue_CBB0_CBC1.bin"
 const EXPECTED_SCENARIO_QUEUE_HEX := "8d1805a9808d1605a9008505a900200fcb60"
 const EXPECTED_SCENARIO_QUEUE_SHA256 := "bda16c7ced2834027dd6039a6c079a701dc8abd9c89179ba2d3c568aa0a16a32"
+const POST_QUEUE_NAME := "scenario_36_post_queue_handoff"
+const POST_QUEUE_PATH := "res://reference/rom_extract/gameplay/first_command_scenarios/entry_root_scenario_36_post_queue_handoff.bin"
+const POST_QUEUE_HEX := "adfc058d4104a9018dfd05a2509a4cdfe0"
+const POST_QUEUE_SHA256 := "fc1b091fdb5a999f2bb40cf5b473fdd4963a35e9dba1582e5bc46fe90a840cd9"
 const RAM_SIZE := 0x0800
 const STACK_PAGE_START := 0x0100
 
@@ -20,6 +24,7 @@ var _configured := false
 var _manifest_sha256 := ""
 var _caller_bytes := PackedByteArray()
 var _queue_bytes := PackedByteArray()
+var _post_queue_bytes := PackedByteArray()
 
 
 func configure() -> bool:
@@ -41,26 +46,40 @@ func configure() -> bool:
 	if not roots is Array:
 		return _fail("Scenario source manifest has no fixed-bank caller roots.")
 	var root_found := false
+	var post_queue_found := false
 	for root_variant in roots:
 		if not root_variant is Dictionary:
 			continue
 		var root: Dictionary = root_variant
-		if String(root.get("name", "")) != SCENARIO_ROOT_NAME:
-			continue
-		root_found = true
-		if String(root.get("path", "")) != SCENARIO_ROOT_PATH \
-				or String(root.get("cpu_address", "")) != "0xDB0E" \
-				or String(root.get("file_offset", "")) != "0x03DB1E" \
-				or String(root.get("bytes_hex", "")).replace(" ", "").to_lower() != EXPECTED_CALLER_HEX \
-				or String(root.get("sha256", "")) != EXPECTED_CALLER_SHA256:
-			return _fail("Scenario-$36 caller manifest entry differs from the supplied ROM bytes.")
-		_caller_bytes = FileAccess.get_file_as_bytes(SCENARIO_ROOT_RESOURCE_PATH)
-		if _caller_bytes.hex_encode() != EXPECTED_CALLER_HEX \
-				or _sha256(_caller_bytes) != EXPECTED_CALLER_SHA256:
-			return _fail("Packaged `$DB0E` caller bytes failed their ROM hash check.")
-		break
+		var name := String(root.get("name", ""))
+		if name == SCENARIO_ROOT_NAME:
+			root_found = true
+			if String(root.get("path", "")) != SCENARIO_ROOT_PATH \
+					or String(root.get("cpu_address", "")) != "0xDB0E" \
+					or String(root.get("file_offset", "")) != "0x03DB1E" \
+					or String(root.get("bytes_hex", "")).replace(" ", "").to_lower() != EXPECTED_CALLER_HEX \
+					or String(root.get("sha256", "")) != EXPECTED_CALLER_SHA256:
+				return _fail("Scenario-$36 caller manifest entry differs from the supplied ROM bytes.")
+			_caller_bytes = FileAccess.get_file_as_bytes(SCENARIO_ROOT_RESOURCE_PATH)
+			if _caller_bytes.hex_encode() != EXPECTED_CALLER_HEX \
+					or _sha256(_caller_bytes) != EXPECTED_CALLER_SHA256:
+				return _fail("Packaged `$DB0E` caller bytes failed their ROM hash check.")
+		elif name == POST_QUEUE_NAME:
+			post_queue_found = true
+			if String(root.get("path", "")) != POST_QUEUE_PATH.trim_prefix("res://") \
+					or String(root.get("cpu_address", "")) != "0xDB13" \
+					or String(root.get("file_offset", "")) != "0x03DB23" \
+					or String(root.get("bytes_hex", "")).replace(" ", "").to_lower() != POST_QUEUE_HEX.replace(" ", "") \
+					or String(root.get("sha256", "")) != POST_QUEUE_SHA256:
+				return _fail("Scenario-$36 post-queue handoff manifest entry differs from the supplied ROM bytes.")
+			_post_queue_bytes = FileAccess.get_file_as_bytes(POST_QUEUE_PATH)
+			if _post_queue_bytes.hex_encode() != POST_QUEUE_HEX.replace(" ", "") \
+					or _sha256(_post_queue_bytes) != POST_QUEUE_SHA256:
+				return _fail("Packaged `$DB13->$E0DF` handoff bytes failed their ROM hash check.")
 	if not root_found:
 		return _fail("Scenario-$36 fresh-kickoff caller is absent from the source manifest.")
+	if not post_queue_found:
+		return _fail("Scenario-$36 post-queue `$DB13->$E0DF` handoff is absent from the source manifest.")
 	_queue_bytes = FileAccess.get_file_as_bytes(SCENARIO_QUEUE_PATH)
 	if _queue_bytes.hex_encode() != EXPECTED_SCENARIO_QUEUE_HEX \
 			or _sha256(_queue_bytes) != EXPECTED_SCENARIO_QUEUE_SHA256:
@@ -162,6 +181,83 @@ func execute_from_live_boundary(boundary: Dictionary) -> Dictionary:
 		"captured_ram_input_used": false,
 		"ppu_apu_effects_applied": false,
 		"source_cycle_timing_modeled": false,
+	}
+
+
+## Executes the stack-sourced `$CBC1 RTS->$DB13` return and the bounded fixed-ROM
+## holder/control handoff to `$E0DF` for the live fresh scenario-$36 caller.
+func execute_post_queue_handoff(dispatch: Dictionary, boundary: Dictionary) -> Dictionary:
+	error_message = ""
+	if not _configured and not configure():
+		return _failure("source_integrity_failure", error_message)
+	var ram_variant: Variant = boundary.get("ram_image", PackedByteArray())
+	var stack_variant: Variant = boundary.get("stack_page", PackedByteArray())
+	var mapper_variant: Variant = boundary.get("mapper", {})
+	if not bool(dispatch.get("ok", false)) or int(dispatch.get("slot_base", -1)) != 0x05 \
+			or String(dispatch.get("resume_path", "")) != "yielded_rts" \
+			or int(dispatch.get("pc", -1)) != 0xCBC1 or int(dispatch.get("sp", -1)) != 0x4E \
+			or int(dispatch.get("bank_low", -1)) != 0x1C or int(dispatch.get("bank_high", -1)) != 0x1D \
+			or int(boundary.get("active_task_slot", -1)) != 0x05 \
+			or int(boundary.get("pc", -1)) != 0xCBC1 or int(boundary.get("sp", -1)) != 0x4E \
+			or String(boundary.get("source_label", "")) != "ROM-byte fresh scenario-$36 caller `$DB0E->$CBB0->$CB0F`" \
+			or not ram_variant is PackedByteArray or ram_variant.size() != RAM_SIZE \
+			or not stack_variant is PackedByteArray or stack_variant.size() != 0x100:
+		return _failure("source_state_required", "The `$CBC1->$DB13` handoff requires the live yielded scenario-$36 slot-$05 boundary.")
+	var mapper_select := int((mapper_variant as Dictionary).get("select", -1)) \
+		if mapper_variant is Dictionary else -1
+	var ram: PackedByteArray = ram_variant
+	var stack: PackedByteArray = stack_variant
+	for offset in range(0x100):
+		if int(ram[0x0100 + offset]) != int(stack[offset]):
+			return _failure("stack_mirror_mismatch", "Live scenario-$36 stack mirror differs at `$%02X`." % offset)
+	var sp := int(dispatch["sp"])
+	var return_word := int(stack[(sp + 1) & 0xFF]) | (int(stack[(sp + 2) & 0xFF]) << 8)
+	if return_word != 0xDB12 or _post_queue_bytes.size() != 17 \
+			or _post_queue_bytes.hex_encode() != POST_QUEUE_HEX \
+			or _sha256(_post_queue_bytes) != POST_QUEUE_SHA256:
+		return _failure("source_integrity_failure", "The physical `$CBC1 RTS` frame or `$DB13->$E0DF` ROM span failed its source check.")
+	var result_ram := ram.duplicate()
+	var result_stack := stack.duplicate()
+	var a := int(ram[0x05FC])
+	var x := int(dispatch.get("x", -1))
+	var y := int(boundary.get("y", dispatch.get("y", -1)))
+	var p := int(boundary.get("p", dispatch.get("p", -1)))
+	var p_known := int(boundary.get("p_known_mask", dispatch.get("p_known_mask", -1)))
+	var result_sp := (sp + 2) & 0xFF
+	var instructions: Array[Dictionary] = []
+	var writes: Array[Dictionary] = []
+	instructions.append({"pc": 0xCBC1, "bytes": PackedByteArray([0x60]), "next_pc": 0xDB13,
+		"stack_return_word": return_word})
+	instructions.append({"pc": 0xDB13, "bytes": _post_queue_bytes.slice(0, 3), "next_pc": 0xDB16})
+	p = _update_nz(p, a)
+	_write_ram(result_ram, writes, 0xDB16, 0x0441, a)
+	instructions.append({"pc": 0xDB16, "bytes": _post_queue_bytes.slice(3, 6), "next_pc": 0xDB19})
+	a = 0x01
+	p = _update_nz(p, a)
+	instructions.append({"pc": 0xDB19, "bytes": _post_queue_bytes.slice(6, 8), "next_pc": 0xDB1B})
+	_write_ram(result_ram, writes, 0xDB1B, 0x05FD, a)
+	instructions.append({"pc": 0xDB1B, "bytes": _post_queue_bytes.slice(8, 11), "next_pc": 0xDB1E})
+	x = 0x50
+	p = _update_nz(p, x)
+	instructions.append({"pc": 0xDB1E, "bytes": _post_queue_bytes.slice(11, 13), "next_pc": 0xDB20})
+	result_sp = x
+	instructions.append({"pc": 0xDB20, "bytes": _post_queue_bytes.slice(13, 14), "next_pc": 0xDB21})
+	instructions.append({"pc": 0xDB21, "bytes": _post_queue_bytes.slice(14, 17), "next_pc": 0xE0DF})
+	return {
+		"ok": true, "status": "scenario36_queue_returned_to_e0df",
+		"rom_sha256": ROM_SHA256, "source_manifest": SCENARIO_MANIFEST_PATH,
+		"source_manifest_sha256": _manifest_sha256,
+		"return_word": return_word, "entry_pc": 0xCBC1, "exit_pc": 0xE0DF,
+		"entry_sp": sp, "exit_sp": result_sp,
+		"registers": {"a": a, "x": x, "y": y, "p": p,
+			"p_known_mask": p_known, "sp": result_sp, "pc": 0xE0DF},
+		"mapper": {"bank_low": int(dispatch["bank_low"]),
+			"bank_high": int(dispatch["bank_high"]),
+			"select": mapper_select},
+		"ram_image": result_ram, "stack_page": result_stack,
+		"writes": writes, "instructions": instructions,
+		"trace_state_used": false, "captured_ram_input_used": false,
+		"timing_modeled": false, "ppu_apu_effects_applied": false,
 	}
 
 

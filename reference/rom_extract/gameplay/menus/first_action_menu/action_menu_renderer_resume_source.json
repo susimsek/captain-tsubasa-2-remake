@@ -1,0 +1,32 @@
+{
+  "schema": "ct2-first-action-renderer-resume-source-v1",
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_code": {
+    "cpu_start": "$E945",
+    "cpu_end_inclusive": "$E9D9",
+    "prg_bank": "$1E",
+    "file_offset": "0x03E955",
+    "length_bytes": 149,
+    "resource": "action_menu_renderer_E945_E9D9.bin",
+    "sha256": "7ed917d625d40ecc484ada8cf7910ffcb950d0de319daff7db66603004248417"
+  },
+  "runtime_inputs": {
+    "action_map": "action_id_to_render_variant_context_00.bin",
+    "action_map_sha256": "9d154b311f10f5a25ae835854853e99223ec66f254251a5e1ff366fc334a740e",
+    "render_variant_pointer_table": "action_render_variant_pointer_table_00_03.bin",
+    "render_variant_pointer_table_sha256": "41f429b2ca2e143fb59e023bc886350b20135197e1bcfe7c5b837127fa662f42",
+    "label_streams": "action_label_render_streams_EA1C_EA45.bin",
+    "label_streams_sha256": "97ad1d49bafb4111180337fc8378ce31a3ac80bca6dccee238c08da423c34b11",
+    "source_audit": "action_blink_source_audit.json",
+    "source_audit_sha256": "72b7cac439df171fe3cad8098335037167f62a678f6edad3f31983b48f6fbf38"
+  },
+  "observed_algorithm": "Resume after the $E93D prologue's CB0F yield. Poll $0515; a nonzero value branches to the $E940 JSR $CB0F and must be resumed again at $E945. When clear, reserve $0515, decode the saved render variant through $E9DA and the selected EA1C-EA45 stream, append row packets to $04A5, publish $0515=$80, and RTS to the caller.",
+  "packet_contract": {
+    "buffer_start": "$04A5",
+    "ready_flag": "$0515",
+    "record": "payload width, PPU address low, PPU address high, payload tiles",
+    "list_terminator": "one zero-width byte after the final row packet",
+    "ppu_writes_are_not_applied_here": true
+  }
+}

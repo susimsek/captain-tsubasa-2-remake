@@ -305,11 +305,42 @@
       ],
       "length_bytes": 10,
       "sha256": "e48ac121e3ef549ac8be743827d733fef3ce4ef98a490d69f10f918556f03796"
+    },
+    {
+      "file": "bank5_meeting_start_scene_56_entry.bin",
+      "description": "Scene $56 entry bytes through its FE jump operands.",
+      "prg_bank": 5,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$BFBA",
+        "$BFC4"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x00BFCA",
+        "0x00BFD4"
+      ],
+      "length_bytes": 10,
+      "sha256": "a2c5becb3fd4bee67e439e92599b7fd7ae839112a09e2a1b9f8cf4db83997adb"
+    },
+    {
+      "file": "bank5_scene_58_shared_tail_BFD5_BFF4.bin",
+      "description": "Scene $58 bytes reached by scene $56's FE jump to $BFD5, through FF.",
+      "prg_bank": 5,
+      "cpu_range_inclusive_start_exclusive_end": [
+        "$BFD5",
+        "$BFF4"
+      ],
+      "rom_file_range_inclusive_start_exclusive_end": [
+        "0x00BFE5",
+        "0x00C004"
+      ],
+      "length_bytes": 31,
+      "sha256": "2123217563334845adab6a95bdfa24a41d42f6e1be2cf2eaa26b6e666ee77537"
     }
   ],
   "limitations": [
     "The English disassembly is a label/navigation lead only; this extraction was checked against the target ROM hash and target bytes.",
     "The menu visual still requires native decoding of the referenced ROM background/metatile, CHR and actor-animation data; these fragments preserve the call/data roots, not a ready-to-ship scene.",
-    "FCEUX captures are not included here and remain observation/validation only."
+    "FCEUX captures are not included here and remain observation/validation only.",
+    "Scene $56 command bytes are extracted; rendering and source return/task timing are not yet integrated."
   ]
 }

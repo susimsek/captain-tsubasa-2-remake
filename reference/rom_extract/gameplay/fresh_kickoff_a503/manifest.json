@@ -1,0 +1,241 @@
+{
+  "schema": "ct2-fresh-match-a503-entry-v1",
+  "rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "mapping": "The iNES header is 16 bytes and each PRG bank is 0x2000 bytes. CPU $8000-$9FFF and $A000-$BFFF spans use the explicit bank field; for the upper window, file offset is 0x10 + bank*0x2000 + (CPU-$A000).",
+  "spans": [
+    {
+      "file": "bank01_match_setup_copy_B33D_B371.bin",
+      "cpu_start": "$B33D",
+      "cpu_end_exclusive": "$B371",
+      "file_offset": "0x00334D",
+      "bank": "$01",
+      "length": 52,
+      "sha256": "007f707f65416ecdff6639a2e819e5eac3a7a9bf482b492e3bb095375bff1e24",
+      "bytes": "30df027838f1026838f4027038f5027838f8028038f9028838fc029040f3026840f6027040f7027840fa028040fb028840fe0290",
+      "role": "Bytes selected by the $A50B LDA $B271,Y loop for Y=$CC..$FF; copied into RAM $0468-$049B."
+    },
+    {
+      "file": "bank01_match_index_descriptor_BCD1_BCD2.bin",
+      "cpu_start": "$BCD1",
+      "cpu_end_exclusive": "$BCD2",
+      "file_offset": "0x003CE1",
+      "bank": "$01",
+      "length": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+      "bytes": "01",
+      "role": "Fresh-match descriptor byte indexed by source RAM $0026=0."
+    },
+    {
+      "file": "bank01_match_descriptor_pointer_BCF3_BCF5.bin",
+      "cpu_start": "$BCF3",
+      "cpu_end_exclusive": "$BCF5",
+      "file_offset": "0x003D03",
+      "bank": "$01",
+      "length": 2,
+      "sha256": "420e35ef6c540790a6f673c4bee8a76af9bd2e6f1d7eb6d23766cbb33aae63b9",
+      "bytes": "ffbc",
+      "role": "Little-endian table pointer selected by the high nibble of the fresh-match descriptor."
+    },
+    {
+      "file": "bank01_match_descriptor_data_BCFF_BD0C.bin",
+      "cpu_start": "$BCFF",
+      "cpu_end_exclusive": "$BD0C",
+      "file_offset": "0x003D0F",
+      "bank": "$01",
+      "length": 13,
+      "sha256": "d702a9ecf77ff6a5205a0fc65e922c1a2d7db7067a750ebef6d8c53e3dfb5748",
+      "bytes": "6a21420b7a0d096f20437570ff",
+      "role": "The first fresh-match descriptor stream selected by the $BCFF pointer."
+    },
+    {
+      "file": "bank00_ppu_descriptor_decoder_9D27_9D50.bin",
+      "cpu_start": "$9D27",
+      "cpu_end_exclusive": "$9D50",
+      "file_offset": "0x001D37",
+      "bank": "$00",
+      "length": 41,
+      "sha256": "94a6f54f43bc9ea6e0d214e9de9808898f2cb7744ad9bd5ffc249b56ffc58c2d",
+      "bytes": "84e686e7a000b1e685e8c8b1e685e984eb20589daae6eba5eb1865e685e6a5e7690085e7e0ffd0dc60",
+      "role": "ROM decoder that reads destination-addressed streams and stops on the $FF block terminator."
+    },
+    {
+      "file": "bank00_ppu_descriptor_inner_reader_9D58_9D73.bin",
+      "cpu_start": "$9D58",
+      "cpu_end_exclusive": "$9D73",
+      "file_offset": "0x001D68",
+      "bank": "$00",
+      "length": 27,
+      "sha256": "0a25ab537c78a9e938afc197d9a7162873208cebbdd9a96ef718ed2d9be89ac8",
+      "bytes": "e6eba4ebb1e6c9fcb010a4e8a6e920ca88e6e8d002e6e94c589d60",
+      "role": "ROM inner reader that sends payload bytes to the shared PPU queue writer until a $FC-$FF marker."
+    },
+    {
+      "file": "bank00_ppu_tile_write_helper_88CA_88FB.bin",
+      "cpu_start": "$88CA",
+      "cpu_end_exclusive": "$88FB",
+      "file_offset": "0x0008DA",
+      "bank": "$00",
+      "length": 49,
+      "sha256": "2d776ddf3e137d3abdf965f574c2a782b5ba6388f19b6ed55ba4445b211b160f",
+      "bytes": "48a98220289b68c9a0901848c9c8a99469009de805e868a8b9148a9de805e8205e9b609de905a9009de805e8e8205e9b60",
+      "role": "ROM helper that encodes low-valued PPU tile bytes into the shared $05E8 update queue."
+    },
+    {
+      "file": "bank00_ppu_text_reader_wrapper_9D50_9D58.bin",
+      "cpu_start": "$9D50",
+      "cpu_end_exclusive": "$9D58",
+      "file_offset": "0x001D60",
+      "bank": "$00",
+      "length": 8,
+      "sha256": "a9fdcc0f1952369a874656d34671da311e5790f0b9246cf6830b12b617a40ba5",
+      "bytes": "84e686e7a9ff85eb",
+      "role": "ROM wrapper that initializes the source pointer and calls the $9D58 text/descriptor reader."
+    },
+    {
+      "file": "bank01_match_second_descriptor_pointer_table_BD64_BD68.bin",
+      "cpu_start": "$BD64",
+      "cpu_end_exclusive": "$BD68",
+      "file_offset": "0x003D74",
+      "bank": "$01",
+      "length": 4,
+      "sha256": "4def2928bbaa89e5e5c223a2d4fa573bb56229db8b40d2d11992399d41f7477b",
+      "bytes": "74bd7cbd",
+      "role": "Pointer entries selected by the low nibble of the fresh-match descriptor byte at $BCD1."
+    },
+    {
+      "file": "bank01_match_second_descriptor_text_BD7C_BD82.bin",
+      "cpu_start": "$BD7C",
+      "cpu_end_exclusive": "$BD82",
+      "file_offset": "0x003D8C",
+      "bank": "$01",
+      "length": 6,
+      "sha256": "5004e7a86cb18c83b6f611ae0c4e82de4563a558d292a97ca6bd54c21b19e8d6",
+      "bytes": "342e4d6163ff",
+      "role": "ROM text bytes selected by descriptor pointer $BD7C and rendered at PPU address $2207."
+    },
+    {
+      "file": "bank01_match_text_pointer_table_BDA8_BDB0.bin",
+      "cpu_start": "$BDA8",
+      "cpu_end_exclusive": "$BDB0",
+      "file_offset": "0x003DB8",
+      "bank": "$01",
+      "length": 8,
+      "sha256": "4830b8a966036c4ee677721ed81b181584357470044dac22003d56e385fda2df",
+      "bytes": "f2bdf9bd00be09be",
+      "role": "Pointer entries read by $A63C for match participant text IDs 0 through 3."
+    },
+    {
+      "file": "bank01_match_text_id_00_BDF2_BDF9.bin",
+      "cpu_start": "$BDF2",
+      "cpu_end_exclusive": "$BDF9",
+      "file_offset": "0x003E02",
+      "bank": "$01",
+      "length": 7,
+      "sha256": "f29654b9ddf2baccdaa88e6d919681c74b0f3c362ed74b2d5619bda9db3635f4",
+      "bytes": "036f201c757dff",
+      "role": "Terminated ROM tile-text selected by match text ID $00."
+    },
+    {
+      "file": "bank01_match_text_id_03_BE09_BE11.bin",
+      "cpu_start": "$BE09",
+      "cpu_end_exclusive": "$BE11",
+      "file_offset": "0x003E19",
+      "bank": "$01",
+      "length": 8,
+      "sha256": "6e855be38b078932eb1a218123e3f1d9ceeafdc745b470e5e4a849d9da28446e",
+      "bytes": "466c751f7c6e0eff",
+      "role": "Terminated ROM tile-text selected by match text ID $03."
+    },
+    {
+      "file": "bank01_match_text_pointer_resolver_A63C_A64C.bin",
+      "cpu_start": "$A63C",
+      "cpu_end_exclusive": "$A64C",
+      "file_offset": "0x00264C",
+      "bank": "$01",
+      "length": 16,
+      "sha256": "9380ddd106f69ca46d45d5c0a48c0dd760a1c5eaba79aaf0ffc11f6aaebdb972",
+      "bytes": "84e886e90aaabca8bdbda9bdaa4c509d",
+      "role": "ROM helper that maps a match text ID through $BDA8 and tail-jumps to the $9D50 tile-text reader."
+    },
+    {
+      "file": "bank06_match_palette_ramp_source_B040_B050.bin",
+      "cpu_start": "$B040",
+      "cpu_end_exclusive": "$B050",
+      "file_offset": "0x00D050",
+      "bank": "$06",
+      "length": 16,
+      "sha256": "c51fe488692967f8f23c855b6509b5849cf667e66742a26c7ffbe5df0481c4ff",
+      "bytes": "0f0f10300f3625300f2130310f213037",
+      "role": "Sixteen source palette entries read by $9AB8 after the $9B07 mapper helper selects PRG bank $06 in the $A000-$BFFF window."
+    },
+    {
+      "file": "bank06_match_palette_ramp_source_B370_B380.bin",
+      "cpu_start": "$B370",
+      "cpu_end_exclusive": "$B380",
+      "file_offset": "0x00D380",
+      "bank": "$06",
+      "length": 16,
+      "sha256": "150799fde48c92af98f99041f6214d03d63bbd064e83c72c2068132d34ccd957",
+      "bytes": "0f0f30360f0f32360f0f22360f0f3036",
+      "role": "Sixteen source palette entries read by $9ADA after the $9B07 mapper helper selects PRG bank $06 in the $A000-$BFFF window."
+    },
+    {
+      "file": "bank00_match_palette_ramp_997A_99AE.bin",
+      "cpu_start": "$997A",
+      "cpu_end_exclusive": "$99AE",
+      "file_offset": "0x00198A",
+      "bank": "$00",
+      "length": 52,
+      "sha256": "a093deb6860ffdfcef31ee67ef56bf544433c37472192b8fdd4170550ad3ddf8",
+      "bytes": "8548864920079b20b89a20da9aa6e920b9c4a54ac90fb002e64aa54bc90fb002e64b20719aa90120a89fa54a18654bc91e90df60",
+      "role": "The $A503 caller's bank-$00 palette ramp helper, including the paired-counter loop and $9FA8 yield."
+    },
+    {
+      "file": "bank00_match_palette_buffer_copy_9AB8_9B07.bin",
+      "cpu_start": "$9AB8",
+      "cpu_end_exclusive": "$9B07",
+      "file_offset": "0x001AC8",
+      "bank": "$00",
+      "length": 79,
+      "sha256": "dcc3d3197e7c9418325d14332c97d65437b45e150c0d55739efddb4d1a59d639",
+      "bytes": "a90085e7a5480a26e70a26e70a26e70a26e718690085e6a5e769b085e7a2004cf99aa90085e7a5490a26e70a26e70a26e70a26e718690085e6a5e769b385e7a210a000b1e69d2a06e8c8c010d0f560",
+      "role": "ROM routine that copies two bank-$06 16-byte palette tables into RAM $062A-$0649."
+    },
+    {
+      "file": "bank00_match_palette_bank_select_9B07_9B11.bin",
+      "cpu_start": "$9B07",
+      "cpu_end_exclusive": "$9B11",
+      "file_offset": "0x001B17",
+      "bank": "$00",
+      "length": 10,
+      "sha256": "2f3885476925a6902b67428ff471d12e3f3006aaf92cc87c82ab060f48e4f707",
+      "bytes": "a52585e9a20620b9c460",
+      "role": "ROM helper that saves the current PRG bank in $E9 and selects PRG bank $06 through $C4B9."
+    },
+    {
+      "file": "bank00_match_palette_transform_9A71_9AB8.bin",
+      "cpu_start": "$9A71",
+      "cpu_end_exclusive": "$9AB8",
+      "file_offset": "0x001A81",
+      "bank": "$00",
+      "length": 71,
+      "sha256": "dd544a728f87bd8795ca241fef9640a4114fe3ba22b6a79ae11f3eac17fddb01",
+      "bytes": "a920a000a23f20289b86e7a000b92a06293018654a20a29ac010d0f1b92a06293018654b20a29ac020d0f1a6e7205e9b60aabda29e85e6b92a06290f05e6a6e79de805e6e7c860",
+      "role": "ROM routine that transforms $062A-$0649 through the $9EA2 lookup and appends the 32-byte $3F00 palette payload."
+    },
+    {
+      "file": "bank00_match_palette_lookup_9EA2_9EE2.bin",
+      "cpu_start": "$9EA2",
+      "cpu_end_exclusive": "$9EE2",
+      "file_offset": "0x001EB2",
+      "bank": "$00",
+      "length": 64,
+      "sha256": "8b6a7afaf8ffbffa5f9a87f297bcd0f2d9308cce31a1704639f6148ec834cb4b",
+      "bytes": "0f0000000000000000000000000000000f0000000000101020203030202010100f0000001010102020203030302020200f001010102020303030303030303030",
+      "role": "The 64-byte ROM lookup used by $9AA2 when converting the paired match-palette values."
+    }
+  ]
+}

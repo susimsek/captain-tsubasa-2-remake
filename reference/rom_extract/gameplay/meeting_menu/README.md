@@ -3,8 +3,11 @@
 ## Source identity and evidence boundary
 
 This note traces the four-choice menu on the fresh KICK OFF route, from its
-banked caller through the selected KICK OFF action. All extracted `.bin` files
-are exact byte ranges from the supplied ROM, identified in `manifest.json`.
+banked caller through the selected KICK OFF action. Preserved source-span
+`.bin` files are exact byte ranges from the supplied ROM and are identified in
+`manifest.json`. The `scene_44_execution.bin` and `scene_56_execution.bin`
+runtime streams flatten reachable noncontiguous spans; their segment maps are
+recorded in the corresponding `scene_*_execution_spans.json` files.
 The ROM SHA-256 is
 `4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097`.
 
@@ -42,7 +45,7 @@ the selector turns the cursor Y into an even option-table offset:
 | `$00` | Bilgi | Coach/advice scene, `$44 + tbl_B393[match]` |
 | `$02` | Şifre | Score-memo scene, then password generation/display |
 | `$04` | Veri | Team-options screen at bank 1 `$A721` |
-| `$06` | Başla | Team-before-match scene, `$5E + tbl_B41B[match]` |
+| `$06` | Başla | Team-before-match scene selected directly from `tbl_B41B[match]` |
 
 The offset table is at bank 1 `$A673`. The Turkish labels above are read from
 the existing same-ROM FCEUX capture; the English disassembly's comments name
@@ -50,14 +53,26 @@ the corresponding actions “advice”, “score memo”, “options”, and “
 The controller and table bytes confirm action dispatch; the names in comments
 are translation labels, not proof of the Turkish on-screen spelling.
 
-For the current route, selecting offset `$06` reads `tbl_B41B[0]=$00` and
-dispatches cutscene `$5E`. Its bank-5 pointer is `$BFF4`, the same as the next
-pointer for `$5F`; `$BFF4` contains `$FF`, so this scene ends immediately.
-The branch calls bank 0 `$9BA0` to fade/clear, then returns to the caller at
-`$8145`. That caller checks `tbl_83DC[$26]`; at match 0 the byte is `$02`, so
-it dispatches cutscene `$02` automatically and then proceeds to `$8017` to
-start the game. The route does not require entering any of the other three
-menu branches.
+For the fresh match, selecting offset `$06` reads `tbl_B41B[0]=$56` and
+dispatches cutscene `$56` directly. The target-ROM table begins with six
+`$56` entries; the menu code at bank 1 `$A6C4` is `LDX $26; LDA $B41B,X; JSR
+$8464`, so no `$5E` base is added. The prior `$5E` attribution was incorrect.
+
+Scene `$56` starts at bank 5 `$BFBA` and executes
+`F1 02 FA 0F FB 01 0C FE D5 BF`. Its `$FE` jumps to `$BFD5`, inside the
+following scene `$58` pointer span (`$BFCE` through `$BFF3`). That shared tail
+contains `$ED $31`, dialogue and line controls, `$ED $01`, `$EA`, and `$FF`.
+The ROM-indexed flattened stream and its two source segments are preserved in
+[`scene_56_execution_spans.json`](scene_56_execution_spans.json).
+
+After scene `$56` returns, the menu code calls the `$82A9` waiter and jumps to
+`$A715`, whose first instructions are `JSR $9BA0; RTS`. The same-input FCEUX
+trace records the live `$ED $31` at `$BFD5` on frame 8027 and `$ED $01` at
+`$BFF0` on frame 8108. It later observes the ID `$02` stream at `$A62D` and
+`$ED $53` at `$A62F` on frame 8271. This establishes command and pointer
+order; task-context restoration and exact transition timing remain separate
+runtime work. The route does not require entering the other three menu
+branches.
 
 The existing route capture records cursor Y `$98`, `$A8`, `$B8`, `$C8` at its
 meeting checkpoints, consistent with the descriptor and the 16-pixel move.
@@ -83,10 +98,11 @@ indexes the bank-9 table at file `0x012086`, points to `$A476` (file
 labels that animation as Roberto's normal right-facing pose; check all labels
 against the target bytes before adopting them in runtime documentation.
 
-To render the menu natively, the next source-decoding work is to resolve the
-background descriptor's metatile records and its referenced CHR bytes, then
-replay the scene-44 commands and cursor animation from the ROM. The preserved
-descriptor/animation roots are not a complete rendering package.
+To render the menus natively, the remaining source-decoding work is to resolve
+the referenced background descriptors, metatile records, CHR bytes, and
+animation data, then connect scenes `$44` and `$56` to the runtime renderer.
+The preserved descriptor/animation roots and event streams are not a complete
+rendering package.
 
 ## Confirmed command structure versus timing
 
@@ -106,5 +122,5 @@ do not invent fixed timings from this structure alone.
 `manifest.json` records every source bank, CPU interval, iNES file interval,
 length, and SHA-256 for the extracted byte spans. It includes the menu
 controller and shared cursor routines, match-index branch tables, scene-44
-entry and branch target, the no-op scene-5E terminator, and the background
-and animation pointer/data roots.
+entry and branch target, scene-56 entry and shared scene-58 tail, the no-op
+scene-5E terminator, and the background and animation pointer/data roots.

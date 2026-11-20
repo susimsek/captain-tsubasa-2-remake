@@ -1,0 +1,36 @@
+{
+  "schema": "ct2-bank10-scenario-2e-source-v1",
+  "source_rom_filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_rom_size_bytes": 393232,
+  "runtime_rom_dependency": false,
+  "capture_or_screenshot_bytes_included": false,
+  "scenario": {
+    "scenario_id": "$2E",
+    "prg_bank": "$10",
+    "pointer_table_cpu_address": "0x89BF",
+    "pointer_table_file_offset": "0x0209CF",
+    "pointer_entry_file_offset": "0x020A2B",
+    "pointer_entry_path": "reference/rom_extract/gameplay/scenario_2e/scenario_pointer_2E.bin",
+    "pointer_entry_bytes_hex": "4E B7",
+    "pointer_entry_sha256": "89ac76264b830ae1361eae0ff3195e173fb7d45b9a0e8754db0986cb14623202",
+    "start_cpu_address": "0xB74E",
+    "end_boundary_pointer_entry_ids": [
+      "$3F"
+    ],
+    "end_cpu_address_exclusive": "0xB754",
+    "stream_file_offset": "0x02375E",
+    "stream_end_file_offset_exclusive": "0x023764",
+    "stream_path": "reference/rom_extract/gameplay/scenario_2e/scenario_2E.bin",
+    "length_bytes": 6,
+    "stream_sha256": "1a8acb72b1adf0fd4059eb2a0a8c27b0e93778b9a3a3a82886aa0818c5722630",
+    "stream_bytes_hex": "F5 78 36 8B 6D FB",
+    "span_boundary_method": "smallest greater valid CPU pointer among all 256 bank-$10 table entries, exclusive",
+    "decoded_scope": {
+      "f5_effect": "The existing ROM-backed reader maps $F5 to the $87E6 routine, which writes zero to RAM $052A.",
+      "record_bytes_hex": "78 36 8B 6D",
+      "record_note": "The four source bytes are retained as a record; scenario-specific callback meaning and worker behavior are not claimed here.",
+      "terminator": "The final $FB is the pointer-span root terminator."
+    }
+  }
+}

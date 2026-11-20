@@ -43,6 +43,12 @@ writers toggle bit 7 while preserving bit 6.
   MMC3 selector/register state, mapped PRG bytes, CPU registers, frame, and
   cycle count. Both passes reached the first `$812F` post-store at source
   frame 7409, cycle 220630519, with `$0700=$55`.
+- A separate muted FCEUX 2.7.0 launch on 2026-11-01 used `--loadstate 0`
+  with the same ROM alias and retained slot file; it did not replay power-on.
+  The first Lua frame callback reported frame 4693 at the checkpoint cycle
+  `139730109`, with RAM `$001B=$40`, `$003B=$55`, `$0078=$00`, `$0079=$00`.
+  This confirms slot loading and the listed RAM bytes; CPU registers were not
+  available through that startup callback, and no new route trace was run.
 - The two local trace passes each have 8,953 PC events and 21,223 watched RAM
   writes. After excluding the pass-number CSV column, the event logs and write
   logs compare identical. Per-log hashes are retained with the ignored local
@@ -95,3 +101,31 @@ no duplicate source spans were added.
 This establishes behavior in FCEUX's NTSC software model. It does not establish
 physical NES interrupt timing. No emulator screenshot or WAV was used as a
 runtime asset.
+
+## Separate-process slot replay audit — 2026-11-01
+
+The persisted frame-4692 slot was reloaded in two independent muted FCEUX
+2.7.0 processes with `--loadstate 0 --savestate 10`, NewPPU, and the same
+recorded route inputs from source frames 4693–7266 (SHA-256
+`87c204c5e513d1aa4b60fa348350a15a4be006d84ef885b7f1b95c4e3a9f229e`). Both
+loads began at cycle 139,730,109 with CPU `PC=$9F04, A=$40, X=$19, Y=$00, P=$21, SP=$E0`,
+`$001B=$40`, `$003B=$55`, `$0078=$00`, `$0079=$00`, and RAM shadow `$0020=$88`.
+After the input range, both were at the `$9F04/$9F06` ready-latch loop
+(`$001B.7=0`) at reported emulator frame 7265 and cycle 216,355,336. The end
+CPU state was `PC=$9F06, A=$40, X=$19, Y=$00, P=$21, SP=$E0`; all 2,574
+frame-end samples remained in the loop. The 2 KiB RAM and 16 KiB PPU dumps
+matched byte-for-byte across both runs. The saved slot hash remained
+`e5f88f9e3b284fd80f69a29bfafe6cd7aaf1c53f426448074bc541320c5e4d84`.
+
+The checked `$9F04-$9F0B` bytes are `A5 1B 10 FC 29 7F 85 1B`: the loop tests
+the negative flag from `$001B` and waits until a source event sets bit 7. The
+separate-process replay proves that the slot is readable and the replay
+deterministic, but does not prove route continuation. The reason the disk
+reload fails to reproduce the in-session NMI progression is unresolved; do
+not infer a specific missing PPU/interrupt field from these measurements.
+Use the already validated in-session checkpoint replay for route traces, or
+validate a later checkpoint by requiring its next source event to advance.
+The raw RAM/PPU snapshots and hashes are retained under the ignored local
+diagnostic directory
+`reference/diagnostics/fresh_kickoff_slot0_crossprocess_stall_20261101/` and
+are observation-only, not runtime inputs.

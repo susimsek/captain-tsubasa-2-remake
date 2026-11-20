@@ -47,8 +47,8 @@ def main() -> None:
         fail("manifest ROM hash differs")
 
     spans = manifest.get("spans")
-    if not isinstance(spans, list) or len(spans) != 4:
-        fail("expected exactly four source spans")
+    if not isinstance(spans, list) or len(spans) != 6:
+        fail("expected the six worker, pointer, stream, and append-helper source spans")
     for span in spans:
         start = int(span["cpu_start"], 16)
         end = int(span["cpu_end_exclusive"], 16)
@@ -66,7 +66,7 @@ def main() -> None:
             fail(f"ROM bytes/hash mismatch for {span['file']}")
         if source.hex(" ") != span["bytes"].lower():
             fail(f"manifest byte list differs for {span['file']}")
-    print("PASS: all four $86F8 audit spans match the identified ROM and bank mappings.")
+    print("PASS: all six $86F8 worker, pointer, stream, and append-helper spans match the identified ROM and bank mappings.")
     print("LIMIT: this verifies source metadata only; it does not execute 6502 code or prove route behavior.")
 
 

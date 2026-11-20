@@ -157,8 +157,12 @@ def decode_background(rom: bytes, bg_id: int, output_dir: Path = OUT) -> dict:
 def route_background_ids() -> list[int]:
     result: set[int] = set()
     event_root = ROOT / "assets/gameplay/rom_logic"
-    for cutscene_id in (1, 2):
-        path = event_root / f"kickoff_cutscene_{cutscene_id:02d}_events.json"
+    for cutscene_id in (1, 2, 0x44, 0x56):
+        if cutscene_id in (1, 2):
+            name = f"kickoff_cutscene_{cutscene_id:02d}_events.json"
+        else:
+            name = f"kickoff_meeting_scene_{cutscene_id:02X}_events.json"
+        path = event_root / name
         document = json.loads(path.read_text(encoding="utf-8"))
         if document.get("source_rom_sha256") != hashlib.sha256(ROM.read_bytes()).hexdigest():
             raise SystemExit(f"Cutscene event metadata ROM identity mismatch: {path}")

@@ -1,0 +1,120 @@
+{
+  "schema": "ct2-pass-receiver-menu-rom-data-v1",
+  "name": "pass_receiver_menu_rom_data",
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "runtime_source_kind": "ROM-derived byte spans; no emulator captures",
+  "bank_mapping": {
+    "bank18_cpu_window": "0x8000-0xBFFF",
+    "bank18_file_offset_formula": "0x030010 + (CPU - 0x8000)",
+    "fixed_c000_cpu_window": "0xC000-0xDFFF",
+    "fixed_c000_file_offset_formula": "0x03C010 + (CPU - 0xC000)"
+  },
+  "descriptor_selection": {
+    "handler_cpu_address": "0xD7E8",
+    "handler_file_offset": "0x03D7F8",
+    "handler_source_bytes_hex": "a9 38 20 b0 cb a9 0f 20 7f ef",
+    "decoded_scope": "source prefix requests scenario $38, then passes descriptor ID $0F to the $EF7F renderer wrapper"
+  },
+  "pointer_table": {
+    "cpu_address": "0xB3CF",
+    "descriptor_id": "0x0F",
+    "entry_cpu_address": "0xB3ED",
+    "entry_file_offset": "0x0333FD",
+    "descriptor_pointer_bytes_hex": "8d b5",
+    "next_pointer_bytes_hex": "a2 b5",
+    "next_descriptor_id": "0x10",
+    "next_descriptor_cpu_address": "0xB5A2",
+    "same_pointer_descriptor_ids": [
+      "0x0E",
+      "0x0F"
+    ]
+  },
+  "descriptor_resource": "descriptor_0F.bin",
+  "descriptor": {
+    "descriptor_id": "0x0F",
+    "pointer_table_entry_cpu": "0xB3ED",
+    "pointer_table_entry_file_offset": "0x0333FD",
+    "pointer_bytes_hex": "8d b5",
+    "next_pointer_bytes_hex": "a2 b5",
+    "descriptor_cpu_address": "0xB58D",
+    "descriptor_file_offset": "0x03359D",
+    "descriptor_length_bytes": 21,
+    "descriptor_sha256": "9e090acd306a92dd42dd00bb2558061e92def0ffe61bbd69732d92be37bd226c",
+    "descriptor_raw_hex": "28 22 18 0a 00 01 0a 05 03 01 02 ed bb 03 02 f4 bb 05 02 fa bb",
+    "header_raw_bytes": [
+      40,
+      34,
+      24,
+      10,
+      0,
+      1,
+      10,
+      5,
+      3
+    ],
+    "window_width_tiles": 24,
+    "window_height_tiles": 10,
+    "row_record_count": 3,
+    "rows": [
+      {
+        "row_index": 0,
+        "descriptor_record_offset": 9,
+        "coordinate_bytes_raw": [
+          1,
+          2
+        ],
+        "coordinate_semantics": "raw descriptor bytes; not pixel coordinates",
+        "text_pointer_cpu": "0xBBED",
+        "text_pointer_file_offset": "0x033BFD",
+        "text_source_length_bytes": 1,
+        "text_source_sha256": "98722e2ebed8ed3d3652e11e4181f0dccc1ce7d192d8f1db370af8ec4a4e174a",
+        "text_source_bytes_hex": "fc",
+        "text_resource": "row_00.bin",
+        "text_byte_semantics": "raw ROM tile/control bytes; glyph interpretation is separate"
+      },
+      {
+        "row_index": 1,
+        "descriptor_record_offset": 13,
+        "coordinate_bytes_raw": [
+          3,
+          2
+        ],
+        "coordinate_semantics": "raw descriptor bytes; not pixel coordinates",
+        "text_pointer_cpu": "0xBBF4",
+        "text_pointer_file_offset": "0x033C04",
+        "text_source_length_bytes": 7,
+        "text_source_sha256": "b6f8de1644d9918dd20f1301c22e67c91a996d85594dabf01f1a288892f7c619",
+        "text_source_bytes_hex": "4e 65 05 79 65 3f fc",
+        "text_resource": "row_01.bin",
+        "text_byte_semantics": "raw ROM tile/control bytes; glyph interpretation is separate"
+      },
+      {
+        "row_index": 2,
+        "descriptor_record_offset": 17,
+        "coordinate_bytes_raw": [
+          5,
+          2
+        ],
+        "coordinate_semantics": "raw descriptor bytes; not pixel coordinates",
+        "text_pointer_cpu": "0xBBFA",
+        "text_pointer_file_offset": "0x033C0A",
+        "text_source_length_bytes": 1,
+        "text_source_sha256": "98722e2ebed8ed3d3652e11e4181f0dccc1ce7d192d8f1db370af8ec4a4e174a",
+        "text_source_bytes_hex": "fc",
+        "text_resource": "row_02.bin",
+        "text_byte_semantics": "raw ROM tile/control bytes; glyph interpretation is separate"
+      }
+    ]
+  },
+  "shared_renderer_dependency": {
+    "window_family_resource": "reference/rom_extract/gameplay/menus/first_action_menu/window_3x3_tile_ids.bin",
+    "note": "Shared border bytes are owned by the existing first-action-menu export; this package does not duplicate them."
+  },
+  "evidence_boundary": {
+    "source_bytes_verified_against_rom": true,
+    "emulator_pixels_or_captured_audio_used_as_source": false,
+    "runtime_player_or_match_state_baked": false,
+    "raw_coordinate_semantics": "unresolved here; retained only as descriptor values"
+  }
+}

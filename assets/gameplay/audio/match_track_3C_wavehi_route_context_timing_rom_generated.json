@@ -1,0 +1,68 @@
+{
+  "schema": "ct2-rom-cue-wavehi-route-context-timing-v1",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "cue": "$3C",
+  "source_audio_path": "assets/gameplay/audio/match_track_3C_wavehi_route_context_rom_generated.wav",
+  "source_audio_sha256": "4f1a93d68a862f7652f0a60bfa1019f31b9ca805576b8bb0a9794cf9c80c74d5",
+  "source_input_timeline_sha256": "6cae92ff2b6a77fcc05c34c57c734bbff47930ada172633cb4a4b830cc3e77dc",
+  "source_candidate_sha256": "dfc63d373992ab7e65f628891ed833f2ec63b6d4c2278687add4ccb3cb922f1d",
+  "source_candidate_report_sha256": "91dfb854491b7ca3a90cb38e7ad3f27823aad02b56d5725cb407e6fc1a6981d8",
+  "source_queue_csv_sha256": "e618bba170d38c4642748b05cd4d582a92a8e2a9f9d709624ec554ecca9da999",
+  "sample_rate_hz": 44100,
+  "channels": 1,
+  "bits_per_sample": 16,
+  "source_pcm_sample_count": 319383,
+  "ntsc_cpu_hz": 1789773,
+  "wavehi_renderer_phase_samples": 25,
+  "wavehi_sample_index_formula": "round(source_cycle * 44100 / 1789773) - 25",
+  "captured_pcm_used": false,
+  "captured_wav_used": false,
+  "capture_used_as_event_input": false,
+  "runtime_needs_rom_or_emulator": false,
+  "occurrences": [
+    {
+      "occurrence_index": 0,
+      "queue_id": "$3C",
+      "queue_source_frame": 8607,
+      "queue_source_cycle": 256313396,
+      "source_end": {
+        "kind": "source_render_end",
+        "source_frame": 9042,
+        "sample_index": 6634919
+      },
+      "renderer_global_sample_window": [
+        6315536,
+        6634919
+      ],
+      "asset_sample_window": [
+        0,
+        319383
+      ],
+      "stop_tail_source_frames": [],
+      "stop_tail_queue_events": [],
+      "embedded_queue_events": [
+        {
+          "source_frame": 8624,
+          "source_cycle": 256809206,
+          "queue_id": "$66"
+        },
+        {
+          "source_frame": 8664,
+          "source_cycle": 257998382,
+          "queue_id": "$2B"
+        },
+        {
+          "source_frame": 8786,
+          "source_cycle": 261637823,
+          "queue_id": "$2C"
+        }
+      ],
+      "embedded_bgm_queue_events": [],
+      "verification_global_sample_window": [
+        6315536,
+        6569610
+      ],
+      "verification_sample_count": 254074
+    }
+  ]
+}

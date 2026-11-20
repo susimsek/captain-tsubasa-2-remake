@@ -56,6 +56,36 @@
       "sha256": "6f4f250519c608d82a9a58aa154e87070a7e6563341a4ec32ae78aa23ee51b12",
       "bank_mapping": "bank $00 at CPU $8000",
       "bytes": "a2 13 20 ee 9d a5 ec 18 69 00 85 ec a5 ed 69 bf 85 ed a5 25 85 ea a2 06 20 b9 c4 a5 78 d0 fc"
+    },
+    {
+      "file": "bank00_cutscene_task_setup_8494_84A5.bin",
+      "cpu_start": "$8494",
+      "cpu_end_exclusive": "$84A5",
+      "file_offset": "0x0004A4",
+      "length": 17,
+      "sha256": "29f3d7fb20d1f4421cd292902d480531c2d82bda9f83718b2299031337a991be",
+      "bank_mapping": "bank $00 at CPU $8000",
+      "bytes": "a2 05 a9 c5 95 00 a9 84 95 01 a0 50 a9 00 20 69 9f"
+    },
+    {
+      "file": "fixed_old_task_resume_9F52_9F69.bin",
+      "cpu_start": "$9F52",
+      "cpu_end_exclusive": "$9F69",
+      "file_offset": "0x001F62",
+      "length": 23,
+      "sha256": "2134f1155ca3fd4be0f366fe8f00b293e041f45d870360737333d39d83fa2e4a",
+      "bank_mapping": "bank $00 at CPU $8000",
+      "bytes": "86 00 a9 06 05 22 85 23 8d 00 80 b5 02 85 24 8d 01 80 b5 01 aa 9a 60"
+    },
+    {
+      "file": "fixed_old_task_create_9F69_9F7E.bin",
+      "cpu_start": "$9F69",
+      "cpu_end_exclusive": "$9F7E",
+      "file_offset": "0x001F79",
+      "length": 21,
+      "sha256": "d770ececa16cd65aba4d88cf917105d695f1d5df1977dc15e693a2eac62a7239",
+      "bank_mapping": "bank $00 at CPU $8000",
+      "bytes": "95 02 88 88 b5 00 99 01 01 b5 01 99 02 01 94 01 a9 ff 95 00 60"
     }
   ],
   "dependencies": [

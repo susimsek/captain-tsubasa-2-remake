@@ -140,6 +140,39 @@ func build_fresh_kickoff_context() -> Variant:
 	return context
 
 
+## Produce only requested bytes from the ROM's verified reset zero-fill loop.
+## This is a source-derived baseline, not a FCEUX RAM snapshot.
+func build_reset_ram_zero_write_receipt(source_event_id: String,
+		addresses: Array[int]) -> Dictionary:
+	error_message = ""
+	if not _configured and not configure_from_project_sources():
+		return {"ok": false, "error": error_message}
+	if source_event_id.is_empty() or addresses.is_empty():
+		return {"ok": false, "error": "Reset zero-fill receipt needs an event identity and at least one RAM address."}
+	var clear_code: PackedByteArray = _source_bytes["reset_ram_clear_C64E_C679.bin"]
+	var expected_loop := PackedByteArray([
+		0xA9, 0x00, 0x85, 0x00, 0x85, 0x01, 0xA8, 0xA2, 0x08,
+		0x91, 0x00, 0xC8, 0xD0, 0xFB, 0xE6, 0x01, 0xCA, 0xD0, 0xF6,
+	])
+	if clear_code.slice(25, 44) != expected_loop:
+		return {"ok": false, "error": "Reset RAM zero-fill instructions differ from the verified ROM loop."}
+	var writes: Array[Dictionary] = []
+	for address in addresses:
+		if address < 0 or address >= 0x0800:
+			return {"ok": false, "error": "Reset zero-fill receipt accepts internal RAM addresses only."}
+		writes.append({"source_pc": 0xC670, "address": address, "value": 0})
+	return {
+		"ok": true,
+		"kind": "rom_reset_ram_zero_fill",
+		"source_rom_sha256": ROM_SHA256,
+		"source_event_id": source_event_id,
+		"source_path": [0xFFFC, 0xFFF0, 0xC503, 0xC64E, 0xC670],
+		"ram_writes": writes,
+		"trace_state_used": false,
+		"emulator_data_used": false,
+	}
+
+
 func _derive_slot05_dispatch() -> Dictionary:
 	var scheduler = TASK_SCHEDULER_SCRIPT.new()
 	if not scheduler.configure_from_project_sources():

@@ -101,6 +101,15 @@
       "sha256": "02848b8b324fe6c120e6eb26bca5d0c08cab23baa91cf7820db454a3f78544df",
       "bytes_hex": "F9 EB 44 02 3A 8F 73 FB",
       "meaning": "Hash-checked fresh-kickoff scenario $35 root stream."
+    },
+    {
+      "path": "reference/rom_extract/gameplay/scenario_task_runtime/scenario44_post_cbc1_E38F_E3A3.bin",
+      "cpu_address": "$E38F",
+      "file_offset": "0x03E39F",
+      "length_bytes": 20,
+      "sha256": "7dc4f685cc530388f709b0944a932a5fb2186f702625a3ef2e9fd1db117739a6",
+      "bytes_hex": "20 8B CB A9 1A 85 24 A9 1B 85 25 20 2D CE A2 50 9A 4C 03 80",
+      "meaning": "Scenario-$44 slot-$05 return continuation: hides OAM through $CB8B, selects PRG banks $1A/$1B through $CE2D, resets SP to $50, then jumps to bank-$1A $8003."
     }
   ],
   "task_seed_sources_manifest": "reference/rom_extract/gameplay/task_context/manifest.json",

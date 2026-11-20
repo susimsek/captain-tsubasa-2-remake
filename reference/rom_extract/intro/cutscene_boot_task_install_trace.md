@@ -61,12 +61,13 @@ A0 50          LDY #$50
 ```
 
 `$9F69` is at file `0x001F79`, with local bytes
-`95 02 B5 00 99 01 01 B5 01 99 02 01 94 01 A9 FF 95 00 60`. For X=`$05`, it
-sets the worker's PRG-bank field at `$0007` to bank 0, copies the staged return
-address `$84C5` into stack RAM `$0151/$0152`, stores the saved stack pointer
-`$50` in `$0006`, and finally writes `$FF` to the worker delay/ready byte
-`$0005`. Resuming that saved 6502 return reaches `$84C6`; the first worker
-interpreter read is at `$84E7`.
+`95 02 88 88 B5 00 99 01 01 B5 01 99 02 01 94 01 A9 FF 95 00 60`. For X=`$05`,
+it sets the worker's PRG-bank field at `$0007` to bank 0. The caller supplies
+Y=`$50`; the two `DEY` instructions reduce it to `$4E` before the helper copies
+the staged return address `$84C5` to stack RAM `$014F/$0150`. It stores this
+saved SP `$4E` in `$0006`, then writes `$FF` to the worker delay/ready byte
+`$0005`. The old scheduler restores SP=`$4E` and executes `RTS`, which resumes
+at `$84C6` with SP=`$50`; the first worker interpreter read is at `$84E7`.
 
 `$FF` is a scheduler sentinel, not a duration. The local scheduler at
 `$9EED` (file `0x001EFD`) starts scanning X=`$01` and advances by four through

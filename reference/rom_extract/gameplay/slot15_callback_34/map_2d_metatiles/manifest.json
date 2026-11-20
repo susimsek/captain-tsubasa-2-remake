@@ -1,0 +1,599 @@
+{
+  "schema": "ct2-slot15-callback-34-map-2d-metatiles-v1",
+  "scope": "ROM byte extraction only; no runtime worker, tile expansion, PPU packet, frame timing, or APU behavior is modeled.",
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_rom_size_bytes": 393232,
+  "ines_header": {
+    "format": "iNES 1.0",
+    "mapper": 4,
+    "trainer_bytes": 0,
+    "prg_rom_bytes": 262144,
+    "chr_rom_bytes": 131072,
+    "prg_bank_size_bytes": 8192,
+    "prg_bank_count_8k": 32,
+    "header_hex": "4E 45 53 1A 10 10 41 00 00 00 00 00 00 00 00 00"
+  },
+  "mapper": "MMC3 (mapper 4)",
+  "runtime_rom_dependency": false,
+  "capture_or_screenshot_bytes_included": false,
+  "map_source": {
+    "map_id": "0x2D",
+    "selector_table_cpu_address": "0x8B42",
+    "selector_table_index": "0x0B",
+    "selector_byte_cpu_address": "0x8B4D",
+    "selector_byte_file_offset": "0x016B5D",
+    "selector_byte_hex": "6A",
+    "selector_formula": "(ROM[table_cpu + (map_id >> 2)] >> (2 * (map_id & 3))) & 3",
+    "resolved_selector": "0x02",
+    "block_map_cpu_address": "0x9104",
+    "block_map_file_offset": "0x017114",
+    "block_map_length_bytes": 32,
+    "block_map_bytes_hex": "00 71 72 72 73 72 74 00 00 75 76 77 78 79 7A 00 00 7B 7C 7D 7E 7F 80 00 00 81 82 82 83 82 84 00",
+    "block_map_sha256": "5f2a7c9e9b42fa9860e062f8df1ee57caf1d255424d85ff884c6158f1cf8e1e9",
+    "block_map_path": "reference/rom_extract/gameplay/slot15_callback_34/map_2d_block.bin",
+    "block_map_cpu_formula": "0x8B64 + ((map_id >> 3) << 8) + ((map_id & 7) << 5)",
+    "first_batch_ids": [
+      "0x00",
+      "0x71",
+      "0x72"
+    ],
+    "unique_metatile_ids_in_first_occurrence_order": [
+      "0x00",
+      "0x71",
+      "0x72",
+      "0x73",
+      "0x74",
+      "0x75",
+      "0x76",
+      "0x77",
+      "0x78",
+      "0x79",
+      "0x7A",
+      "0x7B",
+      "0x7C",
+      "0x7D",
+      "0x7E",
+      "0x7F",
+      "0x80",
+      "0x81",
+      "0x82",
+      "0x83",
+      "0x84"
+    ]
+  },
+  "bank_and_window_formulas": {
+    "bank_0b_cpu_window": "0x8000-0x9FFF",
+    "bank_0b_file_offset": "0x10 + (0x0B * 0x2000) + (CPU - 0x8000)",
+    "selector_tile_window": "window_offset = (selector << 12) + (metatile_id << 4)",
+    "tile_record_prg_bank": "0x12 + (window_offset >> 13)",
+    "tile_record_cpu_address": "0xA000 + (window_offset & 0x1FFF)",
+    "tile_record_file_offset": "0x024010 + window_offset",
+    "attribute_record_cpu_address": "0x9BE4 + (selector << 8) + metatile_id",
+    "attribute_record_file_offset": "0x017BF4 + (selector << 8) + metatile_id",
+    "tile_record_length_bytes": 16,
+    "attribute_record_length_bytes": 1
+  },
+  "metatiles": [
+    {
+      "metatile_id": "0x00",
+      "occurrences_in_map_block": [
+        0,
+        7,
+        8,
+        15,
+        16,
+        23,
+        24,
+        31
+      ],
+      "tiles": {
+        "path": "metatile_00_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA000",
+        "file_offset": "0x026010",
+        "length_bytes": 16,
+        "bytes_hex": "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+        "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+      },
+      "attribute": {
+        "path": "metatile_00_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9DE4",
+        "file_offset": "0x017DF4",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x71",
+      "occurrences_in_map_block": [
+        1
+      ],
+      "tiles": {
+        "path": "metatile_71_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA710",
+        "file_offset": "0x026720",
+        "length_bytes": 16,
+        "bytes_hex": "00 00 00 00 00 00 00 00 00 00 C9 D2 00 00 CC FF",
+        "sha256": "b7f9c3c1c23d2eeddbf7625774f453e6869e4659157f02712d58a0deca4e3f20"
+      },
+      "attribute": {
+        "path": "metatile_71_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E55",
+        "file_offset": "0x017E65",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x72",
+      "occurrences_in_map_block": [
+        2,
+        3,
+        5
+      ],
+      "tiles": {
+        "path": "metatile_72_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA720",
+        "file_offset": "0x026730",
+        "length_bytes": 16,
+        "bytes_hex": "00 00 00 00 00 00 00 00 D2 D2 D2 D2 FF FF FF FF",
+        "sha256": "4846781864ffe466679cc471c19a6e15e6246d3cb73becea1d4dd1776571cd15"
+      },
+      "attribute": {
+        "path": "metatile_72_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E56",
+        "file_offset": "0x017E66",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x73",
+      "occurrences_in_map_block": [
+        4
+      ],
+      "tiles": {
+        "path": "metatile_73_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA730",
+        "file_offset": "0x026740",
+        "length_bytes": 16,
+        "bytes_hex": "00 00 00 00 00 00 00 00 C9 D2 D2 D2 CC FF FF FF",
+        "sha256": "28b4f529c7d97d85fe6fb5a5af3594dc2dd765484862621d2128d4f8fa2e0edd"
+      },
+      "attribute": {
+        "path": "metatile_73_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E57",
+        "file_offset": "0x017E67",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x74",
+      "occurrences_in_map_block": [
+        6
+      ],
+      "tiles": {
+        "path": "metatile_74_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA740",
+        "file_offset": "0x026750",
+        "length_bytes": 16,
+        "bytes_hex": "00 00 00 00 00 00 00 00 D2 D2 D0 00 FF FF D0 00",
+        "sha256": "e0ec407aa09f0c8e1ac83224f4783445f5cd2aefab1a85235b0ca08d88803235"
+      },
+      "attribute": {
+        "path": "metatile_74_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E58",
+        "file_offset": "0x017E68",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x75",
+      "occurrences_in_map_block": [
+        9
+      ],
+      "tiles": {
+        "path": "metatile_75_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA750",
+        "file_offset": "0x026760",
+        "length_bytes": 16,
+        "bytes_hex": "00 00 C9 D2 00 00 CC FF 00 00 C9 D2 00 C9 CC FF",
+        "sha256": "56609da1964fce46c21ade680aea7e55d48e4a6279adb6a958a41f360b4e519a"
+      },
+      "attribute": {
+        "path": "metatile_75_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E59",
+        "file_offset": "0x017E69",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x76",
+      "occurrences_in_map_block": [
+        10
+      ],
+      "tiles": {
+        "path": "metatile_76_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA760",
+        "file_offset": "0x026770",
+        "length_bytes": 16,
+        "bytes_hex": "D2 D2 CC FF FF FF CC FF CC FF CC FF CC FF CC FF",
+        "sha256": "4b6bf481208c1505ff5a90cee301652ffe2ea34810d76c120fb8f4bc00985b6d"
+      },
+      "attribute": {
+        "path": "metatile_76_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E5A",
+        "file_offset": "0x017E6A",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x77",
+      "occurrences_in_map_block": [
+        11
+      ],
+      "tiles": {
+        "path": "metatile_77_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA770",
+        "file_offset": "0x026780",
+        "length_bytes": 16,
+        "bytes_hex": "FF FF FF FF FF FF FF FF FF FF C0 C1 FF FF C2 FF",
+        "sha256": "776dda7f3c3ccfab470776d33f9f840bb63df84165fc75b6a769e6e818f221d3"
+      },
+      "attribute": {
+        "path": "metatile_77_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E5B",
+        "file_offset": "0x017E6B",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x78",
+      "occurrences_in_map_block": [
+        12
+      ],
+      "tiles": {
+        "path": "metatile_78_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA780",
+        "file_offset": "0x026790",
+        "length_bytes": 16,
+        "bytes_hex": "CC FF FF FF CC FF FF FF C4 C5 FF FF CC C7 FF FF",
+        "sha256": "ecb03f9676377dde0deafcd8dae0fca1c469cff7984c84082eb26faea9c92d82"
+      },
+      "attribute": {
+        "path": "metatile_78_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E5C",
+        "file_offset": "0x017E6C",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x79",
+      "occurrences_in_map_block": [
+        13
+      ],
+      "tiles": {
+        "path": "metatile_79_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA790",
+        "file_offset": "0x0267A0",
+        "length_bytes": 16,
+        "bytes_hex": "FF FF C9 D2 FF FF CC FF FF FF CC FF FF FF CC FF",
+        "sha256": "9a00ce1f4640033a7341c53201f5fbf4c23d3f63fe5036b07fb1f2a5ead0784a"
+      },
+      "attribute": {
+        "path": "metatile_79_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E5D",
+        "file_offset": "0x017E6D",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x7A",
+      "occurrences_in_map_block": [
+        14
+      ],
+      "tiles": {
+        "path": "metatile_7A_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA7A0",
+        "file_offset": "0x0267B0",
+        "length_bytes": 16,
+        "bytes_hex": "D2 D2 D0 00 FF FF D0 00 C9 D2 D0 00 CC FF C9 D0",
+        "sha256": "9cb65a5d71dedad00a5d5c608117cc4be618b9c062bb6d9369cd6f55a7f2e693"
+      },
+      "attribute": {
+        "path": "metatile_7A_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E5E",
+        "file_offset": "0x017E6E",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x7B",
+      "occurrences_in_map_block": [
+        17
+      ],
+      "tiles": {
+        "path": "metatile_7B_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA7B0",
+        "file_offset": "0x0267C0",
+        "length_bytes": 16,
+        "bytes_hex": "00 C6 CC FF 00 00 C6 C3 00 00 CC FF 00 00 C6 C3",
+        "sha256": "7b152ed617adc2a2b0cd8f92f2dd451596eccf3843b7d75681601c51c3ec1747"
+      },
+      "attribute": {
+        "path": "metatile_7B_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E5F",
+        "file_offset": "0x017E6F",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x7C",
+      "occurrences_in_map_block": [
+        18
+      ],
+      "tiles": {
+        "path": "metatile_7C_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA7C0",
+        "file_offset": "0x0267D0",
+        "length_bytes": 16,
+        "bytes_hex": "CC FF CC FF CC FF CC FF FF FF CC FF C3 C3 CC FF",
+        "sha256": "b9147a56010932dfc47071845d2c474b66aa7b8d132a760aaafc8cbc6acba7cf"
+      },
+      "attribute": {
+        "path": "metatile_7C_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E60",
+        "file_offset": "0x017E70",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x7D",
+      "occurrences_in_map_block": [
+        19
+      ],
+      "tiles": {
+        "path": "metatile_7D_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA7D0",
+        "file_offset": "0x0267E0",
+        "length_bytes": 16,
+        "bytes_hex": "FF FF C8 FF FF FF CA CB FF FF FF FF FF FF FF FF",
+        "sha256": "08b1e41578d1b61c9d277cd763b845f41cd2860311c3f44e1d895f437cc92790"
+      },
+      "attribute": {
+        "path": "metatile_7D_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E61",
+        "file_offset": "0x017E71",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x7E",
+      "occurrences_in_map_block": [
+        20
+      ],
+      "tiles": {
+        "path": "metatile_7E_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA7E0",
+        "file_offset": "0x0267F0",
+        "length_bytes": 16,
+        "bytes_hex": "CC CD FF FF CE CF FF FF CC FF FF FF CC FF FF FF",
+        "sha256": "10adc83cd3e87a0af2f92a9e66b7c928104901c1d896b46e75d4ec000bcc917b"
+      },
+      "attribute": {
+        "path": "metatile_7E_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E62",
+        "file_offset": "0x017E72",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x7F",
+      "occurrences_in_map_block": [
+        21
+      ],
+      "tiles": {
+        "path": "metatile_7F_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA7F0",
+        "file_offset": "0x026800",
+        "length_bytes": 16,
+        "bytes_hex": "FF FF CC FF FF FF CC FF FF FF CC FF FF FF C6 C3",
+        "sha256": "cf626f2172f883e6c8db1c8b8b801268a13cab003fc6755078ff4de47eb73fb7"
+      },
+      "attribute": {
+        "path": "metatile_7F_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E63",
+        "file_offset": "0x017E73",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x80",
+      "occurrences_in_map_block": [
+        22
+      ],
+      "tiles": {
+        "path": "metatile_80_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA800",
+        "file_offset": "0x026810",
+        "length_bytes": 16,
+        "bytes_hex": "CC FF C6 D0 C6 C3 D0 00 FF FF D0 00 C3 C3 D0 00",
+        "sha256": "8110712bc06d53b172febae80090006eefede7dd05ed7c648b1f31562b3836eb"
+      },
+      "attribute": {
+        "path": "metatile_80_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E64",
+        "file_offset": "0x017E74",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x81",
+      "occurrences_in_map_block": [
+        25
+      ],
+      "tiles": {
+        "path": "metatile_81_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA810",
+        "file_offset": "0x026820",
+        "length_bytes": 16,
+        "bytes_hex": "00 00 CC FF 00 00 C6 C3 00 00 00 00 00 00 00 00",
+        "sha256": "8de13e44e0492086dbd70b7a0b12b339f0cf1931e47280068813cfeb2a3fec46"
+      },
+      "attribute": {
+        "path": "metatile_81_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E65",
+        "file_offset": "0x017E75",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x82",
+      "occurrences_in_map_block": [
+        26,
+        27,
+        29
+      ],
+      "tiles": {
+        "path": "metatile_82_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA820",
+        "file_offset": "0x026830",
+        "length_bytes": 16,
+        "bytes_hex": "FF FF FF FF C3 C3 C3 C3 00 00 00 00 00 00 00 00",
+        "sha256": "bb6b4ebfda8e2c268fa21f30a986bb6e025d6ff85abd032b1b01436d544c7d25"
+      },
+      "attribute": {
+        "path": "metatile_82_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E66",
+        "file_offset": "0x017E76",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x83",
+      "occurrences_in_map_block": [
+        28
+      ],
+      "tiles": {
+        "path": "metatile_83_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA830",
+        "file_offset": "0x026840",
+        "length_bytes": 16,
+        "bytes_hex": "CC FF FF FF C6 C3 C3 C3 00 00 00 00 00 00 00 00",
+        "sha256": "72153684cb8b335246651649a75ee22e43ddb09418bdaa8fa664abc5556b1493"
+      },
+      "attribute": {
+        "path": "metatile_83_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E67",
+        "file_offset": "0x017E77",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    {
+      "metatile_id": "0x84",
+      "occurrences_in_map_block": [
+        30
+      ],
+      "tiles": {
+        "path": "metatile_84_tiles.bin",
+        "prg_bank": "0x13",
+        "cpu_address": "0xA840",
+        "file_offset": "0x026850",
+        "length_bytes": 16,
+        "bytes_hex": "FF FF D0 00 C3 C3 D0 00 00 00 00 00 00 00 00 00",
+        "sha256": "c132413ffe1d2a54ef289ff5a02463eb54f0c277da47eaf2855f10df6ad13c2e"
+      },
+      "attribute": {
+        "path": "metatile_84_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9E68",
+        "file_offset": "0x017E78",
+        "length_bytes": 1,
+        "bytes_hex": "00",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    }
+  ],
+  "limitations": [
+    "The block IDs are read from the verified ROM map-$2D span; tile and attribute bytes are extracted from selector-$02 ROM windows using the recorded formulas.",
+    "This extraction does not establish the map worker's live source-read order, queue cadence, screen output, or NMI/frame timing.",
+    "The files are reference-derived data; adding them does not by itself connect or validate them in the Godot runtime."
+  ]
+}

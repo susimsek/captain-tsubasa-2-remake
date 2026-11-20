@@ -1,0 +1,125 @@
+{
+  "schema": "ct2-scene-56-fa-0f-preclear-source-v1",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "source_spans": [
+    {
+      "name": "fa_loader_selector",
+      "prg_bank": 0,
+      "bank_cpu_window": "$8000-$9FFF",
+      "cpu_start": "$8AF7",
+      "cpu_end_exclusive": "$8BB3",
+      "file_start": "0x000B07",
+      "file_end_exclusive": "0x000BC3",
+      "combined_offset": 0,
+      "byte_length": 188,
+      "sha256": "0d71b7a751296d86bd30336fdc0e859027d256044487cae092d2ec098f5b11ab",
+      "bytes_hex": "85eda9008509850a850d850ea55b297f855ba5258577a20720b9c4a900a0f8995205c8d0faa5ed0aaaa9002aa88a18690085639869a08564a000b163aac8b16385648663a000b1638575c8b1638576c8b163aa293f85488a465b2a265bc8b163855ec8b163855fc8b16329f8855ca902855d065c265d065c265db1632907055c855c065c265d065c265da55d290cd00ca57b0a0a455b2904055d855da55ec90990062071904cab8ba55d2904d0062071904cae8b207690a90120a89f",
+      "description": "Shared F9/FA loader selector; includes the branch to $9071/$9076 and the distinct post-helper $9FA8(A=$01) at $8BAE."
+    },
+    {
+      "name": "clear_helper_entrypoints",
+      "prg_bank": 0,
+      "bank_cpu_window": "$8000-$9FFF",
+      "cpu_start": "$9071",
+      "cpu_end_exclusive": "$9085",
+      "file_start": "0x001081",
+      "file_end_exclusive": "0x001095",
+      "combined_offset": 188,
+      "byte_length": 20,
+      "sha256": "47d0c3b7f8f577d5f1a05a0d46d9e58ac76609c41def11e10be82c6ecdc94480",
+      "bytes_hex": "a9204c7890a92485e7a90085e6a010a2204ce898",
+      "description": "$9071 selects $2000; $9076 selects $2400; both configure 16 rows x 32 bytes and jump to $98E8."
+    },
+    {
+      "name": "clear_row_producer",
+      "prg_bank": 0,
+      "bank_cpu_window": "$8000-$9FFF",
+      "cpu_start": "$98E8",
+      "cpu_end_exclusive": "$992C",
+      "file_start": "0x0018F8",
+      "file_end_exclusive": "0x00193C",
+      "combined_offset": 208,
+      "byte_length": 68,
+      "sha256": "93a95cd78aef488fdbd2db75613e8a43ee127f7391cfa6c9580fe1dff8a41724",
+      "bytes_hex": "a90085eba54a054bf03a84e886e9a5e9a4e6a6e720289ba4e9a5eb9de805e888d0f9205e9ba5e81005a90120a89fa5e618692085e6a5e7690085e7c6e8a5e8297fd0cb60",
+      "description": "$98E8 selects buffered rows when $4A|$4B is nonzero, reserves each row via $9B28, appends 32 zero bytes, finalizes, and increments destination by $20."
+    },
+    {
+      "name": "queue_capacity_writer",
+      "prg_bank": 0,
+      "bank_cpu_window": "$8000-$9FFF",
+      "cpu_start": "$9B28",
+      "cpu_end_exclusive": "$9B6F",
+      "file_start": "0x001B38",
+      "file_end_exclusive": "0x001B7F",
+      "combined_offset": 276,
+      "byte_length": 71,
+      "sha256": "2ae1d070eb6fdb97902158ef4bf707c85606dc79d488134e922a65dacf837320",
+      "bytes_hex": "482c29065009a90120a89f684c289b293f186d2806c93db0ed6809408d29068aae28069dea05989de905ad290629bf9de805e8e8e860a9009de8058e2806ad290629bf8d290660",
+      "description": "$9B28 tests queue cursor $0628 plus payload size against $3D, yields through $9FA8(A=$01), then writes a 3-byte header and payload; $9B5E finalizes the queue cursor."
+    },
+    {
+      "name": "scene_56_fa_0f_event",
+      "prg_bank": 5,
+      "bank_cpu_window": "$A000-$BFFF",
+      "cpu_start": "$BFBC",
+      "cpu_end_exclusive": "$BFBE",
+      "file_start": "0x00BFCC",
+      "file_end_exclusive": "0x00BFCE",
+      "combined_offset": 347,
+      "byte_length": 2,
+      "sha256": "e6ce6978d73013f4f83ccae3bb0ad18dfaf160909fc9ba532d7b5fdedc809a33",
+      "bytes_hex": "fa0f",
+      "description": "Scene-$56 background event operand; event stream begins at $BFBA with F1 $02 followed by FA $0F."
+    },
+    {
+      "name": "background_0f_descriptor",
+      "prg_bank": 7,
+      "bank_cpu_window": "$A000-$BFFF",
+      "cpu_start": "$A294",
+      "cpu_end_exclusive": "$A2A4",
+      "file_start": "0x00E2A4",
+      "file_end_exclusive": "0x00E2B4",
+      "combined_offset": 349,
+      "byte_length": 16,
+      "sha256": "244509d021570cf7e4036b660b962fe2e5419116d966a4c2e585f58b847f04e2",
+      "bytes_hex": "64669a020412575859525a5b5c5600a0",
+      "description": "The bank-$07 descriptor selected by FA $0F; included as a source identity check, not used to invent a preclear destination."
+    }
+  ],
+  "decoded_rules": {
+    "buffered_branch": "$98E8 uses the buffered queue when ($4A | $4B) != 0; direct PPU writes are outside this task.",
+    "helper_entrypoints": {
+      "$9071": {
+        "destination": "$2000",
+        "rows": 16,
+        "bytes_per_row": 32
+      },
+      "$9076": {
+        "destination": "$2400",
+        "rows": 16,
+        "bytes_per_row": 32
+      }
+    },
+    "queue_capacity": "Before each row, $9B28 yields when $0628 + payload_size >= $3D; payload_size is 32. The byte comparison excludes the 3-byte queue header.",
+    "queue_serialization": "A successful row uses 3 queue header bytes plus 32 zero payload bytes; $9B5E records the cursor. A source-valid end cursor can therefore be as high as $3F.",
+    "yield": "$9B2E loads $01 and $9B30 calls $9FA8; $9B32 is the saved return word and $9B33 the resumed PC.",
+    "queue_release_consumer_pc": "$A03C (counted $05E8 queue writer loop); receipt PC must match exactly.",
+    "post_helper_wait": "$8BAE's separate LDA #$01 / JSR $9FA8 is outside this row task."
+  },
+  "resource": {
+    "path": "assets/gameplay/rom_logic/fa_0f_preclear_sources.bin",
+    "reference_path": "reference/rom_extract/gameplay/meeting_menu/fa_0f_preclear_sources.bin",
+    "byte_length": 365,
+    "sha256": "208e9658ca12e3c21c26dfa418bf7a08607d4d997797be760b8affc563681c35",
+    "byte_identity": "Concatenated unchanged ROM source spans in manifest order."
+  },
+  "runtime_policy": {
+    "runtime_uses_original_rom": false,
+    "runtime_uses_emulator_capture": false,
+    "trace_role": "Retained RAM frames validate route-level wait-state observations only; they do not seed runtime cursor, destination, or frame delays."
+  }
+}

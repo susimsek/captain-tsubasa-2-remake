@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Preserve selector-correct ROM metatiles for field maps $36, $42, and $56."""
+"""Preserve selector-correct ROM metatiles for the first-match field maps."""
 
 from __future__ import annotations
 
@@ -21,6 +21,24 @@ ATTRIBUTE_TABLE_OFFSET = 0x017BF4  # bank-$0B CPU $9BE4
 TILE_DATA_BASE_OFFSET = 0x024010  # bank-$12 CPU $A000
 
 MAPS = {
+    0x00: {
+        "selector": 0x00,
+        "expected_map_hex": (
+            "00 0A 00 00 09 02 03 04 "
+            "0C 0D 0C 0D 0E 0F 10 11 "
+            "12 12 12 12 12 12 12 12 "
+            "13 13 13 13 13 13 13 13"
+        ),
+    },
+    0x0E: {
+        "selector": 0x00,
+        "expected_map_hex": (
+            "00 05 00 00 00 0A 06 07 "
+            "0D 0C 32 33 0D 0C 0D 0C "
+            "14 14 14 14 14 14 14 14 "
+            "13 13 13 13 13 13 13 13"
+        ),
+    },
     0x36: {
         "selector": 0x01,
         "animation_id": 0x45,
@@ -54,6 +72,15 @@ MAPS = {
             "14 14 14 14 14 14 14 14"
         ),
     },
+    0x52: {
+        "selector": 0x00,
+        "expected_map_hex": (
+            "C3 C3 C3 49 4A C3 4B C3 "
+            "4A C3 4B C3 C3 C3 C3 49 "
+            "C3 C3 C3 C3 49 4A C3 C3 "
+            "C3 4B C3 C3 C3 C3 49 4A"
+        ),
+    },
 }
 
 
@@ -82,6 +109,10 @@ def main() -> None:
     if len(selector_table) != SELECTOR_TABLE_SIZE:
         raise SystemExit("Selector table range is truncated.")
 
+    previous_entries: list[dict[str, object]] = []
+    if MANIFEST_PATH.exists():
+        previous_manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        previous_entries = list(previous_manifest.get("entries", []))
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     entries: list[dict[str, object]] = []
 
@@ -206,9 +237,14 @@ def main() -> None:
             "map_36": "background animation $45 record at bank-$0B $8A2A; selector $01",
             "map_56": "background animation $70 record at bank-$0B $8B38; selector $02",
             "map_42": "callback event $3A supplies map ID $42 to bank-$0B $8525; selector $01",
+            "map_00": "callback $72 position-map path supplies map ID $00 to bank-$0B $8525; selector $00",
+            "map_0E": "callback $01 F0 control-vector row zero selects map ID $0E at bank-$0B $8525; selector $00",
+            "map_52": "scenario-$36 callback $1F supplies map ID $52 to bank-$0B $8525; selector $00",
         },
         "entries": entries,
     }
+    generated_paths = {str(entry["path"]) for entry in entries}
+    entries.extend(entry for entry in previous_entries if str(entry.get("path", "")) not in generated_paths)
     MANIFEST_PATH.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(f"Wrote selector-correct field-map source manifest: {MANIFEST_PATH}")
     print(f"Preserved {len(entries)} source records from the verified ROM.")

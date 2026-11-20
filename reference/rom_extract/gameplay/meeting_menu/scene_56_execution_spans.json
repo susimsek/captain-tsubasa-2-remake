@@ -1,0 +1,33 @@
+{
+  "name": "supplied_turkish_rom_scene_56_execution_spans",
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "execution_stream_sha256": "d656d678df10757989b518e895a25b05f3cd335664d2df9aa45832fbf33e1536",
+  "runtime_stream_resource": "reference/rom_extract/gameplay/meeting_menu/scene_56_execution.bin",
+  "runtime_stream_is_flattened": true,
+  "segments": [
+    {
+      "execution_stream_offset_range": [
+        0,
+        10
+      ],
+      "source_resource": "reference/rom_extract/gameplay/meeting_menu/bank5_meeting_start_scene_56_entry.bin",
+      "cpu_start": "0xBFBA",
+      "file_start": "0x00BFCA",
+      "length_bytes": 10,
+      "sha256": "a2c5becb3fd4bee67e439e92599b7fd7ae839112a09e2a1b9f8cf4db83997adb"
+    },
+    {
+      "execution_stream_offset_range": [
+        10,
+        41
+      ],
+      "source_resource": "reference/rom_extract/gameplay/meeting_menu/bank5_scene_58_shared_tail_BFD5_BFF4.bin",
+      "cpu_start": "0xBFD5",
+      "file_start": "0x00BFE5",
+      "length_bytes": 31,
+      "sha256": "2123217563334845adab6a95bdfa24a41d42f6e1be2cf2eaa26b6e666ee77537"
+    }
+  ],
+  "note": "Scene $56 at $BFBA branches with FE to $BFD5, inside scene $58's $BFCE-$BFF4 pointer span; the flattened stream preserves those two reachable ROM segments without the skipped bytes."
+}

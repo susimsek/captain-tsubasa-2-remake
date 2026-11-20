@@ -68,6 +68,11 @@ func derive_fresh_kickoff_id1() -> Dictionary:
 			{"pc": 0xC6A2, "operation": "LDA #$00 / STA $0022", "value": 0},
 			{"pc": 0xC411, "operation": "LDA #$00 / STA $22", "value": 0},
 		],
+		"ram_writes": [
+			{"source_pc": 0xC670, "address": 0x0022, "value": 0},
+			{"source_pc": 0xC6A2, "address": 0x0022, "value": 0},
+			{"source_pc": 0xC411, "address": 0x0022, "value": 0},
+		],
 		"route_scope": "cold-start fresh KICK OFF through ID-1 Select cleanup",
 		"source_rom_sha256": ROM_SHA256,
 		"emulator_data_used": false,

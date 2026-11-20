@@ -1,0 +1,74 @@
+{
+  "schema": "ct2-scenario36-fd00-mirror-source-v1",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "header": "iNES 1.0; 16-byte header; no trainer",
+    "mapper": 4,
+    "submapper": 0
+  },
+  "runtime_rom_dependency": false,
+  "trace_state_included": false,
+  "spans": [
+    {
+      "file": "bank10_fd00_handler_8877_88AA.bin",
+      "bank": "$10",
+      "cpu_start": "0x8877",
+      "cpu_end_exclusive": "0x88AA",
+      "file_offset": "0x020887",
+      "length": 51,
+      "sha256": "7b056de209aff026982fabb5e945f5aee9a032e0876588dfd76485bb42260f21",
+      "bytes": "a9 00 85 3b ad 41 04 20 0c c5 ad 38 06 20 36 c5 98 a0 08 38 f1 34 b0 02 e6 3b 8a a0 06 38 f1 34 b0 04 e6 3b e6 3b a2 40 a5 3b f0 06 c9 03 f0 02 a2 00 60"
+    },
+    {
+      "file": "fixed_record_pointer_helper_CD7C_CD89.bin",
+      "bank": "fixed",
+      "cpu_start": "0xCD7C",
+      "cpu_end_exclusive": "0xCD89",
+      "file_offset": "0x03CD8C",
+      "length": 13,
+      "sha256": "8d7d8153252420175055aa5ef041e0e9dd85f99bb9dae8e24200e9549487ed24",
+      "bytes": "0a a8 b9 89 cd 85 34 b9 8a cd 85 35 60"
+    },
+    {
+      "file": "fixed_player_record_pointer_table_CD89_CDC9.bin",
+      "bank": "fixed-data",
+      "cpu_start": "0xCD89",
+      "cpu_end_exclusive": "0xCDC9",
+      "file_offset": "0x03CD99",
+      "length": 64,
+      "sha256": "69928f23546876b56ef0e1c47913e5bcf8b34d2aaab39f521916e8e028cf0dba",
+      "bytes": "00 03 0c 03 18 03 24 03 30 03 3c 03 48 03 54 03 60 03 6c 03 78 03 84 03 90 03 9c 03 a8 03 b4 03 c0 03 cc 03 d8 03 e4 03 f0 03 fc 03 08 04 0c 04 10 04 14 04 18 04 1c 04 20 04 24 04 28 04 2c 04"
+    },
+    {
+      "file": "fixed_value_div12_helper_CDC9_CDE2.bin",
+      "bank": "fixed",
+      "cpu_start": "0xCDC9",
+      "cpu_end_exclusive": "0xCDE2",
+      "file_offset": "0x03CDD9",
+      "length": 25,
+      "sha256": "45eb9e048e38d5655178886e5c61d4245720493c9044e2acc2f180f8c76eba7c",
+      "bytes": "a2 00 c9 0c 90 05 e9 0c e8 d0 f7 0a 0a 0a 69 54 a8 8a 0a 0a 0a 69 34 aa 60"
+    },
+    {
+      "file": "fixed_record_pointer_vector_C50C_C50F.bin",
+      "bank": "fixed",
+      "cpu_start": "0xC50C",
+      "cpu_end_exclusive": "0xC50F",
+      "file_offset": "0x03C51C",
+      "length": 3,
+      "sha256": "71f4bb6ccdc5573bcfceef2422fe8636bc1dd1068675da3d860282d577e78b44",
+      "bytes": "4c 7c cd"
+    },
+    {
+      "file": "fixed_value_div12_vector_C536_C539.bin",
+      "bank": "fixed",
+      "cpu_start": "0xC536",
+      "cpu_end_exclusive": "0xC539",
+      "file_offset": "0x03C546",
+      "length": 3,
+      "sha256": "45c5f5dc3181044f55e152be9dd6ec1c7f9664fb4a87340dc5ac758ccc0bc775",
+      "bytes": "4c c9 cd"
+    }
+  ]
+}

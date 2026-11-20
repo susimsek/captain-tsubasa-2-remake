@@ -3,12 +3,14 @@ extends SceneTree
 ## validation reference only; no screenshot pixels are loaded by game runtime.
 
 const WIDTH := 256
-const HEIGHT := 240
+const RAW_HEIGHT := 240
+const HEIGHT := 224
+const VISIBLE_FIRST_ROW := 8
 const GD_HEADER_BYTES := 11
 const REFERENCE_PATH := "res://reference/diagnostics/kickoff_select_test_20261027/screens/route_frame_008953.gd"
 const INPUT_PATH := "res://reference/diagnostics/kickoff_select_test_20261027/post_title_inputs.csv"
 const INPUT_SHA256 := "87c204c5e513d1aa4b60fa348350a15a4be006d84ef885b7f1b95c4e3a9f229e"
-const GODOT_CAPTURE_PATH := "/tmp/ct2_godot_first_action_menu_recorded_input_8953.png"
+const GODOT_CAPTURE_PATH := "/tmp/ct2_godot_first_action_menu_viewport_8953.png"
 const DIFF_PATH := "/tmp/ct2_first_menu_visible_output_diff_8953.png"
 const REFERENCE_SHA256 := "cc30a78af0f1e4d5d6ceb1a78d023caec0782afcbef43539b4d1607902130559"
 
@@ -23,7 +25,7 @@ func _run() -> void:
 		_fail("The same-input route CSV is missing or its hash changed.")
 		return
 	var reference := FileAccess.get_file_as_bytes(REFERENCE_PATH)
-	if reference.size() != GD_HEADER_BYTES + WIDTH * HEIGHT * 4:
+	if reference.size() != GD_HEADER_BYTES + WIDTH * RAW_HEIGHT * 4:
 		_fail("The FCEUX validation screenshot does not have the expected 256x240 GD layout.")
 		return
 	if _sha256(reference) != REFERENCE_SHA256:
@@ -31,18 +33,19 @@ func _run() -> void:
 		return
 	var reference_width := (int(reference[2]) << 8) | int(reference[3])
 	var reference_height := (int(reference[4]) << 8) | int(reference[5])
-	if reference_width != WIDTH or reference_height != HEIGHT:
+	if reference_width != WIDTH or reference_height != RAW_HEIGHT:
 		_fail("The FCEUX GD header dimensions differ from 256x240.")
 		return
 	var godot_image := Image.load_from_file(GODOT_CAPTURE_PATH)
 	if godot_image == null or godot_image.is_empty():
 		_fail("Run verify_kickoff_recorded_input_path.gd first to produce the Godot background capture.")
 		return
-	if godot_image.get_width() != WIDTH or godot_image.get_height() != HEIGHT:
-		_fail("The Godot capture dimensions differ from the same-input FCEUX screenshot.")
+	if godot_image.get_width() != WIDTH * 4 or godot_image.get_height() != HEIGHT * 4:
+		_fail("The Godot root viewport capture is not an integer 4x scale of 256x224.")
 		return
 	if godot_image.get_format() != Image.FORMAT_RGBA8:
 		godot_image.convert(Image.FORMAT_RGBA8)
+	godot_image.resize(WIDTH, HEIGHT, Image.INTERPOLATE_NEAREST)
 
 	var diff_image := Image.create(WIDTH, HEIGHT, false, Image.FORMAT_RGBA8)
 	var exact_pixels := 0
@@ -50,7 +53,7 @@ func _run() -> void:
 	var differing_pixels := 0
 	for y in HEIGHT:
 		for x in WIDTH:
-			var index := GD_HEADER_BYTES + (y * WIDTH + x) * 4
+			var index := GD_HEADER_BYTES + ((y + VISIBLE_FIRST_ROW) * WIDTH + x) * 4
 			# FCEUX GD stores A,R,G,B; alpha is ignored for the visible RGB comparison.
 			var reference_r := int(reference[index + 1])
 			var reference_g := int(reference[index + 2])
@@ -77,13 +80,18 @@ func _run() -> void:
 	var total_pixels := WIDTH * HEIGHT
 	var exact_percent := 100.0 * float(exact_pixels) / float(total_pixels)
 	var mean_channel_error := float(total_absolute_channel_error) / float(total_pixels * 3)
-	print("Same-input frame 8953 RGB comparison (%dx%d): %d/%d exact pixels (%.3f%%); %d differ; mean absolute channel error %.4f." % [
+	print("Same-input frame 8953 visible RGB comparison (%dx%d): %d/%d exact pixels (%.3f%%); %d differ; mean absolute channel error %.4f." % [
 		WIDTH, HEIGHT, exact_pixels, total_pixels, exact_percent, differing_pixels, mean_channel_error])
+	print("Godot root viewport is nearest-downscaled 4x; FCEUX raw rows %d..%d provide the 224-line visible window." % [
+		VISIBLE_FIRST_ROW, VISIBLE_FIRST_ROW + HEIGHT - 1])
 	print("Input CSV SHA-256: " + INPUT_SHA256)
 	print("FCEUX screenshot SHA-256: " + REFERENCE_SHA256)
-	print("Godot background PNG SHA-256: " + _sha256(FileAccess.get_file_as_bytes(GODOT_CAPTURE_PATH)))
+	print("Godot full viewport PNG SHA-256: " + _sha256(FileAccess.get_file_as_bytes(GODOT_CAPTURE_PATH)))
 	print("Diagnostic diff image: " + DIFF_PATH)
-	print("LIMIT: Godot capture is the background layer only; the FCEUX reference includes the field actors, score/status overlays, and first command menu.")
+	if differing_pixels == 0:
+		print("PASS: same-input visible endpoint pixels match exactly; this does not establish intermediate-frame, cycle/subframe, or audio parity.")
+	else:
+		print("LIMIT: visible endpoint pixel differences remain; this does not establish cycle/subframe timing or audio parity.")
 	quit(0)
 
 

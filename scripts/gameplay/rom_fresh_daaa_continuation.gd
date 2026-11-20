@@ -8,6 +8,31 @@ class_name RomFreshDaaaContinuation
 const ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
 const SOURCE_ROOT := "res://reference/rom_extract/gameplay/fresh_daaa_continuation/"
 const MANIFEST_PATH := SOURCE_ROOT + "manifest.json"
+const FIELD_ENTRY_SOURCE_ROOT := "res://reference/rom_extract/gameplay/field_entry_renderer_wrapper/"
+const FIELD_ENTRY_MANIFEST_PATH := FIELD_ENTRY_SOURCE_ROOT + "manifest.json"
+const FIELD_ENTRY_SOURCE_FILE := "fixed_field_entry_first_wrapper_E0DF_E0E4.bin"
+const FIELD_ENTRY_START := 0xE0DF
+const FIELD_ENTRY_END := 0xE0E4
+const FIELD_SETUP_SOURCE_FILE := "fixed_field_entry_setup_E0E9_E349.bin"
+const FIELD_SETUP_START := 0xE0E9
+const FIELD_SETUP_END := 0xE349
+const SLOT11_SOURCE_ROOT := "res://reference/rom_extract/gameplay/slot11_actor_worker_resume_wait/"
+const SLOT11_SOURCE_MANIFEST := SLOT11_SOURCE_ROOT + "manifest.json"
+const MINIMAP_VECTOR_FILE := "bank1c_minimap_vector_8024_8027.bin"
+const MINIMAP_CODE_FILE := "bank1c_minimap_loader_82ca_834a.bin"
+const MINIMAP_TILES_FILE := "bank1c_minimap_tiles_834a_846a.bin"
+const MINIMAP_VECTOR_START := 0x8024
+const MINIMAP_VECTOR_END := 0x8027
+const MINIMAP_CODE_START := 0x82CA
+const MINIMAP_CODE_END := 0x834A
+const MINIMAP_TILES_START := 0x834A
+const MINIMAP_TILES_END := 0x846A
+const C52D_WAIT_FILE := "fixed_c52d_jump_to_cc46.bin"
+const C52D_WAIT_START := 0xC52D
+const C52D_WAIT_END := 0xC530
+const CC46_WAIT_FILE := "fixed_shared_waiter_CC46_CCD2.bin"
+const CC46_WAIT_START := 0xCC46
+const CC46_WAIT_END := 0xCCD2
 const RAM_SIZE := 0x800
 const END_PC := 0x800C
 const END_BANK := 0x18
@@ -51,6 +76,7 @@ var _a := 0
 var _x := 0
 var _y := 0
 var _p := FLAG_U
+var _p_known_mask := 0xFF
 var _sp := 0
 var _pc := 0
 var _entry_pc := 0
@@ -97,9 +123,105 @@ func configure_from_project_sources() -> bool:
 				or String(entry.get("bytes", "")).replace(" ", "").to_lower() != bytes.hex_encode():
 			return _fail("Fresh $DAAA ROM span failed provenance/size/hash validation: %s." % file_name)
 		_sources[file_name] = bytes
+	if not _load_field_entry_source():
+		return false
+	if not _load_minimap_wait_sources():
+		return false
 	if not _verify_boundaries():
 		return false
 	_configured = true
+	return true
+
+
+func _load_field_entry_source() -> bool:
+	var field_manifest_file := FileAccess.open(FIELD_ENTRY_MANIFEST_PATH, FileAccess.READ)
+	if field_manifest_file == null:
+		return _fail("Field-entry renderer wrapper manifest is unavailable.")
+	var parsed: Variant = JSON.parse_string(field_manifest_file.get_as_text())
+	if not parsed is Dictionary:
+		return _fail("Field-entry renderer wrapper manifest is malformed.")
+	var manifest: Dictionary = parsed
+	if String(manifest.get("schema", "")) != "ct2-field-entry-renderer-wrapper-source-v1" \
+			or String(manifest.get("rom_sha256", "")) != ROM_SHA256:
+		return _fail("Field-entry renderer wrapper package targets an unsupported ROM/schema.")
+	var found_span: Dictionary = {}
+	for span_variant in manifest.get("spans", []):
+		if span_variant is Dictionary and String(span_variant.get("file", "")) == FIELD_ENTRY_SOURCE_FILE:
+			found_span = span_variant
+			break
+	var bytes := FileAccess.get_file_as_bytes(FIELD_ENTRY_SOURCE_ROOT + FIELD_ENTRY_SOURCE_FILE)
+	if bytes.size() != FIELD_ENTRY_END - FIELD_ENTRY_START \
+			or String(found_span.get("cpu_start", "")) != "0xE0DF" \
+			or String(found_span.get("cpu_end_exclusive", "")) != "0xE0E4" \
+			or String(found_span.get("bank", "")) != "0x1F" \
+			or _sha256(bytes) != String(found_span.get("sha256", "")) \
+			or String(found_span.get("bytes", "")).replace(" ", "").to_lower() != bytes.hex_encode():
+		return _fail("Field-entry `$E0DF` ROM bytes failed provenance, size, or hash validation.")
+	_sources[FIELD_ENTRY_SOURCE_FILE] = bytes
+	var setup_span: Dictionary = {}
+	for span_variant in manifest.get("spans", []):
+		if span_variant is Dictionary and String(span_variant.get("file", "")) == FIELD_SETUP_SOURCE_FILE:
+			setup_span = span_variant
+			break
+	var setup_bytes := FileAccess.get_file_as_bytes(FIELD_ENTRY_SOURCE_ROOT + FIELD_SETUP_SOURCE_FILE)
+	if setup_bytes.size() != FIELD_SETUP_END - FIELD_SETUP_START \
+			or String(setup_span.get("cpu_start", "")) != "0xE0E9" \
+			or String(setup_span.get("cpu_end_exclusive", "")) != "0xE349" \
+			or String(setup_span.get("bank", "")) != "0x1F" \
+			or _sha256(setup_bytes) != String(setup_span.get("sha256", "")) \
+			or String(setup_span.get("bytes", "")).replace(" ", "").to_lower() != setup_bytes.hex_encode():
+		return _fail("Field-entry `$E0E9-$E349` setup bytes failed provenance, size, or hash validation.")
+	_sources[FIELD_SETUP_SOURCE_FILE] = setup_bytes
+	for spec in [
+		{"file": MINIMAP_VECTOR_FILE, "start": MINIMAP_VECTOR_START, "end": MINIMAP_VECTOR_END,
+			"bank": "0x1C"},
+		{"file": MINIMAP_CODE_FILE, "start": MINIMAP_CODE_START, "end": MINIMAP_CODE_END,
+			"bank": "0x1C"},
+		{"file": MINIMAP_TILES_FILE, "start": MINIMAP_TILES_START, "end": MINIMAP_TILES_END,
+			"bank": "0x1C"},
+		{"file": CC46_WAIT_FILE, "start": CC46_WAIT_START, "end": CC46_WAIT_END,
+			"bank": "0x1E"},
+	]:
+		var source_span: Dictionary = {}
+		for span_variant in manifest.get("spans", []):
+			if span_variant is Dictionary and String(span_variant.get("file", "")) == String(spec["file"]):
+				source_span = span_variant
+				break
+		var source_bytes := FileAccess.get_file_as_bytes(FIELD_ENTRY_SOURCE_ROOT + String(spec["file"]))
+		if source_bytes.size() != int(spec["end"]) - int(spec["start"]) \
+				or String(source_span.get("cpu_start", "")) != "0x%04X" % int(spec["start"]) \
+				or String(source_span.get("cpu_end_exclusive", "")) != "0x%04X" % int(spec["end"]) \
+				or String(source_span.get("bank", "")) != String(spec["bank"]) \
+				or _sha256(source_bytes) != String(source_span.get("sha256", "")) \
+				or String(source_span.get("bytes", "")).replace(" ", "").to_lower() != source_bytes.hex_encode():
+			return _fail("Field-entry minimap ROM span failed provenance/size/hash validation: %s." % String(spec["file"]))
+		_sources[String(spec["file"])] = source_bytes
+	return true
+
+
+func _load_minimap_wait_sources() -> bool:
+	var manifest_file := FileAccess.open(SLOT11_SOURCE_MANIFEST, FileAccess.READ)
+	if manifest_file == null:
+		return _fail("Existing fixed-bank wait-source manifest is unavailable.")
+	var parsed: Variant = JSON.parse_string(manifest_file.get_as_text())
+	if not parsed is Dictionary or String(parsed.get("rom_sha256", "")) != ROM_SHA256:
+		return _fail("Fixed-bank wait-source manifest targets an unsupported ROM revision.")
+	for spec in [
+		{"file": C52D_WAIT_FILE, "start": C52D_WAIT_START, "end": C52D_WAIT_END},
+	]:
+		var source_span: Dictionary = {}
+		for span_variant in parsed.get("spans", []):
+			if span_variant is Dictionary and String(span_variant.get("file", "")) == String(spec["file"]):
+				source_span = span_variant
+				break
+		var source_bytes := FileAccess.get_file_as_bytes(SLOT11_SOURCE_ROOT + String(spec["file"]))
+		if source_bytes.size() != int(spec["end"]) - int(spec["start"]) \
+				or String(source_span.get("cpu_address", "")) != "0x%04X" % int(spec["start"]) \
+				or int(source_span.get("length", -1)) != source_bytes.size() \
+				or _sha256(source_bytes) != String(source_span.get("sha256", "")) \
+				or String(source_span.get("bytes", "")).replace(" ", "").to_lower() != source_bytes.hex_encode():
+			return _fail("Fixed-bank wait helper failed provenance/size/hash validation: %s." % String(spec["file"]))
+		_sources[String(spec["file"])] = source_bytes
 	return true
 
 
@@ -164,7 +286,8 @@ func execute_after_scenario_return(return_result: Dictionary) -> Dictionary:
 		"exit_pc": _pc,
 		"exit_sp": _sp,
 		"exit_bank": _current_bank_for_pc(_pc),
-		"registers": {"a": _a, "x": _x, "y": _y, "p": _p, "sp": _sp, "pc": _pc},
+		"registers": {"a": _a, "x": _x, "y": _y, "p": _p,
+			"p_known_mask": _p_known_mask, "sp": _sp, "pc": _pc},
 		"mapper": {"bank_low": _bank_low, "bank_high": _bank_high, "register_select": _mmc3_select},
 		"ram_image": _ram.duplicate(),
 		"stack_page": _ram.slice(0x0100, 0x0200),
@@ -176,6 +299,237 @@ func execute_after_scenario_return(return_result: Dictionary) -> Dictionary:
 		"call_request": {"callsite_pc": 0xDADF, "target_pc": 0xCB0F,
 			"return_pc": 0xDAE2, "return_minus_one": 0xDAE1},
 		"scope": "ROM-byte scenario caller prefix to its scheduler yield callsite",
+	}
+
+
+## Executes the scenario-$1E fixed-bank caller after the live `$CBC1 RTS->$E238`
+## return through its ROM-owned `$E247 JSR $8024` minimap callsite.
+func execute_after_field_setup_scenario_return(return_result: Dictionary) -> Dictionary:
+	error_message = ""
+	if not _configured:
+		_fail("Configure hash-checked field-entry setup sources before execution.")
+		return {}
+	var entry: Dictionary = return_result.get("entry", {})
+	var registers: Dictionary = return_result.get("registers", {})
+	var mapper: Dictionary = return_result.get("mapper", {})
+	var ram: Variant = return_result.get("ram_image", PackedByteArray())
+	var stack: Variant = return_result.get("stack_page", PackedByteArray())
+	var call_contract: Dictionary = return_result.get("call_contract", {})
+	var caller_request: Dictionary = call_contract.get("caller_request", {})
+	var source_dispatch: Dictionary = call_contract.get("dispatch", {})
+	var source_return_word := int(source_dispatch.get("source_return_word", -1))
+	var source_bank_low := int(source_dispatch.get("bank_low", -1))
+	var source_bank_high := int(source_dispatch.get("bank_high", -1))
+	var source_context_valid := (source_return_word == 0xD11D \
+		and source_bank_low == 0x1C and source_bank_high == 0x1D) \
+		or (source_return_word == 0xE944 \
+		and source_bank_low == 0x1A and source_bank_high == 0x1B)
+	if not bool(return_result.get("ok", false)) \
+			or String(return_result.get("status", "")) != "returned_to_source_caller" \
+			or int(entry.get("scenario_id", -1)) != 0x1E \
+			or int(entry.get("expected_return_pc", -1)) != 0xE238 \
+			or int(registers.get("pc", -1)) != 0xE238 \
+			or int(registers.get("sp", -1)) != 0x4E \
+			or int(caller_request.get("return_word", -1)) != 0xE237 \
+			or not ram is PackedByteArray or ram.size() != RAM_SIZE \
+			or int(ram[0x0518]) != 0x1E \
+			or not stack is PackedByteArray or stack.size() != 0x100 \
+			or not source_context_valid \
+			or int(mapper.get("bank_low", -1)) != source_bank_low \
+			or int(mapper.get("bank_high", -1)) != source_bank_high \
+			or int(registers.get("bank_low", -1)) != source_bank_low \
+			or int(registers.get("bank_high", -1)) != source_bank_high:
+		_fail("Input is not the live scenario-$1E `$CBC1 RTS->$E238` field-setup continuation.")
+		return {}
+	_reset_from_scenario_return(return_result)
+	var instruction_limit := 24
+	while _pc != 0xE247 and _instructions.size() < instruction_limit:
+		if not _execute_one():
+			return {}
+	if _pc != 0xE247 or _sp != 0x4E or _bank_low != 0x1C or _bank_high != 0x1D:
+		_fail("Scenario-$1E field setup did not reach its `$E247->$8024` minimap callsite with the source register/mapper state.")
+		return {}
+	var target_pc := _read_word(_pc + 1)
+	if target_pc != 0x8024:
+		_fail("The `$E247` field setup call target changed from the bank-$1C `$8024` vector.")
+		return {}
+	var call_bytes := PackedByteArray([_read_cpu(_pc), _read_cpu(_pc + 1), _read_cpu(_pc + 2)])
+	return {
+		"ok": true,
+		"status": "scenario1e_minimap_callsite_ready",
+		"rom_sha256": ROM_SHA256,
+		"source_manifest": FIELD_ENTRY_MANIFEST_PATH,
+		"entry_pc": 0xE238,
+		"exit_pc": _pc,
+		"exit_sp": _sp,
+		"exit_bank": _current_bank_for_pc(_pc),
+		"registers": {"a": _a, "x": _x, "y": _y, "p": _p,
+			"p_known_mask": _p_known_mask, "sp": _sp, "pc": _pc},
+		"mapper": {"bank_low": _bank_low, "bank_high": _bank_high,
+			"register_select": _mmc3_select},
+		"ram_image": _ram.duplicate(),
+		"stack_page": _ram.slice(0x0100, 0x0200),
+		"writes": _writes.duplicate(true),
+		"mapper_writes": _mapper_writes.duplicate(true),
+		"calls": _calls.duplicate(true),
+		"instructions": _instructions.duplicate(true),
+		"instruction_count": _instructions.size(),
+		"call_request": {"kind": "rom_jsr_request", "callsite_pc": 0xE247,
+			"target_pc": target_pc, "target_bank": _bank_low,
+			"return_pc": 0xE24A, "return_minus_one": 0xE249,
+			"sp_before_jsr": _sp, "source_bytes": call_bytes},
+		"scope": "Source-executed scenario-$1E field setup to its real `$E247 JSR $8024` minimap call; target routine/NMI queue still pending.",
+	}
+
+
+## Executes the bank-$1C `$8024->$82CA` vector and its real `$C52D->$CC46`
+## waiter until the source `$CC50 JSR $CB0F` task-yield callsite.
+func execute_field_minimap_to_first_wait_callsite(field_setup_result: Dictionary) -> Dictionary:
+	error_message = ""
+	if not _configured:
+		_fail("Configure hash-checked minimap and wait-helper sources before execution.")
+		return {}
+	var entry_call: Dictionary = field_setup_result.get("call_request", {})
+	var registers: Dictionary = field_setup_result.get("registers", {})
+	var ram: Variant = field_setup_result.get("ram_image", PackedByteArray())
+	var stack: Variant = field_setup_result.get("stack_page", PackedByteArray())
+	var mapper: Dictionary = field_setup_result.get("mapper", {})
+	if not bool(field_setup_result.get("ok", false)) \
+			or String(field_setup_result.get("status", "")) != "scenario1e_minimap_callsite_ready" \
+			or int(field_setup_result.get("exit_pc", -1)) != 0xE247 \
+			or int(entry_call.get("target_pc", -1)) != 0x8024 \
+			or int(entry_call.get("target_bank", -1)) != 0x1C \
+			or int(registers.get("sp", -1)) != 0x4E \
+			or not ram is PackedByteArray or ram.size() != RAM_SIZE \
+			or not stack is PackedByteArray or stack.size() != 0x100 \
+			or int(mapper.get("bank_low", -1)) != 0x1C or int(mapper.get("bank_high", -1)) != 0x1D:
+		_fail("Minimap execution requires the live scenario-$1E `$E247 JSR $8024` source boundary.")
+		return {}
+	_reset_from_result(field_setup_result)
+	var instruction_limit := 96
+	while _pc != 0xCC50 and _instructions.size() < instruction_limit:
+		if not _execute_one():
+			return {}
+	if _pc != 0xCC50 or _sp != 0x49 or int(_ram[0x05F4]) != 0:
+		_fail("ROM-byte minimap setup did not reach `$CC50` with the source `$05F4=0` waiter state.")
+		return {}
+	var target_pc := _read_word(_pc + 1)
+	if target_pc != 0xCB0F:
+		_fail("The fixed `$CC50` wait call target changed from the scheduler's `$CB0F` trampoline.")
+		return {}
+	return {
+		"ok": true,
+		"status": "scenario1e_minimap_first_yield_callsite_ready",
+		"rom_sha256": ROM_SHA256,
+		"source_manifest": FIELD_ENTRY_MANIFEST_PATH,
+		"entry_pc": 0xE247,
+		"exit_pc": _pc,
+		"exit_sp": _sp,
+		"registers": {"a": _a, "x": _x, "y": _y, "p": _p,
+			"p_known_mask": _p_known_mask, "sp": _sp, "pc": _pc},
+		"mapper": {"bank_low": _bank_low, "bank_high": _bank_high,
+			"register_select": _mmc3_select},
+		"ram_image": _ram.duplicate(),
+		"stack_page": _ram.slice(0x0100, 0x0200),
+		"writes": _writes.duplicate(true),
+		"mapper_writes": _mapper_writes.duplicate(true),
+		"calls": _calls.duplicate(true),
+		"instructions": _instructions.duplicate(true),
+		"instruction_count": _instructions.size(),
+		"call_request": {"kind": "rom_jsr_request", "callsite_pc": 0xCC50,
+			"target_pc": target_pc, "target_bank": 0x1E,
+			"return_pc": 0xCC53, "return_minus_one": 0xCC52,
+			"sp_before_jsr": _sp,
+			"source_bytes": PackedByteArray([_read_cpu(_pc), _read_cpu(_pc + 1), _read_cpu(_pc + 2)])},
+		"scope": "Executes the actual bank-$1C vector and fixed `$C52D->$CC46` helper to the first source yield; row packets and NMI consumption have not started.",
+	}
+
+
+## Resumes the real `$CC46` packet waiter from its saved slot-$05 return PC,
+## then enters the `$82CA` row loader until its next source-owned yield.
+func execute_field_minimap_wait_resume(dispatch: Dictionary,
+		boundary: Dictionary) -> Dictionary:
+	error_message = ""
+	if not _configured:
+		_fail("Configure hash-checked minimap waiter sources before resume.")
+		return {}
+	var ram: Variant = boundary.get("ram_image", PackedByteArray())
+	var stack: Variant = boundary.get("stack_page", PackedByteArray())
+	var source_pc := int(dispatch.get("pc", -1))
+	if not bool(dispatch.get("ok", false)) or int(dispatch.get("slot_base", -1)) != 0x05 \
+			or source_pc not in [0xCC53, 0xCCA3, 0xCCD1, 0x82E3] \
+			or String(dispatch.get("resume_path", "")) != "yielded_rts" \
+			or int(dispatch.get("bank_low", -1)) != 0x1C \
+			or int(dispatch.get("bank_high", -1)) != 0x1D \
+			or int(boundary.get("active_task_slot", -1)) != 0x05 \
+			or int(boundary.get("pc", -1)) != source_pc \
+			or not ram is PackedByteArray or ram.size() != RAM_SIZE \
+			or int(ram[0x0518]) != 0x1E \
+			or not stack is PackedByteArray or stack.size() != 0x100 \
+			or ram.slice(0x0100, 0x0200) != stack:
+		_fail("Minimap waiter resume requires a live scenario-$1E slot-$05 dispatch from `$CC53/$CCA3/$CCD1`.")
+		return {}
+	_reset_from_dispatch(dispatch, boundary)
+	var instruction_limit := 2048
+	while _pc not in [0xCC50, 0xCCA0, 0xCCCE, 0x82E0, 0x800C] \
+			and _instructions.size() < instruction_limit:
+		if not _execute_one():
+			return {}
+	if _pc == 0x800C and source_pc == 0x82E3:
+		return {
+			"ok": true,
+			"status": "minimap_loader_returned_to_bank18_worker",
+			"rom_sha256": ROM_SHA256,
+			"source_manifest": FIELD_ENTRY_MANIFEST_PATH,
+			"entry_pc": source_pc,
+			"exit_pc": _pc,
+			"exit_bank": _current_bank_for_pc(_pc),
+			"exit_sp": _sp,
+			"registers": {"a": _a, "x": _x, "y": _y, "p": _p,
+				"p_known_mask": _p_known_mask, "sp": _sp, "pc": _pc},
+			"mapper": {"bank_low": _bank_low, "bank_high": _bank_high,
+				"register_select": _mmc3_select},
+			"ram_image": _ram.duplicate(),
+			"stack_page": _ram.slice(0x0100, 0x0200),
+			"writes": _writes.duplicate(true),
+			"mapper_writes": _mapper_writes.duplicate(true),
+			"calls": _calls.duplicate(true),
+			"instructions": _instructions.duplicate(true),
+			"scope": "ROM-byte minimap row loop returned to bank-$18 caller `$800C`; worker continuation remains a separate source component.",
+		}
+	if _pc not in [0xCC50, 0xCCA0, 0xCCCE, 0x82E0]:
+		_fail("Source minimap waiter did not reach its next ROM yield callsite within its bound.")
+		return {}
+	var target_pc := _read_word(_pc + 1)
+	var expected_target := 0xC515 if _pc == 0x82E0 else 0xCB0F
+	if target_pc != expected_target:
+		_fail("Source minimap yield `$%04X` targets `$%04X`, expected `$%04X`." % [_pc, target_pc, expected_target])
+		return {}
+	return {
+		"ok": true,
+		"status": "minimap_row_wait_callsite_ready" if _pc == 0x82E0 else "minimap_wait_resume_callsite_ready",
+		"rom_sha256": ROM_SHA256,
+		"source_manifest": FIELD_ENTRY_MANIFEST_PATH,
+		"entry_pc": source_pc,
+		"exit_pc": _pc,
+		"exit_sp": _sp,
+		"registers": {"a": _a, "x": _x, "y": _y, "p": _p,
+			"p_known_mask": _p_known_mask, "sp": _sp, "pc": _pc},
+		"mapper": {"bank_low": _bank_low, "bank_high": _bank_high,
+			"register_select": _mmc3_select},
+		"ram_image": _ram.duplicate(),
+		"stack_page": _ram.slice(0x0100, 0x0200),
+		"writes": _writes.duplicate(true),
+		"mapper_writes": _mapper_writes.duplicate(true),
+		"calls": _calls.duplicate(true),
+		"instructions": _instructions.duplicate(true),
+		"instruction_count": _instructions.size(),
+		"call_request": {"kind": "rom_jsr_request", "callsite_pc": _pc,
+			"target_pc": target_pc, "target_bank": 0x1E,
+			"return_pc": (_pc + 3) & 0xFFFF, "return_minus_one": (_pc + 2) & 0xFFFF,
+			"sp_before_jsr": _sp,
+			"source_bytes": PackedByteArray([_read_cpu(_pc), _read_cpu(_pc + 1), _read_cpu(_pc + 2)])},
+		"scope": "ROM-byte resume of the shared PPU waiter into the minimap row loop through the next `$CB0F`/`$C515` callsite; no external NMI is generated.",
 	}
 
 
@@ -260,6 +614,29 @@ func execute_scenario35_wait_resume(dispatch: Dictionary, boundary: Dictionary) 
 	}
 
 
+## Executes `$E0DF LDA #$00; JSR $EF7F` and the fixed wrapper through the
+## first bank-$18 renderer entry. Its asynchronous worker/PPU effects remain
+## a separate source transition.
+func execute_field_entry_first_wrapper(handoff_result: Dictionary) -> Dictionary:
+	error_message = ""
+	if not _configured:
+		_fail("Configure hash-checked field-entry source bytes before execution.")
+		return {}
+	if not _validate_field_entry_handoff(handoff_result):
+		return {}
+	_reset_from_field_entry_handoff(handoff_result)
+	var result := _execute_to_worker_entry()
+	if result.is_empty():
+		return {}
+	result["status"] = "field_entry_first_renderer_wrapper_returned_to_bank18"
+	result["source_context"] = {"kind": "field_entry_e0df_first_renderer",
+		"entry_pc": 0xE0DF, "entry_bank": 0x1F, "renderer_descriptor": 0x00}
+	result["scope"] = "ROM-byte `$E0DF LDA #$00; JSR $EF7F` and fixed wrapper through bank-$18:$800C; renderer worker body and PPU output are not executed here"
+	result["runtime_integrated"] = true
+	result["precondition_gaps"] = ["The bank-$18 descriptor renderer worker and its NMI/PPU queue effects remain outside this transition."]
+	return result
+
+
 func _execute_to_worker_entry() -> Dictionary:
 	var instruction_limit := 4096
 	while not _at_end_boundary() and _instructions.size() < instruction_limit:
@@ -276,7 +653,8 @@ func _execute_to_worker_entry() -> Dictionary:
 		"exit_pc": _pc,
 		"exit_sp": _sp,
 		"exit_bank": _current_bank_for_pc(_pc),
-		"registers": {"a": _a, "x": _x, "y": _y, "p": _p, "sp": _sp, "pc": _pc},
+		"registers": {"a": _a, "x": _x, "y": _y, "p": _p,
+			"p_known_mask": _p_known_mask, "sp": _sp, "pc": _pc},
 		"stack_top_sp_plus_1_to_8": _bytes_hex(0x0100 | ((_sp + 1) & 0xFF), 8),
 		"mapper": {"bank_low": _bank_low, "bank_high": _bank_high, "select": _mmc3_select,
 			"fixed_low": 0x1E, "fixed_high": 0x1F},
@@ -340,6 +718,68 @@ func _validate_period_result(period_result: Dictionary) -> bool:
 	return true
 
 
+func _validate_field_entry_handoff(handoff_result: Dictionary) -> bool:
+	var scenario1c_handoff := String(handoff_result.get("status", "")) \
+		== "scenario1c_pass_handoff_returned_to_e0df"
+	var expected_status := "scenario1c_pass_handoff_returned_to_e0df" if scenario1c_handoff \
+		else "scenario36_queue_returned_to_e0df"
+	var expected_manifest := "res://reference/rom_extract/gameplay/pass_receiver_holder_transfer/manifest.json" \
+		if scenario1c_handoff else "res://reference/rom_extract/gameplay/first_command_scenarios/manifest.json"
+	var expected_entry_pc := 0xDE90 if scenario1c_handoff else 0xCBC1
+	var expected_entry_sp := 0x50 if scenario1c_handoff else 0x4E
+	var registers_variant: Variant = handoff_result.get("registers", {})
+	var mapper_variant: Variant = handoff_result.get("mapper", {})
+	var ram_variant: Variant = handoff_result.get("ram_image", PackedByteArray())
+	var stack_variant: Variant = handoff_result.get("stack_page", PackedByteArray())
+	if not bool(handoff_result.get("ok", false)) \
+			or String(handoff_result.get("status", "")) != expected_status \
+			or String(handoff_result.get("rom_sha256", "")) != ROM_SHA256 \
+			or String(handoff_result.get("source_manifest", "")) != expected_manifest \
+			or int(handoff_result.get("entry_pc", -1)) != expected_entry_pc \
+			or int(handoff_result.get("entry_sp", -1)) != expected_entry_sp \
+			or int(handoff_result.get("exit_pc", -1)) != 0xE0DF \
+			or int(handoff_result.get("exit_sp", -1)) != 0x50 \
+			or not registers_variant is Dictionary or not mapper_variant is Dictionary \
+			or not ram_variant is PackedByteArray or not stack_variant is PackedByteArray:
+		return _fail("Field entry requires a supported live ROM-derived scenario-$36 or scenario-$1C `$E0DF` handoff.")
+	var registers: Dictionary = registers_variant
+	var mapper: Dictionary = mapper_variant
+	var ram: PackedByteArray = ram_variant
+	var stack: PackedByteArray = stack_variant
+	var p_known_mask := int(registers.get("p_known_mask", -1))
+	var expected_bank_low := 0x1A if scenario1c_handoff else 0x1C
+	var expected_bank_high := 0x1B if scenario1c_handoff else 0x1D
+	if registers.get("pc", -1) != 0xE0DF or registers.get("x", -1) != 0x50 \
+			or registers.get("sp", -1) != 0x50 \
+			or mapper.get("bank_low", -1) != expected_bank_low \
+			or mapper.get("bank_high", -1) != expected_bank_high \
+			or ram.size() != RAM_SIZE or stack.size() != 0x100 \
+			or ram.slice(0x0100, 0x0200) != stack:
+		return _fail("Field-entry `$E0DF` handoff mismatch: registers=%s mapper=%s ram=%d stack=%d mirror=%s." % [
+			str(registers), str(mapper), ram.size(), stack.size(),
+			str(ram.size() == RAM_SIZE and stack.size() == 0x100 \
+				and ram.slice(0x0100, 0x0200) == stack)])
+	if scenario1c_handoff:
+		var entry_registers_variant: Variant = handoff_result.get("entry_registers", {})
+		if not entry_registers_variant is Dictionary:
+			return _fail("Scenario-$1C handoff omits its `$DE90` input registers.")
+		var entry_registers: Dictionary = entry_registers_variant
+		var entry_known_mask := int(entry_registers.get("p_known_mask", 0))
+		if int(registers.get("a", -1)) != int(entry_registers.get("a", -2)) \
+				or int(registers.get("y", -1)) != int(entry_registers.get("y", -2)) \
+				or (int(registers.get("p", -1)) & 0x82) != 0 \
+				or ((int(registers.get("p", -1)) ^ int(entry_registers.get("p", -1))) \
+					& entry_known_mask & 0x7D) != 0 \
+				or (p_known_mask & 0x82) != 0x82:
+			return _fail("Scenario-$1C `$DE90` handoff does not preserve inputs and ROM LDX `$50` flags.")
+	else:
+		if int(registers.get("a", -1)) != 0x01 or int(registers.get("y", -1)) != 0x7C \
+				or p_known_mask < 0 \
+				or ((int(registers.get("p", 0)) ^ 0x31) & p_known_mask) != 0:
+			return _fail("Scenario-$36 `$E0DF` handoff register flags do not match its source profile.")
+	return true
+
+
 func _reset_from_period_result(period_result: Dictionary) -> void:
 	_ram.resize(RAM_SIZE)
 	var source_ram: Variant = period_result.get("ram_image", PackedByteArray())
@@ -397,12 +837,76 @@ func _reset_from_scenario_return(return_result: Dictionary) -> void:
 	_x = int(registers.get("x", 0)) & 0xFF
 	_y = int(registers.get("y", 0)) & 0xFF
 	_p = int(registers.get("p", FLAG_U)) | FLAG_U
+	_p_known_mask = int(registers.get("p_known_mask", 0xFF)) & 0xFF
 	_sp = int(registers["sp"]) & 0xFF
-	_pc = 0xDADD
+	_pc = int(registers.get("pc", 0xDADD)) & 0xFFFF
 	_entry_pc = _pc
 	_bank_low = int(mapper["bank_low"]) & 0xFF
 	_bank_high = int(mapper["bank_high"]) & 0xFF
 	_mmc3_select = int(mapper.get("register_select", 0x07)) & 0x07
+
+
+func _reset_from_field_entry_handoff(handoff_result: Dictionary) -> void:
+	_ram = (handoff_result["ram_image"] as PackedByteArray).duplicate()
+	_writes.clear()
+	_mapper_writes.clear()
+	_calls.clear()
+	_instructions.clear()
+	var registers: Dictionary = handoff_result["registers"]
+	var mapper: Dictionary = handoff_result["mapper"]
+	_a = int(registers["a"]) & 0xFF
+	_x = int(registers["x"]) & 0xFF
+	_y = int(registers["y"]) & 0xFF
+	_p = (int(registers["p"]) | FLAG_U) & 0xFF
+	_p_known_mask = int(registers.get("p_known_mask", 0xFF)) & 0xFF
+	_sp = int(registers["sp"]) & 0xFF
+	_pc = 0xE0DF
+	_entry_pc = _pc
+	_bank_low = int(mapper["bank_low"]) & 0xFF
+	_bank_high = int(mapper["bank_high"]) & 0xFF
+	# `$EF7F->$CE2D` writes the selector before the wrapper's first `$8001`;
+	# the incoming MMC3 selector value is not needed for this call path.
+	_mmc3_select = int(mapper.get("select", -1))
+
+
+func _reset_from_result(source_result: Dictionary) -> void:
+	_ram = (source_result["ram_image"] as PackedByteArray).duplicate()
+	_writes.clear()
+	_mapper_writes.clear()
+	_calls.clear()
+	_instructions.clear()
+	var registers: Dictionary = source_result["registers"]
+	var mapper: Dictionary = source_result["mapper"]
+	_a = int(registers.get("a", 0)) & 0xFF
+	_x = int(registers.get("x", 0)) & 0xFF
+	_y = int(registers.get("y", 0)) & 0xFF
+	_p = (int(registers.get("p", FLAG_U)) | FLAG_U) & 0xFF
+	_p_known_mask = int(registers.get("p_known_mask", 0xFF)) & 0xFF
+	_sp = int(registers.get("sp", 0)) & 0xFF
+	_pc = int(source_result.get("exit_pc", -1)) & 0xFFFF
+	_entry_pc = _pc
+	_bank_low = int(mapper.get("bank_low", 0)) & 0xFF
+	_bank_high = int(mapper.get("bank_high", 1)) & 0xFF
+	_mmc3_select = int(mapper.get("register_select", 0x07)) & 0x07
+
+
+func _reset_from_dispatch(dispatch: Dictionary, boundary: Dictionary) -> void:
+	_ram = (boundary["ram_image"] as PackedByteArray).duplicate()
+	_writes.clear()
+	_mapper_writes.clear()
+	_calls.clear()
+	_instructions.clear()
+	_a = int(dispatch.get("a", 0)) & 0xFF
+	_x = int(dispatch.get("x", 0)) & 0xFF
+	_y = int(dispatch.get("y", 0)) & 0xFF
+	_p = (int(dispatch.get("p", FLAG_U)) | FLAG_U) & 0xFF
+	_p_known_mask = int(dispatch.get("p_known_mask", 0xFF)) & 0xFF
+	_sp = int(dispatch.get("sp", 0)) & 0xFF
+	_pc = int(dispatch.get("pc", -1)) & 0xFFFF
+	_entry_pc = _pc
+	_bank_low = int(dispatch.get("bank_low", 0)) & 0xFF
+	_bank_high = int(dispatch.get("bank_high", 1)) & 0xFF
+	_mmc3_select = int((boundary.get("mapper", {}) as Dictionary).get("select", 0x07)) & 0x07
 
 
 func _reset_from_scenario_wait_dispatch(dispatch: Dictionary, boundary: Dictionary) -> void:
@@ -457,22 +961,32 @@ func _execute_one() -> bool:
 			if _y < 0: return false
 			_set_nz(_y)
 			_pc += 3
-		0xF0, 0xD0, 0x10: # BEQ, BNE, BPL
+		0xF0, 0xD0, 0x10, 0x90: # BEQ, BNE, BPL, BCC
 			var displacement := _read_cpu(_pc + 1)
 			if displacement < 0: return false
 			if displacement >= 0x80: displacement -= 0x100
 			var take := (opcode == 0xF0 and (_p & FLAG_Z) != 0) \
 					or (opcode == 0xD0 and (_p & FLAG_Z) == 0) \
-					or (opcode == 0x10 and (_p & FLAG_N) == 0)
+					or (opcode == 0x10 and (_p & FLAG_N) == 0) \
+					or (opcode == 0x90 and (_p & FLAG_C) == 0)
 			_pc = _pc + 2 + displacement if take else _pc + 2
 		0xE8: # INX
 			_x = (_x + 1) & 0xFF
 			_set_nz(_x)
 			_pc += 1
+		0x88: # DEY
+			_y = (_y - 1) & 0xFF
+			_set_nz(_y)
+			_pc += 1
 		0xC8: # INY
 			_y = (_y + 1) & 0xFF
 			_set_nz(_y)
 			_pc += 1
+		0xC0: # CPY #imm
+			var value := _read_cpu(_pc + 1)
+			if value < 0: return false
+			_compare(_y, value)
+			_pc += 2
 		0xE0: # CPX #imm
 			var value := _read_cpu(_pc + 1)
 			if value < 0: return false
@@ -482,6 +996,10 @@ func _execute_one() -> bool:
 			var address := _read_word(_pc + 1)
 			if address < 0 or not _write_cpu((address + _x) & 0xFFFF, _a, start_pc, start_bank): return false
 			_pc += 3
+		0x8A: # TXA
+			_a = _x
+			_set_nz(_a)
+			_pc += 1
 		0xA9: # LDA #imm
 			_a = _read_cpu(_pc + 1)
 			if _a < 0: return false
@@ -562,6 +1080,39 @@ func _execute_one() -> bool:
 			_set_flag(FLAG_V, ((~(before ^ value) & (before ^ sum)) & 0x80) != 0)
 			_a = sum & 0xFF
 			_set_nz(_a)
+			_pc += 2
+		0x65: # ADC zp
+			var address := _read_cpu(_pc + 1)
+			if address < 0: return false
+			var value := _read_cpu(address)
+			if value < 0: return false
+			var before := _a
+			var sum := before + value + (1 if (_p & FLAG_C) != 0 else 0)
+			_set_flag(FLAG_C, sum > 0xFF)
+			_set_flag(FLAG_V, ((~(before ^ value) & (before ^ sum)) & 0x80) != 0)
+			_a = sum & 0xFF
+			_set_nz(_a)
+			_pc += 2
+		0x6E, 0x7E: # ROR abs / abs,X
+			var address := _read_word(_pc + 1)
+			if address < 0: return false
+			if opcode == 0x7E:
+				address = (address + _x) & 0xFFFF
+			var previous := _read_cpu(address)
+			if previous < 0: return false
+			var result := ((previous >> 1) | (0x80 if (_p & FLAG_C) != 0 else 0)) & 0xFF
+			_set_flag(FLAG_C, (previous & 0x01) != 0)
+			if not _write_cpu(address, result, start_pc, start_bank): return false
+			_set_nz(result)
+			_pc += 3
+		0xE6: # INC zp
+			var address := _read_cpu(_pc + 1)
+			if address < 0: return false
+			var previous := _read_cpu(address)
+			if previous < 0: return false
+			var result := (previous + 1) & 0xFF
+			if not _write_cpu(address, result, start_pc, start_bank): return false
+			_set_nz(result)
 			_pc += 2
 		0xA5: # LDA zp
 			var address := _read_cpu(_pc + 1)
@@ -691,6 +1242,22 @@ func _read_cpu(address: int) -> int:
 	if address < 0x2000:
 		return int(_ram[address & 0x07FF])
 	var bank := _current_bank_for_pc(address)
+	if bank == 0x1C and address >= MINIMAP_VECTOR_START and address < MINIMAP_VECTOR_END:
+		return int((_sources[MINIMAP_VECTOR_FILE] as PackedByteArray)[address - MINIMAP_VECTOR_START])
+	if bank == 0x1C and address >= MINIMAP_CODE_START and address < MINIMAP_CODE_END:
+		return int((_sources[MINIMAP_CODE_FILE] as PackedByteArray)[address - MINIMAP_CODE_START])
+	if bank == 0x1C and address >= MINIMAP_TILES_START and address < MINIMAP_TILES_END:
+		return int((_sources[MINIMAP_TILES_FILE] as PackedByteArray)[address - MINIMAP_TILES_START])
+	if bank == 0x1F and address >= FIELD_ENTRY_START and address < FIELD_ENTRY_END:
+		return int((_sources[FIELD_ENTRY_SOURCE_FILE] as PackedByteArray)[address - FIELD_ENTRY_START])
+	if bank == 0x1F and address >= FIELD_SETUP_START and address < FIELD_SETUP_END:
+		return int((_sources[FIELD_SETUP_SOURCE_FILE] as PackedByteArray)[address - FIELD_SETUP_START])
+	if bank == 0x1E and address >= C52D_WAIT_START and address < C52D_WAIT_END:
+		return int((_sources[C52D_WAIT_FILE] as PackedByteArray)[address - C52D_WAIT_START])
+	if bank == 0x1E and address >= CC46_WAIT_START and address < CC46_WAIT_END:
+		return int((_sources[CC46_WAIT_FILE] as PackedByteArray)[address - CC46_WAIT_START])
+	if bank == 0x1E and address >= CC46_WAIT_START and address < CC46_WAIT_END:
+		return int((_sources[CC46_WAIT_FILE] as PackedByteArray)[address - CC46_WAIT_START])
 	for file_name: String in SOURCE_FILES:
 		var spec: Dictionary = SOURCE_FILES[file_name]
 		if int(spec["bank"]) == bank and address >= int(spec["start"]) and address < int(spec["end"]):
@@ -747,6 +1314,7 @@ func _set_flag(mask: int, enabled: bool) -> void:
 	if enabled: _p |= mask
 	else: _p &= ~mask
 	_p |= FLAG_U
+	_p_known_mask |= mask
 
 
 func _current_bank_for_pc(address: int) -> int:
@@ -758,9 +1326,9 @@ func _current_bank_for_pc(address: int) -> int:
 
 func _opcode_length(opcode: int) -> int:
 	match opcode:
-		0xA2, 0xF0, 0xD0, 0x10, 0xE0, 0xA9, 0xA0, 0x85, 0x91, 0xC9, 0x18, 0x69, 0xA5, 0x09, 0xB1, 0x29, 0x84, 0xA4, 0xE9:
+		0xA2, 0xF0, 0xD0, 0x10, 0x90, 0xC0, 0xE0, 0xA9, 0xA0, 0x85, 0x91, 0xC9, 0x18, 0x69, 0x65, 0xE6, 0xA5, 0x09, 0xB1, 0x29, 0x84, 0xA4, 0xE9:
 			return 2
-		0xBC, 0x9D, 0x20, 0xB9, 0x8D, 0x4C, 0x2C, 0x6C, 0xAD, 0xBD, 0x8E, 0xAE:
+		0xBC, 0x9D, 0x20, 0xB9, 0x8D, 0x4C, 0x2C, 0x6C, 0xAD, 0xBD, 0x8E, 0xAE, 0x6E, 0x7E:
 			return 3
 		_:
 			return 1
@@ -822,6 +1390,9 @@ func _verify_boundaries() -> bool:
 		0xAD, 0x29, 0x06, 0x20, 0x99, 0xCB, 0x34, 0xDB, 0x9E, 0xDB, 0xFC, 0xDB, 0xF3, 0xDB, 0x03, 0xDC
 	]) or (_sources["bank1c_dispatch_trampoline_8003_8005.bin"] as PackedByteArray) != PackedByteArray([0x4C, 0x22, 0x8B]):
 		return _fail("Fresh selector-dispatch source bytes changed.")
+	if (_sources["fixed_field_entry_first_wrapper_E0DF_E0E4.bin"] as PackedByteArray) \
+			!= PackedByteArray([0xA9, 0x00, 0x20, 0x7F, 0xEF]):
+		return _fail("Field-entry `$E0DF` first wrapper no longer matches `LDA #$00; JSR $EF7F`.")
 	if (_sources["bank1c_fresh_opponent_setup_8B22_8B93.bin"] as PackedByteArray)[0x93 - 0x22] != 0x60 \
 			or (_sources["bank1d_opponent_pointer_entry_0_BAB2_BAB3.bin"] as PackedByteArray) != PackedByteArray([0xF6, 0xBA]) \
 			or (_sources["bank1d_opponent_3_header_BAF6_BAFF.bin"] as PackedByteArray)[9] != 0x0F \

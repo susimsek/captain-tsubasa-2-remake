@@ -1,6 +1,6 @@
 extends Node
 class_name KickoffCutsceneCommandVm
-## Source-byte-preserving scheduler for the two fresh-start KICK OFF scripts.
+## Source-byte-preserving scheduler for ROM-indexed KICK OFF cutscene streams.
 ## Presentation commands are forwarded; this VM does not draw or play anything.
 
 signal presenter_event(event: Dictionary)
@@ -21,6 +21,8 @@ enum RunState {
 	RUNNING,
 	WAITING_TICKS,
 	WAITING_INPUT,
+	WAITING_QUEUE_CAPACITY,
+	WAITING_SOURCE_TASK,
 	FINISHED,
 	FAILED,
 }
@@ -30,6 +32,8 @@ const NES_A_PRESSED_EDGE := 0x80
 const FC_YIELD_TICKS := 4
 const SCREEN_ON_PRE_WAIT_TICKS := 2
 const SCREEN_ON_FADE_LEVELS := 15
+const F4_PALETTE_RAMP_STEPS := 4
+const F4_PALETTE_RAMP_TICKS_PER_STEP := 4
 const MAX_EVENTS_PER_PUMP := 4096
 const INITIAL_TEXT_SPEED := 8
 
@@ -37,28 +41,33 @@ const EXPECTED_MANIFEST_SHA256 := {
 	1: "e596286e60d4ccfd01dcc3c03f5c48f911f236978b4896f68bff62e28a56765d",
 	2: "fc943538831c90103b6fe91b2244de6a003489e254b95c5e8980234e895a5ebc",
 	0x44: "95442a61b4c8c7a97781efe59ad9eb0ada544895076c46efeac405d0d282f6a7",
+	0x56: "05422d6c42961d411deb1e164fb880bd08873e3a03e32fdaf539eed304b53161",
 }
 const EXPECTED_STREAM_SHA256 := {
 	1: "acf2618fa8a93c9b25e9b91f803d69e9073a7aa670919d1b7c9d06320596926b",
 	2: "2909bce2e1ef5f25c383b9fe7de8b2b226acf4f50e83b85d9a30d83d7de5affe",
 	0x44: "f1c60b3e4f92dee044189bc94e89197439decab3881bb946f483e7899faa861b",
+	0x56: "d656d678df10757989b518e895a25b05f3cd335664d2df9aa45832fbf33e1536",
 }
-const EXPECTED_EVENT_COUNTS := {1: 222, 2: 45, 0x44: 12}
+const EXPECTED_EVENT_COUNTS := {1: 222, 2: 45, 0x44: 12, 0x56: 17}
 
 const CUTSCENE_MANIFESTS := {
 	1: "res://assets/gameplay/rom_logic/kickoff_cutscene_01_events.json",
 	2: "res://assets/gameplay/rom_logic/kickoff_cutscene_02_events.json",
 	0x44: "res://assets/gameplay/rom_logic/kickoff_meeting_scene_44_events.json",
+	0x56: "res://assets/gameplay/rom_logic/kickoff_meeting_scene_56_events.json",
 }
 const CUTSCENE_NAMES := {
 	1: "kickoff_cutscene_01",
 	2: "kickoff_cutscene_02",
 	0x44: "kickoff_meeting_scene_44",
+	0x56: "kickoff_meeting_scene_56",
 }
 const CUTSCENE_SOURCE_STARTS := {
 	1: {"cpu": 0xA2A1, "file": 0x0062B1},
 	2: {"cpu": 0xA626, "file": 0x006636},
 	0x44: {"cpu": 0xBE84, "file": 0x00BE94},
+	0x56: {"cpu": 0xBFBA, "file": 0x00BFCA},
 }
 
 const COMPACT_PAUSE_TICKS := {
@@ -99,6 +108,8 @@ const ALLOWED_EVENT_KINDS := [
 ]
 
 const VM_HANDLED_KINDS := [
+	"background_1",
+	"background_2",
 	"compact_pause",
 	"dialog_window",
 	"exit",
@@ -107,6 +118,7 @@ const VM_HANDLED_KINDS := [
 	"pause_frames",
 	"screen_off_clear",
 	"screen_on",
+		"text_brightness_command",
 	"text_speed",
 	"text_base_ppu_address",
 	"text_tile_ids",
@@ -128,14 +140,24 @@ var _wait_kind: String = ""
 var _wait_remaining: int = 0
 var _text_tiles: Array = []
 var _text_glyph_index: int = 0
+var _text_glyph_queue_capacity_provider: Callable = Callable()
+var _text_queue_wait_nmi_sequence := -1
 var _screen_palette_level: int = 0
 
 
 ## Loads and validates one of the ROM-derived event streams, then dispatches
 ## immediate commands until the first source wait. `pressed_edges` supplied to
 ## advance_scheduler_tick() must contain NES newly-pressed bits, not held state.
-func start_cutscene(requested_cutscene_id: int) -> bool:
+func start_cutscene(requested_cutscene_id: int,
+		initial_fade_counters: Vector2i = Vector2i(-1, -1)) -> bool:
 	_reset_runtime_state()
+	if initial_fade_counters == Vector2i(-1, -1):
+		initial_fade_counters = Vector2i.ZERO
+	if initial_fade_counters.x < 0 or initial_fade_counters.x > 0x0F \
+			or initial_fade_counters.y < 0 or initial_fade_counters.y > 0x0F \
+			or initial_fade_counters.x != initial_fade_counters.y:
+		return _fail("Cutscene start requires a known equal ROM `$4A/$4B` fade-counter pair.")
+	_screen_palette_level = initial_fade_counters.x
 	if not CUTSCENE_MANIFESTS.has(requested_cutscene_id):
 		return _fail("Unsupported KICK OFF cutscene id: %d" % requested_cutscene_id)
 
@@ -166,11 +188,14 @@ func start_cutscene(requested_cutscene_id: int) -> bool:
 ## Advances exactly one cooperative ROM scheduler tick. A wait-for-input
 ## resumes only when this call contains the NES A newly-pressed edge ($80).
 func advance_scheduler_tick(pressed_edges: int = 0) -> void:
-	if state != RunState.WAITING_TICKS and state != RunState.WAITING_INPUT:
+	if state != RunState.WAITING_TICKS and state != RunState.WAITING_INPUT \
+			and state != RunState.WAITING_QUEUE_CAPACITY:
 		return
 	scheduler_tick_index += 1
 
-	if state == RunState.WAITING_INPUT:
+	if state == RunState.WAITING_QUEUE_CAPACITY:
+		_resume_text_after_queue_release()
+	elif state == RunState.WAITING_INPUT:
 		if (pressed_edges & NES_A_PRESSED_EDGE) != 0:
 			_complete_wait()
 	else:
@@ -181,13 +206,74 @@ func advance_scheduler_tick(pressed_edges: int = 0) -> void:
 	scheduler_tick_processed.emit(scheduler_tick_index, current_event_index, current_source_address)
 
 
+## Let a production route suspend the command stream while a ROM-owned
+## background task drains its packet batches. The event is already active in
+## `_pump_events()` when the presenter callback calls this method.
+func begin_external_source_task(event_index: int, source_cpu_address: int,
+		task_name: String) -> bool:
+	if state != RunState.RUNNING or event_index != current_event_index \
+			or source_cpu_address != current_source_address or task_name.is_empty():
+		return false
+	_wait_kind = task_name
+	_wait_remaining = 0
+	state = RunState.WAITING_SOURCE_TASK
+	wait_started.emit(_wait_kind, -1, _active_event.duplicate(true))
+	return true
+
+
+## Let the route execute an EB handler's post-input ROM work before the
+## interpreter consumes that command. The fresh edge itself is source input;
+## this method does not synthesize one.
+func begin_external_input_completion_task(event_index: int, source_cpu_address: int,
+		pressed_edges: int, task_name: String) -> bool:
+	if state != RunState.WAITING_INPUT or event_index != current_event_index \
+			or source_cpu_address != current_source_address or task_name.is_empty() \
+			or (pressed_edges & NES_A_PRESSED_EDGE) == 0 \
+			or String(_active_event.get("kind", "")) != "wait_for_input" \
+			or int(_active_event.get("opcode", -1)) != 0xEB:
+		return false
+	_wait_kind = task_name
+	_wait_remaining = 0
+	state = RunState.WAITING_SOURCE_TASK
+	wait_started.emit(_wait_kind, -1, _active_event.duplicate(true))
+	return true
+
+
+func get_active_event() -> Dictionary:
+	return _active_event.duplicate(true)
+
+
+## The route supplies the live presenter-owned `$0628` queue state. A standalone
+## VM without a presenter keeps its decoded event playback behavior.
+func set_text_glyph_queue_capacity_provider(provider: Callable) -> void:
+	_text_glyph_queue_capacity_provider = provider
+
+
+## Resume at the caller's next scheduler scan after the source task returns.
+func complete_external_source_task(event_index: int, source_cpu_address: int) -> bool:
+	if state != RunState.WAITING_SOURCE_TASK or event_index != current_event_index \
+			or source_cpu_address != current_source_address:
+		return false
+	var completed_kind := _wait_kind
+	var completed_event := _active_event.duplicate(true)
+	_wait_kind = ""
+	_wait_remaining = 0
+	state = RunState.RUNNING
+	wait_completed.emit(completed_kind, completed_event)
+	_advance_active_event()
+	_pump_events()
+	return state != RunState.FAILED
+
+
 ## Cancels playback and clears all source/runtime state.
 func stop() -> void:
 	_reset_runtime_state()
 
 
 func is_running() -> bool:
-	return state == RunState.RUNNING or state == RunState.WAITING_TICKS or state == RunState.WAITING_INPUT
+	return state == RunState.RUNNING or state == RunState.WAITING_TICKS \
+		or state == RunState.WAITING_INPUT or state == RunState.WAITING_QUEUE_CAPACITY \
+		or state == RunState.WAITING_SOURCE_TASK
 
 
 ## The supported E9/EA model uses one level for the two ROM fade counters.
@@ -196,8 +282,22 @@ func get_rom_modeled_fade_counters() -> Vector2i:
 	return Vector2i(_screen_palette_level, _screen_palette_level)
 
 
+## Apply ROM `$F3 $00`'s `$9A35` counter reset to the active, byte-checked event.
+func apply_rom_f3_palette_rebuild(event: Dictionary) -> bool:
+	var arguments: Array = event.get("arguments", [])
+	if state != RunState.RUNNING or str(event.get("kind", "")) != "palette_command" \
+			or int(event.get("opcode", -1)) != 0xF3 \
+			or arguments.size() != 1 or int(arguments[0]) != 0x00 \
+			or int(event.get("event_index", -1)) != current_event_index \
+			or int(event.get("cpu_address", -1)) != current_source_address:
+		return false
+	_screen_palette_level = 0x0F
+	return true
+
+
 func is_waiting() -> bool:
-	return state == RunState.WAITING_TICKS or state == RunState.WAITING_INPUT
+	return state == RunState.WAITING_TICKS or state == RunState.WAITING_INPUT \
+		or state == RunState.WAITING_QUEUE_CAPACITY or state == RunState.WAITING_SOURCE_TASK
 
 
 func _validate_manifest(requested_cutscene_id: int, manifest: Dictionary) -> Array:
@@ -310,6 +410,12 @@ func _validate_manifest(requested_cutscene_id: int, manifest: Dictionary) -> Arr
 			return []
 		if not _validate_event_payload(event, raw_bytes, event_index):
 			return []
+		if kind == "jump":
+			var target_cpu_address := int(event.get("target_cpu_address", -1))
+			if event_index + 1 >= events.size() \
+					or int(events[event_index + 1].get("cpu_address", -1)) != target_cpu_address:
+				_fail("Cutscene jump at event %d does not lead to its next preserved source segment" % event_index)
+				return []
 		expected_offset += raw_bytes.size()
 
 	if expected_offset != stream.size():
@@ -352,6 +458,11 @@ func _validate_event_payload(event: Dictionary, raw_bytes: PackedByteArray, even
 			var arguments: Array = event.get("arguments", [])
 			if raw_bytes.size() != 2 or raw_bytes[0] != 0xF2 or arguments.size() != 1 or int(arguments[0]) != raw_bytes[1]:
 				return _fail("Invalid F2 text-speed bytes at event %d" % event_index)
+		"text_brightness_command":
+			var arguments: Array = event.get("arguments", [])
+			if raw_bytes.size() != 2 or raw_bytes[0] != 0xF4 \
+					or arguments.size() != 1 or int(arguments[0]) != raw_bytes[1]:
+				return _fail("Invalid F4 text-brightness bytes at event %d" % event_index)
 		"text_tile_ids":
 			var tile_ids: Array = event.get("tile_ids", [])
 			if tile_ids.size() != raw_bytes.size():
@@ -359,6 +470,13 @@ func _validate_event_payload(event: Dictionary, raw_bytes: PackedByteArray, even
 			for tile_index in tile_ids.size():
 				if int(tile_ids[tile_index]) != raw_bytes[tile_index] or raw_bytes[tile_index] >= 0xD8:
 					return _fail("Invalid text tile byte at event %d" % event_index)
+		"jump":
+			var arguments: Array = event.get("arguments", [])
+			if raw_bytes.size() != 3 or raw_bytes[0] != 0xFE or arguments.size() != 2:
+				return _fail("Invalid FE jump bytes at event %d" % event_index)
+			var target_cpu_address := int(raw_bytes[1]) | (int(raw_bytes[2]) << 8)
+			if int(event.get("target_cpu_address", -1)) != target_cpu_address:
+				return _fail("FE jump target metadata mismatch at event %d" % event_index)
 		"exit":
 			if raw_bytes.size() != 1 or raw_bytes[0] != 0xFF:
 				return _fail("Invalid FF terminator at event %d" % event_index)
@@ -433,7 +551,13 @@ func _pump_events() -> void:
 		current_source_address = int(_active_event["cpu_address"])
 		var kind := str(_active_event["kind"])
 		presenter_event.emit(_active_event.duplicate(true))
-		if not VM_HANDLED_KINDS.has(kind):
+		var vm_handles_event := VM_HANDLED_KINDS.has(kind)
+		if kind == "text_brightness_command":
+			var brightness_arguments: Array = _active_event.get("arguments", [])
+			vm_handles_event = int(_active_event.get("opcode", -1)) == 0xF4 \
+					and brightness_arguments.size() == 1 \
+					and [0x04, 0x05].has(int(brightness_arguments[0]))
+		if not vm_handles_event:
 			unsupported_opcode.emit(_active_event.duplicate(true))
 		match kind:
 			"screen_on":
@@ -446,7 +570,12 @@ func _pump_events() -> void:
 				if int(_active_event.get("opcode", -1)) != 0xEA:
 					_fail("Screen-off/clear event is not backed by ROM opcode $EA.")
 					return
-				_begin_timed_wait("screen_off_pre_wait", 1)
+				if _screen_palette_level > 0:
+					_screen_palette_level -= 1
+					screen_fade_palette_step_requested.emit(_active_event.duplicate(true), _screen_palette_level)
+					_begin_wait("screen_off_fade_down", 1, _active_event)
+					return
+				_finish_screen_off_clear(_active_event)
 				return
 			"compact_pause":
 				_begin_timed_wait("compact_pause", int(_active_event["ticks"]))
@@ -466,9 +595,34 @@ func _pump_events() -> void:
 				var arguments: Array = _active_event.get("arguments", [])
 				text_speed = int(arguments[0])
 				_advance_active_event()
+			"text_brightness_command":
+				var arguments: Array = _active_event.get("arguments", [])
+				if int(arguments[0]) == 0x04 or int(arguments[0]) == 0x05:
+					# Bank-0 `$86F5/$8712` each run four palette steps. Each
+					# step yields through `$9FA8(A=$04)`, so hold the source
+					# command for sixteen cooperative scheduler ticks.
+					_begin_timed_wait("f4_palette_ramp",
+						F4_PALETTE_RAMP_STEPS * F4_PALETTE_RAMP_TICKS_PER_STEP)
+					return
+				_advance_active_event()
 			"text_tile_ids":
 				if _begin_text_run(_active_event):
 					return
+			"background_1", "background_2":
+				# In the production route, presenter_event starts a ROM-owned
+				# background task and changes the VM to WAITING_SOURCE_TASK. Keep
+				# the command address at the F9/FA boundary until that task returns.
+				# Standalone VM users retain the immediate decoded-data behavior.
+				if state == RunState.WAITING_SOURCE_TASK:
+					return
+				_advance_active_event()
+			"dialog_window":
+				# Scene `$56` F1 `$02` runs the buffered `$97B6` producer in the
+				# production route. Preserve the active command until its ROM-derived
+				# queue/NMI task returns; standalone VM playback stays immediate.
+				if state == RunState.WAITING_SOURCE_TASK:
+					return
+				_advance_active_event()
 			"exit":
 				state = RunState.FINISHED
 				cutscene_finished.emit(cutscene_id)
@@ -485,19 +639,79 @@ func _begin_text_run(event: Dictionary) -> bool:
 	_text_glyph_index = 0
 	if text_speed == 0:
 		while _text_glyph_index < _text_tiles.size():
-			_emit_text_glyph(event)
-		_advance_active_event()
+			if not _emit_text_glyph(event):
+				return true
+		_finish_text_run()
 		return false
-	_emit_text_glyph(event)
+	if not _emit_text_glyph(event):
+		return true
 	_begin_wait("text_speed", text_speed, event)
 	return true
 
 
-func _emit_text_glyph(event: Dictionary) -> void:
+func _emit_text_glyph(event: Dictionary) -> bool:
 	var glyph_index := _text_glyph_index
+	var source_cpu_address := int(event["cpu_address"]) + glyph_index
+	# Text runs are grouped for presentation, but the ROM advances its script
+	# pointer one glyph byte at a time. Keep the live PC on the byte being read,
+	# including while the glyph helper is waiting for queue capacity.
+	current_source_address = source_cpu_address
+	var queue_status := _text_glyph_queue_status()
+	if not bool(queue_status.get("can_accept", true)):
+		_wait_kind = "text_queue_capacity"
+		_wait_remaining = 0
+		_text_queue_wait_nmi_sequence = int(queue_status.get("nmi_sequence", -1))
+		state = RunState.WAITING_QUEUE_CAPACITY
+		wait_started.emit(_wait_kind, -1, event.duplicate(true))
+		return false
 	var tile_id := int(_text_tiles[glyph_index])
 	_text_glyph_index += 1
-	text_glyph_requested.emit(tile_id, int(event["cpu_address"]), int(event["event_index"]), glyph_index)
+	text_glyph_requested.emit(tile_id, source_cpu_address, int(event["event_index"]), glyph_index)
+	return true
+
+
+func _text_glyph_queue_status() -> Dictionary:
+	if not _text_glyph_queue_capacity_provider.is_valid():
+		return {"can_accept": true, "nmi_sequence": -1}
+	var status_variant: Variant = _text_glyph_queue_capacity_provider.call()
+	if not status_variant is Dictionary:
+		return {"can_accept": false, "nmi_sequence": -1}
+	return status_variant
+
+
+func _resume_text_after_queue_release() -> void:
+	if _wait_kind != "text_queue_capacity" or _active_event.is_empty():
+		return
+	var queue_status := _text_glyph_queue_status()
+	if not bool(queue_status.get("can_accept", false)) \
+			or int(queue_status.get("nmi_sequence", -1)) <= _text_queue_wait_nmi_sequence:
+		return
+	var completed_event := _active_event.duplicate(true)
+	_wait_kind = ""
+	_wait_remaining = 0
+	_text_queue_wait_nmi_sequence = -1
+	state = RunState.RUNNING
+	wait_completed.emit("text_queue_capacity", completed_event)
+	if text_speed == 0:
+		while _text_glyph_index < _text_tiles.size():
+			if not _emit_text_glyph(completed_event):
+				return
+		_finish_text_run()
+		_pump_events()
+		return
+	if _text_glyph_index < _text_tiles.size():
+		if not _emit_text_glyph(completed_event):
+			return
+		_begin_wait("text_speed", text_speed, completed_event)
+		return
+	_finish_text_run()
+	_pump_events()
+
+
+func _finish_text_run() -> void:
+	_text_tiles.clear()
+	_text_glyph_index = 0
+	_advance_active_event()
 
 
 func _begin_timed_wait(kind: String, ticks: int) -> void:
@@ -520,23 +734,15 @@ func _complete_wait() -> void:
 	if completed_kind == "screen_on_pre_wait":
 		if _screen_palette_level < SCREEN_ON_FADE_LEVELS:
 			_screen_palette_level += 1
-			screen_fade_palette_step_requested.emit(completed_event, _screen_palette_level)
-			_begin_wait("screen_on_fade_up", 1, completed_event)
-			return
+		screen_fade_palette_step_requested.emit(completed_event, _screen_palette_level)
+		_begin_wait("screen_on_fade_up", 1, completed_event)
+		return
 	if completed_kind == "screen_on_fade_up":
 		if _screen_palette_level < SCREEN_ON_FADE_LEVELS:
 			_screen_palette_level += 1
 			screen_fade_palette_step_requested.emit(completed_event, _screen_palette_level)
 			_begin_wait("screen_on_fade_up", 1, completed_event)
 			return
-	if completed_kind == "screen_off_pre_wait":
-		if _screen_palette_level > 0:
-			_screen_palette_level -= 1
-			screen_fade_palette_step_requested.emit(completed_event, _screen_palette_level)
-			_begin_wait("screen_off_fade_down", 1, completed_event)
-			return
-		_finish_screen_off_clear(completed_event)
-		return
 	if completed_kind == "screen_off_fade_down":
 		if _screen_palette_level > 0:
 			_screen_palette_level -= 1
@@ -546,12 +752,15 @@ func _complete_wait() -> void:
 		_finish_screen_off_clear(completed_event)
 		return
 	if completed_kind == "text_speed" and _text_glyph_index < _text_tiles.size():
-		_emit_text_glyph(_active_event)
+		if not _emit_text_glyph(_active_event):
+			return
 		_begin_wait("text_speed", text_speed, _active_event)
 		return
 	if completed_kind == "text_speed":
-		_text_tiles.clear()
-		_text_glyph_index = 0
+		_finish_text_run()
+		state = RunState.RUNNING
+		_pump_events()
+		return
 	state = RunState.RUNNING
 	_advance_active_event()
 	_pump_events()
@@ -568,8 +777,6 @@ func _finish_screen_off_clear(event: Dictionary) -> void:
 	state = RunState.RUNNING
 	_advance_active_event()
 	_pump_events()
-	if current_event_index >= 0 and current_event_index < _events.size():
-		current_source_address = int(_events[current_event_index]["cpu_address"]) + int(_events[current_event_index]["raw_bytes"].size())
 
 
 func _read_resource_bytes(path: String) -> PackedByteArray:
@@ -622,6 +829,7 @@ func _reset_runtime_state() -> void:
 	_active_event.clear()
 	_wait_kind = ""
 	_wait_remaining = 0
+	_text_queue_wait_nmi_sequence = -1
 	_screen_palette_level = 0
 	_text_tiles.clear()
 	_text_glyph_index = 0

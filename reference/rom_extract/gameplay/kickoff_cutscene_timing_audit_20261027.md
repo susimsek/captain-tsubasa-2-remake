@@ -125,3 +125,82 @@ cooperative scheduler ticks only: same-frame CPU/NMI ordering, exact input
 release subframe, PPU pixel timing and visible raster phase remain unresolved.
 The VM forwards presentation-only commands without inventing their visual or
 audio effects, and it does not implement `$EB`'s post-wait `$88B1` helper work.
+
+## Historical recorded-route pointer audit — superseded 2 Nov 2026
+
+The production route verifier now compares Godot's active cutscene source PC
+against `$004D/$004E` in the same-input FCEUX RAM snapshots. The ROM input file
+is `reference/diagnostics/kickoff_select_test_20261027/post_title_inputs.csv`
+(SHA-256
+`87c204c5e513d1aa4b60fa348350a15a4be006d84ef885b7f1b95c4e3a9f229e`). The
+comparison is read-only; FCEUX RAM is not supplied to the Godot route.
+
+| Frame | FCEUX `$004D/$004E` | Godot VM PC | Godot lead |
+|---:|---:|---:|---:|
+| 6808 | `$A36F` | `$A384` | 21 bytes |
+| 6943 | `$A380` | `$A385` | 5 bytes |
+| 6968 | `$A384` | `$A38C` | 8 bytes |
+| 7093 | `$A384` | `$A39D` | 25 bytes |
+| 7096 | `$A385` | `$A39D` | 24 bytes |
+| 7112 | `$A386` | `$A39D` | 23 bytes |
+| 7119 | `$A38B` | `$A39D` | 18 bytes |
+
+This is a source-clock mismatch, not a missing CHR value. At frame 6808 the
+ROM is still reading the dialogue bytes around `$A36F`, while Godot has
+already entered the `$A384` fresh-A wait. The recorded A edge at frame 6943
+therefore advances Godot's later wait; FCEUX is still at `$A380` then and
+reaches `$A384` only at frame 6968, where it waits for the next A edge at
+7093. The Godot verifier observes `$F9 $5E` at frame 6959, while FCEUX is on
+the preceding `$EA` byte `$A385` through frame 7111. The ROM then enters the
+`$F9 $5E` handler at `$A386` on frame 7112, records `$0075/$0076` through
+`$8B3F/$8B44`, and advances to `$A38B` by frame 7119 after the background and
+animation commands. Godot's instantaneous background application therefore
+does not establish the source-timed transition.
+
+The input-path verifier prints this comparison at the selected frame edges.
+The next implementation should align the preceding text/input-wait execution
+and then model the F9 loader's ROM task/queue yields before advancing to `$FB`
+and `$E9`. Do not insert a fixed delay or merge the `$0075/$0076` writes at the
+earlier Godot event. Until this is resolved, downstream NMI context and
+visual timing are still projections, and the route must not be described as
+same-input timing matched.
+
+## Current recorded-route timing status — 2 Nov 2026
+
+The production route and comparison verifier were updated after the historical
+audit above. The current command
+`CT2_ROUTE_FINAL_FRAME=7400 godot --headless --path . --script tools/diagnostics/verify_kickoff_recorded_input_path.gd`
+passes its documented interrupt-free projection boundary at frame 7266. Current
+same-input pointer comparisons are:
+
+| Frame | FCEUX PC | Godot PC | Result |
+|---:|---:|---:|---|
+| 6808 | `$A36F` | `$A367` | Godot 8 bytes behind |
+| 6943 | `$A380` | `$A373` | Godot 13 bytes behind |
+| 6968 | `$A384` | `$A384` | Match |
+| 7093 | `$A384` | `$A384` | Match |
+| 7096 | `$A385` | `$A385` | Match |
+| 7112 | `$A386` | `$A386` | Match |
+| 7119 | `$A38B` | `$A38B` | Match |
+
+The earlier `$F9 $5E` dispatch at frame 6959 and positive leads in the preceding
+table are obsolete. The current Godot route starts `$F9 $5E` at frame 7112; its
+seven ROM-derived packet groups finish at frame 7119. Two `$EB` post-wait clear
+sequences also match FCEUX script pointers and `$0628` at frames 5443/5446 and
+5743/5746; the queue cursor is zero again by frame 5800. The source-derived
+details are in [`eb_post_wait_clear/README.md`](eb_post_wait_clear/README.md).
+
+The remaining 6808 and 6943 source-PC gaps are before the later matched
+checkpoints. They are still unresolved and mean this is not full frame-by-frame
+route parity. At frame 7266, the route reaches a projected `$893B` boundary
+without dispatching the observed NMI/IRQ chain or producing its `$78` release.
+The first in-match command menu, complete same-input presentation/audio checks,
+and ROM/emulator-free packaged execution are not yet verified. These are
+software source-frame comparisons; they do not establish physical NES CPU,
+PPU, or APU subframe timing.
+
+The `$F9 $5E` task's ROM-derived CHR selector lineage now continues through the
+NMI shadow bytes `$008E/$008F`; see the focused [CHR-shadow report]
+(`cutscene_nmi_chr_shadow/README.md`). This closes those two candidate NMI
+inputs only. It does not dispatch the NMI or resolve the remaining status,
+stack, and field-state inputs.

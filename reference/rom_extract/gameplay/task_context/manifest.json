@@ -253,6 +253,51 @@
       "sha256": "03f3c4278cc253614b622fa856993e8b325eb061a29e54685038771778377938",
       "description": "bank-$18 parameter `$73` pointer-table entry resolving to actor stream `$9F42`",
       "bytes": "42 9f"
+    },
+    {
+      "file": "bank18_actor_parameter_74_pointer_9308.bin",
+      "cpu_address": "0x9308",
+      "file_offset": "0x031318",
+      "length": 2,
+      "sha256": "d6de1632ce947017995ebba65ebb4c7978900db26ec8fe48a6e1ad1801ff877c",
+      "description": "bank-$18 parameter `$74` pointer-table entry resolving to actor stream `$A3BD`",
+      "bytes": "bd a3"
+    },
+    {
+      "file": "bank18_actor_parameter_75_pointer_930A.bin",
+      "cpu_address": "0x930A",
+      "file_offset": "0x03131A",
+      "length": 2,
+      "sha256": "63253be64a551ffde4a984e94b212e76497d0704cecfcf0491de218e0f4a2b06",
+      "description": "bank-$18 parameter `$75` pointer-table entry resolving to actor stream `$A439`",
+      "bytes": "39 a4"
+    },
+    {
+      "file": "bank18_actor_parameter_47_pointer_92AE.bin",
+      "cpu_address": "0x92AE",
+      "file_offset": "0x0312BE",
+      "length": 2,
+      "sha256": "773e6dc176b145c4fc93a4f37b2ee1da5cfbf98d8089a35487fa5922d12c72df",
+      "description": "Bank-$18 actor parameter `$47` pointer-table entry; `$800F` computes `$9220 + 2*$47` and resolves it to stream `$9917`.",
+      "bytes": "17 99"
+    },
+    {
+      "file": "bank18_actor_parameter_58_pointer_92D0.bin",
+      "cpu_address": "0x92D0",
+      "file_offset": "0x0312E0",
+      "length": 2,
+      "sha256": "07b01bffef79dcc1053207cd18e23cafe70f8fe80f69364b2a0bdb052d552a3a",
+      "description": "Bank-$18 actor parameter `$58` pointer-table entry; `$800F` computes `$9220 + 2*$58` and resolves it to stream `$9A62`.",
+      "bytes": "62 9a"
+    },
+    {
+      "file": "bank18_actor_parameter_00_pointer_9220.bin",
+      "cpu_address": "0x9220",
+      "file_offset": "0x031230",
+      "length": 2,
+      "sha256": "f5bba10f36a72d4f8952644f71cb9004a85ae3cf67b9e6ab60b8c4c38230ee8e",
+      "description": "Bank-$18 actor parameter `$00` pointer-table entry at `$9220`; resolves to actor stream `$9400`.",
+      "bytes": "00 94"
     }
   ]
 }

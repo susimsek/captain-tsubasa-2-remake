@@ -1,6 +1,7 @@
 extends SceneTree
 
 const EXECUTOR_SCRIPT := preload("res://scripts/gameplay/rom_fresh_match_selector_executor.gd")
+const SELECTOR_CLOCK_SCRIPT := preload("res://scripts/gameplay/rom_fresh_match_selector_clock.gd")
 const COPY_SOURCE_PATH := "res://reference/rom_extract/gameplay/fresh_kickoff_match_selector/selector_prg_ram_copy_source_ACB0_BFFF.bin"
 
 
@@ -100,6 +101,62 @@ func _initialize() -> void:
 		return
 	if bool(result.get("trace_state_used", true)) or bool(result.get("emulator_data_used", true)):
 		_fail("Selector executor must not use trace or emulator state.")
+		return
+	var selector_clock: Variant = SELECTOR_CLOCK_SCRIPT.new()
+	if not selector_clock.configure_from_project_sources():
+		_fail("Could not load the ROM-only selector clock: " + selector_clock.error_message)
+		return
+	var nmi_cycle := -1
+	var preceding_interrupt_cycles := 0
+	var clock_events: Array[Dictionary] = selector_clock.get_interrupt_events()
+	for event in clock_events:
+		if int(event.get("frame_offset", -1)) == 8 \
+				and String(event.get("kind", "")) == "NMI":
+			if String(event.get("pc_before", "")) != "$A15B":
+				_fail("The selector-clock frame-8 NMI no longer names the `$A15B` boundary.")
+				return
+			nmi_cycle = int(event.get("elapsed_cycle", -1))
+			break
+		preceding_interrupt_cycles += int(event.get("return_cycle", -1)) \
+				- int(event.get("elapsed_cycle", -1))
+	if nmi_cycle < 0:
+		_fail("The ROM-only selector clock omitted its frame-8 NMI event.")
+		return
+	var mainline_cycle := nmi_cycle - preceding_interrupt_cycles
+	var checkpoint_cpu := cpu_state.duplicate(true)
+	checkpoint_cpu["p"] = 0xA0 # Fixture status that preserves the verified mapper N/Z, with I clear.
+	var requested_checkpoint_cycles: Array[int] = [mainline_cycle]
+	var checkpoint_result: Dictionary = executor.execute_source_call(source_call,
+		checkpoint_cpu, ram_before, requested_checkpoint_cycles)
+	if not bool(checkpoint_result.get("ok", false)):
+		_fail("Selector could not produce the source-only `$A15B` CPU checkpoint: "
+			+ String(checkpoint_result.get("error", "unknown error")))
+		return
+	var checkpoints: Array[Dictionary] = checkpoint_result.get("source_cpu_checkpoints", [])
+	if checkpoints.size() != 1 \
+			or not checkpoint_result.get("unmatched_a15b_checkpoint_cycle_offsets", []).is_empty():
+		_fail("The selector's ROM-executed `$A15B` checkpoint did not match the requested mainline cycle.")
+		return
+	var checkpoint: Dictionary = checkpoints[0]
+	var checkpoint_registers: Dictionary = checkpoint.get("registers", {})
+	var checkpoint_pointers: Dictionary = checkpoint.get("ram_pointers", {})
+	if int(checkpoint.get("source_cycle_offset", -1)) != 193821 \
+			or int(checkpoint_registers.get("pc", -1)) != 0xA15B \
+			or int(checkpoint_registers.get("a", -1)) != 0x1F \
+			or int(checkpoint_registers.get("x", -1)) != 0 \
+			or int(checkpoint_registers.get("y", -1)) != 0 \
+			or int(checkpoint_registers.get("p", -1)) != 0x20 \
+			or int(checkpoint_pointers.get(0x00D0, -1)) != 0x1F \
+			or int(checkpoint_pointers.get(0x00D1, -1)) != 0xBF \
+			or int(checkpoint_pointers.get(0x00D2, -1)) != 0x6F \
+			or int(checkpoint_pointers.get(0x00D3, -1)) != 0x72:
+		_fail("ROM-only copy-loop state at the selector NMI candidate differs: %s" % checkpoint)
+		return
+	if String(checkpoint.get("stack_model", "")) != "physical_stack_page" \
+			or int(checkpoint.get("sp", -1)) != 0xF9 \
+			or bool(checkpoint.get("trace_state_used", true)) \
+			or bool(checkpoint.get("emulator_data_used", true)):
+		_fail("The ROM-only `$A15B` checkpoint has an invalid test-stack or provenance contract.")
 		return
 
 	var wrong_y := cpu_state.duplicate(true)
@@ -209,7 +266,8 @@ func _initialize() -> void:
 		return
 
 	print("PASS: source-backed `$80FA->$A20F->$A86E` match-zero path runs with physical test stack and source-derived logical frames; its cycle-ordered RAM-write timeline materializes the 4,944-byte ROM copy only when due and returns at `$80FD`.")
-	print("LIMIT: logical stack omits absolute SP/stack-page contents; the selector timeline excludes asynchronous NMI/IRQ effects; the live route consumes its cycle budgets but does not yet execute handlers or later match setup.")
+	print("PASS: the ROM-only selector clock's frame-8 NMI boundary resolves to the source-executed `$A15B` state at mainline cycle 193821 (A=$1F, P=$20, D0-D3=$1F/$BF/$6F/$72) using a test-only call/stack fixture.")
+	print("LIMIT: the live route now supplies the source-derived `$80FC/$A880` stack words, but other stack bytes and source-owned PPU/MMC3 interrupt dispatch remain unresolved; the NMI handler and later match setup are not reached.")
 	quit(0)
 
 

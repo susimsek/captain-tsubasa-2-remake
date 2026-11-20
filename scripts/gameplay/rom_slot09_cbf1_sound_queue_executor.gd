@@ -21,6 +21,8 @@ const ROOT_SOURCE_SHA256 := "91ee3ddc0110b7575a472103de8f5e4d1391a60efebe557b4f4
 const ROOT_MANIFEST_SHA256 := "d5e9c83f09faab5a9b2c9fdb9e74b07c983be97a67da05bea9714d705773313a"
 const ROOT_SOURCE_OFFSET := "0x03EB96"
 const ROOT_SOURCE_LENGTH := 130
+const D093_SOURCE_MANIFEST := "res://reference/rom_extract/gameplay/slot09_d093_sound_request/manifest.json"
+const D093_SOURCE_SHA256 := "f40f3cd4e1dd98e081463a5b9e9e3651e65533b495f2b437a9fee4e2cbf311d8"
 const RAM_SIZE := 0x800
 const STACK_SIZE := 0x100
 const QUEUE_START := 0x0700
@@ -65,6 +67,15 @@ func configure_from_project_sources() -> bool:
 ## Consumes the nested `source_cbf1_call` object emitted by the live root
 ## executor at `$EC02->$CBF1`. It reads its queue from complete source RAM.
 func execute_from_root_cbf1_call(source_cbf1_call: Dictionary) -> Dictionary:
+	return execute_from_rom_call(source_cbf1_call)
+
+
+## Consumes the same ROM helper from the bounded `$D093` sound-request caller.
+func execute_from_d093_sound_request_call(source_cbf1_call: Dictionary) -> Dictionary:
+	return execute_from_rom_call(source_cbf1_call)
+
+
+func execute_from_rom_call(source_cbf1_call: Dictionary) -> Dictionary:
 	error_message = ""
 	if not _configured:
 		return _rejected("Configure the hash-checked `$CBF1` helper source first.")
@@ -166,8 +177,10 @@ func execute_from_root_cbf1_call(source_cbf1_call: Dictionary) -> Dictionary:
 	var return_word := (return_high << 8) | return_low
 	cpu["sp"] = sp
 	cpu["pc"] = (return_word + 1) & 0xFFFF
-	if return_word != 0xEC04 or int(cpu["pc"]) != 0xEC05:
-		return _rejected("The helper RTS did not return through `$EC04` to `$EC05`.")
+	var expected_return_word := int(source_cbf1_call.get("return_word", -1))
+	var expected_return_pc := int(source_cbf1_call.get("return_pc", -1))
+	if return_word != expected_return_word or int(cpu["pc"]) != expected_return_pc:
+		return _rejected("The helper RTS did not return through its source caller's checked stack word.")
 
 	var queue_full := selected_index < 0
 	var output_queue := ram.slice(QUEUE_START, QUEUE_START + QUEUE_SIZE)
@@ -193,7 +206,7 @@ func execute_from_root_cbf1_call(source_cbf1_call: Dictionary) -> Dictionary:
 		"root_source_span_sha256": ROOT_SOURCE_SHA256,
 		"root_source_manifest_sha256": ROOT_MANIFEST_SHA256,
 		"source_call_status": "source_cbf1_call_entry",
-		"caller_pc": 0xEC02,
+		"caller_pc": int(source_cbf1_call.get("caller_pc", -1)),
 		"target_pc": HELPER_START,
 		"entry_pc": HELPER_START,
 		"exit_pc": int(cpu["pc"]),
@@ -233,16 +246,36 @@ func get_status() -> Dictionary:
 
 
 func _validate_source_call(source_call: Dictionary) -> Dictionary:
-	if String(source_call.get("rom_sha256", "")) != ROM_SHA256 \
-			or String(source_call.get("source_manifest", "")) != ROOT_SOURCE_MANIFEST \
+	var caller_pc := int(source_call.get("caller_pc", -1))
+	var expected_call: Dictionary = {}
+	if caller_pc == 0xEC02:
+		expected_call = {"manifest": ROOT_SOURCE_MANIFEST, "return_word": 0xEC04,
+			"return_pc": 0xEC05, "sp": 0x78,
+			"stack": PackedByteArray([0x04, 0xEC]),
+			"writes": [
+				{"pc": 0xEC02, "address": 0x017A, "value": 0xEC, "kind": "JSR_high"},
+				{"pc": 0xEC02, "address": 0x0179, "value": 0x04, "kind": "JSR_low"}],
+			"kind": "root"}
+	elif caller_pc == 0xD0A8:
+		expected_call = {"manifest": D093_SOURCE_MANIFEST,
+			"return_word": 0xD0AA, "return_pc": 0xD0AB, "sp": 0x76,
+			"stack": PackedByteArray([0xAA, 0xD0, 0xF5, 0xEB]),
+			"writes": [
+				{"pc": 0xEBF3, "address": 0x017A, "value": 0xEB, "kind": "JSR_high"},
+				{"pc": 0xEBF3, "address": 0x0179, "value": 0xF5, "kind": "JSR_low"},
+				{"pc": 0xD0A8, "address": 0x0178, "value": 0xD0, "kind": "JSR_high"},
+				{"pc": 0xD0A8, "address": 0x0177, "value": 0xAA, "kind": "JSR_low"}],
+			"kind": "d093"}
+	if expected_call.is_empty() \
+			or String(source_call.get("rom_sha256", "")) != ROM_SHA256 \
+			or String(source_call.get("source_manifest", "")) != String(expected_call["manifest"]) \
 			or String(source_call.get("status", "")) != "source_cbf1_call_entry" \
-			or int(source_call.get("caller_pc", -1)) != 0xEC02 \
 			or int(source_call.get("target_pc", -1)) != HELPER_START \
 			or int(source_call.get("entry_pc", -1)) != HELPER_START \
-			or int(source_call.get("return_word", -1)) != 0xEC04 \
-			or int(source_call.get("return_pc", -1)) != 0xEC05 \
+			or int(source_call.get("return_word", -1)) != int(expected_call["return_word"]) \
+			or int(source_call.get("return_pc", -1)) != int(expected_call["return_pc"]) \
 			or bool(source_call.get("trace_state_used", false)):
-		return {"ok": false, "reason": "Input lacks the hash-checked root executor's `$EC02->$CBF1` source call contract."}
+		return {"ok": false, "reason": "Input lacks a supported, hash-checked ROM caller contract for `$CBF1`."}
 	var registers_variant: Variant = source_call.get("registers", {})
 	var mapper_variant: Variant = source_call.get("mapper", {})
 	var ram_variant: Variant = source_call.get("ram_image", PackedByteArray())
@@ -265,17 +298,25 @@ func _validate_source_call(source_call: Dictionary) -> Dictionary:
 	var status := int(registers.get("p", -1))
 	var sound_request := int(registers.get("a", -1))
 	var sound_flags := int(ram[0x063F]) if ram.size() == RAM_SIZE else -1
+	var bit_source := int(ram[0x063F] if String(expected_call["kind"]) == "root" else ram[0x063E]) if ram.size() == RAM_SIZE else -1
 	var expected_zero := ((sound_request & sound_flags) == 0) if sound_request >= 0 and sound_flags >= 0 else false
-	var expected_v := (sound_flags & 0x40) != 0
-	var expected_p_flags := (FLAG_Z if expected_zero else 0) | (FLAG_V if expected_v else 0)
-	var expected_stack_writes: Array[Dictionary] = [
-		{"pc": 0xEC02, "address": 0x017A, "value": 0xEC, "kind": "JSR_high"},
-		{"pc": 0xEC02, "address": 0x0179, "value": 0x04, "kind": "JSR_low"},
-	]
+	var expected_v := (bit_source & 0x40) != 0
+	var d093_bypass := bool(source_call.get("d093_bit_bypass", false))
+	var d093_zero := (((0x32 & bit_source) == 0) if d093_bypass else sound_request == 0)
+	var d093_negative := (((bit_source & 0x80) != 0) if d093_bypass else (sound_request & 0x80) != 0)
+	var expected_p_flags := (FLAG_C if String(expected_call["kind"]) == "d093" else 0) \
+			| (FLAG_Z if (expected_zero if String(expected_call["kind"]) == "root" else d093_zero) else 0) \
+			| (FLAG_V if expected_v else 0) \
+			| (FLAG_N if String(expected_call["kind"]) == "d093" and d093_negative else 0)
+	var expected_stack_writes: Array = expected_call["writes"]
+	var expected_stack: PackedByteArray = expected_call["stack"]
+	var d093_contract_ok := String(expected_call["kind"]) != "d093" \
+			or (String(source_call.get("caller_source_span_sha256", "")) == D093_SOURCE_SHA256 \
+			and source_call.has("d093_bit_bypass"))
 	if registers.size() == 0 or ram.size() != RAM_SIZE or stack.size() != STACK_SIZE \
 			or int(registers.get("pc", -1)) != HELPER_START \
 			or sound_request < 0 or sound_request >= 0x7E \
-			or int(registers.get("sp", -1)) != 0x78 \
+			or int(registers.get("sp", -1)) != int(expected_call["sp"]) \
 			or status < 0 or status > 0xFF or known > 0xFF \
 			or int(registers.get("x", -1)) < 0 or int(registers.get("x", -1)) > 0xFF \
 			or int(registers.get("y", -1)) < 0 or int(registers.get("y", -1)) > 0xFF \
@@ -289,11 +330,11 @@ func _validate_source_call(source_call: Dictionary) -> Dictionary:
 			or int(bank_registers.get(7, bank_registers.get("7", -1))) != 0x19 \
 			or int(ram[0x0000]) != 0x09 \
 			or int(ram[0x052E]) != 0 \
-			or int(ram[0x052F]) != sound_request \
-			or (sound_flags & 0x80) != 0 \
-			or stack[0x79] != 0x04 or stack[0x7A] != 0xEC \
+			or (String(expected_call["kind"]) == "root" and (int(ram[0x052F]) != sound_request or (sound_flags & 0x80) != 0)) \
+			or not d093_contract_ok \
+			or stack.slice(int(registers["sp"]) + 1, int(registers["sp"]) + 1 + expected_stack.size()) != expected_stack \
 			or stack_writes != expected_stack_writes:
-		return {"ok": false, "reason": "Root `$CBF1` registers, mapper, BIT flags, caller stack, RAM or JSR writes do not match the source `$052F/$063F` contract."}
+		return {"ok": false, "reason": "ROM `$CBF1` registers, mapper, flags, caller stack, RAM or ordered JSR writes do not match the source caller contract."}
 	return {"ok": true}
 
 

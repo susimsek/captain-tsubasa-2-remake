@@ -49,6 +49,7 @@ var _nametable_ram_power_on := PackedByteArray()
 var _background_palette := PackedByteArray()
 var _source_background_palette := PackedByteArray()
 var _chr := PackedByteArray()
+var _source_chr_rom_verified := false
 var _decoded_chr_pixels := PackedByteArray()
 var _chr_banks: Array[int] = [60, 61, 62, 63]
 var _lower_chr_banks: Array[int] = [0, 1, 2, 3]
@@ -231,6 +232,12 @@ func set_ppu_memory(ppu_memory: Dictionary) -> void:
 		_ppu_memory_bytes[address_offset] = int(
 			_ppu_memory.get(0x2000 + address_offset, 0)) & 0xFF
 	_request_redraw()
+
+
+## The source cartridge has hash-verified 128 KiB CHR-ROM. A CPU write through
+## $2007 to $0000-$1FFF cannot modify those read-only pattern-table bytes.
+func has_verified_source_chr_rom() -> bool:
+	return _source_chr_rom_verified
 
 
 ## Read the live modeled PPU bus for the source `$2000-$2FFF` nametable range.
@@ -635,9 +642,11 @@ func set_raster_chr_split(upper_banks: Array[int], lower_banks: Array[int], spli
 func _load_rom_resources() -> bool:
 	_chr = FileAccess.get_file_as_bytes(CHR_PATH)
 	_rgb_palette = FileAccess.get_file_as_bytes(NES_RGB_PATH)
+	_source_chr_rom_verified = false
 	if _chr.size() != 131072 or _sha256_hex(_chr) != CHR_SHA256:
 		push_error("PPU screen renderer CHR bytes differ from the supplied ROM extract.")
 		return false
+	_source_chr_rom_verified = true
 	if _rgb_palette.size() != 192 or _sha256_hex(_rgb_palette) != RGB_PALETTE_SHA256:
 		push_error("PPU screen renderer RGB palette differs from the documented FCEUX palette.")
 		return false

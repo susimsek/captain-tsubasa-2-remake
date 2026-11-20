@@ -17,6 +17,8 @@ const TITLE_OAM_Y_ADD: int = 0x30
 const OAM_PRIORITY_BIT: int = 0x20
 const OAM_HFLIP_BIT: int = 0x40
 
+var _palette_override := PackedByteArray()
+
 
 func _ready() -> void:
 	centered = false
@@ -29,13 +31,22 @@ func _ready() -> void:
 	texture = _build_rom_cup_texture()
 
 
+func set_fade_palette_bytes(palette: PackedByteArray) -> bool:
+	if palette.size() != 16:
+		return false
+	_palette_override = palette.duplicate()
+	texture = _build_rom_cup_texture()
+	return texture != null
+
+
 func _build_rom_cup_texture() -> Texture2D:
 	var animation_bytes := FileAccess.get_file_as_bytes(ANIMATION_SOURCE_PATH)
 	var timing_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(ANIMATION_TIMING_PATH))
 	var cutscene_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(CUTSCENE_SOURCE_PATH))
 	var frame_index_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(SPRITE_FRAME_INDEX_PATH))
 	var chr_bytes := FileAccess.get_file_as_bytes(CHR_SOURCE_PATH)
-	var sprite_palette := FileAccess.get_file_as_bytes(SPRITE_PALETTE_PATH)
+	var sprite_palette := _palette_override.duplicate() if _palette_override.size() == 16 \
+		else FileAccess.get_file_as_bytes(SPRITE_PALETTE_PATH)
 	var rgb_palette := FileAccess.get_file_as_bytes(RGB_PALETTE_PATH)
 
 	if animation_bytes.size() != 7 or animation_bytes[1] != 0xF1 or animation_bytes[6] != 0xFF:

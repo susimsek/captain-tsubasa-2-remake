@@ -191,14 +191,16 @@ func execute_from_selector_return(selector_result: Dictionary) -> Dictionary:
 	var mapper_registers: Dictionary = mapper_result["return_registers"].duplicate(true)
 	var mapper_ram: Dictionary = mapper_result["ram_after"].duplicate(true)
 	var mapper_bus_writes: Array = mapper_result.get("mapper_bus_writes", [])
-	if not _mapper_selected_bank_two(mapper_bus_writes):
-		return _failure("The `$810C` ROM mapper helper did not select bank `$02` before `$A20C`.")
+	var expected_mapper_select := 0x07 | int(mapper_ram.get(0x0022, -1))
+	if expected_mapper_select < 0 or expected_mapper_select > 0xFF \
+			or not _mapper_selected_bank_two(mapper_bus_writes, expected_mapper_select):
+		return _failure("The `$810C` ROM mapper helper did not select bank `$02` with its source-owned shadow.")
 	if int(mapper_registers.get("pc", -1)) != MAPPER_RETURN_PC \
 			or int(mapper_registers.get("sp", -1)) != pre_call_sp \
-			or int(mapper_registers.get("a", -1)) != 0x87 \
+			or int(mapper_registers.get("a", -1)) != expected_mapper_select \
 			or int(mapper_registers.get("x", -1)) != 2 \
 			or int(mapper_registers.get("y", -1)) != 0x84 \
-			or int(mapper_registers.get("p", -1)) != 0xA4:
+			or (int(mapper_registers.get("p", -1)) & 0xC3) != _nz_bits(expected_mapper_select):
 		return _failure("The `$C4B9` return registers/stack do not match the `$810F` bank-$02 entry contract.")
 	cycles += 6 + int(mapper_result.get("cpu_cycles", -1))
 	source_path.append_array([0xC4B9, 0xC4BC, 0xC4BE, 0xC4C0, 0xC4C2, 0xC4C5, 0xC4C8, 0x810F])
@@ -398,13 +400,23 @@ func _validate_selector_result(selector_result: Dictionary) -> Dictionary:
 	if int(registers.get("pc", -1)) != SELECTOR_RETURN_PC \
 			or int(registers.get("sp", -1)) < 0 or int(registers.get("sp", -1)) > 0xFF \
 			or int(registers.get("a", -1)) != 3 or int(registers.get("x", -1)) != 0 \
-			or int(registers.get("y", -1)) != 0x84 or int(registers.get("p", -1)) != 0x24:
+			or int(registers.get("y", -1)) != 0x84:
 		return {"ok": false, "error": "The `$A20F` returned CPU state does not match the verified fresh match-zero contract."}
+	var p_value := int(registers.get("p", -1))
+	var p_known_mask := int(registers.get("p_known_mask", 0xFF))
+	var p_known_value := int(registers.get("p_known_value", p_value))
+	if p_value < 0 or p_value > 0xFF or p_known_mask < 0 or p_known_mask > 0xFF \
+			or p_known_value < 0 or p_known_value > 0xFF \
+			or (p_known_mask & 0xC3) != 0xC3 \
+			or (p_known_value & 0xC3) != 0 \
+			or ((p_known_mask & 0x04) != 0 and (p_known_value & 0x04) != 0):
+		return {"ok": false, "error": "The `$A20F` return flags are not the required source-derived ADC/I contract (P=$%02X mask=$%02X known=$%02X)." % [p_value, p_known_mask, p_known_value]}
 	var ram_after: Dictionary = selector_result.get("ram_after", {})
 	for address: int in [0x0022, 0x0023, 0x0025, 0x0026, 0x002A, 0x002B]:
 		if not ram_after.has(address):
 			return {"ok": false, "error": "Prior selector state is missing caller RAM `$%04X`." % address}
-	if int(ram_after[0x0022]) != 0x80 or int(ram_after[0x0023]) != 0x87 \
+	var selector_mapper_value := 0x07 | int(ram_after[0x0022])
+	if int(ram_after[0x0023]) != selector_mapper_value \
 			or int(ram_after[0x0025]) != 2 or int(ram_after[0x0026]) != FRESH_MATCH_INDEX \
 			or int(ram_after[0x002A]) != 0 or int(ram_after[0x002B]) != 3:
 		return {"ok": false, "error": "The prior selector RAM/map shadows do not satisfy the fresh match-zero caller contract."}
@@ -423,16 +435,16 @@ func _validate_logical_selector_result(selector_result: Dictionary) -> Dictionar
 	if not bool(selector_result.get("ok", false)) \
 			or String(selector_result.get("source_rom_sha256", "")) != ROM_SHA256 \
 			or bool(selector_result.get("trace_state_used", true)) \
-			or bool(selector_result.get("emulator_data_used", true)) \
-			or bool(selector_result.get("physical_stack_mode", true)):
-		return {"ok": false, "error": "A successful ROM-only logical result from the fresh `$A20F` selector is required."}
+			or bool(selector_result.get("emulator_data_used", true)):
+		return {"ok": false, "error": "A successful ROM-only result from the fresh `$A20F` selector is required."}
 	var receipt: Dictionary = selector_result.get("source_return_receipt", {})
+	var expected_stack_model := "physical_stack_page" if bool(selector_result.get("physical_stack_mode", false)) else "logical_source_jsr_frames"
 	if int(receipt.get("caller_pc", -1)) != 0x80FA \
 			or int(receipt.get("target_pc", -1)) != 0xA20F \
 			or int(receipt.get("return_pc", -1)) != SELECTOR_RETURN_PC \
-			or String(receipt.get("stack_model", "")) != "logical_source_jsr_frames" \
+			or String(receipt.get("stack_model", "")) != expected_stack_model \
 			or String(receipt.get("status", "")) != "returned":
-		return {"ok": false, "error": "The source return does not identify the logical `$80FA->$A20F->$80FD` selector call."}
+		return {"ok": false, "error": "The source return does not identify the `$80FA->$A20F->$80FD` selector call and stack model."}
 	var source_event_id := String(receipt.get("source_event_id", "")).strip_edges()
 	if source_event_id.is_empty():
 		return {"ok": false, "error": "The source call identity must continue across the caller setup prefix."}
@@ -459,10 +471,23 @@ func _validate_logical_selector_result(selector_result: Dictionary) -> Dictionar
 			or int(ram_after[0x002B]) != 3:
 		return {"ok": false, "error": "Logical selector mapper/RAM state differs from the fresh match-zero source contract."}
 	var stack_variant: Variant = selector_result.get("stack_after")
-	if not stack_variant is Array or not stack_variant.is_empty():
-		return {"ok": false, "error": "The logical selector must return after consuming its source JSR frame."}
+	var physical_stack_mode := bool(selector_result.get("physical_stack_mode", false))
+	if physical_stack_mode:
+		if not stack_variant is PackedByteArray or stack_variant.size() != 0x100 \
+				or int(registers.get("sp", -1)) != 0x28:
+			return {"ok": false, "error": "The physical selector did not return to `$80FD` with its caller SP restored."}
+		var known_offsets: Array = selector_result.get("stack_known_page_offsets_at_return", [])
+		if not known_offsets.has(0x25) or not known_offsets.has(0x26) \
+				or not known_offsets.has(0x27) or not known_offsets.has(0x28) \
+				or int(stack_variant[0x27]) != 0xFC or int(stack_variant[0x28]) != 0x80:
+			return {"ok": false, "error": "The physical selector did not preserve all four source-derived caller/inner return bytes."}
+	else:
+		if not stack_variant is Array or not stack_variant.is_empty():
+			return {"ok": false, "error": "The logical selector must return after consuming its source JSR frame."}
 	return {"ok": true, "source_event_id": source_event_id, "registers": registers,
-		"ram_after": ram_after, "stack_after": stack_variant, "logical_stack_mode": true}
+		"ram_after": ram_after, "stack_after": stack_variant,
+		"logical_stack_mode": not physical_stack_mode,
+		"physical_stack_mode": physical_stack_mode}
 
 
 func _execute_logical_normalize(source_call: Dictionary, entry_registers: Dictionary,
@@ -569,9 +594,10 @@ func _execute_normalize(source_call: Dictionary, entry_registers: Dictionary,
 		return _failure("Normalization call does not have its exact `$8111` stacked JSR return word.")
 	if int(ram_before.get(0x0026, -1)) != FRESH_MATCH_INDEX:
 		return _failure("Only source-derived fresh match index `$0026=0` is supported.")
+	var expected_select := 0x07 | int(ram_before.get(0x0022, -1))
 	if int(entry_registers.get("x", -1)) != 2 \
-			or int(entry_registers.get("a", -1)) != 0x87 \
-			or int(ram_before.get(0x0023, -1)) != 0x87 \
+			or int(entry_registers.get("a", -1)) != expected_select \
+			or int(ram_before.get(0x0023, -1)) != expected_select \
 			or int(ram_before.get(0x0025, -1)) != 2:
 		return _failure("The `$A20C` entry does not follow the ROM `$810C->$C4B9` bank-$02 helper.")
 	var branch_proof := _prove_e4_branch_invariance(int(ram_before[0x0026]),
@@ -679,14 +705,14 @@ func _prove_e4_branch_invariance(match_index: int, input_p: int, home_team: int)
 	}
 
 
-func _mapper_selected_bank_two(bus_writes: Array) -> bool:
+func _mapper_selected_bank_two(bus_writes: Array, expected_select: int) -> bool:
 	var select_seen := false
 	var data_seen := false
 	for write_variant in bus_writes:
 		if not write_variant is Dictionary:
 			continue
 		var write: Dictionary = write_variant
-		if int(write.get("address", -1)) == 0x8000 and int(write.get("value", -1)) == 0x87:
+		if int(write.get("address", -1)) == 0x8000 and int(write.get("value", -1)) == expected_select:
 			select_seen = true
 		if select_seen and int(write.get("address", -1)) == 0x8001 and int(write.get("value", -1)) == 2:
 			data_seen = true

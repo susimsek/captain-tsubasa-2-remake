@@ -10,6 +10,14 @@ var entry_pc: int = -1
 var entry_sp: int = -1
 var scheduler_dispatch: Dictionary = {}
 var provenance: Dictionary = {}
+## The title selector's ROM-executed `$A8BB` roster loop writes these player IDs
+## before the cutscene-to-match scheduler handoff. Keep the source receipt so
+## the later scheduler can adopt only those writes, not a captured RAM image.
+var selector_roster_write_receipt: Dictionary = {}
+## Bounded ROM `$811F->$C572->$DB62` result. The live scheduler adopts only
+## its ordered energy-record writes; the rest of its source RAM remains owned
+## by the existing task context.
+var stamina_initialization_receipt: Dictionary = {}
 
 
 func to_period_task_inputs() -> Dictionary:
@@ -21,6 +29,7 @@ func to_period_task_inputs() -> Dictionary:
 		"opponent_id_002b": opponent_id_002b,
 		"source_context": provenance.duplicate(true),
 		"scheduler_dispatch": scheduler_dispatch.duplicate(true),
+		"selector_roster_write_receipt": selector_roster_write_receipt.duplicate(true),
 	}
 
 
@@ -36,4 +45,6 @@ func to_dictionary() -> Dictionary:
 		"entry_sp": entry_sp,
 		"scheduler_dispatch": scheduler_dispatch.duplicate(true),
 		"provenance": provenance.duplicate(true),
+		"selector_roster_write_count": selector_roster_write_receipt.get("ram_writes", []).size(),
+		"stamina_initialization_write_count": int(stamina_initialization_receipt.get("energy_write_count", 0)),
 	}

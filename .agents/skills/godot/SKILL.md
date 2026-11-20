@@ -18,7 +18,7 @@ Use this project-local Godot skill for engine-specific implementation, debugging
 
 ## Fidelity goal for this project
 
-- The cold-boot opening through the title menu is already implemented. The current milestone is a fresh-start `KICK OFF` route through the first in-match command menu. Stop before confirming a soccer action and do not enter Continue.
+- The cold-boot opening through the unselected first in-match command menu is the verified baseline. The active milestone extends through exactly one confirmed soccer action, its first ROM-defined result, and the next player decision boundary. Stop before a second soccer action and do not enter Continue.
 - Use the user's supplied ROM as the canonical source for original graphics, palette indices, text, music, sound effects, and gameplay/cutscene data. Extract and decode original bytes into Godot-owned resources so the finished project does not need the `.nes` file or an emulator at runtime.
 - Trace the original ROM's own drawing, cutscene, and audio routines/data where practical. If using a disassembly or source from another translation/revision, verify each relevant bank/offset against this ROM before treating it as authoritative.
 - Emulator PPU/RAM/APU captures may identify active banks, nametable/OAM layout, input timing, and audio behavior. Emulator screenshots/video and captured WAV are comparison references only; never package them as final art or music.

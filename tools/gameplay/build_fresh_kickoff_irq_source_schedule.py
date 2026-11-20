@@ -28,6 +28,7 @@ INPUT_BUILDER = ROOT / "tools/gameplay/build_kickoff_rng_source_schedule.py"
 OUTPUT = ROOT / "reference/rom_extract/gameplay/fresh_kickoff_893b_irq_candidate_schedule_20261031.json"
 REQUIRED_IRQ_PATH = (0xC506, 0xC821, 0xC478, 0xC491, 0xA160, 0xA1C3, 0xC4AD)
 WAIT_RAM = {0x001B: 0xC0, 0x0078: 0x04, 0x0079: 0x40, 0x003B: 0x55}
+IRQ_SOURCE_RAM = (0x007C, 0x007D, 0x007E, 0x0090, 0x0091)
 WAIT_RAM_LAST_WRITERS = {
     0x001B: {"source_pc": 0xA133, "prg_bank": 2, "value": 0xC0},
     0x0078: {"source_pc": 0xA0A6, "prg_bank": 2, "value": 0x04},
@@ -96,19 +97,19 @@ def main() -> None:
             self.selector_interrupt_stack: list[dict] = []
             self.wait_ram_write_audit = {
                 address: {"count": 0, "first": None, "recent": []}
-                for address in WAIT_RAM
+                for address in (*WAIT_RAM, *IRQ_SOURCE_RAM)
             }
             super().__init__(*args, **kwargs)
 
         def _wait_ram_write_provenance(self) -> dict:
             return {
                 f"${address:04X}": {
-                    "expected_wait_value": expected,
+                    "expected_wait_value": WAIT_RAM.get(address),
                     "write_count_before_first_wait": self.wait_ram_write_audit[address]["count"],
                     "first_write": self.wait_ram_write_audit[address]["first"],
                     "recent_writes": list(self.wait_ram_write_audit[address]["recent"]),
                 }
-                for address, expected in WAIT_RAM.items()
+                for address in self.wait_ram_write_audit
             }
 
         def _snapshot(self) -> dict:
@@ -119,6 +120,7 @@ def main() -> None:
                         "y": self.cpu.y, "p": self.cpu.p, "prev_p": self.prev_p,
                         "sp": self.cpu.sp},
                 "wait_ram": {address: self.ram[address] for address in WAIT_RAM},
+                "irq_source_ram": {address: self.ram[address] for address in IRQ_SOURCE_RAM},
                 "ppu": {"line": self.ppu_line, "dot": self.ppu_dot,
                         "ctrl": self.ppu_regs[0], "mask": self.ppu_regs[1],
                         "status": self.ppu_status, "addr": self.ppu_addr,

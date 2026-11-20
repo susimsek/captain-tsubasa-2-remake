@@ -4,7 +4,7 @@ const CONTEXT_BUILDER := preload("res://scripts/gameplay/rom_fresh_kickoff_entry
 const ROUTE_RUNNER := preload("res://scripts/gameplay/rom_fresh_kickoff_source_route_runner.gd")
 const SCHEDULER_SCRIPT := preload("res://scripts/gameplay/rom_gameplay_task_scheduler.gd")
 const ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
-const WORKER_MANIFEST_SHA256 := "afb902c0a8b3780f546ee61b2838e378b272ade79cb4023ac40d3419c165c4dc"
+const WORKER_MANIFEST_SHA256 := "4d5670a642fbb6d9e9b8039fb1bb92ee7c2afe2cbee66260e5eb505161a550b8"
 
 
 func _init() -> void:

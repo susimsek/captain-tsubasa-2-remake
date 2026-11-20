@@ -1,0 +1,96 @@
+{
+  "schema": "ct2-cutscene-animation-chr-shadow-source-v1",
+  "rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "cutscene_event": {
+    "cutscene_id": 1,
+    "event_index": 51,
+    "cpu_address": "$A388",
+    "file_offset": "0x006398",
+    "opcode": "$FB",
+    "arguments_hex": "01 51",
+    "animation_id": "$51"
+  },
+  "animation_entry": {
+    "resource_path": "res://reference/rom_extract/gameplay/animations/kickoff/animation_51.bin",
+    "prg_bank": "$09",
+    "cpu_address": "$A54E",
+    "file_offset": "0x01255E",
+    "length": 7,
+    "bytes": "3f f1 30 46 93 64 ff",
+    "sha256": "40a828d78a96db8be8436c90c732e0f7579a0b7e0675034576c77173c409fb4f",
+    "frame_command_hex": "93 64",
+    "resolved_frame_cpu_address": "$B364"
+  },
+  "sprite_frame_header": {
+    "file": "bank09_sprite_frame_B364_chr_header.bin",
+    "cpu_start": "$B364",
+    "file_offset": "0x013374",
+    "length": 4,
+    "bytes": "70 71 66 67",
+    "sha256": "1fd6f8c29c7aa6ef0de8ecc0cbaa5004f862b81f7b7b41c99fcbee2d812ff908",
+    "bank": "$09"
+  },
+  "writer": {
+    "file": "bank00_animation_frame_chr_shadow_writer_94D8_94F0.bin",
+    "cpu_start": "$94D8",
+    "file_offset": "0x0014E8",
+    "length": 24,
+    "bytes": "a0 00 b1 e6 09 80 85 9e c8 b1 e6 85 9f a0 02 b1 e6 85 a0 c8 b1 e6 85 a1",
+    "sha256": "c1095b3c0d9f0a412337d4e848f6f860e4ef7462612e4f292db985d0f3c396a1",
+    "bank": "$00"
+  },
+  "ram_writes": [
+    {
+      "source_pc": "$94DE",
+      "post_instruction_pc": "$94E0",
+      "address": "$009E",
+      "value_expression": "frame_header[0] | $80"
+    },
+    {
+      "source_pc": "$94E3",
+      "post_instruction_pc": "$94E5",
+      "address": "$009F",
+      "value_expression": "frame_header[1]"
+    },
+    {
+      "source_pc": "$94E9",
+      "post_instruction_pc": "$94EB",
+      "address": "$00A0",
+      "value_expression": "frame_header[2]"
+    },
+    {
+      "source_pc": "$94EE",
+      "post_instruction_pc": "$94F0",
+      "address": "$00A1",
+      "value_expression": "frame_header[3]"
+    }
+  ],
+  "limits": {
+    "source_data_rom_derived": true,
+    "emulator_data_used": false,
+    "physical_nes_timing_proven": false
+  },
+  "spans": [
+    {
+      "file": "bank00_animation_frame_chr_shadow_writer_94D8_94F0.bin",
+      "cpu_start": "$94D8",
+      "file_offset": "0x0014E8",
+      "length": 24,
+      "bytes": "a0 00 b1 e6 09 80 85 9e c8 b1 e6 85 9f a0 02 b1 e6 85 a0 c8 b1 e6 85 a1",
+      "sha256": "c1095b3c0d9f0a412337d4e848f6f860e4ef7462612e4f292db985d0f3c396a1",
+      "bank": "$00"
+    },
+    {
+      "file": "bank09_sprite_frame_B364_chr_header.bin",
+      "cpu_start": "$B364",
+      "file_offset": "0x013374",
+      "length": 4,
+      "bytes": "70 71 66 67",
+      "sha256": "1fd6f8c29c7aa6ef0de8ecc0cbaa5004f862b81f7b7b41c99fcbee2d812ff908",
+      "bank": "$09"
+    }
+  ]
+}

@@ -11,6 +11,10 @@ const EXPECTED := [
 	{"offset": 0x0298AE, "record": 0x0586, "motion_index": 0x71, "motion": 0xA72C, "appearance_index": 0x93, "appearance": 0xB312, "active": 0x80, "x": 0xB8, "y": 0xB3},
 	{"offset": 0x0298B4, "record": 0x059B, "motion_index": 0x71, "motion": 0xA72C, "appearance_index": 0x93, "appearance": 0xB312, "active": 0x80, "x": 0x00, "y": 0xB3},
 ]
+const EXPECTED_66 := [
+	{"offset": 0x029458, "record": 0x055C, "motion_index": 0x5D, "motion": 0xA692, "appearance_index": 0x31, "appearance": 0xAF81, "active": 0x80, "x": 0xB0, "y": 0xD3},
+	{"offset": 0x02945F, "record": 0x0547, "motion_index": 0xA9, "motion": 0xA96E, "appearance_index": 0xC4, "appearance": 0xB537, "active": 0x80, "x": 0xB8, "y": 0xDB},
+]
 
 
 func _initialize() -> void:
@@ -71,7 +75,76 @@ func _run() -> void:
 	if packet_index != EXPECTED.size():
 		_fail("Animation $8F yielded %d packets; expected %d source constructors." % [packet_index, EXPECTED.size()])
 		return
-	print("PASS: all five animation-$8F F1 packets resolve through ROM pointer tables into 21-byte $80AA actor records; no RAM snapshot or fixed route timing was used.")
+	var animation_66: Dictionary = decoder.decode_animation(0x66)
+	if not bool(animation_66.get("ok", false)):
+		_fail("Fresh-start animation $66 did not decode: " + str(animation_66.get("error", "unknown error")))
+		return
+	packet_index = 0
+	for event_variant in animation_66.get("events", []):
+		if int(event_variant.kind) != EVENT_ACTOR_PACKET:
+			continue
+		if packet_index >= EXPECTED_66.size():
+			_fail("Animation $66 yielded more F1 packets than the constructor fixture covers.")
+			return
+		var expected: Dictionary = EXPECTED_66[packet_index]
+		if int(event_variant.selected_animation_id) != 0x66 \
+				or int(event_variant.source_file_offset) != int(expected["offset"]):
+			_fail("Animation $66 packet order/source offset differs from the extracted ROM stream.")
+			return
+		var actor: Variant = constructor.construct(event_variant)
+		if actor == null:
+			_fail("Animation-$66 ROM F1 packet construction failed: " + constructor.last_error)
+			return
+		var expected_actor_index := 1 if packet_index == 0 else 0
+		if actor.actor_index != expected_actor_index \
+				or actor.record_cpu_address != int(expected["record"]) \
+				or actor.motion_index != int(expected["motion_index"]) \
+				or actor.motion_cpu_address != int(expected["motion"]) \
+				or actor.appearance_index != int(expected["appearance_index"]) \
+				or actor.appearance_cpu_address != int(expected["appearance"]) \
+				or actor.active_flags != int(expected["active"]):
+			_fail("Animation-$66 F1 pointer/flag values differ from the source-table result at packet %d." % packet_index)
+			return
+		if actor.bytes.size() != 21 or int(actor.bytes[0]) != int(expected["active"]) \
+				or _read_u16(actor.bytes, 1) != int(expected["motion"]) \
+				or _read_u16(actor.bytes, 3) != int(expected["appearance"]) \
+				or int(actor.bytes[8]) != int(expected["x"]) \
+				or int(actor.bytes[12]) != int(expected["y"]):
+			_fail("Animation-$66 F1 actor-record bytes differ from the `$80AA` source writes at packet %d." % packet_index)
+			return
+		packet_index += 1
+	if packet_index != EXPECTED_66.size():
+		_fail("Animation $66 yielded %d packets; expected %d source constructors." % [packet_index, EXPECTED_66.size()])
+		return
+	var animation_8b: Dictionary = decoder.decode_animation(0x8B)
+	if not bool(animation_8b.get("ok", false)):
+		_fail("Scenario-$2E animation-$8B did not decode: " + str(animation_8b.get("error", "unknown error")))
+		return
+	packet_index = 0
+	for event_variant in animation_8b.get("events", []):
+		if int(event_variant.kind) != EVENT_ACTOR_PACKET:
+			continue
+		if int(event_variant.selected_animation_id) != 0x8B \
+				or int(event_variant.source_file_offset) != 0x02983E:
+			_fail("Animation-$8B F1 packet does not match its pointer-bounded ROM span.")
+			return
+		var actor_8b: Variant = constructor.construct(event_variant)
+		if actor_8b == null:
+			_fail("Animation-$8B ROM F1 packet construction failed: " + constructor.last_error)
+			return
+		if actor_8b.actor_index != 0 or actor_8b.record_cpu_address != 0x0547 \
+				or actor_8b.motion_index != 0 or actor_8b.motion_cpu_address != 0xA38A \
+				or actor_8b.appearance_index != 0x8F \
+				or actor_8b.appearance_cpu_address != 0xB30A \
+				or actor_8b.active_flags != 0x81 \
+				or int(actor_8b.bytes[8]) != 0x10 or int(actor_8b.bytes[12]) != 0xBB:
+			_fail("Animation-$8B F1 fields differ from the source actor, motion, appearance, or coordinates.")
+			return
+		packet_index += 1
+	if packet_index != 1:
+		_fail("Animation $8B yielded %d packets; expected one ROM constructor." % packet_index)
+		return
+	print("PASS: animation-$8F, $66, and $8B F1 packets resolve through ROM pointer tables into source-derived actor records; no RAM snapshot or fixed route timing was used.")
 	quit(0)
 
 

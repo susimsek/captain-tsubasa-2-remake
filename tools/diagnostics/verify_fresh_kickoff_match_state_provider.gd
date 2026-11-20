@@ -31,6 +31,7 @@ func _initialize() -> void:
 	var stamina_profiles := FileAccess.get_file_as_bytes(RESOURCE_ROOT + "stamina_profile_values_AE86_AFAE.bin")
 	var stamina_values := FileAccess.get_file_as_bytes(RESOURCE_ROOT + "stamina_value_words_9F0E_9FCD.bin")
 	var profile_map := FileAccess.get_file_as_bytes(MENU_DATA_ROOT + "player_stat_profile_map_00_22.bin")
+	var player_profiles := FileAccess.get_file_as_bytes(MENU_DATA_ROOT + "player_stat_profiles_00_8c.bin")
 	var record_pointers := FileAccess.get_file_as_bytes(MENU_DATA_ROOT + "player_record_pointer_table_22.bin")
 	if slot < 0 or slot >= 11 or state.player_id != roster[slot]:
 		_fail("Active player ID does not resolve through the extracted match-00 ROM roster.")
@@ -39,7 +40,9 @@ func _initialize() -> void:
 	if state.stat_profile_id != profile_id:
 		_fail("Menu stat profile did not resolve from the ROM's player-profile map.")
 		return
-	var profile_base := int(stamina_profiles[profile_id * 8])
+	var use_common_profile_row := slot == 0 or slot == 0x0B or slot == 0x1E or slot == 0x1F
+	var profile_base := int(stamina_profiles[profile_id * 8]) if use_common_profile_row \
+		else int(player_profiles[profile_id * 0x18])
 	var stamina_index := mini(0x5F, profile_base + state.level)
 	var value_offset := stamina_index * 2
 	var source_maximum := int(stamina_values[value_offset]) | (int(stamina_values[value_offset + 1]) << 8)
@@ -50,6 +53,34 @@ func _initialize() -> void:
 	var source_record_address := int(record_pointers[pointer_offset]) | (int(record_pointers[pointer_offset + 1]) << 8)
 	if provider.get_player_record(slot).get("record_address", -1) != source_record_address:
 		_fail("Player RAM-record address did not resolve through the ROM pointer table.")
+		return
+	var expected_initial_energies: Array[int] = [400, 400, 400, 400, 400, 400, 400, 400, 416, 748, 408]
+	var actual_initial_energies: Array[int] = []
+	for home_slot in range(11):
+		var player_id := int(roster[home_slot])
+		var source_profile := int(profile_map[player_id * 4])
+		var use_shared_curve := home_slot == 0 or home_slot == 0x0B \
+			or home_slot == 0x1E or home_slot == 0x1F
+		var curve_base := int(stamina_profiles[source_profile * 8]) if use_shared_curve \
+			else int(player_profiles[source_profile * 0x18])
+		var word_offset := mini(0x5F, curve_base) * 2
+		var rom_energy := int(stamina_values[word_offset]) \
+			| (int(stamina_values[word_offset + 1]) << 8)
+		actual_initial_energies.append(rom_energy)
+		var player_record: Dictionary = provider.get_player_record(home_slot)
+		if int(player_record.get("current_energy", -1)) != rom_energy \
+				or rom_energy != expected_initial_energies[home_slot] \
+				or int(player_record.get("max_energy", -1)) != rom_energy:
+			_fail("Fresh slot %d stamina differs from its ROM profile curve (source %d, provider %d)." % [
+				home_slot, rom_energy, int(player_record.get("current_energy", -1))])
+			return
+	if actual_initial_energies != expected_initial_energies:
+		_fail("The complete ROM-derived match-00 initializer vector changed: %s." % [actual_initial_energies])
+		return
+	var initial_trace := FileAccess.get_file_as_bytes(
+		"res://reference/diagnostics/kickoff_select_test_20261027/ram/route_frame_007409.bin")
+	if not _check_trace_energy_vector(initial_trace, record_pointers, expected_initial_energies,
+		"FCEUX frame 7409 initializer boundary"):
 		return
 
 	for iteration in range(10):
@@ -64,6 +95,17 @@ func _initialize() -> void:
 	var expected_after_tick := maxi(0, source_maximum - run_cost)
 	if state.current_energy != expected_after_tick:
 		_fail("Holder energy did not use the ROM-derived stamina cost and zero floor.")
+		return
+	var first_update_energies: Array[int] = []
+	for home_slot in range(11):
+		first_update_energies.append(int(provider.get_player_record(home_slot).get("current_energy", -1)))
+	var expected_after_first_update: Array[int] = [400, 400, 400, 400, 400, 400, 397, 400, 416, 748, 408]
+	var first_update_trace := FileAccess.get_file_as_bytes(
+		"res://reference/diagnostics/kickoff_select_test_20261027/ram/route_frame_008863.bin")
+	if first_update_energies != expected_after_first_update \
+			or not _check_trace_energy_vector(first_update_trace, record_pointers,
+				expected_after_first_update, "FCEUX frame 8863 first `$E2BC` output"):
+		_fail("The first ROM-derived `$E2BC` all-player energy state differs from same-input evidence.")
 		return
 	for iteration in range(10):
 		if provider.advance_field_loop_iteration():
@@ -128,6 +170,22 @@ func _advance_one_stamina_update(provider: RomFreshKickoffMatchStateProvider) ->
 		if provider.advance_field_loop_iteration():
 			return false
 	return provider.advance_field_loop_iteration()
+
+
+func _check_trace_energy_vector(trace_ram: PackedByteArray, pointers: PackedByteArray,
+		expected: Array[int], label: String) -> bool:
+	if trace_ram.size() != 0x800 or pointers.size() != 44 or expected.size() != 11:
+		_fail("%s RAM or ROM pointer table has invalid dimensions." % label)
+		return false
+	for slot in range(11):
+		var offset := slot * 2
+		var address := int(pointers[offset]) | (int(pointers[offset + 1]) << 8)
+		var energy := int(trace_ram[address + 1]) | (int(trace_ram[address + 2]) << 8)
+		if energy != expected[slot]:
+			_fail("%s slot %d energy %d differs from ROM-derived value %d." % [
+				label, slot, energy, expected[slot]])
+			return false
+	return true
 
 
 func _fail(message: String) -> void:

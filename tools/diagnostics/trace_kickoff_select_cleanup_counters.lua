@@ -1,4 +1,4 @@
--- Muted two-pass trace of the live $004A/$004B source around ID-1 Select cleanup.
+-- Muted two-pass trace of cleanup, selected NMI RAM writers, and route sound/script pointers.
 -- Replays the captured prefix once, checkpoints frame 4692 in memory, then
 -- repeats frames 4693-9042 from that signature-checked state.
 
@@ -7,6 +7,7 @@ local OPENING_INPUT = ROOT .. "/reference/opening_reference_capture/input_timeli
 local ROUTE_INPUT = ROOT .. "/reference/diagnostics/kickoff_select_test_20261027/post_title_inputs.csv"
 local OUT = assert(os.getenv("CT2_SELECT_CLEANUP_TRACE_OUTPUT_DIR"), "missing output directory")
 local CHECKPOINT_FRAME, FIRST_FRAME, LAST_FRAME = 4692, 4693, 9042
+local SCRIPT_POINTER_TRACE_FIRST_FRAME, SCRIPT_POINTER_TRACE_LAST_FRAME = 7900, 8300
 local CALLER_HOOK_FIRST_FRAME, CALLER_HOOK_LAST_FRAME = 7257, 9042
 local CALLER_HOOKS = {
 	[0x80DF]="$80DF", [0x80E1]="$80E1", [0x80E6]="$80E6", [0x80E9]="$80E9", [0x80EB]="$80EB", [0x80EE]="$80EE",
@@ -123,8 +124,16 @@ local function mapped_bank(pc)
 	return -1
 end
 local mapper_shadow_header = "phase,pass,sequence,source_frame,emulator_frame,cycle,pc_callback,bank,old_value,new_value,a,x,y,p,sp,ram_0022,ram_0023,ram_0024,ram_0025,mapper_select,mapper_r6,mapper_r7,code_context"
-local sound_queue_header = "sequence,pass,source_frame,emulator_frame,cycle,pc,bank,address,old_value,new_value,a,x,y,p,sp,ram_0700,ram_0701,ram_0702,ram_0703,ram_0704,ram_0705,ram_07fc,mapper_select,mapper_r6,mapper_r7"
+local sound_queue_header = "sequence,pass,source_frame,emulator_frame,cycle,pc,bank,address,old_value,new_value,a,x,y,p,sp,ram_0700,ram_0701,ram_0702,ram_0703,ram_0704,ram_0705,ram_07fc,mapper_select,mapper_r6,mapper_r7,script_pointer_004d_004e,script_pointer_bank,cutscene_id_00e0"
 local stream_buffer_header = "sequence,phase,pass,source_frame,emulator_frame,cycle,pc,bank,address,old_value,new_value,a,x,y,p,sp,ram_05b0,ram_05b1,ram_05b2,ram_05b3,ram_05b4,ram_05b5,ram_05b6,ram_05b7,ram_05b8,ram_05b9,ram_05ba,ram_05bb,ram_05bc,ram_05bd,ram_05be,ram_05bf,mapper_select,mapper_r6,mapper_r7"
+local slot09_trace_pcs = {0xEB86,0xEB88,0xEBD7,0xEBDA,0xEBDC,0xEBDF,0xEBE1,
+	0xEBE4,0xEBE8,0xEBEA,0xEBEC,0xEBF1,0xEBF3,0xEBF6,0xEBF9,0xEBFC,
+	0xEBFE,0xEC00,0xEC02,0xEC05,0xED45,0xED48,0xED4B,0xED4E,0xCBF1,0xCBFE,0xCC01}
+local nmi_ram_input_addresses = {0x001B,0x001C,0x001D,0x0020,0x0021,0x0022,0x0023,
+	0x0024,0x0025,0x003B,0x0044,0x0045,0x0078,0x0079,0x007A,0x007B,
+	0x008E,0x008F,0x009C,0x009D,0x009E,0x009F,0x00A0,0x00A1,0x00A2,0x00A3,
+	0x00E1,0x00E2,0x00E3,0x003A,0x0040,0x0041,0x0628}
+local nmi_ram_input_header = "phase,pass,sequence,source_frame,emulator_frame,cycle,pc_callback,bank,address,write_size,value,a,x,y,p,sp,mapper_select,mapper_r6,mapper_r7"
 local mapper_shadow_output = nil
 local mapper_trace_phase, mapper_trace_pass, mapper_trace_frame = "startup", 0, -1
 local mapper_shadow_sequence, mapper_shadow_write_count = 0, 0
@@ -180,6 +189,60 @@ local function attach_stream_buffer_writers(file, sequence, phase, pass)
 		end)
 	end
 end
+local function attach_nmi_ram_input_writers(file, phase, pass, sequence)
+	for _, address in ipairs(nmi_ram_input_addresses) do
+		local hook_address = address
+		memory.registerwrite(hook_address, 1, function(written_address, write_size, value)
+			local frame = mapper_trace_frame
+			if file == nil or (phase == "route" and (frame < FIRST_FRAME or frame > 7266)) then return end
+			sequence.value = sequence.value + 1
+			local pc = reg("pc")
+			local r0, r1 = prg_map()
+			file:write(csv({phase,pass,sequence.value,frame,emu.framecount(),debugger.getcyclescount(),
+				hx(pc),hx(mapped_bank(pc),2),hx(written_address),hx(write_size,2),hx(value,2),hx(reg("a"),2),
+				hx(reg("x"),2),hx(reg("y"),2),hx(reg("p"),2),hx(reg("s"),2),
+				hx(mmc3_select,2),hx(r0,2),hx(r1,2)}) .. "\n")
+		end)
+	end
+end
+local function detach_nmi_ram_input_writers()
+	for _, address in ipairs(nmi_ram_input_addresses) do
+		pcall(memory.registerwrite, address, 1, nil)
+	end
+end
+local function attach_slot09_source_trace(file, sequence, pass)
+	local function record(kind, pc, address, old_value, new_value)
+		local frame = mapper_trace_frame
+		if frame < CALLER_HOOK_FIRST_FRAME or frame > LAST_FRAME then return end
+		sequence.value = sequence.value + 1
+		local r0, r1 = prg_map()
+		file:write(csv({sequence.value,pass,frame,emu.framecount(),debugger.getcyclescount(),kind,
+			hx(pc),hx(mapped_bank(pc),2),hx(address,4),hx(old_value,2),hx(new_value,2),
+			hx(reg("a"),2),hx(reg("x"),2),hx(reg("y"),2),hx(reg("p"),2),hx(reg("s"),2),
+			hx(b(0x0000),2),hx(b(0x0516),2),hx(b(0x0518),2),hx(b(0x052E),2),hx(b(0x052F),2),
+			hx(b(0x0530),2),hx(b(0x0531),2),hx(b(0x063F),2),hx(b(0x0700),2),hx(b(0x0701),2),
+			hx(b(0x0702),2),hx(b(0x0703),2),hx(b(0x0704),2),hx(mmc3_select,2),hx(r0,2),hx(r1,2)}) .. "\n")
+	end
+	for _, address in ipairs({0x052E,0x052F,0x0530,0x0531}) do
+		local hook_address = address
+		memory.registerwrite(hook_address, 1, function(_, old_value, new_value)
+			record("write", reg("pc"), hook_address, old_value,
+				type(new_value) == "number" and new_value or b(hook_address))
+		end)
+	end
+	for _, address in ipairs(slot09_trace_pcs) do
+		local hook_address = address
+		memory.registerexec(hook_address, function()
+			record("exec", hook_address, -1, -1, -1)
+		end)
+	end
+end
+local function detach_slot09_source_trace()
+	for _, address in ipairs({0x052E,0x052F,0x0530,0x0531}) do
+		pcall(memory.registerwrite, address, 1, nil)
+	end
+	for _, address in ipairs(slot09_trace_pcs) do pcall(memory.registerexec, address, nil) end
+end
 local function signature()
 	local r0, r1 = prg_map()
 	local banks = {}; for i = 1, 8 do banks[i] = mmc3[i] end
@@ -211,6 +274,9 @@ attach_startup_sound_queue_writer(0x07FC)
 local startup_stream_buffer_output = output("stream_buffer_writes_startup.csv", stream_buffer_header)
 local startup_stream_buffer_sequence = {value=0}
 attach_stream_buffer_writers(startup_stream_buffer_output, startup_stream_buffer_sequence, "startup", 0)
+local startup_nmi_ram_input_output = output("nmi_ram_input_writes_startup.csv", nmi_ram_input_header)
+local startup_nmi_ram_input_sequence = {value=0}
+attach_nmi_ram_input_writers(startup_nmi_ram_input_output, "startup", 0, startup_nmi_ram_input_sequence)
 assert(pcall(emu.poweron), "emu.poweron failed")
 if debugger.resetcyclescount then pcall(debugger.resetcyclescount) end
 pcall(emu.speedmode, "turbo")
@@ -227,6 +293,8 @@ assert(pcall(savestate.save, checkpoint), "savestate.save failed")
 assert(pcall(savestate.persist, checkpoint), "savestate.persist failed")
 mapper_shadow_output:flush(); mapper_shadow_output:close(); mapper_shadow_output = nil
 startup_sound_queue_output:flush(); startup_sound_queue_output:close(); startup_sound_queue_output = nil
+startup_nmi_ram_input_output:flush(); startup_nmi_ram_input_output:close()
+detach_nmi_ram_input_writers()
 for address = 0x0700, 0x0705 do pcall(memory.registerwrite, address, 1, nil) end
 pcall(memory.registerwrite, 0x07FC, 1, nil)
 startup_stream_buffer_output:flush(); startup_stream_buffer_output:close()
@@ -240,12 +308,15 @@ metadata:write("checkpoint_signature=frame/cycle, RAM2KiB, PPU16KiB, MMC3 regist
 metadata:write("trace_window=" .. FIRST_FRAME .. "-" .. LAST_FRAME .. "; replayed twice from the same anonymous checkpoint\n")
 metadata:write("caller_hook_window=" .. CALLER_HOOK_FIRST_FRAME .. "-" .. CALLER_HOOK_LAST_FRAME .. "; selected ROM PCs only\n")
 metadata:write("sound_queue_write_window=" .. FIRST_FRAME .. "-" .. LAST_FRAME .. "; six ID slots and saved-bank writes\n")
+metadata:write("nmi_ram_input_writer_window=all startup writes through frame 4692; route writes through frame 7266; two passes from the same in-session checkpoint\n")
 metadata:flush()
 
 local write_header = "sequence,pass,source_frame,emulator_frame,cycle,pc_callback,bank,address,new_value,a,x,y,p,sp,ram_0000,ram_001e,ram_004d,ram_004e,ram_00e0,mapper_select,mapper_r6,mapper_r7,code_context"
 local snapshot_header = "pass,source_frame,emulator_frame,cycle,ram_004a,ram_004b,ram_001e,ram_004d,ram_004e,ram_00e0,ram_062a_0649,ram_05e8_060a,ppu_3f00_3f1f,pc"
 local caller_hook_header = "sequence,pass,source_frame,emulator_frame,cycle,pc,name,bank,a,x,y,p,sp,stack_return_low,stack_return_high,ram_001e,ram_0022,ram_0023,ram_0025,ram_0026,ram_0044,ram_0045,ram_004d,ram_004e,ram_0078,ram_007a,ram_007b,ram_00e0,ram_00ec,ram_00ed,dispatch_ptr,dispatch_byte,ram_05b3,ram_05b4,ram_05b5,ram_0700,ram_0701,ram_0702,ram_0703,ram_0704,ram_0705,ram_07fc,mapper_select,mapper_r6,mapper_r7,ppu_scanline,ppu_dot"
+local slot09_trace_header = "sequence,pass,source_frame,emulator_frame,cycle,kind,pc,bank,address,old_value,new_value,a,x,y,p,sp,ram_0000,ram_0516,ram_0518,ram_052e,ram_052f,ram_0530,ram_0531,ram_063f,ram_0700,ram_0701,ram_0702,ram_0703,ram_0704,mapper_select,mapper_r6,mapper_r7"
 local word_wait_header = "sequence,pass,source_frame,emulator_frame,cycle,pc,bank,address,old_value,new_value,a,x,y,p,sp,ram_004d,ram_004e,ram_0078,mapper_select,mapper_r6,mapper_r7"
+local script_pointer_header = "sequence,pass,source_frame,emulator_frame,cycle,pc,bank,address,old_value,new_value,a,x,y,p,sp,active_pointer,pointer_bank,ram_0025,ram_00e0,ram_0078,ram_007a,ram_007b,ram_00ec,ram_00ed,dispatch_ptr,dispatch_byte,mapper_select,mapper_r6,mapper_r7"
 local write_count = {}
 metadata:write("mapper_shadow_startup_writes=" .. mapper_shadow_write_count .. "\n")
 
@@ -261,15 +332,36 @@ for pass = 1, 2 do
 	local writes = output("counter_writes" .. (pass == 1 and "" or "_repeat") .. ".csv", write_header)
 	local snapshots = output("frame_snapshots" .. (pass == 1 and "" or "_repeat") .. ".csv", snapshot_header)
 	local caller_hooks = output("caller_hooks" .. (pass == 1 and "" or "_repeat") .. ".csv", caller_hook_header)
+	local slot09_trace = output("slot09_source_trace" .. (pass == 1 and "" or "_repeat") .. ".csv", slot09_trace_header)
 	local word_wait_writes = output("word_wait_writes" .. (pass == 1 and "" or "_repeat") .. ".csv", word_wait_header)
 	local sound_queue_writes = output("sound_queue_writes" .. (pass == 1 and "" or "_repeat") .. ".csv", sound_queue_header)
+	local script_pointer_writes = output("script_pointer_writes" .. (pass == 1 and "" or "_repeat") .. ".csv", script_pointer_header)
 	local stream_buffer_writes = output("stream_buffer_writes" .. (pass == 1 and "" or "_repeat") .. ".csv", stream_buffer_header)
+	local nmi_ram_input_writes = output("nmi_ram_input_writes" .. (pass == 1 and "" or "_repeat") .. ".csv", nmi_ram_input_header)
 	local count, seq, frame_now = 0, 0, FIRST_FRAME - 1
 	local caller_hook_seq, caller_hook_counts = 0, {}
 	local word_wait_seq = 0
 	local sound_queue_seq = 0
+	local script_pointer_seq = 0
 	local stream_buffer_sequence = {value=0}
+	local nmi_ram_input_sequence = {value=0}
+	local slot09_trace_sequence = {value=0}
+	local function attach_script_pointer_writer(address)
+		memory.registerwrite(address, 1, function(_, old_value, new_value)
+			if frame_now < SCRIPT_POINTER_TRACE_FIRST_FRAME or frame_now > SCRIPT_POINTER_TRACE_LAST_FRAME then return end
+			script_pointer_seq = script_pointer_seq + 1
+			local pc = reg("pc")
+			local pointer = b(0x004D) + b(0x004E) * 0x100
+			local dispatch_ptr = b(0x00EC) + b(0x00ED) * 0x100
+			local r0, r1 = prg_map()
+			script_pointer_writes:write(csv({script_pointer_seq,pass,frame_now,emu.framecount(),debugger.getcyclescount(),hx(pc),hx(mapped_bank(pc),2),hx(address),hx(old_value,2),hx(type(new_value)=="number" and new_value or b(address),2),hx(reg("a"),2),hx(reg("x"),2),hx(reg("y"),2),hx(reg("p"),2),hx(reg("s"),2),hx(pointer,4),hx(mapped_bank(pointer),2),hx(b(0x0025),2),hx(b(0x00E0),2),hx(b(0x0078),2),hx(b(0x007A),2),hx(b(0x007B),2),hx(b(0x00EC),2),hx(b(0x00ED),2),hx(dispatch_ptr),hx(b(dispatch_ptr + reg("y")),2),hx(mmc3_select,2),hx(r0,2),hx(r1,2)}) .. "\n")
+		end)
+	end
+	attach_script_pointer_writer(0x004D)
+	attach_script_pointer_writer(0x004E)
 	attach_stream_buffer_writers(stream_buffer_writes, stream_buffer_sequence, "route", pass)
+	attach_nmi_ram_input_writers(nmi_ram_input_writes, "route", pass, nmi_ram_input_sequence)
+	attach_slot09_source_trace(slot09_trace, slot09_trace_sequence, pass)
 	local nmi_snapshot_done = {}
 	local selector_return_frame = -1
 	local function attach(address)
@@ -297,7 +389,8 @@ for pass = 1, 2 do
 			sound_queue_seq = sound_queue_seq + 1
 			local pc = reg("pc")
 			local r0, r1 = prg_map()
-			sound_queue_writes:write(csv({sound_queue_seq,pass,frame_now,emu.framecount(),debugger.getcyclescount(),hx(pc),hx(mapped_bank(pc),2),hx(address),hx(old_value,2),hx(type(new_value)=="number" and new_value or b(address),2),hx(reg("a"),2),hx(reg("x"),2),hx(reg("y"),2),hx(reg("p"),2),hx(reg("s"),2),hx(b(0x0700),2),hx(b(0x0701),2),hx(b(0x0702),2),hx(b(0x0703),2),hx(b(0x0704),2),hx(b(0x0705),2),hx(b(0x07FC),2),hx(mmc3_select,2),hx(r0,2),hx(r1,2)}) .. "\n")
+			local script_pointer = b(0x004D) + b(0x004E) * 0x100
+			sound_queue_writes:write(csv({sound_queue_seq,pass,frame_now,emu.framecount(),debugger.getcyclescount(),hx(pc),hx(mapped_bank(pc),2),hx(address),hx(old_value,2),hx(type(new_value)=="number" and new_value or b(address),2),hx(reg("a"),2),hx(reg("x"),2),hx(reg("y"),2),hx(reg("p"),2),hx(reg("s"),2),hx(b(0x0700),2),hx(b(0x0701),2),hx(b(0x0702),2),hx(b(0x0703),2),hx(b(0x0704),2),hx(b(0x0705),2),hx(b(0x07FC),2),hx(mmc3_select,2),hx(r0,2),hx(r1,2),hx(script_pointer,4),hx(mapped_bank(script_pointer),2),hx(b(0x00E0),2)}) .. "\n")
 		end)
 	end
 	for address = 0x0700, 0x0705 do attach_sound_queue_writer(address) end
@@ -350,19 +443,25 @@ for pass = 1, 2 do
 		if frame >= 7238 and frame <= 7260 then
 			snapshots:write(csv({pass,frame,emu.framecount(),debugger.getcyclescount(),hx(b(0x004A),2),hx(b(0x004B),2),hx(b(0x001E),2),hx(b(0x004D),2),hx(b(0x004E),2),hx(b(0x00E0),2),ram_hex(0x062A,0x20),ram_hex(0x05E8,0x23),ppu_hex(0x3F00,0x20),hx(reg("pc"))}) .. "\n")
 		end
-		if frame % 500 == 0 or frame == LAST_FRAME then writes:flush(); snapshots:flush(); caller_hooks:flush(); word_wait_writes:flush(); sound_queue_writes:flush(); stream_buffer_writes:flush(); progress("pass" .. pass .. ":" .. frame) end
+		if frame % 500 == 0 or frame == LAST_FRAME then writes:flush(); snapshots:flush(); caller_hooks:flush(); word_wait_writes:flush(); sound_queue_writes:flush(); script_pointer_writes:flush(); stream_buffer_writes:flush(); nmi_ram_input_writes:flush(); slot09_trace:flush(); progress("pass" .. pass .. ":" .. frame) end
 	end
 	mapper_shadow_output:flush(); mapper_shadow_output:close(); mapper_shadow_output = nil
+	pcall(memory.registerwrite, 0x004D, 1, nil); pcall(memory.registerwrite, 0x004E, 1, nil)
 	pcall(memory.registerwrite, 0x004A, 1, nil); pcall(memory.registerwrite, 0x004B, 1, nil)
 	pcall(memory.registerwrite, 0x0078, 1, nil)
 	for address = 0x0700, 0x0705 do pcall(memory.registerwrite, address, 1, nil) end
 	pcall(memory.registerwrite, 0x07FC, 1, nil)
 	for address = 0x05B0, 0x05BF do pcall(memory.registerwrite, address, 1, nil) end
+	detach_nmi_ram_input_writers()
+	detach_slot09_source_trace()
 	for address in pairs(CALLER_HOOKS) do pcall(memory.registerexec, address, nil) end
-	writes:close(); snapshots:close(); caller_hooks:close(); word_wait_writes:close(); sound_queue_writes:close(); stream_buffer_writes:close()
+	writes:close(); snapshots:close(); caller_hooks:close(); word_wait_writes:close(); sound_queue_writes:close(); script_pointer_writes:close(); stream_buffer_writes:close(); nmi_ram_input_writes:close(); slot09_trace:close()
 	write_count[pass] = count
 	metadata:write("pass_" .. pass .. "_counter_writes=" .. count .. "\n")
 	metadata:write("pass_" .. pass .. "_mapper_shadow_writes=" .. mapper_shadow_write_count .. "\n")
+	metadata:write("pass_" .. pass .. "_nmi_ram_input_writes=" .. nmi_ram_input_sequence.value .. "\n")
+	metadata:write("pass_" .. pass .. "_slot09_trace_records=" .. slot09_trace_sequence.value .. "\n")
+	metadata:write("pass_" .. pass .. "_script_pointer_write_records=" .. script_pointer_seq .. "\n")
 	metadata:flush()
 end
 

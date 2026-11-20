@@ -57,6 +57,12 @@ def load_source_events() -> list[dict]:
 def main() -> None:
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--output", type=Path, required=True, help="Diagnostic NSF output path")
+	parser.add_argument(
+		"--startup-phase-frames",
+		type=int,
+		default=3,
+		help="NSF frame-counter seed; 1 is the ROM/NMI-derived source-phase candidate, 3 preserves the legacy diagnostic",
+	)
 	args = parser.parse_args()
 
 	# The timeline builder's default module import derives its default event list
@@ -83,7 +89,7 @@ def main() -> None:
 		"captured_ram_used_to_schedule": False,
 		"captured_pcm_or_wav_used": False,
 	}
-	info = timeline.build(args.output.resolve())
+	info = timeline.build(args.output.resolve(), startup_phase_frames=args.startup_phase_frames)
 	info["event_source"] = timeline.EVENT_DERIVATION
 	info["captured_ram_used_to_schedule"] = False
 	info["captured_pcm_or_wav_used"] = False

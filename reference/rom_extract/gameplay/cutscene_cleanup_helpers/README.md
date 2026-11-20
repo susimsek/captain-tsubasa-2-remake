@@ -11,10 +11,15 @@ ROM identity, CPU addresses, iNES file offsets, lengths, and SHA-256 hashes.
 | `$9B7F-$9B9F` | `0x001B8F` | Fill `$0468-$0567` and `$0200-$02FF` with `$F8`, clear four motion-record bytes, return |
 
 `RomCutsceneCleanupClearTask` verifies the preserved bytes and applies the
-decoded PPU and OAM effects to the presentation. It records the four RAM
-effects in the route's bounded cleanup shadow. The Godot renderer does not yet
-own PPUCTRL/PPUMASK shadows, so `$0020/$0021` register-mask restoration is
-reported but not claimed as live register emulation.
+decoded PPU and OAM effects to the presentation. The Godot route obtains the
+initial `$0020/$0021` values from the hash-checked `$C6E8-$C765` bootstrap,
+executes the cleanup masks/restores from `$98A0-$98DB`, records the ordered
+`$2000/$2001` writes in both presenters, and carries the resulting shadow
+values to the next cleanup event. The production source RAM ledger now retains
+the actual bootstrap writes to `$0019/$0020/$0021` and the later cleanup writes
+to `$0020/$0021`; each entry keeps its ROM source PC and event ID. This records
+only routines the route executed and does not imply that later NMI writers ran.
+Scanline display gating and sub-frame PPU timing remain unresolved.
 
 ## Validation
 

@@ -63,17 +63,14 @@ stamina selector X=0, then stores the returned 16-bit maximum at player record
 bytes `+1/+2` through `$DB90/$DB95`. This is the source of the initial energy
 field; the frame-8788 value 400 is not a runtime constant.
 
-For the ROM-selected slot, the bank-$1C evaluator `$803A/$8113` computes
-stamina using ROM tables. The home-player profile selector comes from
-`$95D6` (already extracted as `player_stat_profile_map_00_22.bin`); it indexes
-the first byte of an eight-byte stamina record in `$AE86-$AFAE`. The current
-level is added to that stamina curve index, clamped at `$5F`, and the result
-indexes the little-endian 16-bit value table `$9F0E-$9FCD`. For this input
-route, the RNG replay resolves a slot, the match-00 roster at file offset
-`0x004A57` resolves its player ID, and the ROM profile/value tables then derive
-that player's maximum. The slot-6 / ID-8 validation case resolves profile 6,
-stamina index 0, and word `$0190` from `$9F0E`; this agrees with the retained
-RAM sample but comes from ROM bytes and the reset level state.
+For the slot-6 / ID-8 validation case, the bank-$1C evaluator resolves profile
+6, curve index 0, and word `$0190` from `$9F0E`; this agrees with the retained
+RAM sample and is derived from ROM bytes plus the reset level state. The full
+`$DB62` home-roster pass has additional selector-dependent branches: ordinary
+home slots read 40-byte profile rows beginning at `$9FCE`, while special
+selectors use the shared `$AE86` rows. See the later [fresh stamina initializer
+report](fresh_match_stamina_initializer_20261103.md) for the decoded branch
+and production route implementation.
 
 The fresh-start level byte is zero because the cold-reset routine clears
 volatile CPU RAM before the match. The match-zero roster setup assigns player

@@ -1,0 +1,22 @@
+{
+  "schema": "ct2-legacy-title-task-seed-v1",
+  "rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "mapping": "The supplied image has a 16-byte iNES header. PRG bank $02 is mapped at CPU $A000-$BFFF; file offset = 0x10 + 0x4000 + (CPU-$A000).",
+  "scope": "ROM bytes which initialize the old scheduler's slot-$01 title task before the opening route. Trace observations are validation only.",
+  "spans": [
+    {
+      "file": "bank02_slot01_create_A281_A291.bin",
+      "cpu_start": "$A281",
+      "cpu_end_exclusive": "$A292",
+      "file_offset": "0x004291",
+      "length": 17,
+      "sha256": "3d32f102f7038143e3c764416a8cbb092c782b613d815c306967ccbb1dd0b7d6",
+      "bank_mapping": "MMC3 PRG bank $02 at CPU $A000",
+      "bytes": "a2 01 a9 1e 95 00 a9 80 95 01 a0 28 a9 00 20 69 9f",
+      "disassembly": "LDX #$01; LDA #$1E; STA $00,X; LDA #$80; STA $01,X; LDY #$28; LDA #$00; JSR $9F69"
+    }
+  ]
+}

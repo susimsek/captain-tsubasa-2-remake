@@ -1,0 +1,230 @@
+{
+  "schema": "ct2-pass-no-candidates-continuation-v1",
+  "source_rom": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "rom_size_bytes": 393232,
+  "runtime_source_kind": "ROM-derived code and lookup bytes; no emulator state/capture",
+  "scope": "PASS action 1, holder slot 6, ROM no-candidates branch only; stops at caller PC $D6C7",
+  "resources": [
+    {
+      "name": "fixed_pass_caller_D68A_D6C7",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xD68A",
+      "cpu_end_exclusive": "0xD6C7",
+      "mapped_window_start": "0xC000",
+      "file_offset": "0x03D69A",
+      "length_bytes": 61,
+      "resource": "fixed_pass_caller_D68A_D6C7.bin",
+      "sha256": "dd4261a2ad44fffa33a2404796b85a31d405353e6f67847776ccf16dc13906f3"
+    },
+    {
+      "name": "fixed_action_parameter_caller_D717_D746",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xD717",
+      "cpu_end_exclusive": "0xD746",
+      "mapped_window_start": "0xC000",
+      "file_offset": "0x03D727",
+      "length_bytes": 47,
+      "resource": "fixed_action_parameter_caller_D717_D746.bin",
+      "sha256": "a099674edaf7126fa18c8f1ea61d220f99ee6bc823165890acef13bb5fd16eaa"
+    },
+    {
+      "name": "fixed_holder_delta_D76B_D77A",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xD76B",
+      "cpu_end_exclusive": "0xD77B",
+      "mapped_window_start": "0xC000",
+      "file_offset": "0x03D77B",
+      "length_bytes": 16,
+      "resource": "fixed_holder_delta_D76B_D77A.bin",
+      "sha256": "040512830e123bdbafc88e0e3d39ea37f9c2de4632e7a2360be908e36d273479"
+    },
+    {
+      "name": "fixed_mapper_helper_CE2D_CE4A",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xCE2D",
+      "cpu_end_exclusive": "0xCE4B",
+      "mapped_window_start": "0xC000",
+      "file_offset": "0x03CE3D",
+      "length_bytes": 30,
+      "resource": "fixed_mapper_helper_CE2D_CE4A.bin",
+      "sha256": "118ed4201a0d5a540571b1588ac322f64885baf8cbbada497e318df75b52c445"
+    },
+    {
+      "name": "fixed_player_record_pointer_CD7C_CD9F",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xCD7C",
+      "cpu_end_exclusive": "0xCDA0",
+      "mapped_window_start": "0xC000",
+      "file_offset": "0x03CD8C",
+      "length_bytes": 36,
+      "resource": "fixed_player_record_pointer_CD7C_CD9F.bin",
+      "sha256": "c7cfbe87dd2ab9284382f7ca41ffbd25d425395c9e84dc1a2bb79c2f7c7bbff9"
+    },
+    {
+      "name": "fixed_player_record_vector_C50C_C50F",
+      "prg_bank": "0x1E",
+      "cpu_start": "0xC50C",
+      "cpu_end_exclusive": "0xC510",
+      "mapped_window_start": "0xC000",
+      "file_offset": "0x03C51C",
+      "length_bytes": 4,
+      "resource": "fixed_player_record_vector_C50C_C50F.bin",
+      "sha256": "cedc8a22cbb6e93806b06bb35216db8e595cc66ac9273665ca19bf7c76530a05"
+    },
+    {
+      "name": "bank1c_vectors_8000_803A",
+      "prg_bank": "0x1C",
+      "cpu_start": "0x8000",
+      "cpu_end_exclusive": "0x803A",
+      "mapped_window_start": "0x8000",
+      "file_offset": "0x038010",
+      "length_bytes": 58,
+      "resource": "bank1c_vectors_8000_803A.bin",
+      "sha256": "b15267e3f9f8f66ba7e43a435bc04bd3689807a5fe14e72a71172566ea9ced8e"
+    },
+    {
+      "name": "bank1c_player_attribute_helper_803A_818E",
+      "prg_bank": "0x1C",
+      "cpu_start": "0x803A",
+      "cpu_end_exclusive": "0x818E",
+      "mapped_window_start": "0x8000",
+      "file_offset": "0x03804A",
+      "length_bytes": 340,
+      "resource": "bank1c_player_attribute_helper_803A_818E.bin",
+      "sha256": "e272337684e7dd0057fc3baf05e04a91fac2174ef60ac95c4021e871c6cc6b90"
+    },
+    {
+      "name": "bank1c_player_attribute_lookup_818E_819D",
+      "prg_bank": "0x1C",
+      "cpu_start": "0x818E",
+      "cpu_end_exclusive": "0x819D",
+      "mapped_window_start": "0x8000",
+      "file_offset": "0x03819E",
+      "length_bytes": 15,
+      "resource": "bank1c_player_attribute_lookup_818E_819D.bin",
+      "sha256": "b26a940454a4719f073f493e92942e798ee21a3088a4073f3141d89f83df0299"
+    },
+    {
+      "name": "bank1d_player_effect_data_A060_A080",
+      "prg_bank": "0x1D",
+      "cpu_start": "0xA060",
+      "cpu_end_exclusive": "0xA080",
+      "mapped_window_start": "0xA000",
+      "file_offset": "0x03A070",
+      "length_bytes": 32,
+      "resource": "bank1d_player_effect_data_A060_A080.bin",
+      "sha256": "c77da3adbc25d9971a4b750c31a95c93c0888d376d8c44d2bacea16081af4a13"
+    },
+    {
+      "name": "bank1c_action_parameters_819D_8298",
+      "prg_bank": "0x1C",
+      "cpu_start": "0x819D",
+      "cpu_end_exclusive": "0x8298",
+      "mapped_window_start": "0x8000",
+      "file_offset": "0x0381AD",
+      "length_bytes": 251,
+      "resource": "bank1c_action_parameters_819D_8298.bin",
+      "sha256": "59309dd5e73c620eed0c06f9076634d7301f0592921058aff7b657fabf32682f"
+    },
+    {
+      "name": "bank1c_candidate_scan_8C06_8C3B",
+      "prg_bank": "0x1C",
+      "cpu_start": "0x8C06",
+      "cpu_end_exclusive": "0x8C3B",
+      "mapped_window_start": "0x8000",
+      "file_offset": "0x038C16",
+      "length_bytes": 53,
+      "resource": "bank1c_candidate_scan_8C06_8C3B.bin",
+      "sha256": "2c88c66dcb292c508066d9f62b6400ddec42a1d03d513a36148d9d5ef6fbb911"
+    },
+    {
+      "name": "bank1c_holder_candidate_pointer_8DC9_8DE2",
+      "prg_bank": "0x1C",
+      "cpu_start": "0x8DC9",
+      "cpu_end_exclusive": "0x8DE2",
+      "mapped_window_start": "0x8000",
+      "file_offset": "0x038DD9",
+      "length_bytes": 25,
+      "resource": "bank1c_holder_candidate_pointer_8DC9_8DE2.bin",
+      "sha256": "7284a5ee905ac488521da7c8f05c511dce88cd1cd9ee14c87941d035a85e2ba0"
+    },
+    {
+      "name": "bank1c_candidate_pointer_table_8E1B_8E3B",
+      "prg_bank": "0x1C",
+      "cpu_start": "0x8E1B",
+      "cpu_end_exclusive": "0x8E3B",
+      "mapped_window_start": "0x8000",
+      "file_offset": "0x038E2B",
+      "length_bytes": 32,
+      "resource": "bank1c_candidate_pointer_table_8E1B_8E3B.bin",
+      "sha256": "69e9bed826dfe82d45d1d23dcfa40368587a16ada4ef94034bece138d892eecf"
+    },
+    {
+      "name": "bank1c_holder6_empty_candidates_8F07_8F17",
+      "prg_bank": "0x1C",
+      "cpu_start": "0x8F07",
+      "cpu_end_exclusive": "0x8F17",
+      "mapped_window_start": "0x8000",
+      "file_offset": "0x038F17",
+      "length_bytes": 16,
+      "resource": "bank1c_holder6_empty_candidates_8F07_8F17.bin",
+      "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    {
+      "name": "bank1c_player1_candidate_pointers_8F17_8F1F",
+      "prg_bank": "0x1C",
+      "cpu_start": "0x8F17",
+      "cpu_end_exclusive": "0x8F1F",
+      "mapped_window_start": "0x8000",
+      "file_offset": "0x038F27",
+      "length_bytes": 8,
+      "resource": "bank1c_player1_candidate_pointers_8F17_8F1F.bin",
+      "sha256": "c89f5e366d5133c2ce779eff0de875c36618dce89449dbffef9b7885677eadc6"
+    },
+    {
+      "name": "bank1c_action_parameter_pointer_table_9460_9468",
+      "prg_bank": "0x1C",
+      "cpu_start": "0x9460",
+      "cpu_end_exclusive": "0x9468",
+      "mapped_window_start": "0x8000",
+      "file_offset": "0x039470",
+      "length_bytes": 8,
+      "resource": "bank1c_action_parameter_pointer_table_9460_9468.bin",
+      "sha256": "868346734b4747d2e23728f809e8c7b57a2ab90031d87cbba86c987430e07531"
+    },
+    {
+      "name": "bank1c_player_action_support_tables_9500_9600",
+      "prg_bank": "0x1C",
+      "cpu_start": "0x9500",
+      "cpu_end_exclusive": "0x9600",
+      "mapped_window_start": "0x8000",
+      "file_offset": "0x039510",
+      "length_bytes": 256,
+      "resource": "bank1c_player_action_support_tables_9500_9600.bin",
+      "sha256": "190a7c19ae4b027d3a73b42d2c80393bd581f1ff845474f89f33a693ffe00546"
+    },
+    {
+      "name": "bank1c_pass_action_parameters_9510_9530",
+      "prg_bank": "0x1C",
+      "cpu_start": "0x9510",
+      "cpu_end_exclusive": "0x9530",
+      "mapped_window_start": "0x8000",
+      "file_offset": "0x039520",
+      "length_bytes": 32,
+      "resource": "bank1c_pass_action_parameters_9510_9530.bin",
+      "sha256": "3cb7ea73464142c35a19bd0d30463d8a1eb351f82ecbcbe777e8eaa3b5b73a5b"
+    },
+    {
+      "name": "bank1c_effect_conversion_table_9E4E_9F10",
+      "prg_bank": "0x1C",
+      "cpu_start": "0x9E4E",
+      "cpu_end_exclusive": "0x9F10",
+      "mapped_window_start": "0x8000",
+      "file_offset": "0x039E5E",
+      "length_bytes": 194,
+      "resource": "bank1c_effect_conversion_table_9E4E_9F10.bin",
+      "sha256": "35a3e6da352b5e65a6d687be32dadb830b2b7b3dd6fd5b3c2c32cc35cdde3815"
+    }
+  ]
+}

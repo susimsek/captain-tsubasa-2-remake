@@ -2,29 +2,29 @@
 
 ## Runtime status update
 
-The live worker now executes the row loop through `$BBE0: ED 00 FC`. Its own
-ROM instructions clear `$003C` at `$8954`, increment it to `1` at `$8960`, and
-restore it to `1` after the `$ED` name-emission helper. The worker then stops
-before `$BD9C: EE 00 FC`, so this verifies the formatter input producer but
-does not execute the `$EE` formatter. See
-[`slot05_descriptor01_ed_row00_runtime_20261029.md`](slot05_descriptor01_ed_row00_runtime_20261029.md).
+A later muted FCEUX trace captured `$8C55` during both descriptor passes. The
+first pass calls the formatter with `$003C=1`; the row-commit pass calls it
+with `$003C=0`, and queue-buffer snapshots show the ROM zero tile `$33` in both
+`$EE` rows. The earlier focused worker report below stops before `$BD9C` and
+records a narrower trace boundary. See
+[`fresh_field_entry_cross_correlation_20261107.md`](fresh_field_entry_cross_correlation_20261107.md)
+for the repeated checkpoint capture and counter evidence.
 
 ## Finding
 
 For descriptor `$01`, `$003C` is produced by the bank-$18 descriptor-row loop;
 it is not an upstream caller input. The loop clears `$003C`, derives it from
 the descriptor row's progress byte and the worker-owned `$05C5` counter, then
-calls the `$8986` token parser. The live route has now executed this producer
-for row `$BBE0` and verified `$003C=1` before its `$ED` handler. Later `$EE` and
-`$ED 01` rows remain source-derived expectations, not executed route results.
+calls the `$8986` token parser. The direct trace records `$8C55` for both
+progress-1 and progress-3 `$EE` rows during their initial and row-commit passes.
 
 The selected descriptor is `$B464`; its row progress bytes are `01,01,03,03`
 for streams `$BBE0,$BD9C,$BBE3,$BD9F`. The second wrapper's worker setup writes
 `$05C5=0` before its first `$C515` yield. Therefore the first descriptor pass
-statically derives `$003C=1,1,3,3` for the four rows. The live route confirms
-the first value during `$BBE0` execution and records `$003C=1` at the following
-`$BD9C` boundary. Because `$EE 00` has not been entered, its value at the
-handler remains unverified; `$EE 01` at `$BD9F` is static analysis only.
+statically derives first-pass `$003C=1,1,3,3` for the four rows. At row commit,
+when `$05C5` reaches that row's progress value, the loop re-enters with
+`$003C=0`. The FCEUX trace observes these pairs at frames 8464 and 8465, with
+the same sequence recurring at frames 8786 and 8787.
 
 ## Hash-bound source
 
@@ -69,16 +69,12 @@ zero for both bytes, and the fresh-period path provides `$0027=0`, selecting
 the ordinary `$0028/$0029` read rather than the `$0027==4` alternate at
 `$0610,X`.
 
-For `$EE 00`, `$8C55` sees `$003C=1`, decrements it to zero, and returns before
-formatting. For `$EE 01`, it sees `3` and enters formatting. The zero value
-passes through `$C51E->$CD3C`, yielding zero quotient and remainder. The
-formatter then calls `$8C7A`, which adds `$33`, and `$8C85` writes that tile to
-`$04A8,X` (with `X=$3D`); the writer's `$003C` decrement is restored before
-return. The later `$6F==0` branch ends the formatter after this zero tile.
-Thus the ROM source predicts different first-pass outcomes: `$EE 00` returns
-without a tile, while `$EE 01` writes one `$33` tile. Neither `$EE` path has
-been executed by the current Godot route, so its exact output and destination
-index remain unverified runtime state.
+For either zero-valued `$EE` operand, the initial pass at `$003C=1` decrements
+to zero and returns before formatting. On row commit, `$003C=0` enters the
+formatter path through `$C51E->$CD3C`, yielding zero quotient and remainder.
+The formatter adds `$33`; the queue snapshots confirm one `$33` in each
+committed row. This establishes ROM packet output, while the production Godot
+route still does not execute the worker/queue cadence or render the field.
 
 The generic worker text scanner also writes `$003C` at `$8641/$864E`, and the
 character-buffer helper temporarily decrements/increments it at `$8C87/$8C9C`.
@@ -87,16 +83,14 @@ derives `$003C` immediately before calling the token parser for each row.
 
 ## Runtime consumer contract and boundary
 
-Do not expose `$003C` as an externally injected route input. The live slot-$05
-worker now derives the row-0 value from descriptor progress and source-owned
-`$05C5` at `$8949`, executes `$BBE0: ED 00 FC`, and adopts its CPU/RAM/stack
-writes. It stops before `$BD9C: EE 00 FC`; the `$EE` formatter and later rows
-are still pending. Continue from that source boundary through the real
-queue/NMI yields; do not set the program counter or substitute packet-builder
-output for a source return.
+Do not expose `$003C` as an externally injected route input. The ROM source
+derives first-pass and row-commit values from descriptor progress and
+`$05C5`; FCEUX confirms the `$EE` queue payloads. The Godot packet source models
+the final payload but is not connected to the live worker/queue/NMI renderer
+path. Continue from that source boundary through the real source returns; do
+not inject a program counter or substitute packet-builder output for a source
+return.
 
-Static bytes resolve the `$003C` producer and formatter branches; the focused
-runtime report records the first row's execution. No additional FCEUX hook is
-required to identify the producer. The `$EE` rows and their formatter effects
-still need live worker integration. This audit made no FCEUX, `GOALS.md`, or
-`PLANS.md` changes and ran no tests.
+Static bytes and repeated FCEUX hooks resolve the `$003C` producer and the two
+`$EE` row-commit payloads. The remaining gap is Godot route integration and
+visible-output verification, not ROM packet identification.

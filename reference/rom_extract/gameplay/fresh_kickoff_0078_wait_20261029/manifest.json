@@ -33,6 +33,16 @@
       "purpose": "physical PRG bank $02 mapped at CPU $A000; NMI-side PPU/raster setup and RTS"
     },
     {
+      "file": "reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/bank02_boot_counter_clear_A234_A23E.bin",
+      "cpu_start": "$A234",
+      "cpu_end_exclusive": "$A23E",
+      "file_offset": "0x004244",
+      "length": 10,
+      "sha256": "6d7887ce24131537fb91f69ed32775333e10e902eb4eb0c93dbe7c400a034604",
+      "bytes": "a900a05a99e0ffc8d0fa",
+      "purpose": "bank $02 boot zero-fill loop; its first STA $FFE0,Y at $A238 wraps to internal RAM $003A"
+    },
+    {
       "file": "reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/bank02_irq_event_consumer_A160_A1E1.bin",
       "cpu_start": "$A160",
       "cpu_end_exclusive": "$A1E2",

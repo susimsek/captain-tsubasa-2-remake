@@ -59,7 +59,7 @@ const SEMANTIC_GAPS: Array[String] = [
 	"Appearance/motion interpreters and live shared mirror, scroll, clipping, palette, and CHR state remain caller-owned",
 ]
 
-const ROUTE_ANIMATION_IDS: Array[int] = [0x8F, 0x4E, 0x66, 0x4C, 0x78, 0x79, 0x90, 0xE6]
+const ROUTE_ANIMATION_IDS: Array[int] = [0x8F, 0x4E, 0x66, 0x4C, 0x78, 0x79, 0x7A, 0x5C, 0x8B, 0x90, 0xE6]
 
 ## The static values pin each extracted pointer-table span to the checked ROM.
 ## `$E6` is a five-byte redirect prefix whose target lies inside `$78`.
@@ -94,6 +94,16 @@ const STREAM_SPECS := {
 		"start_cpu": 0x9651, "end_cpu": 0x965F, "file_offset": 0x029661,
 		"sha256": "07c30128d6fa992838e170dce98dcf41d306f73d5fde03c7a25a3e7581aacfc0",
 	},
+	0x7A: {
+		"path": "route_animation_7A.bin", "table_offset": 0x028A6C,
+		"start_cpu": 0x965F, "end_cpu": 0x9689, "file_offset": 0x02966F,
+		"sha256": "2109241cccc2bea34f4f5545be60f2983a174baed4d0f5924cdd2e589b284db5",
+	},
+	0x8B: {
+		"path": "route_animation_8B.bin", "table_offset": 0x028A8E,
+		"start_cpu": 0x9827, "end_cpu": 0x9835, "file_offset": 0x029837,
+		"sha256": "137fcb64fd80bc0cabb276fac8817ec7457e05a9ef8d5838dbf21d0bd7164d12",
+	},
 	0x90: {
 		"path": "route_animation_90.bin", "table_offset": 0x028A98,
 		"start_cpu": 0x98AB, "end_cpu": 0x98C5, "file_offset": 0x0298BB,
@@ -103,6 +113,11 @@ const STREAM_SPECS := {
 		"path": "route_animation_E6.bin", "table_offset": 0x028B44,
 		"start_cpu": 0xA0A3, "end_cpu": 0xA0A8, "file_offset": 0x02A0B3,
 		"sha256": "1a65ba372628aff0f4634033047496041fbd1b8d929f4e78c0d505b653a9a7ca",
+	},
+	0x5C: {
+		"path": "animation_5C_actor_packets_9357.bin", "table_offset": 0x028A30,
+		"start_cpu": 0x9357, "end_cpu": 0x9371, "file_offset": 0x029367,
+		"sha256": "421e49f864693c445615f708234ce96bbca517cd7256a656dfe5eee3248d1603",
 	},
 }
 

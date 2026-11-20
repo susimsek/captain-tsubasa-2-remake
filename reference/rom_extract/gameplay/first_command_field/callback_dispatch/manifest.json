@@ -7,13 +7,95 @@
     "bank_0b_cpu_8000_file_base": "0x016010"
   },
   "source_behavior": {
+    "scenario_1c_callback": "Scenario-$1C record 38 63 7A 58 selects callback $63; bank-$0B entry $88BC resolves to $8AD8 and the next entry bounds stream 02 00 51, whose vector row 0 resolves to $8327 and map selector $51.",
+    "scenario_2e_callback": "Scenario-$2E event record selects callback $36; bank-$0B table entry $36 resolves to $89E7 and following entry $37 at $89EA bounds the three-byte stream 02 00 2F. The meaning of the final operand is unresolved.",
+    "scenario_1e_callback": "Scenario-$1E task slot $15 selects callback $45; bank-$0B table entry $45 resolves to $8A2A and the next entry $46 bounds bytes 06 00 36.",
     "scenario_event": "bank-$10 scenario $44 record: 02 70 5C F0, followed by caller-owned $FB continuation",
     "callback_pointer_table": "bank-$0B $87F6 plus 2*$70 stores pointer $8B38; next valid entry $72 points to $8B3E",
     "dispatch_vector": "bank-$0B $81A7 inline target entry 0 is $8327",
-    "shared_placement_state": "bank-$0B $8327 reads global RAM $05CD, writes $05CE, then updates $05CD",
-    "first_fresh_callback": "Scenario $35 selects callback $3A, pointer $89F3, bounded by $3B at $89F6; first operation is 02 00 42."
+    "shared_placement_state": "bank-$0B $8327 reads global RAM $05CD, writes $05CE, then updates $05CD"
   },
   "entries": [
+    {
+      "path": "bank_0b_event_63_pointer_boundary.bin",
+      "file_offset": "0x0168CC",
+      "size_bytes": 4,
+      "cpu_address": "0x88BC",
+      "prg_bank": "0x0B",
+      "source": "Callback-$63 pointer $8AD8 and following callback-$64 boundary $8ADB.",
+      "sha256": "9809adbf9e01314d334616274822da4f3236d502df6cf394e5330ca5a0b76c74",
+      "raw_hex": "D8 8A DB 8A"
+    },
+    {
+      "path": "bank_0b_event_63_stream.bin",
+      "file_offset": "0x016AE8",
+      "size_bytes": 3,
+      "cpu_address": "0x8AD8",
+      "prg_bank": "0x0B",
+      "source": "Pointer-bounded callback-$63 bytes through the callback-$64 boundary.",
+      "sha256": "9d2066a00be92403af4c988c62e1630c7b6bed5f91918b9934c35b58303ffd0f",
+      "raw_hex": "02 00 51"
+    },
+    {
+      "path": "bank_0b_event_36_pointer_boundary.bin",
+      "file_offset": "0x016872",
+      "size_bytes": 4,
+      "cpu_address": "0x8862",
+      "prg_bank": "0x0B",
+      "source": "Scenario-$2E callback-$36 pointer $89E7 and following callback-$37 boundary $89EA.",
+      "sha256": "aeb3e470d501911d2e44f80ada32a8cae2da4549baa3d14486656505043607df",
+      "raw_hex": "E7 89 EA 89"
+    },
+    {
+      "path": "bank_0b_event_36_stream.bin",
+      "file_offset": "0x0169F7",
+      "size_bytes": 3,
+      "cpu_address": "0x89E7",
+      "prg_bank": "0x0B",
+      "source": "Pointer-bounded scenario-$2E callback-$36 bytes through the callback-$37 boundary.",
+      "sha256": "4470eb249b4005c5eee6fa30b4c78d40754603cdd77ee68811ff0c184055b9da",
+      "raw_hex": "02 00 2F"
+    },
+    {
+      "path": "bank_0b_event_45_pointer_boundary.bin",
+      "file_offset": "0x016890",
+      "size_bytes": 4,
+      "cpu_address": "0x8880",
+      "prg_bank": "0x0B",
+      "source": "Scenario-$1E callback-$45 pointer $8A2A and following callback-$46 boundary $8A2D.",
+      "sha256": "c47887871fd1395ea85b2adf1c683a43c8092859d497fd89070de1652af927bc",
+      "raw_hex": "2A 8A 2D 8A"
+    },
+    {
+      "path": "bank_0b_event_45_stream.bin",
+      "file_offset": "0x016A3A",
+      "size_bytes": 3,
+      "cpu_address": "0x8A2A",
+      "prg_bank": "0x0B",
+      "source": "Pointer-bounded scenario-$1E callback-$45 bytes through the callback-$46 boundary.",
+      "sha256": "a338daef97f1529da31483000bbdc227e53a40852662a5671b8a2ff7c57c1d90",
+      "raw_hex": "06 00 36"
+    },
+    {
+      "path": "bank_0b_event_01_pointer_boundary.bin",
+      "file_offset": "0x016808",
+      "size_bytes": 4,
+      "cpu_address": "0x87F8",
+      "prg_bank": "0x0B",
+      "source": "Callback-$01 pointer $88E3 and following callback-$02 boundary $88E4.",
+      "sha256": "353ac46a0f0784e23d33906840fbee88130f649ae7a70061cd4ecc47746b25aa",
+      "raw_hex": "E3 88 E4 88"
+    },
+    {
+      "path": "bank_0b_event_01_stream.bin",
+      "file_offset": "0x0168F3",
+      "size_bytes": 1,
+      "cpu_address": "0x88E3",
+      "prg_bank": "0x0B",
+      "source": "Pointer-bounded callback-$01 control byte F0.",
+      "sha256": "fde502858306c235a3121e42326b53228b7ef4690eeed92a2b2eafe73c03a3ef",
+      "raw_hex": "F0"
+    },
     {
       "path": "bank_0b_dispatcher_814c_81a6.bin",
       "file_offset": "0x01615C",
@@ -63,26 +145,6 @@
       "source": "Pointer-bounded callback-$70 bytes through the next valid callback target $8B3E.",
       "sha256": "0356c29ad2d677b4aa64102937c1b3cefc4212f0fe6f4bce0c3fc53ef184f9e5",
       "raw_hex": "06 00 56 02 00 80"
-    },
-    {
-      "path": "bank_0b_event_3a_pointer_boundary.bin",
-      "file_offset": "0x01687A",
-      "size_bytes": 4,
-      "cpu_address": "0x886A",
-      "prg_bank": "0x0B",
-      "source": "Callback $3A pointer and next valid boundary pointer $3B.",
-      "sha256": "c4bf5bc239937e437da70f6a20ffa3eee46ef5694b7f1fd38115a5d693e209a0",
-      "raw_hex": "F3 89 F6 89"
-    },
-    {
-      "path": "bank_0b_event_3a_stream.bin",
-      "file_offset": "0x016A03",
-      "size_bytes": 3,
-      "cpu_address": "0x89F3",
-      "prg_bank": "0x0B",
-      "source": "Pointer-bounded first operation for callback $3A.",
-      "sha256": "f619833b71e98ee35083a2777d7d6ef697470576a132939ea610025f7d7b32d8",
-      "raw_hex": "02 00 42"
     }
   ]
 }

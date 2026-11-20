@@ -1,0 +1,90 @@
+{
+  "schema": "ct2-pass-scenario-18-source-v1",
+  "source_rom_filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_rom_size_bytes": 393232,
+  "runtime_rom_dependency": false,
+  "capture_or_screenshot_bytes_included": false,
+  "pointer_table": {
+    "cpu_address": "0x89BF",
+    "file_offset": "0x0209CF",
+    "prg_bank": "$10",
+    "entry_width_bytes": 2,
+    "scanned_entry_count": 256,
+    "boundary_rule": "End at the smallest greater valid CPU pointer among all 256 entries; end is exclusive."
+  },
+  "scenario_id": "$18",
+  "start_cpu_address": "0x9E3E",
+  "pointer_entry_cpu_address": "0x89EF",
+  "pointer_entry_file_offset": "0x0209FF",
+  "pointer_entry_bytes_hex": "3E 9E",
+  "pointer_entry_sha256": "3101454d77028d7505313ba354609954498f92a503e65b791b076e04219f3d9b",
+  "end_boundary_pointer_entry_id": "$32",
+  "end_cpu_address_exclusive": "0x9E57",
+  "file_offset": "0x021E4E",
+  "end_file_offset_exclusive": "0x021E67",
+  "length_bytes": 25,
+  "sha256": "8e79217a8131e753b6a194df0ca5eb8e916b11d1bd537c06a4541583161bb81b",
+  "bytes_hex": "FD 00 F3 B4 03 02 0B F3 1E 51 AF 59 AF 90 AF AA AF F9 15 2B 3F 2A 19 47 FB",
+  "source_spans": [
+    {
+      "file": "scenario_pointer_18.bin",
+      "cpu_start": "0x89EF",
+      "file_offset": "0x0209FF",
+      "length": 2,
+      "sha256": "3101454d77028d7505313ba354609954498f92a503e65b791b076e04219f3d9b"
+    },
+    {
+      "file": "scenario_18.bin",
+      "cpu_start": "0x9E3E",
+      "file_offset": "0x021E4E",
+      "length": 25,
+      "sha256": "8e79217a8131e753b6a194df0ca5eb8e916b11d1bd537c06a4541583161bb81b"
+    },
+    {
+      "name": "slot05_post_queue_caller",
+      "file": "slot05_scenario18_post_queue_caller_8188_819b.bin",
+      "bank": "0x1A",
+      "cpu_start": "0x8188",
+      "file_offset": "0x034198",
+      "length_bytes": 20,
+      "sha256": "fea79dbe1bb2ce4aa401d7b4df6c6cfd4574aa0ee0bf0fac643005b42f428245"
+    }
+  ],
+  "initial_control_flow": [
+    {
+      "offset": 0,
+      "bytes_hex": "FD 00",
+      "status": "Source handler and live context are required."
+    },
+    {
+      "offset": 2,
+      "bytes_hex": "F3 B4 03 02 0B",
+      "status": "Selector and branch are determined by live RAM $044E."
+    }
+  ],
+  "external_branches": [
+    {
+      "selector": 0,
+      "table_entry_offset": 9,
+      "target_cpu_address": "0xAF51",
+      "file_offset": "0x022F61",
+      "file": "scenario_18_branch_af51.bin",
+      "length_bytes": 8,
+      "sha256": "162fe60677bbd4a6f06415055195215d0a39860746a52816598badfc7571cb8a",
+      "bytes_hex": "F9 05 2B 3C 72 66 47 FB",
+      "terminator": "local `$FB`; scenario root continuation remains caller-owned"
+    }
+  ],
+  "slot05_post_queue_caller": {
+    "role": "After the scenario-$18 `$CBC1 RTS` pops `$8187`, execute this caller through its final RTS; the `$C624` vector and `$DCDF` target are pinned in pass_scenario_1c/manifest.json.",
+    "cpu_address": "0x8188",
+    "file_offset": "0x034198",
+    "length_bytes": 20,
+    "file": "slot05_scenario18_post_queue_caller_8188_819b.bin",
+    "sha256": "fea79dbe1bb2ce4aa401d7b4df6c6cfd4574aa0ee0bf0fac643005b42f428245",
+    "bytes_hex": "AD 44 04 29 03 8D 4E 04 20 24 C6 AD 17 06 09 80 8D 17 06 60",
+    "entry": "`$8188`, returned from `$CBC1 RTS` using stack word `$8187`",
+    "exit": "`$8112`, after `$819B RTS` consumes the caller-owned `$8111` word; `$E944` remains separate scheduler metadata"
+  }
+}

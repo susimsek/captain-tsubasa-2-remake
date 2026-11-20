@@ -126,6 +126,13 @@ Closed for this route trace:
 - the ROM command loop that produces the four-pose first actor cycle before
   the panel transition;
 - the final three descriptor streams and their frozen timer state.
+- Runtime actor-state interpretation now includes the animation-$66 appearance
+  root `$AF81` selected by the new `$F1` actor packet. The exact source bytes
+  set actor flip bit `$20`, then schedule descriptor `$9E` for six actor
+  updates. Its motion root `$A692` supplies the `$01` command with duration
+  `$3C` and signed fixed-point lanes `($FF:$DA,$FF:$ED)`, followed by `$00`;
+  the bounded interpreter applies the first source integration tick. This
+  covers the root's first pose/motion tick, not its later commands.
 
 Still unresolved for a route-time Godot producer:
 

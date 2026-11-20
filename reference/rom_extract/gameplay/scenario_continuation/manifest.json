@@ -103,6 +103,16 @@
       "cpu_end_exclusive": "0xCBB0",
       "file_offset": "0x03CBA9",
       "role": "Dispatches through the byte table following each scenario opcode callsite"
+    },
+    {
+      "path": "bank10_f7_handler_87f5_87ff.bin",
+      "size_bytes": 10,
+      "sha256": "42f86ca3e1cfb75bedfacafd80b7ec80e34b52582be56d1457a3ce5d4b51f2da",
+      "prg_bank": "$10",
+      "cpu_start": "0x87F5",
+      "cpu_end_exclusive": "0x87FF",
+      "file_offset": "0x020805",
+      "role": "Scenario opcode $F7 handler; advances $003A and writes the next stream byte to $052B"
     }
   ]
 }

@@ -12,7 +12,15 @@
     "packed_selector_index": "0x10",
     "packed_selector_byte": "0x52",
     "map_42_selector": "0x01",
-    "selector_note": "The packed table byte $52 at index $10 yields selector $01 for map $42."
+    "selector_note": "The packed table byte $52 at index $10 yields selector $01 for map $42.",
+    "map_id_0x52": "fresh scenario-$36 callback-$1F stream at $896A supplies map ID $52",
+    "packed_selector_index_0x14": "packed selector byte at $8B56 is $80; selector formula yields $00",
+    "map_52_chr_pair": "$8792 contains 3C 4A; map-worker shifts map $52 to map-data pointer $95A4",
+    "map_36_selector": "0x01",
+    "map_36_chr_pair": "$875A contains 00 3C for map $36.",
+    "map_56_chr_pair": "$879A contains 3C 2E for scenario-$44 callback-$70 map $56.",
+    "map_2f_selector": "The packed table byte $6A at index $0B yields selector $01 for map $2F.",
+    "map_2f_chr_pair": "$874C contains 3C 4A for callback-$36 map ID $2F."
   },
   "entries": [
     {
@@ -46,6 +54,16 @@
       "raw_hex": "3C 2C"
     },
     {
+      "path": "bank_0b_86ee_map_43_chr_pair.bin",
+      "file_offset": "0x016784",
+      "cpu_address": "0x8774",
+      "prg_bank": "0x0B",
+      "size_bytes": 2,
+      "sha256": "50ccd3ef9e7c33fc6961800add05d3ed815ad357d03d7fbfcb74354a40986c46",
+      "source": "CHR selector pair read by $8525 for map ID $43; the bytes match map $42 but are independently extracted from the map-$43 table offset.",
+      "raw_hex": "3C 2C"
+    },
+    {
       "path": "bank_0b_856f_8572_c515_callsite.bin",
       "file_offset": "0x01657F",
       "cpu_address": "0x856F",
@@ -76,6 +94,49 @@
       "size_bytes": 273,
       "sha256": "1aab318fd595b2cf9f82ed8176340dfe43d4fbdc792e9204ede31c2d21c79e15",
       "source": "ROM bytes executed by the resumed slot-$15 map-$42 worker."
+    },
+    {
+      "path": "bank_0b_86ee_map_52_chr_pair.bin",
+      "file_offset": "0x0167A2",
+      "cpu_address": "0x8792",
+      "prg_bank": "0x0B",
+      "size_bytes": 2,
+      "sha256": "cab590fcde8cf68ac09914f68ae356b7ca9587e2366db966ad506569d6603a19",
+      "source": "CHR selector pair read by $8525 for callback-$1F map ID $52.",
+      "raw_hex": "3C 4A"
+    },
+    {
+      "name": "map_36_chr_pair",
+      "path": "bank_0b_875a_875c.bin",
+      "file_offset": "0x01676A",
+      "cpu_start": "0x875A",
+      "cpu_end_exclusive": "0x875C",
+      "prg_bank": "0x0B",
+      "size_bytes": 2,
+      "sha256": "505114fe537172ea35e17ca1a7516edac516a89b31f983f7c6387d5d2bb462aa",
+      "source": "ROM CHR selector table entry for scenario-$1E callback-$45 map-$36."
+    },
+    {
+      "name": "map_56_chr_pair",
+      "path": "bank_0b_879a_879c.bin",
+      "file_offset": "0x0167AA",
+      "cpu_start": "0x879A",
+      "cpu_end_exclusive": "0x879C",
+      "prg_bank": "0x0B",
+      "size_bytes": 2,
+      "sha256": "12ff27f82eb1fec60296d1e0176f4e158fbae7748cc092e5e145404c6e8473c5",
+      "source": "ROM CHR selector table entry for scenario-$44 callback-$70 map-$56."
+    },
+    {
+      "name": "map_2f_chr_pair",
+      "path": "bank_0b_874c_874e.bin",
+      "file_offset": "0x01675C",
+      "cpu_start": "0x874C",
+      "cpu_end_exclusive": "0x874E",
+      "prg_bank": "0x0B",
+      "size_bytes": 2,
+      "sha256": "cab590fcde8cf68ac09914f68ae356b7ca9587e2366db966ad506569d6603a19",
+      "source": "ROM CHR selector table entry at $874C for callback-$36 map-$2F."
     }
   ]
 }

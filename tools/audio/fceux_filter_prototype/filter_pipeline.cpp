@@ -22,6 +22,10 @@
 #include <string>
 #include <vector>
 
+#ifndef FCEUX_FILTER_MASTER_VOLUME
+#define FCEUX_FILTER_MASTER_VOLUME 256
+#endif
+
 namespace {
 constexpr int kSampleRate = 44100;
 constexpr double kNtscCpuHz = 1789772.7272727272727272;
@@ -223,7 +227,7 @@ private:
 	std::vector<std::int16_t> run_sexy_filter(const std::vector<std::int32_t>& input) {
 		const std::int32_t mul1 = (94 << 16) / kSampleRate;
 		const std::int32_t mul2 = (24 << 16) / kSampleRate;
-		std::int32_t vmul = (256 << 16) * 3 / 4 / 100;
+		std::int32_t vmul = (FCEUX_FILTER_MASTER_VOLUME << 16) * 3 / 4 / 100;
 		vmul /= 4; // FCEUX soundq >= 1
 		std::vector<std::int16_t> output;
 		output.reserve(input.size());

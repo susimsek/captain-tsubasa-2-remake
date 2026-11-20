@@ -5,18 +5,33 @@ local ROOT = assert(os.getenv("CT2_PROJECT_ROOT"), "missing project root")
 local OPENING_INPUT = ROOT .. "/reference/opening_reference_capture/input_timeline.csv"
 local ROUTE_INPUT = ROOT .. "/reference/diagnostics/kickoff_select_test_20261027/post_title_inputs.csv"
 local OUT = assert(os.getenv("CT2_FIELD_INPUT_TRACE_OUTPUT_DIR"), "missing output directory")
-local FIRST_TRACE_FRAME, LAST_TRACE_FRAME = 8400, 8953
+local FIRST_TRACE_FRAME, LAST_TRACE_FRAME = 8400, 9042
 local CHECKPOINT_FRAME = FIRST_TRACE_FRAME - 1
 local RAM_FIRST, RAM_LAST = 0x04A5, 0x0515
+local SOURCE_ENTRY_HOOKS = {
+	[0xDAAA] = "$DAAA",
+	[0xE0DF] = "$E0DF",
+	[0xE233] = "$E233",
+	[0xE145] = "$E145",
+	[0xE349] = "$E349",
+	[0xEF7F] = "$EF7F",
+	[0x800C] = "$800C",
+	[0x8851] = "$8851",
+	[0xC515] = "$C515",
+	[0x8B2F] = "$8B2F",
+	[0x8C55] = "$8C55",
+}
 local INPUT_STATE = {
 	{address=0x0034, name="$0034"},
 	{address=0x0035, name="$0035"},
+	{address=0x003C, name="$003C"},
 	{address=0x034E, name="$034E"},
 	{address=0x0350, name="$0350"},
 	{address=0x0366, name="$0366"},
 	{address=0x0368, name="$0368"},
 	{address=0x0441, name="$0441"},
 	{address=0x05FB, name="$05FB"},
+	{address=0x05C5, name="$05C5"},
 	{address=0x05CD, name="$05CD"},
 	{address=0x05CE, name="$05CE"},
 	{address=0x063D, name="$063D"},
@@ -132,12 +147,13 @@ assert(type(debugger) == "table" and type(debugger.getcyclescount) == "function"
 assert(type(memory.registerwrite) == "function", "FCEUX memory write hooks unavailable")
 metadata:write("purpose=muted target-ROM source writes to PPU packet RAM $04A5-$0515\n")
 metadata:write("secondary_purpose=RAM writers of coordinate pointers/record bytes/$0441/$05FB/$05CE/$063D/$0635/$0637 and entries to $DB00/$DC29/$E6F2/$E6FA/$E701/$F015/$F0B5/$F114/$F159\n")
+metadata:write("source_entry_hooks=$DAAA,$E0DF,$E233,$E145,$E349,$EF7F,$800C,$8851,$C515,$8B2F,$8C55\n")
 metadata:write("source_frames=" .. FIRST_TRACE_FRAME .. "-" .. LAST_TRACE_FRAME .. "\n")
 metadata:write("rom_md5=" .. tostring(rom_md5) .. "\nrom_hash_verification=Python runner\n")
 metadata:write("checkpoint=anonymous in-memory FCEUX save state at source frame " .. CHECKPOINT_FRAME .. "; loaded twice and signature-checked\n")
 metadata:write("capture=CPU RAM writes only; no screenshots, audio, PPU dumps, numbered slots or runtime inputs\n")
 metadata:write("range=$04A5-$0515 inclusive; $0515 is the packet-ready flag\n")
-metadata:write("watched_input_state=$0034,$0035,$034E,$0350,$0366,$0368,$0441,$05FB,$05CD,$05CE,$063D,$0635,$0637\n")
+metadata:write("watched_input_state=$0034,$0035,$003C,$034E,$0350,$0366,$0368,$0441,$05FB,$05C5,$05CD,$05CE,$063D,$0635,$0637\n")
 metadata:flush()
 
 local current_source_frame = -1
@@ -145,6 +161,7 @@ local frame_cycle_start = -1
 local active_pass = 0
 local writes, flags, queue_entries, frame_file = nil, nil, nil, nil
 local source_writes, producer_entries, table_entries, pointer_codepath = nil, nil, nil, nil
+local source_entries = nil
 local early_source_writes = nil
 local write_sequence = 0
 local last_value = {}
@@ -364,6 +381,27 @@ local function log_coordinate_pointer_codepath()
 		table.concat(code," "),hx(r0,2),hx(r1,2),hx(r2,2),hx(r3,2)}) .. "\n")
 end
 
+local function log_source_entry(address)
+	if current_source_frame < FIRST_TRACE_FRAME or current_source_frame > LAST_TRACE_FRAME or source_entries == nil then return end
+	local absolute = cycles()
+	local relative = absolute >= 0 and frame_cycle_start >= 0 and absolute - frame_cycle_start or -1
+	local emu_frame = -1
+	pcall(function() emu_frame = emu.framecount() end)
+	local pc = reg("pc")
+	local sp = reg("s")
+	local stack_low, stack_high = -1, -1
+	if sp >= 0 and sp < 0xFF then
+		stack_low, stack_high = byte(0x0100 + sp + 1), byte(0x0100 + sp + 2)
+	end
+	local r0, r1, r2, r3 = prg_map()
+	source_entries:write(csv({active_pass,current_source_frame,emu_frame,relative,absolute,
+		hx(address,4),hx(pc_bank(pc),2),hx(reg("a"),2),hx(reg("x"),2),hx(reg("y"),2),
+		hx(reg("p"),2),hx(sp,2),hx(stack_low,2),hx(stack_high,2),hx(byte(0x0034),2),hx(byte(0x0035),2),
+			hx(byte(0x003A),2),hx(byte(0x003B),2),hx(byte(0x003C),2),hx(byte(0x003D),2),
+		hx(byte(0x05FB),2),hx(byte(0x05C5),2),hx(byte(0x05CD),2),hx(byte(0x05CE),2),hx(byte(0x063D),2),
+		hx(mmc3_select,2),hx(r0,2),hx(r1,2),hx(r2,2),hx(r3,2)}) .. "\n")
+end
+
 memory.registerwrite(0x8000, 1, function(_, _, value) mmc3_select = value or 0 end)
 memory.registerwrite(0x8001, 1, function(_, _, value) mmc3[(mmc3_select % 8) + 1] = value or 0 end)
 memory.registerwrite(0xA000, 1, function(_, _, value) mmc3_mirroring = value or -1 end)
@@ -401,6 +439,10 @@ local function attach_ram_hooks()
 	for _, address in ipairs({0xCD74,0xCD7B,0xCD7E,0xCD80,0xCD83,0xCD86,0xCD88}) do
 		memory.registerexec(address, log_coordinate_pointer_codepath)
 	end
+	for address in pairs(SOURCE_ENTRY_HOOKS) do
+		local hooked_address = address
+		memory.registerexec(hooked_address, function() log_source_entry(hooked_address) end)
+	end
 	ram_hooks_attached = true
 end
 
@@ -413,6 +455,8 @@ local function write_pass_files(pass_index)
 		"pass,source_frame,emulator_frame,cycle_from_frame_start,cycle_absolute,entry_pc,entry_prg_bank,cpu_a,cpu_x,cpu_y,ram_05FB,ram_0034,ram_0035,table_low_address,table_low,table_high_address,table_high,prg_8000,prg_a000,prg_c000,prg_e000")
 	pointer_codepath = output("coordinate_pointer_codepath" .. suffix .. ".csv",
 		"pass,source_frame,emulator_frame,cycle_from_frame_start,cycle_absolute,entry_pc,entry_prg_bank,cpu_a,cpu_x,cpu_y,ram_0034,ram_0035,bytes_cd74_cd88,prg_8000,prg_a000,prg_c000,prg_e000")
+	source_entries = output("source_entry_hooks" .. suffix .. ".csv",
+		"pass,source_frame,emulator_frame,cycle_from_frame_start,cycle_absolute,entry_pc,entry_prg_bank,cpu_a,cpu_x,cpu_y,cpu_p,cpu_s,stack_low,stack_high,scenario_0034,scenario_0035,ram_003a,ram_003b,ram_003c,ram_003d,task_05fb,descriptor_progress_05c5,holder_05cd,holder_05ce,mode_063d,mmc3_select,prg_8000,prg_a000,prg_c000,prg_e000")
 	flags = output("ppu_packet_ready_events" .. suffix .. ".csv",
 		"pass,source_frame,emulator_frame,cycle_from_frame_start,cycle_absolute,cpu_pc_after_write,pc_prg_bank,old_value,new_value,buffer_04a5_0515_hex")
 	queue_entries = output("queue_consumer_entries" .. suffix .. ".csv",
@@ -430,11 +474,11 @@ end
 
 local function close_pass_files(pass_index, event_count)
 	writes:flush(); flags:flush(); queue_entries:flush(); frame_file:flush()
-	source_writes:flush(); producer_entries:flush(); table_entries:flush(); pointer_codepath:flush()
+	source_writes:flush(); producer_entries:flush(); table_entries:flush(); pointer_codepath:flush(); source_entries:flush()
 	writes:close(); flags:close(); queue_entries:close(); frame_file:close()
-	source_writes:close(); producer_entries:close(); table_entries:close(); pointer_codepath:close()
+	source_writes:close(); producer_entries:close(); table_entries:close(); pointer_codepath:close(); source_entries:close()
 	writes, flags, queue_entries, frame_file = nil, nil, nil, nil
-	source_writes, producer_entries, table_entries, pointer_codepath = nil, nil, nil, nil
+	source_writes, producer_entries, table_entries, pointer_codepath, source_entries = nil, nil, nil, nil, nil
 	local snapshot_name = pass_index == 1 and "buffer_end.bin" or "buffer_end_repeat.bin"
 	buffer_snapshot(snapshot_name)
 	metadata:write("pass_" .. pass_index .. "_ram_write_events=" .. event_count .. "\n")
@@ -459,7 +503,7 @@ local function run_pass(pass_index)
 			cycle_end-frame_cycle_start,table.concat(bits,"")}, ",") .. "\n")
 		if frame % 15 == 0 or frame == LAST_TRACE_FRAME then
 			writes:flush(); flags:flush(); queue_entries:flush(); frame_file:flush()
-			source_writes:flush(); producer_entries:flush(); table_entries:flush(); pointer_codepath:flush(); metadata:flush()
+			source_writes:flush(); producer_entries:flush(); table_entries:flush(); pointer_codepath:flush(); source_entries:flush(); metadata:flush()
 			local progress = assert(io.open(OUT .. "/progress.txt", "w"))
 			progress:write(tostring(pass_index) .. ":" .. tostring(frame) .. "\n")
 			progress:close()
@@ -535,7 +579,7 @@ for pass = 1, 2 do
 end
 
 metadata:write("complete=true\nreplay_passes=2\ncompleted_source_frames=" .. LAST_TRACE_FRAME .. "\n")
-metadata:write("caveat=pre-checkpoint writer capture is limited to $05CD/$05CE/$063D; all other watched source-state writers are recorded only for frames 8400-8953\n")
+metadata:write("caveat=pre-checkpoint writer capture is limited to $05CD/$05CE/$063D; all other watched source-state writers are recorded only for frames 8400-9042\n")
 metadata:flush()
 metadata:close()
 pcall(memory.registerwrite, RAM_FIRST, RAM_LAST - RAM_FIRST + 1, nil)
@@ -544,6 +588,7 @@ for _, input_state in ipairs(INPUT_STATE) do pcall(memory.registerwrite, input_s
 for _, address in ipairs({0xDB00,0xDC29,0xE6F2,0xE6FA,0xE701,0xF015,0xF0B5,0xF114,0xF159}) do pcall(memory.registerexec, address, nil) end
 pcall(memory.registerexec, 0xCD7C, nil)
 for _, address in ipairs({0xCD74,0xCD7B,0xCD7E,0xCD80,0xCD83,0xCD86,0xCD88}) do pcall(memory.registerexec, address, nil) end
+for address in pairs(SOURCE_ENTRY_HOOKS) do pcall(memory.registerexec, address, nil) end
 for _, address in ipairs({0x8000,0x8001,0xA000,0xA001,0xC000,0xC001,0xE000,0xE001}) do
 	pcall(memory.registerwrite, address, 1, nil)
 end

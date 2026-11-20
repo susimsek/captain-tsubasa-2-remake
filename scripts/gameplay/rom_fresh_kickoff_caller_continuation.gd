@@ -1,7 +1,7 @@
 extends RefCounted
 class_name RomFreshKickoffCallerContinuation
-## Bounded projection of the bank-$00 KICK OFF caller from title selection
-## through the automatic cutscene-$02 dispatch. It is not a 6502/task runner.
+## Bounded execution of source-supported bank-$00 KICK OFF caller blocks.
+## Unmodeled helper bodies and the full caller are not a 6502/task runner.
 
 const ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
 const SOURCE_ROOT := "res://reference/rom_extract/gameplay/fresh_kickoff_caller/"
@@ -382,6 +382,138 @@ func resolve_match_setup_music_id(match_index: int) -> int:
 	var threshold := int(caller[_offset(0x8126) + 1])
 	var final_id := int(caller[_offset(0x812A) + 1])
 	return immediate if match_index < threshold else final_id
+
+
+## Executes the live direct music store after the source `$C572->$DB62` return.
+## `$0700` changes only when this byte-checked path reaches `$812C`.
+func execute_match_setup_music_store_8122(stamina_result: Dictionary,
+		source_ram: RomSourceRamImage, route_frame: int) -> Dictionary:
+	if not _configured and not configure_from_project_sources():
+		return _refused(error_message)
+	var cpu: Dictionary = stamina_result.get("cpu_output_contract", {})
+	if source_ram == null or String(stamina_result.get("status", "")) != "returned_to_8122" \
+			or int(stamina_result.get("return_source_pc", -1)) != 0x8122 \
+			or int(cpu.get("pc", -1)) != 0x8122 or int(cpu.get("a", -1)) != 0xFF \
+			or int(cpu.get("y", -1)) != 0x02 or int(cpu.get("sp", -1)) != 0x28:
+		return _refused("The music caller requires the verified live `$8122` stamina return contract.")
+	if route_frame < 0:
+		return _refused("A nonnegative Godot route-frame label is required for this live store event.")
+	var caller: PackedByteArray = _sources[CALLER_FILE]
+	var start := _offset(0x8122)
+	if caller.slice(start, start + 13) != PackedByteArray([
+			0xA2, 0x55, 0xA5, 0x26, 0xC9, 0x20, 0x90, 0x02,
+			0xA2, 0x4C, 0x8E, 0x00, 0x07]):
+		return _refused("ROM `$8122-$812F` branch/store bytes changed.")
+	var match_index_byte: Dictionary = source_ram.get_byte(0x0026)
+	if not bool(match_index_byte.get("known", false)):
+		return _refused("The caller's live `$0026` match index is not source-proven.")
+	var match_index := int(match_index_byte.get("value", -1))
+	var queue_id := resolve_match_setup_music_id(match_index)
+	if queue_id not in [0x55, 0x4C]:
+		return _refused("The ROM match-music branch did not resolve to `$55` or `$4C`.")
+	var branch_taken := match_index < 0x20
+	var source_path: Array[int] = [0x8122, 0x8124, 0x8126, 0x8128]
+	if not branch_taken:
+		source_path.append(0x812A)
+	source_path.append_array([0x812C, 0x812F])
+	var event_id := "fresh_match_setup_music_812c_%02x" % queue_id
+	var queue_event := {
+		"event_id": event_id,
+		"event_origin": "rom_direct_queue_store",
+		"source_role": "fresh_match_setup_music",
+		"source_rom_sha256": ROM_SHA256,
+		"queue_address": 0x0700,
+		"queue_id": queue_id,
+		"queue_store_instruction_pc": 0x812C,
+		"post_store_pc": 0x812F,
+		"route_frame": route_frame,
+		"route_frame_domain": "godot_route_model_tick",
+		"source_frame": -1,
+		"cpu_cycle": -1,
+		"timing_verified": false,
+	}
+	var result := _new_result()
+	result["status"] = "returned_to_812F"
+	result["source_path"] = source_path
+	result["final_source_pc"] = 0x812F
+	result["match_index_0026"] = match_index
+	result["selected_queue_id"] = queue_id
+	result["queue_event"] = queue_event
+	result["ram_writes"] = [{"source_pc": 0x812C, "address": 0x0700, "value": queue_id}]
+	result["return_source_pc"] = 0x812F
+	result["cpu_output_contract"] = {
+		"pc": 0x812F,
+		"a": match_index,
+		"x": queue_id,
+		"y": int(cpu.get("y", -1)),
+		"sp": int(cpu.get("sp", -1)),
+		"p_known_mask": 0x83,
+		"p_known_value": 0x00 if branch_taken else 0x01,
+		"p_other_bits": "preserved or unknown from source caller context",
+	}
+	result["absolute_rom_frame"] = -1
+	result["cpu_cycle"] = -1
+	result["timing_verified"] = false
+	result["trace_state_used"] = false
+	result["emulator_data_used"] = false
+	return result
+
+
+## Executes the checked `$812F-$8142` stores and prepares the source-owned
+## mapper-helper call at `$813F`; it does not enter a later setup routine.
+func execute_match_setup_prefix_812f(music_result: Dictionary,
+		source_ram: RomSourceRamImage) -> Dictionary:
+	if not _configured and not configure_from_project_sources():
+		return _refused(error_message)
+	var cpu: Dictionary = music_result.get("cpu_output_contract", {})
+	if source_ram == null or String(music_result.get("status", "")) != "returned_to_812F" \
+			or int(cpu.get("pc", -1)) != 0x812F or int(cpu.get("a", -1)) != 0 \
+			or int(cpu.get("y", -1)) != 0x02 \
+			or int(music_result.get("match_index_0026", -1)) != 0:
+		return _refused("Caller tail requires the live fresh match-00 `$812F` return contract.")
+	var caller: PackedByteArray = _sources[CALLER_FILE]
+	if caller.slice(_offset(0x812F), _offset(0x8142)) != PackedByteArray([
+			0xA9, 0x00, 0x8D, 0x50, 0x04, 0x8D, 0x51, 0x04,
+			0x8D, 0x52, 0x04, 0x8D, 0x53, 0x04, 0xA2, 0x01,
+			0x20, 0xB9, 0xC4]):
+		return _refused("ROM `$812F-$8142` fresh caller prefix bytes changed.")
+	var shadow: Dictionary = source_ram.get_byte(0x0022)
+	var match_index: Dictionary = source_ram.get_byte(0x0026)
+	if not bool(shadow.get("known", false)) or int(shadow.get("value", -1)) != 0 \
+			or not bool(match_index.get("known", false)) or int(match_index.get("value", -1)) != 0:
+		return _refused("The caller needs source-derived match index and MMC3 `$0022` shadow bytes.")
+	var event_id := "fresh_match_setup_812f_prefix"
+	var mapper_call_id := event_id + ":813f-C4B9"
+	var mapper_call := {
+		"caller_pc": 0x813F,
+		"target_pc": 0xC4B9,
+		"return_pc": 0x8142,
+		"call_id": "select_bank_01_before_prematch_dispatch",
+		"source_event_id": mapper_call_id,
+		"logical_stack_frame": {"kind": "rom_jsr", "caller_pc": 0x813F,
+			"target_pc": 0xC4B9, "return_pc": 0x8142,
+			"return_word": 0x8141, "source_event_id": mapper_call_id},
+	}
+	return {
+		"ok": true,
+		"status": "pending_mapper_helper_at_C4B9",
+		"source_rom_sha256": ROM_SHA256,
+		"source_path": [0x812F, 0x8131, 0x8134, 0x8137, 0x813A, 0x813D, 0x813F],
+		"ram_writes": [
+			{"source_pc": 0x8131, "address": 0x0450, "value": 0},
+			{"source_pc": 0x8134, "address": 0x0451, "value": 0},
+			{"source_pc": 0x8137, "address": 0x0452, "value": 0},
+			{"source_pc": 0x813A, "address": 0x0453, "value": 0},
+		],
+		"event_id": event_id,
+		"mapper_source_call": mapper_call,
+		"mapper_cpu_contract": {"pc": 0xC4B9, "a": 0, "x": 1,
+			"y": int(cpu.get("y", -1)), "p_known_mask": 0x83,
+			"p_known_value": 0x00},
+		"trace_state_used": false,
+		"emulator_data_used": false,
+		"physical_nes_timing_proven": false,
+	}
 
 
 ## Reads the pre-match cutscene byte from the ROM table at `$83DC + match_index`.

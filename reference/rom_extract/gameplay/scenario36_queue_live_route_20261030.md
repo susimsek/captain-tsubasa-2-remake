@@ -179,3 +179,21 @@ baseline, apply queue events to the renderer, continue through the initial
 command-menu request, implement cursor navigation, compare route audio, and
 verify ROM/emulator-free runtime. The recorded input route still uses its
 fixed-hash RNG replay; arbitrary input histories are not implemented.
+
+## 7 November 2026 route update
+
+The latest recorded-input replay is `/tmp/ct2_route_e0df_final_recheck.log`.
+Godot's ROM-byte projection reaches frame 8782 and the `$CBC1 RTS->$DB13->$E0DF`
+handoff, which copies the live holder state and sets the next CPU entry. This
+supersedes the older `$CB0F`, `$A865`, and frame-8593 boundary summaries above.
+
+The direct-hook FCEUX trace in
+[`fresh_field_entry_cross_correlation_20261107.md`](fresh_field_entry_cross_correlation_20261107.md)
+corrects the previous statement that the endpoint was uncorrelated. With the
+same recorded input hash, FCEUX reaches `$E0DF` at frame 8782 and then executes
+the `$EF7F->$800C->$8851` renderer path; two frame-8399 checkpoint replays
+matched through frame 9042. The older trace's absence of `$8B2F/$8C55` rows was
+caused by those addresses not being hooked, not evidence that they did not run.
+This confirms event/frame correlation only. The Godot route still has no
+complete visible field or first command menu, and sub-frame timing parity is
+unverified.

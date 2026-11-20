@@ -1,0 +1,98 @@
+{
+  "schema": "ct2-fresh-match-b0c0-stream-v2",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "mapping": "MMC3 PRG 8 KiB bank $01 at $A000 and bank $00 at $8000; source spans cover B0C0 dispatch, PPU fill/packet handlers, and the first B305 stream data",
+  "spans": [
+    {
+      "file": "bank01_match_b0c0_dispatch_B0C0_B1C9.bin",
+      "bank": 1,
+      "cpu_slot_start": "$A000",
+      "cpu_start": "$B0C0",
+      "cpu_end_exclusive": "$B1C9",
+      "file_offset": "0x0030D0",
+      "length": 265,
+      "sha256": "0a4c492d3977ff466d97e92106b83393028ad024d59c228ec601ab833cd0769e",
+      "bytes": "84ec86eda000b1ec0aaabdd7b085e6bdd8b085e76ce600f7b002b113b11eb12fb13bb14db160b173b186b199b1bab1bab1a4b1acb1bab120c9b120b697a9034cbbb1a003b1ec4820c9b16820b897a9044cbbb120c9b120ab97a9034cbbb1a003b1ec4820c9b16820ad97a9044cbbb120d3b120deb1a4e9a201100a20d3b120deb1a6e9a00120ea98a9054cbbb120d3b120deb1aaa900a4e920ea98a9054cbbb120d3b120deb1aab1eca4e920ea98a9064cbbb120d3b120deb1aaa900a4e920df98a9054cbbb120d3b120deb1aab1eca4e920df98a9064cbbb120c9b120279da9034cbbb120a098a9014cbbb1c8b1ecaac8b1ec85ed86ec4cc4b0601865ec85eca5ed690085ed4cc4b0"
+    },
+    {
+      "file": "bank01_match_b0c0_stream_B305_B328.bin",
+      "bank": 1,
+      "cpu_slot_start": "$A000",
+      "cpu_start": "$B305",
+      "cpu_end_exclusive": "$B328",
+      "file_offset": "0x003315",
+      "length": 35,
+      "sha256": "3907025e26e2b3f305a682282af798b2d04dafd2498ab061741d49d6e7c40790",
+      "bytes": "0d054521168905a52116ba05a52216890464210a8a047b210a8a04cf2107bb0028b30f"
+    },
+    {
+      "file": "bank01_match_b0c0_data_B328_B33D.bin",
+      "bank": 1,
+      "cpu_slot_start": "$A000",
+      "cpu_start": "$B328",
+      "cpu_end_exclusive": "$B33D",
+      "file_offset": "0x003338",
+      "length": 21,
+      "sha256": "7c0a9d06e6a511e8b5c099080e1bb21cbd56ca90f2a76907ad9e0d3a11990ca9",
+      "bytes": "01442188015b219001a4228e01bb2293423322918f"
+    },
+    {
+      "file": "bank01_match_b0c0_pointer_helper_B1C9_B1D3.bin",
+      "bank": 1,
+      "cpu_slot_start": "$A000",
+      "cpu_start": "$B1C9",
+      "cpu_end_exclusive": "$B1D3",
+      "file_offset": "0x0031D9",
+      "length": 10,
+      "sha256": "3b45c08a076cbeea84c1ea0f88c57d0dc7785301ef1455c30d800576af1dd8a7",
+      "bytes": "a002b1ecaa88b1eca860"
+    },
+    {
+      "file": "bank01_match_b0c0_argument_helpers_B1D3_B1E8.bin",
+      "bank": 1,
+      "cpu_slot_start": "$A000",
+      "cpu_start": "$B1D3",
+      "cpu_end_exclusive": "$B1E8",
+      "file_offset": "0x0031E3",
+      "length": 21,
+      "sha256": "494c973e66d6ef485a4a18aac9afe85339949bd6c4cd313a6d539fead5e25056",
+      "bytes": "c8b1ec85e6c8b1ec85e760c8b1ec85e9c8b1ecc860"
+    },
+    {
+      "file": "bank00_ppu_clear_rts_98DC_98DD.bin",
+      "bank": 0,
+      "cpu_slot_start": "$8000",
+      "cpu_start": "$98DC",
+      "cpu_end_exclusive": "$98DD",
+      "file_offset": "0x0018EC",
+      "length": 1,
+      "sha256": "8d33f520a3c4cef80d2453aef81b612bfe1cb44c8b2025630ad38662763f13d3",
+      "bytes": "60"
+    },
+    {
+      "file": "bank00_ppu_fill_98EA_997A.bin",
+      "bank": 0,
+      "cpu_slot_start": "$8000",
+      "cpu_start": "$98EA",
+      "cpu_end_exclusive": "$997A",
+      "file_offset": "0x0018FA",
+      "length": 144,
+      "sha256": "32b8c92b5020a5e3ec416b2f421baae64ee1c49a2154eb8ca4550324e7f9c18a",
+      "bytes": "85eba54a054bf03a84e886e9a5e9a4e6a6e720289ba4e9a5eb9de805e888d0f9205e9ba5e81005a90120a89fa5e618692085e6a5e7690085e7c6e8a5e8297fd0cb60a520297f8d00208520a52129e78d0120852186e984e8a4e9a5e78d0620a5e68d0620a5eb8d072088d0faa5e618692085e6a5e7690085e7c6e8d0dba52109188d01208521a520098085208d002060"
+    },
+    {
+      "file": "bank00_ppu_packet_reader_97B6_988A.bin",
+      "bank": 0,
+      "cpu_slot_start": "$8000",
+      "cpu_start": "$97B6",
+      "cpu_end_exclusive": "$988A",
+      "file_offset": "0x0017C6",
+      "length": 212,
+      "sha256": "c534baeaa667d97b133b1fedb4eec77aed024bb056101f93237031fb6af7eab2",
+      "bytes": "a90085e9a54a054bf059a90085eb84e686e7a001b1e61865e985e8c8a90024e91002a9ff71e6aaa000b1e6a4e885e829bf20289ba5e8293fa00348b1e69de805c8e86838e901d0f2981865e685e6a5e7690085e7205e9ba5ebf00320a89f24e850b060a520297f8d00208520a52129e78d0120852184e686e7a001b1e61865e9aac8a90024e91002a9ff71e68d06208e0620a200a000b1e61002a2048e002048293faaa003b1e68d0720c8cad0f7680a300f981865e685e6a5e7690085e74c2f98a52109188d01208521a520098085208d002060"
+    }
+  ]
+}

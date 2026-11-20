@@ -98,7 +98,7 @@
       "queue_hex": "$01",
       "post_store_pc": "$CC01",
       "playback_effect": "stop_all",
-      "source_note": "Fixed-bank stop/control queue event; caller meaning not assigned."
+      "source_note": "Fresh slot-$05 setup `$DAAC JSR $CBF1`; `$CBFE STA $0700,X` inserts the first-slot stop/control request and returns at `$CC01`. Two-pass FCEUX confirms frame/path; its callback cycle differs from the ROM-stepper cycle."
     },
     {
       "source_frame": 8607,

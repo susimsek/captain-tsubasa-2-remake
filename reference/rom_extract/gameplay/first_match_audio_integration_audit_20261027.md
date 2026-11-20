@@ -1,5 +1,26 @@
 # First-match route audio integration audit — 2026-10-27
 
+## Current acceptance note — 9 November 2026
+
+The current source-cycle and same-input PCM closeout is recorded at the end of
+this report. It supersedes earlier mismatch and missing-capture statements:
+all 42,228 APU writes now match FCEUX through the CPU cycle, and the ROM-only
+WaveHi route render matches every one of the 6,634,919 common PCM samples in
+the finalized FCEUX WAV. The active 734-sample difference is one frame beyond
+the source-render endpoint; the requested menu endpoint is already covered.
+
+## Production Godot route update — 10 November 2026
+
+The preceding 9 November note covers the ROM-only renderer versus FCEUX. It is
+now complemented by an exact production Godot AudioServer comparison: 3,036,345
+same-index samples match from queue `$55` at frame 4816 through the stable
+frame-8953 first-menu endpoint, after the measured 66-sample capture-start
+prefix. The active route now plays the ROM-generated full route-context asset
+and preserves embedded later BGM/SFX events without duplicate playback. See
+the final section of the
+[route audio boundary report](first_match_audio_integration_boundary_20261028.md)
+for source asset hashes, capture paths, and limits.
+
 ## Source identity and route queue events
 
 The input reference is the supplied Turkish ROM, SHA-256
@@ -17,7 +38,7 @@ frame 9042. Its decoded runtime queue events are:
 | 8108 | `$01` | Cutscene ED handler; post-handler PC `$85FF` |
 | 8271 | `$53` | Cutscene ED handler; post-handler PC `$85FF` |
 | 8443 | `$01` | Select skip cleanup |
-| 8460 | `$01` | Fixed-bank source-stepper event; caller meaning not assigned |
+| 8460 | `$01` | Fresh slot-$05 setup `$DAAC JSR $CBF1`; `$CBFE` writes the first free queue slot, with FCEUX post-store PC `$CC01` |
 | 8607 | `$3C` | Fixed-bank source-stepper event |
 | 8624 | `$66` | Sound-test SFX ordinal 91 |
 | 8664 | `$2B` | Sound-test SFX ordinal 78 |
@@ -347,3 +368,71 @@ Evidence: `first_match_audio_source.md`,
 `kickoff_cutscene_timing_audit_20261027.md`,
 `fresh_start_to_first_command_menu.md`, and the supplied ROM bytes at driver
 bank `$0C` file offset `0x018010` and pointer table `0x018BEA`.
+
+## Same-input source PCM and deferred NMI2 verification — 9 November 2026
+
+This section supersedes the earlier WaveHi mismatch metrics and the earlier
+statement that thousands of APU cycle labels remained unresolved. The source
+stepper and route PCM were rerun after applying FCEUX 2.7.0's documented local
+NMI2 behavior to
+`tools/diagnostics/step_rom_source_cpu_ppu_dmc.py`.
+
+FCEUX's `$2000` write path calls `TriggerNMI2()` when PPUCTRL bit 7 rises
+during vblank. In `X6502_Run`, FCEU_IQNMI2 promotes the request to regular NMI,
+then the current instruction completes; NMI is serviced at the following
+instruction boundary. The ROM-only stepper now holds an `nmi2_pending` latch,
+promotes it while skipping NMI acceptance for that one instruction, and accepts
+NMI at the next boundary. This is a source-semantics correction, not an audio
+phase offset.
+
+The exact 9,043-frame route was replayed from the merged ROM-only input
+timeline (SHA-256
+`6cae92ff2b6a77fcc05c34c57c734bbff47930ada172633cb4a4b830cc3e77dc`). The
+finalized muted FCEUX WAV is
+`/tmp/ct2_canonical_fceux_route_capture/route_canonical.wav`; its completion
+log is `/tmp/ct2_canonical_fceux_route_capture/capture.log`, which records
+source/movie frame 9042 and
+`startup_movie_stopped=true`; WAV SHA-256 is
+`900fae09d17d3b2c0c49332c5ef50948ad0c5201d651f925f0a4ec2daea15833`, format
+mono signed 16-bit at 44.1 kHz, 6,635,653 samples. The ROM-only WaveHi render
+uses the corrected 87,680 APU writes, 596,576 DMC DMA reads (149,144 output
+bytes), and 9,042 source-frame cycle rows. Its SHA-256 is
+`dfc63d373992ab7e65f628891ed833f2ec63b6d4c2278687add4ccb3cb922f1d`; it has
+6,634,919 samples. At fixed identical indices, all 6,634,919 common samples
+match the FCEUX WAV exactly: Pearson r=1.0, RMSE=0, and exact fraction=1.0.
+Both `$55` source windows also match exactly. No lag fit, gain fit,
+resampling, or captured-PCM synthesis input was used.
+
+The FCEUX WAV contains 734 additional nonzero samples after the source render
+ends. Their RMS is 3175.37, so they are an active output frame, not silent
+padding. This one-frame remainder is after source frame 9042; the required
+first-menu endpoint is frame 8953 and is covered by both outputs. The duration
+remainder is recorded rather than called full-file parity.
+
+Both vblank `$2000` rising edges were observed in the FCEUX instruction log at
+`$9976: STA $2000`: frame 6513, cycle 193932668, and frame 7113, cycle
+211800839. The source stepper reports the same frames, PCs, PPUCTRL values,
+and cycles. Rechecking the retained FCEUX APU log now yields 42,228/42,228
+ordered writes exact at frame/address/value/PC/cycle, with zero cycle delta.
+The route presenter audit remains 10/10 ordered queue events at their source
+frames.
+
+The rebuilt runtime `$55` asset is
+`assets/gameplay/audio/match_track_55_wavehi_occurrences_rom_generated.wav`,
+SHA-256 `1cafcd55218fd2896e1c38a277b52bac40297fd177c443f851008d39c17fa832`;
+its source-timing manifest SHA-256 is
+`c54396fad4b3e7e34c996963b18c51b9116e092bdb9d2f1266bcf8d19bc2bfa8`. The
+Godot cue presenter verifier passes against these hashes. A later Godot
+AudioEffectCapture experiment with the Dummy driver produced 2,920,448 of
+3,036,429 scheduled samples and was rejected; local CoreAudio reports 48 kHz.
+Therefore this report establishes exact ROM-source render vs FCEUX PCM through
+the scoped endpoint, not sample identity after a user's physical output
+device or Godot's host mixer.
+
+The report JSONs and large PCM/trace outputs were kept under `/tmp` and are not
+runtime inputs. Reproduction used
+`trace_rom_stepper_ce6_opcode_candidate_20261026.py`,
+`render_rom_stepper_wavehi_volume255_candidate.py`,
+`build_match_track_55_wavehi_occurrence_assets.py`,
+`compare_first_match_route_pcm.py`, and
+`compare_source_stepper_apu_writes_to_fceux.py`.

@@ -21,7 +21,7 @@ FCEUX = Path("/opt/homebrew/bin/fceux")
 EXPECTED_ROM_SHA256 = "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
 EXPECTED_OPENING_SHA256 = "195743d71b36da01b5148e46e14733988d3e5d21cf308ab09eaa735daf83d2d3"
 EXPECTED_ROUTE_SHA256 = "87c204c5e513d1aa4b60fa348350a15a4be006d84ef885b7f1b95c4e3a9f229e"
-LAST_TRACE_FRAME = 8953
+LAST_TRACE_FRAME = 9042
 TOTAL_TIMEOUT_SECONDS = 300
 NO_PROGRESS_TIMEOUT_SECONDS = 60
 
@@ -64,7 +64,7 @@ def validate_inputs() -> tuple[str, str]:
 	if opening_frames[:4693] != list(range(4693)):
 		raise SystemExit("Opening timeline must contain source frames 0–4692.")
 	if route_frames[: LAST_TRACE_FRAME - 4693 + 1] != list(range(4693, LAST_TRACE_FRAME + 1)):
-		raise SystemExit("Post-title timeline must contain source frames 4693–8953.")
+		raise SystemExit("Post-title timeline must contain source frames 4693–9042.")
 	return opening_hash, route_hash
 
 
@@ -127,6 +127,7 @@ def main() -> None:
 		("field_producer_entries.csv", "field_producer_entries_repeat.csv", "pass"),
 		("coordinate_pointer_table_entries.csv", "coordinate_pointer_table_entries_repeat.csv", "pass"),
 		("coordinate_pointer_codepath.csv", "coordinate_pointer_codepath_repeat.csv", "pass"),
+		("source_entry_hooks.csv", "source_entry_hooks_repeat.csv", "pass"),
 	]
 	for first, second, label in paired:
 		paths = (output / first, output / second)
@@ -182,11 +183,22 @@ def main() -> None:
 	if not codepath:
 		raise SystemExit("The trace did not execute the $CD74-$CD88 pointer code path.")
 	print(f"$CD74-$CD88 instruction hooks/pass={len(codepath)}", flush=True)
-	for address in ("$0034", "$0035", "$034E", "$0350", "$0366", "$0368", "$0441", "$05FB", "$05CD", "$05CE", "$063D", "$0635", "$0637"):
+	for address in ("$0034", "$0035", "$003C", "$034E", "$0350", "$0366", "$0368", "$0441", "$05FB", "$05C5", "$05CD", "$05CE", "$063D", "$0635", "$0637"):
 		count = 0
 		with (output / "field_producer_input_writes.csv").open(newline="", encoding="utf-8") as stream:
 			count = sum(row["cpu_address"] == address for row in csv.DictReader(stream))
 		print(f"{address} writes/pass={count}", flush=True)
+	with (output / "source_entry_hooks.csv").open(newline="", encoding="utf-8") as stream:
+		source_entries = list(csv.DictReader(stream))
+	for address in ("$DAAA", "$E0DF", "$E233", "$E145", "$E349", "$EF7F", "$800C", "$8851", "$C515", "$8B2F", "$8C55"):
+		count = sum(row["entry_pc"] == address for row in source_entries)
+		print(f"{address} execution hooks/pass={count}", flush=True)
+	for row in source_entries:
+		if row["entry_pc"] == "$C515" and row["source_frame"] in ("8782", "8783"):
+			print("descriptor-$00 C515 entry=" + " ".join(
+				f"{key}={row[key]}" for key in ("source_frame", "cycle_from_frame_start",
+					"entry_prg_bank", "cpu_a", "cpu_x", "cpu_y", "cpu_p", "cpu_s",
+					"stack_low", "stack_high", "mmc3_select", "prg_8000", "prg_a000")), flush=True)
 	for first, second in [
 		("frame_edges.csv", "frame_edges_repeat.csv"),
 		("buffer_start.bin", "buffer_start_repeat.bin"),

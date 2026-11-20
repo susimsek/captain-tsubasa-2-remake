@@ -21,29 +21,40 @@ enum DirectionIndex {
 	UP = 3,
 }
 
-const DIRECTION_ACTIONS: Array[int] = [
-	ActionId.SHOOT,
-	ActionId.PASS,
-	ActionId.ONE_TWO_PASS,
-	ActionId.DRIBBLE,
-]
-
 const INPUT_ACTION_BY_DIRECTION: Array[StringName] = [
 	&"match_action_right",
 	&"match_action_left",
 	&"match_action_down",
 	&"match_action_up",
 ]
+const NES_DIRECTION_BITS: Array[int] = [0x01, 0x02, 0x04, 0x08]
 const CONFIRM_INPUT_ACTION: StringName = &"match_action_confirm"
+const NES_CONFIRM_BIT := 0x80
+const ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+const SOURCE_ROOT := "res://reference/rom_extract/gameplay/first_action_menu_input/"
+const SOURCE_MANIFEST_PATH := SOURCE_ROOT + "manifest.json"
+const SOURCE_MANIFEST_SHA256 := "5e3a87d63733ecedb4fdbab7265ecca0d3d6ce3a4ae60ac016df1c80ed5b59f8"
+const DIRECTION_TABLE_PATH := SOURCE_ROOT + "direction_action_ids_context_00_D6E8.bin"
+const DIRECTION_TABLE_SHA256 := "dce8e125cc41a56ea02407a10727c0fbced6827fea37a619f5c3cc98f1ee4968"
+const DIRECTION_TABLE_CPU := 0xD6E8
+const DIRECTION_TABLE_FILE_OFFSET := 0x03D6F8
 
 var selected_action_id: int = ActionId.NONE
 var selected_direction_index: int = -1
+var source_ready := false
+var source_error_message := ""
 
 var _pending_direction_mask := 0
 var _pending_confirmation := false
+var _direction_action_ids := PackedByteArray()
+var _held_nes_pad_state := 0
+var _latched_nes_press_bits := 0
 
 
 func _ready() -> void:
+	if not _load_direction_action_table():
+		push_error("First-action input is disabled: " + source_error_message)
+		return
 	_install_input_actions()
 
 
@@ -61,13 +72,27 @@ func _process(_delta: float) -> void:
 func handle_input_event(event: InputEvent) -> bool:
 	if event is InputEventKey and event.echo:
 		return false
+	if not source_ready:
+		return false
 	var handled := false
 	for direction_index in INPUT_ACTION_BY_DIRECTION.size():
-		if event.is_action_pressed(INPUT_ACTION_BY_DIRECTION[direction_index]):
+		var action_name := INPUT_ACTION_BY_DIRECTION[direction_index]
+		var nes_bit := NES_DIRECTION_BITS[direction_index]
+		if event.is_action_pressed(action_name):
 			_pending_direction_mask |= 1 << direction_index
+			_held_nes_pad_state |= nes_bit
+			_latched_nes_press_bits |= nes_bit
+			handled = true
+		elif event.is_action_released(action_name):
+			_held_nes_pad_state &= 0xFF ^ nes_bit
 			handled = true
 	if event.is_action_pressed(CONFIRM_INPUT_ACTION):
 		_pending_confirmation = true
+		_held_nes_pad_state |= NES_CONFIRM_BIT
+		_latched_nes_press_bits |= NES_CONFIRM_BIT
+		handled = true
+	elif event.is_action_released(CONFIRM_INPUT_ACTION):
+		_held_nes_pad_state &= 0xFF ^ NES_CONFIRM_BIT
 		handled = true
 	return handled
 
@@ -75,11 +100,15 @@ func handle_input_event(event: InputEvent) -> bool:
 ## Apply queued edges as a single ROM input poll. Public for deterministic
 ## replay and focused verification without a live window or emulator.
 func flush_pending_input() -> void:
+	if not source_ready:
+		_pending_direction_mask = 0
+		_pending_confirmation = false
+		return
 	var direction_index := _first_pressed_direction(_pending_direction_mask)
 	_pending_direction_mask = 0
 	if direction_index >= 0:
 		selected_direction_index = direction_index
-		selected_action_id = DIRECTION_ACTIONS[direction_index]
+		selected_action_id = int(_direction_action_ids[direction_index])
 		selection_changed.emit(selected_action_id, selected_direction_index)
 
 	if _pending_confirmation:
@@ -91,7 +120,7 @@ func flush_pending_input() -> void:
 ## Directly apply a newly pressed direction from the ROM direction table:
 ## Right=Shoot, Left=Pass, Down=One-two pass, Up=Dribble.
 func select_direction(direction_index: DirectionIndex) -> void:
-	if direction_index < 0 or direction_index >= DIRECTION_ACTIONS.size():
+	if not source_ready or direction_index < 0 or direction_index >= _direction_action_ids.size():
 		return
 	_pending_direction_mask |= 1 << int(direction_index)
 
@@ -109,12 +138,70 @@ func reset_selection() -> void:
 	_pending_confirmation = false
 
 
+## Current held NES pad mask for the source route's `$001C/$001E` sampler.
+## Direction values use A B Select Start Up Down Left Right bit order.
+func get_nes_pad_state() -> int:
+	return _held_nes_pad_state & 0xFF
+
+
+## Returns one source-poll mask, preserving taps that were pressed and released
+## between source ticks. The press latch is cleared after each read, while
+## physically held buttons remain present until their release event.
+func consume_nes_pad_state_for_source_poll() -> int:
+	var state := (_held_nes_pad_state | _latched_nes_press_bits) & 0xFF
+	_latched_nes_press_bits = 0
+	return state
+
+
 func _first_pressed_direction(mask: int) -> int:
 	# The ROM checks its newly-pressed direction bits in this exact order.
-	for direction_index in DIRECTION_ACTIONS.size():
+	for direction_index in _direction_action_ids.size():
 		if (mask & (1 << direction_index)) != 0:
 			return direction_index
 	return -1
+
+
+func _load_direction_action_table() -> bool:
+	source_ready = false
+	source_error_message = ""
+	if not FileAccess.file_exists(SOURCE_MANIFEST_PATH) \
+			or not FileAccess.file_exists(DIRECTION_TABLE_PATH):
+		return _source_failure("ROM-derived direction table or manifest is missing.")
+	var manifest_bytes := FileAccess.get_file_as_bytes(SOURCE_MANIFEST_PATH)
+	if FileAccess.get_sha256(SOURCE_MANIFEST_PATH) != SOURCE_MANIFEST_SHA256:
+		return _source_failure("ROM-derived direction table manifest failed its SHA-256 check.")
+	var parsed: Variant = JSON.parse_string(manifest_bytes.get_string_from_utf8())
+	if not parsed is Dictionary:
+		return _source_failure("ROM-derived direction table manifest is not a JSON object.")
+	var manifest: Dictionary = parsed
+	var table_variant: Variant = manifest.get("table", {})
+	if String(manifest.get("schema", "")) != "ct2-first-action-menu-input-rom-data-v1" \
+			or String(manifest.get("source_rom_sha256", "")) != ROM_SHA256 \
+			or int(manifest.get("source_rom_size_bytes", -1)) != 0x60010 \
+			or not table_variant is Dictionary:
+		return _source_failure("Direction table manifest does not identify the pinned ROM and schema.")
+	var table: Dictionary = table_variant
+	if int(table.get("context", -1)) != 0 \
+			or String(table.get("cpu_address", "")) != "0xD6E8" \
+			or String(table.get("prg_bank", "")) != "0x1E" \
+			or String(table.get("file_offset", "")) != "0x03D6F8" \
+			or int(table.get("length_bytes", -1)) != 4 \
+			or String(table.get("resource", "")) != DIRECTION_TABLE_PATH.get_file() \
+			or String(table.get("sha256", "")) != DIRECTION_TABLE_SHA256 \
+			or String(table.get("bytes_hex", "")).replace(" ", "").to_lower() != "00010302":
+		return _source_failure("Direction table manifest does not match the ROM span at `$D6E8`.")
+	var table_bytes := FileAccess.get_file_as_bytes(DIRECTION_TABLE_PATH)
+	if table_bytes.size() != 4 or FileAccess.get_sha256(DIRECTION_TABLE_PATH) != DIRECTION_TABLE_SHA256 \
+			or table_bytes.hex_encode() != "00010302":
+		return _source_failure("Direction/action table bytes failed size, content, or SHA-256 validation.")
+	_direction_action_ids = table_bytes.duplicate()
+	source_ready = true
+	return true
+
+
+func _source_failure(message: String) -> bool:
+	source_error_message = message
+	return false
 
 
 func _install_input_actions() -> void:

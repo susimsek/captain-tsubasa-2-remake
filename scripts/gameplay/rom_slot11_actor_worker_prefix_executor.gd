@@ -6,19 +6,51 @@ class_name RomSlot11ActorWorkerPrefixExecutor
 const ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
 const MANIFEST_PATH := "res://reference/rom_extract/gameplay/task_context/manifest.json"
 const SOURCE_ROOT := "res://reference/rom_extract/gameplay/task_context/"
+const ACTOR_6D_MANIFEST_PATH := "res://reference/rom_extract/gameplay/slot11_actor_parameter_6d/manifest.json"
+const ACTOR_6D_SOURCE_ROOT := "res://reference/rom_extract/gameplay/slot11_actor_parameter_6d/"
 const WORKER_FILE := "bank18_actor_worker_entry_8000_804A.bin"
-const POINTER_FILE := "bank18_actor_parameter_73_pointer_9306.bin"
 const WORKER_START := 0x8000
 const WORKER_END_EXCLUSIVE := 0x804A
 const WORKER_BANK := 0x18
 const WORKER_OFFSET := "0x030010"
 const WORKER_LENGTH := WORKER_END_EXCLUSIVE - WORKER_START
 const WORKER_SHA256 := "2187af6881ea2f4e7eb16c0c5550bb24ead076be918d429d8ab63564ed8fd46c"
-const POINTER_SHA256 := "03f3c4278cc253614b622fa856993e8b325eb061a29e54685038771778377938"
+const ACTOR_6D_POINTER_FILE := "bank18_actor_parameter_6d_pointer_92fa.bin"
+const ACTOR_6D_POINTER_SHA256 := "0aebdd98608aa88311ca8ab9bedd486c26160ed4a842df5297fd8572eb568bf4"
+const ACTOR_6D_STREAM_FILE := "bank18_actor_parameter_6d_stream_9be3_9c70.bin"
+const ACTOR_6D_STREAM_SHA256 := "0b787ded174d6496196c978f5b835c4e89c9858a8499617b02bacc5b3f7b7d1e"
+const POINTER_SPECS := {
+	0x00: {"file": "bank18_actor_parameter_00_pointer_9220.bin",
+		"cpu_address": "0x9220", "file_offset": "0x031230",
+	"bytes": [0x00, 0x94],
+	"sha256": "f5bba10f36a72d4f8952644f71cb9004a85ae3cf67b9e6ab60b8c4c38230ee8e"},
+	0x47: {"file": "bank18_actor_parameter_47_pointer_92AE.bin",
+		"cpu_address": "0x92AE", "file_offset": "0x0312BE",
+	"bytes": [0x17, 0x99],
+	"sha256": "773e6dc176b145c4fc93a4f37b2ee1da5cfbf98d8089a35487fa5922d12c72df"},
+	0x58: {"file": "bank18_actor_parameter_58_pointer_92D0.bin",
+		"cpu_address": "0x92D0", "file_offset": "0x0312E0",
+	"bytes": [0x62, 0x9A],
+	"sha256": "07b01bffef79dcc1053207cd18e23cafe70f8fe80f69364b2a0bdb052d552a3a"},
+	0x6D: {"file": ACTOR_6D_POINTER_FILE,
+		"cpu_address": "0x92FA", "file_offset": "0x03130A",
+		"bytes": [0xE3, 0x9B], "sha256": ACTOR_6D_POINTER_SHA256},
+	0x73: {"file": "bank18_actor_parameter_73_pointer_9306.bin",
+		"cpu_address": "0x9306", "file_offset": "0x031316",
+		"bytes": [0x42, 0x9F],
+		"sha256": "03f3c4278cc253614b622fa856993e8b325eb061a29e54685038771778377938"},
+	0x74: {"file": "bank18_actor_parameter_74_pointer_9308.bin",
+		"cpu_address": "0x9308", "file_offset": "0x031318",
+		"bytes": [0xBD, 0xA3],
+		"sha256": "d6de1632ce947017995ebba65ebb4c7978900db26ec8fe48a6e1ad1801ff877c"},
+	0x75: {"file": "bank18_actor_parameter_75_pointer_930A.bin",
+		"cpu_address": "0x930A", "file_offset": "0x03131A",
+		"bytes": [0x39, 0xA4],
+		"sha256": "63253be64a551ffde4a984e94b212e76497d0704cecfcf0491de218e0f4a2b06"},
+}
 const RAM_SIZE := 0x800
 const STACK_PAGE_SIZE := 0x100
 const SLOT_11 := 0x11
-const ENTRY_RECORD := [0xFF, 0xC8, 0x18, 0x00]
 const P_C := 0x01
 const P_Z := 0x02
 const P_V := 0x40
@@ -29,14 +61,16 @@ const P_BIT_MASK := P_N | P_V | P_Z
 var error_message := ""
 var _configured := false
 var _worker := PackedByteArray()
-var _pointer_73 := PackedByteArray()
+var _actor_pointer_bytes_by_parameter: Dictionary = {}
+var _actor_stream_bytes_by_parameter: Dictionary = {}
 
 
 func configure_from_project_sources() -> bool:
 	error_message = ""
 	_configured = false
 	_worker.clear()
-	_pointer_73.clear()
+	_actor_pointer_bytes_by_parameter.clear()
+	_actor_stream_bytes_by_parameter.clear()
 	var manifest_file := FileAccess.open(MANIFEST_PATH, FileAccess.READ)
 	if manifest_file == null:
 		return _fail("Task-context source manifest is unavailable.")
@@ -62,22 +96,36 @@ func configure_from_project_sources() -> bool:
 			or String(worker_spec.get("bytes", "")).replace(" ", "").to_lower() != _worker.hex_encode():
 		_worker.clear()
 		return _fail("Packaged bank-$18 actor worker bytes failed manifest validation.")
-	var pointer_spec: Dictionary = spans_by_file.get(POINTER_FILE, {})
-	if pointer_spec.is_empty() or String(pointer_spec.get("cpu_address", "")) != "0x9306" \
-			or String(pointer_spec.get("file_offset", "")) != "0x031316" \
-			or int(pointer_spec.get("length", -1)) != 2 \
-			or String(pointer_spec.get("sha256", "")) != POINTER_SHA256:
-		return _fail("Parameter-$73 actor pointer manifest mapping is unsupported.")
-	_pointer_73 = FileAccess.get_file_as_bytes(SOURCE_ROOT + POINTER_FILE)
-	if _pointer_73 != PackedByteArray([0x42, 0x9F]) or _sha256(_pointer_73) != POINTER_SHA256 \
-			or String(pointer_spec.get("bytes", "")).replace(" ", "").to_lower() != _pointer_73.hex_encode():
-		_pointer_73.clear()
-		return _fail("Parameter-$73 pointer bytes do not resolve to `$9F42`.")
+	for parameter_variant: Variant in POINTER_SPECS:
+		var parameter := int(parameter_variant)
+		if parameter == 0x6D:
+			continue
+		var expected_spec: Dictionary = POINTER_SPECS[parameter]
+		var pointer_file := String(expected_spec["file"])
+		var pointer_spec: Dictionary = spans_by_file.get(pointer_file, {})
+		var expected_bytes := PackedByteArray(expected_spec["bytes"])
+		if pointer_spec.is_empty() \
+				or String(pointer_spec.get("cpu_address", "")) != String(expected_spec["cpu_address"]) \
+				or String(pointer_spec.get("file_offset", "")) != String(expected_spec["file_offset"]) \
+				or int(pointer_spec.get("length", -1)) != expected_bytes.size() \
+				or String(pointer_spec.get("sha256", "")) != String(expected_spec["sha256"]):
+			return _fail("Parameter-$%02X actor pointer manifest mapping is unsupported." % parameter)
+		var pointer_bytes := FileAccess.get_file_as_bytes(SOURCE_ROOT + pointer_file)
+		if pointer_bytes != expected_bytes or _sha256(pointer_bytes) != String(expected_spec["sha256"]) \
+				or String(pointer_spec.get("bytes", "")).replace(" ", "").to_lower() != pointer_bytes.hex_encode():
+			return _fail("Parameter-$%02X pointer bytes failed their source manifest check." % parameter)
+		_actor_pointer_bytes_by_parameter[parameter] = pointer_bytes
+	if not _configure_actor_parameter_6d_sources():
+		_worker.clear()
+		_actor_pointer_bytes_by_parameter.clear()
+		_actor_stream_bytes_by_parameter.clear()
+		return false
 	if not _expect(0x8000, [0x4C, 0x0F, 0x80]) \
 			or not _expect(0x800F, [0x2C, 0x3F, 0x06, 0x10, 0x03, 0x4C, 0x12, 0xC5]) \
 			or not _expect(0x8047, [0x20, 0x15, 0xC5]):
 		_worker.clear()
-		_pointer_73.clear()
+		_actor_pointer_bytes_by_parameter.clear()
+		_actor_stream_bytes_by_parameter.clear()
 		return _fail("Actor-worker dispatch, branch, or `$8047` yield callsite changed.")
 	_configured = true
 	return true
@@ -154,8 +202,9 @@ func execute_from_dispatched_slot11(boundary: Dictionary) -> Dictionary:
 	_write(ram, writes, 0x0060, a, 0x801D)
 	executed.append(0x801F)
 	a = int(ram[0x05EA])
-	if a != 0x73:
-		return _unsupported("Only live actor parameter `$73` has a packaged pointer-table entry.")
+	var actor_parameter := a
+	if not _actor_pointer_bytes_by_parameter.has(actor_parameter):
+		return _unsupported("Live actor parameter `$%02X` has no packaged ROM pointer-table entry." % actor_parameter)
 	p = _set_nz(p, a)
 	executed.append(0x8022) # ASL A
 	var doubled := a << 1
@@ -165,19 +214,23 @@ func execute_from_dispatched_slot11(boundary: Dictionary) -> Dictionary:
 	p = (p & 0xFE) | carry
 	p_known |= P_C
 	if carry != 0:
-		return _unsupported("The actor pointer-table high-page carry path is not packaged for parameter `$73`.")
+		return _unsupported("The actor pointer-table high-page carry path is not packaged for parameter `$%02X`." % actor_parameter)
 	executed.append(0x8023) # BCC $8027
 	y = a
 	p = _set_nz(p, y)
 	executed.append(0x8027) # TAY
-	# The indexed read is deliberately restricted to the manifest-backed $9306 entry.
+	# Resolve the indexed read only through a packaged, manifest-backed table pair.
 	var table_base := 0x9220
 	var pointer_index := y
 	var table_address := (table_base + pointer_index) & 0xFFFF
-	if table_address != 0x9306:
-		return _unsupported("The live actor parameter resolves outside the packaged `$9306` pointer entry.")
+	var expected_table_address := table_base + (actor_parameter << 1)
+	var pointer_bytes: PackedByteArray = _actor_pointer_bytes_by_parameter[actor_parameter]
+	var pointer_spec: Dictionary = POINTER_SPECS[actor_parameter]
+	if table_address != expected_table_address \
+			or String(pointer_spec["cpu_address"]) != "0x%04X" % expected_table_address:
+		return _unsupported("The live actor parameter resolves outside its packaged `$%04X` pointer entry." % expected_table_address)
 	executed.append(0x8028) # LDA ($5F),Y
-	a = int(_pointer_73[0])
+	a = int(pointer_bytes[0])
 	p = _set_nz(p, a)
 	executed.append(0x802A) # TAX
 	x = a
@@ -187,9 +240,9 @@ func execute_from_dispatched_slot11(boundary: Dictionary) -> Dictionary:
 	p = _set_nz(p, y)
 	executed.append(0x802C) # LDA ($5F),Y
 	table_address = (table_base + y) & 0xFFFF
-	if table_address != 0x9307:
-		return _reject("Pointer-table high-byte read is not adjacent to `$9306`.")
-	a = int(_pointer_73[1])
+	if table_address != expected_table_address + 1:
+		return _reject("Pointer-table high-byte read is not adjacent to the selected pointer entry.")
+	a = int(pointer_bytes[1])
 	p = _set_nz(p, a)
 	executed.append(0x802E) # STA $60
 	_write(ram, writes, 0x0060, a, 0x802E)
@@ -226,15 +279,32 @@ func execute_from_dispatched_slot11(boundary: Dictionary) -> Dictionary:
 	registers["sp"] = sp
 	registers["pc"] = pc
 
-	if x != 0x42 or y != 0xE7 or a != 0x01:
-		return _reject("Actor prefix did not derive the trace-matched `$42/$E7/$01` callsite registers.")
+	var expected_actor_x := int(pointer_bytes[0])
+	var expected_actor_y := (actor_parameter << 1) + 1
+	if x != expected_actor_x or y != expected_actor_y or a != 0x01:
+		return _reject("Actor prefix did not derive the pointer-table `$%02X/$%02X/$01` callsite registers." % [expected_actor_x, expected_actor_y])
+	var actor_stream_metadata: Dictionary = {}
+	if actor_parameter == 0x6D:
+		var actor_stream: PackedByteArray = _actor_stream_bytes_by_parameter.get(actor_parameter, PackedByteArray())
+		var resolved_pointer := int(pointer_bytes[0]) | (int(pointer_bytes[1]) << 8)
+		if resolved_pointer != 0x9BE3 or actor_stream.is_empty() or int(actor_stream[0]) != 0xF2:
+			return _unsupported("The scenario-$2E `$6D` seed no longer resolves to the verified `$9BE3` stream beginning with `$F2`.")
+		actor_stream_metadata = {
+			"source_manifest": ACTOR_6D_MANIFEST_PATH,
+			"source_stream_file": ACTOR_6D_STREAM_FILE,
+			"source_stream_sha256": ACTOR_6D_STREAM_SHA256,
+			"source_stream_first_byte": int(actor_stream[0]),
+			"source_stream_first_command_pc": 0x9BE3,
+			"source_stream_dispatch_state": "`$F2` byte validated only; prefix exits at `$8047`. The resumed `$804A` executor still needs the `$6D` profile to reach `$CC46/$CC50`.",
+		}
 	return {
 		"ok": true,
 		"status": "slot11_actor_worker_at_8047_before_jsr",
 		"rom_sha256": ROM_SHA256,
 		"source_manifest": MANIFEST_PATH,
-		"source_pointer_file": POINTER_FILE,
-		"source_pointer_sha256": POINTER_SHA256,
+		"source_pointer_manifest": ACTOR_6D_MANIFEST_PATH if actor_parameter == 0x6D else MANIFEST_PATH,
+		"source_pointer_file": String(pointer_spec["file"]),
+		"source_pointer_sha256": String(pointer_spec["sha256"]),
 		"source_file": WORKER_FILE,
 		"source_sha256": WORKER_SHA256,
 		"entry_pc": WORKER_START,
@@ -252,8 +322,9 @@ func execute_from_dispatched_slot11(boundary: Dictionary) -> Dictionary:
 		"stack_page": stack,
 		"memory_writes": writes,
 		"instruction_pcs": executed,
-		"resolved_actor_stream_pointer": 0x9F42,
-		"resolved_parameter": 0x73,
+		"resolved_actor_stream_pointer": int(pointer_bytes[0]) | (int(pointer_bytes[1]) << 8),
+		"resolved_parameter": actor_parameter,
+		"actor_stream_source": actor_stream_metadata,
 		"ppu_bus_events": [],
 		"apu_register_writes": [],
 		"trace_state_used": false,
@@ -276,7 +347,8 @@ func _validate_boundary(boundary: Dictionary) -> Dictionary:
 	var stack: Variant = boundary.get("stack_page", PackedByteArray())
 	var mapper_low := int(boundary.get("bank_low", -1))
 	var mapper_high := int(boundary.get("bank_high", -1))
-	if not record is PackedByteArray or record != PackedByteArray(ENTRY_RECORD) \
+	if not record is PackedByteArray or record.size() != 4 \
+			or record.slice(0, 3) != PackedByteArray([0xFF, 0xC8, 0x18]) \
 			or not ram is PackedByteArray or ram.size() != RAM_SIZE \
 			or not stack is PackedByteArray or stack.size() != STACK_PAGE_SIZE \
 			or not boundary.has("a") or not boundary.has("x") \
@@ -284,11 +356,93 @@ func _validate_boundary(boundary: Dictionary) -> Dictionary:
 			or not boundary.has("p_known_mask") or not boundary.has("sp") \
 			or not boundary.has("pc"):
 		return {"ok": false, "reason": "Slot-$11 snapshot lacks the exact task, RAM, stack, registers, or mapper data."}
-	if int(ram[0x05EA]) != 0x73 or (int(ram[0x063F]) & P_N) != 0 \
+	var actor_parameter := int(ram[0x05EA])
+	var actor_parameter_supported := POINTER_SPECS.has(actor_parameter)
+	if actor_parameter == 0x6D:
+		actor_parameter_supported = _is_scenario2e_callback36_map2f_actor_seed_profile(ram)
+	if not actor_parameter_supported or (int(ram[0x063F]) & P_N) != 0 \
 			or int(stack[0xC9]) != 0xFF or int(stack[0xCA]) != 0x7F \
 			or mapper_low != 0x18 or mapper_high != 0x19:
-		return {"ok": false, "reason": "Live actor parameter, branch state, seeded RTS stack, or mapper pair is unsupported."}
+		return {"ok": false, "reason": "Live actor parameter lacks its ROM-backed setup profile, or branch state, seeded RTS stack, or mapper pair is unsupported."}
 	return {"ok": true}
+
+
+func _configure_actor_parameter_6d_sources() -> bool:
+	var manifest_file := FileAccess.open(ACTOR_6D_MANIFEST_PATH, FileAccess.READ)
+	if manifest_file == null:
+		return _fail("Actor-parameter `$6D` source manifest is unavailable.")
+	var parsed: Variant = JSON.parse_string(manifest_file.get_as_text())
+	if not parsed is Dictionary:
+		return _fail("Actor-parameter `$6D` source manifest is malformed.")
+	var manifest: Dictionary = parsed
+	var source_rom: Variant = manifest.get("source_rom", {})
+	var bank_mapping: Variant = manifest.get("bank_mapping", {})
+	if not source_rom is Dictionary or not bank_mapping is Dictionary \
+			or String(source_rom.get("sha256", "")) != ROM_SHA256 \
+			or String(bank_mapping.get("file_base", "")) != "0x030010" \
+			or int(bank_mapping.get("prg_bank_size_bytes", -1)) != 0x2000:
+		return _fail("Actor-parameter `$6D` source manifest targets another ROM mapping.")
+	var spans_by_name: Dictionary = {}
+	for span_variant: Variant in manifest.get("spans", []):
+		if span_variant is Dictionary:
+			var span: Dictionary = span_variant
+			spans_by_name[String(span.get("name", ""))] = span
+	var pointer_span: Dictionary = spans_by_name.get("actor_parameter_6D_pointer_entry", {})
+	var stream_span: Dictionary = spans_by_name.get("actor_parameter_6D_stream", {})
+	if pointer_span.is_empty() or stream_span.is_empty() \
+			or not _span_matches(pointer_span, "0x92FA", "0x92FC", "0x03130A", 2,
+				"E3 9B", ACTOR_6D_POINTER_SHA256, ACTOR_6D_POINTER_FILE) \
+			or not _span_matches(stream_span, "0x9BE3", "0x9C71", "0x031BF3", 142,
+				String(stream_span.get("bytes_hex", "")), ACTOR_6D_STREAM_SHA256, ACTOR_6D_STREAM_FILE):
+		return _fail("Actor-parameter `$6D` pointer or bounded stream manifest span changed.")
+	var pointer_bytes := FileAccess.get_file_as_bytes(ACTOR_6D_SOURCE_ROOT + ACTOR_6D_POINTER_FILE)
+	var stream_bytes := FileAccess.get_file_as_bytes(ACTOR_6D_SOURCE_ROOT + ACTOR_6D_STREAM_FILE)
+	if pointer_bytes != PackedByteArray([0xE3, 0x9B]) \
+			or _sha256(pointer_bytes) != ACTOR_6D_POINTER_SHA256 \
+			or stream_bytes.size() != 142 or _sha256(stream_bytes) != ACTOR_6D_STREAM_SHA256 \
+			or String(pointer_span.get("bytes_hex", "")).replace(" ", "").to_lower() != pointer_bytes.hex_encode() \
+			or String(stream_span.get("bytes_hex", "")).replace(" ", "").to_lower() != stream_bytes.hex_encode():
+		return _fail("Actor-parameter `$6D` pointer/stream artifacts failed their manifest byte or hash checks.")
+	if (int(pointer_bytes[0]) | (int(pointer_bytes[1]) << 8)) != 0x9BE3 \
+			or int(stream_bytes[0]) != 0xF2:
+		return _fail("Actor-parameter `$6D` pointer does not resolve to the verified initial `$F2` stream.")
+	_actor_pointer_bytes_by_parameter[0x6D] = pointer_bytes
+	_actor_stream_bytes_by_parameter[0x6D] = stream_bytes
+	return true
+
+
+func _span_matches(
+		span: Dictionary, cpu_start: String, cpu_end_exclusive: String,
+		file_offset: String, length_bytes: int, bytes_hex: String,
+		sha256: String, file_name: String) -> bool:
+	return String(span.get("cpu_start", "")) == cpu_start \
+			and String(span.get("cpu_end_exclusive", "")) == cpu_end_exclusive \
+			and String(span.get("file_offset", "")) == file_offset \
+			and int(span.get("length_bytes", -1)) == length_bytes \
+			and String(span.get("bytes_hex", "")).replace(" ", "").to_lower() == bytes_hex.replace(" ", "").to_lower() \
+			and String(span.get("sha256", "")) == sha256 \
+			and String(span.get("file", "")) == file_name
+
+
+func _is_scenario2e_callback36_map2f_actor_seed_profile(ram: PackedByteArray) -> bool:
+	return ram.size() == RAM_SIZE \
+			and ram.slice(0x0516, 0x051A) == PackedByteArray([0x01, 0x00, 0x2E, 0x78]) \
+			and ram.slice(0x051A, 0x051C) == PackedByteArray([0xE8, 0x9B]) \
+			and int(ram[0x0522]) == 0 \
+			and ram.slice(0x0523, 0x052B) == PackedByteArray([
+				0x78, 0x36, 0x02, 0x3C, 0x4A, 0x8B, 0x6D, 0x00]) \
+			and int(ram[0x052B]) == 0 and int(ram[0x0539]) == 0 \
+			and int(ram[0x003A]) == 0x06 \
+			and ram.slice(0x0052, 0x0056) == PackedByteArray([0xE7, 0x89, 0x44, 0x91]) \
+			and ram.slice(0x0056, 0x0058) == PackedByteArray([0x50, 0xB2]) \
+			and ram.slice(0x005D, 0x005F) == PackedByteArray([0x53, 0xB7]) \
+			and ram.slice(0x0079, 0x007B) == PackedByteArray([0x03, 0xAE]) \
+			and ram.slice(0x05C7, 0x05D3) == PackedByteArray([
+				0x24, 0xC0, 0x00, 0x01, 0x01, 0x2F, 0x80, 0xA0, 0x00, 0x02, 0x00, 0x00]) \
+			and int(ram[0x05CC]) == 0x2F \
+			and int(ram[0x05CE]) == 0xA0 \
+			and int(ram[0x000D]) == 0 and int(ram[0x000E]) == 0 \
+			and int(ram[0x05EA]) == 0x6D
 
 
 func _expect(cpu_address: int, expected: Array[int]) -> bool:

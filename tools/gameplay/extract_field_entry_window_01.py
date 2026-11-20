@@ -139,7 +139,7 @@ def main() -> None:
             raise SystemExit(f"ROM team-name stream {pointer_index} has no $FC terminator.")
         raw = rom[name_offset:terminator + 1]
         save(name, raw, name_cpu, name_offset,
-             f"ROM team-name string for team ID {pointer_index * 3}; $ED emits its first three bytes")
+             f"ROM team-name string for team ID {team_id}; $ED emits its first three bytes")
         prefix = raw[:3]
         if any(value < 0x41 or value > 0x5A for value in prefix):
             raise SystemExit(f"Team {team_id} prefix left the verified uppercase ASCII path.")

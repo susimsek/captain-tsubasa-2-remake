@@ -1,5 +1,24 @@
 # First-match route audio: ROM source and source-only trace
 
+## Current acceptance status — 9 November 2026
+
+This report retains dated investigation notes; use [GOALS.md](../../../GOALS.md)
+and [PLANS.md](../../../PLANS.md) for the active milestone. The final
+production-route audit matches all 10 source-frame audio events. All 42,228
+APU writes match the same-input FCEUX trace at frame, address, value, PC, and
+cycle after correcting the ROM-only stepper's deferred `$2000` NMI2 handling.
+
+The finalized muted FCEUX WAV has 6,635,653 samples. The ROM-only WaveHi render
+matches all 6,634,919 common 44.1 kHz samples exactly (RMSE 0, Pearson r=1.0).
+The FCEUX capture has one extra active 734-sample frame after the source render
+ends; the candidate already extends past the required frame-8953 menu.
+The refreshed ROM-derived `$55` occurrence WAV is the production asset. No
+sample shift, gain fit, or resampling was used. A Godot Dummy-driver route
+capture did not meet its scheduled sample count, while local CoreAudio mixes at
+48 kHz; therefore host-device PCM phase is not claimed or compared at 44.1 kHz.
+Earlier unverified WAV metrics below are historical and superseded by the
+current fixed-index comparison documented in the integration audit.
+
 ## Scope and ROM identity
 
 This note maps audio queue writes on one fresh-start KICK OFF route through the
@@ -36,20 +55,20 @@ The source-stepper queue file records the CPU PC after each store to `$0700`.
 Thus `$85FF` identifies the return after the `$ED` script-command handler's
 `STA $0700,X`; it is not the command's script address. The queue IDs and
 source-frame/cycle positions below come directly from executing the ROM-only
-stepper with the route input. “Likely script” locations are static ROM
-candidate literals and are not presented as captured live script pointers.
+stepper with the route input. Events with live pointers are identified below;
+other proposed stream locations remain static ROM candidates.
 
 | Source frame | Source CPU cycle | Queue ID | Post-store PC | Source attribution and evidence |
 |---:|---:|---:|---:|---|
-| 4816 | 143396526 | `$55` | `$85FF` | `$ED $55` occurs at scene-1 script CPU `$A2AA`, file `0x0062BA`. The queue write is a ROM-stepper event; the literal-to-live-script association is strongly supported by the matching ID and route, but the live `$4D/$4E` script pointer was not logged at this event. |
+| 4816 | 143396526 | `$55` | `$85FF` | Muted FCEUX queue-write hook captured live `$4D/$4E=$A2AA`, PRG bank `$03`; the bytes are `$ED $55` at file `0x0062BA`. |
 | 7243 | 215674689 | `$01` | `$82DF` | Direct code store. Bank-0 file `0x0002EC` contains `A9 01 8D 00 07` (`LDA #$01; STA $0700`); the stored value is a stop/control command. |
 | 7266 | 216367134 | `$01` | `$810A` | Direct code store. Bank-0 file `0x000115` contains `A9 01 8D 00 07`; the event is the code path's stop/control write. |
 | 7409 | 220630517 | `$55` | `$812F` | Direct match-setup code. Bank-0 file `0x000132` begins `A2 55 A5 26 C9 20 90 02 A2 4C 8E 00 07`; CPU `$812C` stores X to `$0700`, and the post-store hook is `$812F`. Fresh match index `$26=0` takes `$55`; the final-match branch substitutes `$4C`. |
-| 8027 | 239028028 | `$31` | `$85FF` | `$ED`-handler queue write during the story sequence. A candidate `$ED $31` is present at scene-1 CPU `$A3DE`, file `0x0063EE`; no live script pointer was captured, so this literal association is not claimed as a direct address trace. |
-| 8108 | 241434503 | `$01` | `$85FF` | `$ED`-handler queue write during the story sequence. Candidate `$ED $01` bytes are at scene-1 CPU `$A3E1`, file `0x0063F1`; exact live pointer association was not captured. |
-| 8271 | 246288156 | `$53` | `$85FF` | `$ED`-handler queue write during the matchup sequence. Candidate `$ED $53` is at scene-2 CPU `$A62F`, file `0x00663F`; exact live pointer association was not captured. |
+| 8027 | 239028028 | `$31` | `$85FF` | Live pointer `$4D/$4E=$BFD5`, PRG bank `$05`; the bytes at file `0x00BFE5` are `$ED $31`. |
+| 8108 | 241434503 | `$01` | `$85FF` | Live pointer `$4D/$4E=$BFF0`, PRG bank `$05`; the bytes at file `0x00C000` are `$ED $01`. This replaces the earlier static candidate at `$A3E1`. |
+| 8271 | 246288156 | `$53` | `$85FF` | Live pointer `$4D/$4E=$A62F`, PRG bank `$03`; the bytes are `$ED $53` at file `0x00663F`. |
 | 8443 | 251410847 | `$01` | `$82DF` | Direct bank-0 stop/control store on the Select transition. |
-| 8460 | 251937843 | `$01` | `$CC01` | Direct source-stepper queue event in fixed-bank code; call-site meaning not assigned here. |
+| 8460 | 251937843 | `$01` | `$CC01` | ROM stepper event; two-pass muted FCEUX independently identifies fresh slot-$05 setup: `$DAAC JSR $CBF1`, then `$CBFE STA $0700,X` stores the first-slot `$01`. FCEUX queue callback cycle is 251937939, so cycle alignment is not claimed. |
 | 8607 | 256313339 | `$3C` | `$CC01` | Direct source-stepper event in fixed-bank code; runtime sound ID is confirmed, semantic label is not assigned here. |
 | 8624 | 256809146 | `$66` | `$CC01` | Direct source-stepper event. The ROM pointer audit maps runtime ID `$66` to sound-test SFX ordinal 91; ordinal is a catalog index, not a descriptive sound name. |
 | 8664 | 257998379 | `$2B` | `$CC01` | Direct source-stepper event. The ROM pointer audit maps runtime ID `$2B` to sound-test SFX ordinal 78. |
@@ -430,3 +449,146 @@ ticks, while the source-owned task/callback events and absolute clock are not
 executed. See the focused
 [`audio integration boundary note`](first_match_audio_integration_boundary_20261028.md)
 for the caller path and separate PCM limitation.
+
+## Live `$ED` script pointers — 9 November 2026
+
+The muted FCEUX trace now records `$004D/$004E`, the mapped PRG bank, and
+`$00E0` in the same `$0700` queue-write callback. It starts from the verified
+frame-4692 in-session checkpoint, replays frames 4693–9042 twice, and the
+runner validates byte-identical queue/pointer rows between passes. Output:
+`reference/diagnostics/kickoff_select_cleanup_counters_20261109_050830_utc/`;
+see [`sound_queue_writes.csv`](../../diagnostics/kickoff_select_cleanup_counters_20261109_050830_utc/sound_queue_writes.csv),
+[`script_pointer_writes.csv`](../../diagnostics/kickoff_select_cleanup_counters_20261109_050830_utc/script_pointer_writes.csv),
+and their repeat-pass files in the same directory.
+
+The live stream sequence is `$ED $31` at bank `$05:$BFD5` / frame 8027,
+`$ED $01` at bank `$05:$BFF0` / frame 8108, then `$ED $53` at bank `$03:$A62F`
+/ frame 8271. The earlier `$A3E1` guess for the stop command was wrong. The
+`$55` at frame 4816 is also now directly tied to live pointer `$03:$A2AA`.
+These address observations are ROM and emulator evidence; they do not supply a
+runtime schedule. The menu table and `$A6C4` caller identify `$BFBA` as scene
+`$56`; the ROM-indexed flattened script, including its `$FE->$BFD5` branch, is
+now preserved in
+[`kickoff_meeting_scene_56_events.json`](../../../assets/gameplay/rom_logic/kickoff_meeting_scene_56_events.json)
+and passes an isolated Godot VM check. The production route still emits `$53`
+at route tick 8139, does not emit `$01` at the corresponding source event, and
+does not yet execute scene `$56` or restore the suspended ID-`$02` context.
+Scene rendering, caller/task resumption, and source-timed audio remain open.
+
+## CE6 full-route source WaveHi candidate — 9 November 2026
+
+A fresh source-only CE6 stepper run and continuous WaveHi render were generated
+for the exact 0–9042 input route (9,043 input rows). The timeline SHA-256 is
+`6cae92ff2b6a77fcc05c34c57c734bbff47930ada172633cb4a4b830cc3e77dc`; ROM SHA
+remains `4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097`.
+The candidate WAV is mono signed 16-bit PCM at 44.1 kHz, 6,634,919 samples
+(150.451678 s), SHA-256
+`f5893082270911b85d4e4038557112ae10ed1b5ca9d479425285d23cba79114e`. It
+uses ROM-stepper APU writes, DMC reads and DAC-edge states, CPU frame cycles,
+the pinned WaveHi nonlinear mixer/FIR/SexyFilter implementation, and the
+recorded `[255,255,255,255,255]` output profile. The FCEUX log and any captured
+PCM are not renderer inputs. This is an offline diagnostic candidate, not a
+runtime asset or a hardware-accuracy claim.
+
+Compared against the retained muted FCEUX route APU log at frames 4817–9042,
+the ordered 42,228 `(frame,address,value)` writes match exactly; all 42,228
+PCs also match. Re-running the checked comparator shows 39,850/42,228 raw
+cycle labels exact and 2,378 differing by -6 to +10 cycles. The delta counts
+(source stepper minus FCEUX) are `0:39850, +3:1614, -1:210, +1:195, -3:99,
++2:99, -2:62, +4:51, -6:23, -4:11, +6:10, +7:3, +10:1`. The 23 `-6` writes
+are at frames 6513 and 7113; adjacent logged frames match exactly. No global
+cycle correction is applied. The retained trace has no paired per-frame
+instruction/cycle evidence to localize the deltas to a ROM-owned wait or
+hardware phase. This confirms the software register-write sequence and PC,
+not cycle-exact hardware timing, APU waveform equality, or DMC arbitration.
+The source render used 596,576 four-cycle DMC read rows (149,144 accepted
+sample bytes) and replayed 1,190,637 DAC-changing DMC edges. Its self-checks
+reported zero ROM address/value mismatches, DMC buffer overruns, DAC-before
+mismatches, or buffered-phase conflicts. These checks compare the renderer to
+the ROM-only stepper; there is no retained same-input FCEUX DMC hook log for
+frames 4817–9042 to establish DMC event parity.
+
+The previously recorded FCEUX route WAV has metadata/hash in the integration
+audit, but the file itself (`/tmp/ct2_kickoff_route_reference_volume255.wav`,
+SHA-256 `900fae09d17d3b2c0c49332c5ef50948ad0c5201d651f925f0a4ec2daea15833`)
+is absent from the current machine. A fresh muted FCEUX capture was attempted
+with the same 9,043-frame input movie, but the emulator did not stop at the
+requested frame 9043 and movie completion was not confirmed. The file kept
+growing with zero RIFF/data sizes, so its stable 6,635,653-sample prefix
+(SHA-256
+`f1cec2501e73575b9167287d8327cf4a035c7b132a64e5ad106ded7c1480b447`) is
+exploratory only and excluded as same-input PCM evidence. The attempted file
+was terminated after preserving that prefix to prevent unbounded growth. The
+fixed-index diagnostic is `tools/audio/compare_first_match_route_pcm.py`; a
+validated, finalized route capture is still required before its PCM results
+can close this goal.
+
+Across the common 6,634,919 samples, Pearson correlation is `0.527871`, RMSE
+is `3154.297`, and 606,235 samples (9.137%) are exact. The first `$55` window
+`[3534072,5314928)` has `r=0.016277` and RMSE `4609.432`; its restart window
+`[5437549,5949652)` has `r=0.011435` and RMSE `4766.523`. A diagnostic search
+over ±22,050 samples finds different, weak peaks in the two windows, so there
+is no supported shared sample offset to apply. These measurements are only an
+exploratory comparison against an unverified FCEUX run; they do not demonstrate
+same-input parity or mismatch. The WaveHi candidate is diagnostic-only. Older
+PCM metrics apply to different candidate hashes and must not be attributed to
+this render.
+
+### Production `$55` presenter AudioServer capture — 9 November 2026
+
+The production presenter was captured through Godot 4.7.2's Dummy AudioServer
+at 44.1 kHz for 220,500 samples. A clean run reproduced the previously
+recorded deterministic SHA-256
+`03cdb92b8ba4bbbb13853431e4a48df4c68022663387ec82e54ba6bf11ed8787`. A
+separate run had a 4,096-sample capture-buffer startup artifact and was
+rejected. Against the unverified FCEUX prefix, the source-delay-aligned window
+(`[3534072,3753765)` vs candidate `[807,220500)`) has `r=-0.042172`, RMSE
+`5311.947`, and 16 exact samples; aligning the candidate's measured first
+nonzero sample 873 to the reference window start gives `r=0.006819`, RMSE
+`5188.216`, and 26 exact samples. Because the reference movie did not complete
+under verified observation, these values are exploratory, not same-input
+parity evidence. The Godot capture uses only the ROM-derived source WAV and
+does not alter runtime assets.
+
+Reproduce the route input file and source candidate from the repository root:
+
+```sh
+AUDIO_TMP="${TMPDIR:-/tmp}/ct2_first_match_audio_ce6_20261109"
+mkdir -p "$AUDIO_TMP"
+CT2_AUDIO_TMP="$AUDIO_TMP" python3 - <<'PY'
+import importlib.util
+import os
+import sys
+from pathlib import Path
+
+module_path = Path("tools/gameplay/build_kickoff_rng_source_schedule.py").resolve()
+spec = importlib.util.spec_from_file_location("route_input_builder", module_path)
+module = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = module
+spec.loader.exec_module(module)
+_, timeline = module._read_route_inputs()
+target = Path(os.environ["CT2_AUDIO_TMP"]) / "route_input_timeline.csv"
+target.write_bytes(timeline)
+print(f"frames=9043 sha256={module.sha256(timeline)} path={target}")
+PY
+
+python3 tools/diagnostics/trace_rom_stepper_ce6_opcode_candidate_20261026.py \
+  --end-frame 9042 \
+  --input-timeline "$AUDIO_TMP/route_input_timeline.csv" \
+  --out-dir "$AUDIO_TMP/stepper" \
+  --export-dmc-state \
+  --source-frame-updates-out "$AUDIO_TMP/stepper/source_frame_updates.csv"
+
+python3 tools/audio/render_rom_stepper_wavehi_volume255_candidate.py \
+  --stepper-dir "$AUDIO_TMP/stepper" \
+  --output-dir "$AUDIO_TMP/wavehi" \
+  --rom 'Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes'
+
+python3 tools/audio/compare_source_stepper_apu_writes_to_fceux.py \
+  --source-apu "$AUDIO_TMP/stepper/source_apu_writes.csv" \
+  --fceux-apu reference/diagnostics/kickoff_select_test_20261027/apu_writes.csv \
+  --stepper-report "$AUDIO_TMP/stepper/source_stepper_report.json" \
+  --input-timeline "$AUDIO_TMP/route_input_timeline.csv" \
+  --first-source-frame 4817 \
+  --output "$AUDIO_TMP/apu_event_comparison.json"
+```

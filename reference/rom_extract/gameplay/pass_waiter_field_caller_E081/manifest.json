@@ -1,0 +1,36 @@
+{
+  "schema": "ct2-pass-waiter-field-caller-e081-source-v1",
+  "source_rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "size_bytes": 393232,
+    "mapper": 4,
+    "prg_banks_16k": 16,
+    "chr_banks_8k": 16
+  },
+  "mapping": "iNES PRG starts at 0x0010; this fixed-bank span maps CPU $E081-$E0DE in PRG bank $1F at file offset 0x03E091.",
+  "spans": [
+    {
+      "file": "fixed_field_caller_E081_E0DE.bin",
+      "bank": "0x1F",
+      "window": "fixed",
+      "cpu_start": "0xE081",
+      "cpu_end_exclusive": "0xE0DF",
+      "file_offset": "0x03E091",
+      "length": 94,
+      "sha256": "d5c9912b82292028e430cba0615751ec0f95c433df07b6738118c8f9c71261b9",
+      "bytes": "a9 00 48 a9 01 20 0f cb 68 48 f0 44 c9 0b f0 40 cd 41 04 f0 3b 2c 2a 06 10 14 48 48 a5 22 a9 1a 85 24 a9 1b 85 25 20 2d ce 68 20 00 80 68 85 41 20 7c cd a5 41 c9 0b ae fb 05 f0 06 08 68 49 01 48 28 a2 21 90 02 a2 22 a5 41 20 08 ce 20 54 e8 68 18 69 01 c9 16 d0 aa a9 00 8d ff 05 60",
+      "description": "ROM field caller after `$E709 RTS`, including the conditional `$E0AB JSR $8000` handoff site and natural `$E0DE RTS`; executor emits a call contract before the `$8000` JSR."
+    }
+  ],
+  "trace_evidence": {
+    "directory": "reference/diagnostics/pass_receiver_waiter_boundaries_20261116_063055_utc/",
+    "events_csv_sha256": "a63da962c2c3de4bb1f2ff1545226076c67b3eefc974c69bc9110a3dafc113c6",
+    "validation_json_sha256": "cc7aec1f3d8914d77d9bcdd87ab9286e97505b9bea4f2e4f6c05159b3ed80870",
+    "event_facts": [
+      "At frame 9086, `$E709` has SP=$4C and the validated return word is `$E080`, producing `$E081` after RTS.",
+      "At frame 9088, `$A103` is observed with A=$01, X=$00, Y=$07, P=$20, SP=$4A, mapper low/high banks $1A/$1B.",
+      "The trace has no direct `$E081` or `$E0AB` instruction hook; A103/SP is consistent with, but does not independently prove, `$E0AB JSR $8000`."
+    ]
+  }
+}

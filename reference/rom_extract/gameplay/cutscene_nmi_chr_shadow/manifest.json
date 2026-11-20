@@ -1,0 +1,44 @@
+{
+  "schema": "ct2-cutscene-nmi-chr-shadow-source-v1",
+  "rom": {
+    "name": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "mapping": "Offsets include the 16-byte iNES header. Bank $00 at CPU $8000 maps to 0x000010 + (CPU-$8000); bank $07 uses its 8 KiB PRG window.",
+  "record": {
+    "background_id": "0x5E",
+    "cpu_address": "$AE37",
+    "file_offset": "0x00EE47",
+    "length": 20,
+    "sha256": "ac5f6bcc9e79f4a18c5163b0e14a9af8279a431a2b04aafa01aa44664b4b567d",
+    "file": "background_5E_record.bin",
+    "bytes": "3c 3e 20 02 06 11 2c 2d 2c 2c 2c 2c 2e 2f 2e 2f 2e 2f 00 a0"
+  },
+  "spans": [
+    {
+      "file": "bank00_chr_pair_record_reader_8B39_8B46.bin",
+      "cpu_start": "$8B39",
+      "cpu_end_exclusive": "$8B46",
+      "file_offset": "0x000B49",
+      "length": 13,
+      "sha256": "399b2560a157a52279a23456f5686b49a637d93669110ab11bebb78f68788e55",
+      "bank_mapping": "bank $00 at CPU $8000",
+      "bytes": "86 63 a0 00 b1 63 85 75 c8 b1 63 85 76"
+    },
+    {
+      "file": "bank00_nmi_chr_pair_shadow_copy_8CA7_8CAD.bin",
+      "cpu_start": "$8CA7",
+      "cpu_end_exclusive": "$8CAD",
+      "file_offset": "0x000CB7",
+      "length": 6,
+      "sha256": "fff6e8eb18075cc61a7f3113def039abec133912039d622e526634fbb15837f1",
+      "bank_mapping": "bank $00 at CPU $8000",
+      "bytes": "85 8e a5 76 85 8f"
+    }
+  ],
+  "limits": {
+    "source_data_rom_derived": true,
+    "emulator_data_used": false,
+    "physical_nes_timing_proven": false
+  }
+}

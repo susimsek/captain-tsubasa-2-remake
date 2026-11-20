@@ -142,6 +142,47 @@
       "source_record_length_bytes": 23
     },
     {
+      "animation_id": "0x0C",
+      "prg_bank": 9,
+      "start_cpu_address": "0xA287",
+      "terminal": {
+        "kind": "exit",
+        "at_relative_tick": 0,
+        "cpu_address": "0xA28D",
+        "file_offset": "0x01229D"
+      },
+      "beats": [],
+      "commands": [
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA288",
+          "file_offset": "0x012298",
+          "kind": "set_y_x",
+          "y": 48,
+          "x": 70,
+          "raw_hex": "f1 30 46"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA28B",
+          "file_offset": "0x01229B",
+          "kind": "sprite_frame",
+          "frame_cpu_address": "0xA852",
+          "raw_hex": "88 52"
+        },
+        {
+          "at_relative_tick": 0,
+          "cpu_address": "0xA28D",
+          "file_offset": "0x01229D",
+          "kind": "exit",
+          "raw_hex": "ff"
+        }
+      ],
+      "caution": "Ticks follow ROM animation wait counters. Scene call timing, movement integration, palette effects and OAM clipping need separate reconstruction.",
+      "source_record_sha256": "3c1ce73cdf7f606f5c6ae85bc9f1e92e37f91ecbc5c0402de4e941ebb56ec23d",
+      "source_record_length_bytes": 7
+    },
+    {
       "animation_id": "0x12",
       "prg_bank": 9,
       "start_cpu_address": "0xA2B8",

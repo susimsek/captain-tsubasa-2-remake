@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "purpose": "ROM-derived source package for the traced slot-$11 animation-index-$02 continuation through the $A21A animation parser.",
+  "rom_file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "trace_state_included": false,
+  "rom_layout": {
+    "format": "iNES",
+    "mapper": 4,
+    "prg_size_bytes": 262144,
+    "cpu_window": "0xA000-0xBFFF",
+    "prg_8k_bank": "0x1B",
+    "cpu_to_file_mapping": "0x036010 + (CPU address - 0xA000); iNES header is 16 bytes."
+  },
+  "spans": [
+    {
+      "file": "bank1b_actor_animation_stream_02_A2E8_A2FC.bin",
+      "bank": "bank1b",
+      "cpu_start": "0xA2E8",
+      "cpu_end_inclusive": "0xA2FC",
+      "file_offset": "0x0362F8",
+      "length": 21,
+      "sha256": "424adf7357d292bb49f97104a0e091edb8e4705a81d0698984fbbcd94b13ab66",
+      "bytes_hex": "04 05 04 06 04 07 04 06 04 07 04 06 04 07 04 06 04 05 FF E8 A2",
+      "description": "ROM actor-animation index $02 stream at the traced $A21A continuation."
+    },
+    {
+      "file": "bank1b_actor_animation_packet_pointer_table_A42A_A439.bin",
+      "bank": "bank1b",
+      "cpu_start": "0xA42A",
+      "cpu_end_inclusive": "0xA439",
+      "file_offset": "0x03643A",
+      "length": 16,
+      "sha256": "1e692b18504e8fad80b9172d657f448d147d9c1ed65ff05ea8b8bfb8409e4dc1",
+      "bytes_hex": "6A A4 8F A4 94 A4 99 A4 9E A4 C3 A4 E8 A4 ED A4",
+      "description": "Eight little-endian packet pointers used by the $A21A animation command parser; extends the previously extracted five-entry prefix."
+    },
+    {
+      "file": "bank1b_actor_animation_packets_05_A4C3_A4E7.bin",
+      "bank": "bank1b",
+      "cpu_start": "0xA4C3",
+      "cpu_end_inclusive": "0xA4E7",
+      "file_offset": "0x0364D3",
+      "length": 37,
+      "sha256": "f82521c259c81ec916a28e42ed2744a59cbb2abe8521081fd23c9d9690c28b93",
+      "bytes_hex": "04 C8 22 00 B4 E4 E5 04 E8 22 00 B6 E6 E7 04 08 23 00 BC BD E8 04 28 23 00 BE BF EA 01 EA 23 50 01 F2 23 05 00",
+      "description": "Packet row 5, bounded by the next pointer at $A4E8."
+    },
+    {
+      "file": "bank1b_actor_animation_packets_06_A4E8_A4EC.bin",
+      "bank": "bank1b",
+      "cpu_start": "0xA4E8",
+      "cpu_end_inclusive": "0xA4EC",
+      "file_offset": "0x0364F8",
+      "length": 5,
+      "sha256": "b07bc05cce10fd5c335a4d677dcd13fdb168227f64b358dd25b5eeca550fcf1e",
+      "bytes_hex": "01 EA 22 D9 00",
+      "description": "Packet row 6, bounded by the next pointer at $A4ED."
+    },
+    {
+      "file": "bank1b_actor_animation_packets_07_A4ED_A4F1.bin",
+      "bank": "bank1b",
+      "cpu_start": "0xA4ED",
+      "cpu_end_inclusive": "0xA4F1",
+      "file_offset": "0x0364FD",
+      "length": 5,
+      "sha256": "0630624ed694ebb370c1539d4da0be8778264c6a596ae6bcb697d26253252b00",
+      "bytes_hex": "01 EA 22 F2 00",
+      "description": "Packet row 7, including its zero terminator."
+    }
+  ],
+  "pointer_rows_5_to_7": [
+    "0xA4C3",
+    "0xA4E8",
+    "0xA4ED"
+  ],
+  "runtime_rom_dependency": false
+}

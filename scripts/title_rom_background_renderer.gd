@@ -27,15 +27,20 @@ const TITLE_CURSOR_CLEAR_ADDRESSES: Array[int] = [0x220A, 0x222A, 0x224A]
 
 var _loader
 var _ppu_memory: Dictionary = {}
+var _source_ppuctrl_shadow := 0
+var _source_ppumask_shadow := 0
+var _source_ppu_register_history: Array[Dictionary] = []
 var _chr := PackedByteArray()
 var _background_palette := PackedByteArray()
 var _source_background_palette := PackedByteArray()
 var _source_sprite_palette := PackedByteArray()
+var _current_sprite_palette := PackedByteArray()
 var _ppu_palette_memory := PackedByteArray()
 var _rgb_palette := PackedByteArray()
 var _frame_texture: ImageTexture
 var _cup_texture: Texture2D
 var _hidden_cup_layer: Sprite2D
+var _cup_oam_visible := true
 var _render_state: Dictionary = {}
 
 
@@ -97,6 +102,86 @@ func get_source_title_palette_bytes() -> PackedByteArray:
 	return result
 
 
+func get_current_title_palette_bytes() -> PackedByteArray:
+	var result := _background_palette.duplicate()
+	result.append_array(_current_sprite_palette)
+	return result
+
+
+## Apply one ROM-built $9A71 palette packet while the title fades to black.
+func set_rom_fade_palette_bytes(palette: PackedByteArray) -> bool:
+	if palette.size() != 32:
+		return false
+	_background_palette = palette.slice(0, 16)
+	_current_sprite_palette = palette.slice(16, 32)
+	_ppu_palette_memory = palette.duplicate()
+	if is_instance_valid(_hidden_cup_layer):
+		if not bool(_hidden_cup_layer.call("set_fade_palette_bytes", _current_sprite_palette)):
+			return false
+		_cup_texture = _hidden_cup_layer.texture
+	_rebuild_frame()
+	return true
+
+
+## Apply the modeled $98A0/$9B7F title PPU/OAM clear after $99F0 returns.
+func apply_rom_cutscene_cleanup_clear() -> bool:
+	if _ppu_memory.is_empty():
+		return false
+	for address in range(0x2000, 0x2800):
+		_ppu_memory[address] = 0
+	_background_palette = PackedByteArray()
+	_current_sprite_palette = PackedByteArray()
+	for _index in range(16):
+		_background_palette.append(0x0F)
+		_current_sprite_palette.append(0x0F)
+	_ppu_palette_memory = _background_palette.duplicate()
+	_ppu_palette_memory.append_array(_current_sprite_palette)
+	_cup_oam_visible = false
+	if is_instance_valid(_hidden_cup_layer):
+		_hidden_cup_layer.call("set_fade_palette_bytes", _current_sprite_palette)
+		_cup_texture = _hidden_cup_layer.texture
+	_rebuild_frame()
+	return true
+
+
+func apply_source_ppu_register_writes(events: Array) -> bool:
+	var updated_ctrl := _source_ppuctrl_shadow
+	var updated_mask := _source_ppumask_shadow
+	var accepted: Array[Dictionary] = []
+	for event_variant in events:
+		if not event_variant is Dictionary:
+			return false
+		var event: Dictionary = event_variant
+		var register := int(event.get("ppu_register", -1))
+		var value := int(event.get("value", -1))
+		if value < 0 or value > 0xFF or register not in [0x2000, 0x2001]:
+			return false
+		if register == 0x2000:
+			updated_ctrl = value
+		else:
+			updated_mask = value
+		accepted.append(event.duplicate(true))
+	_source_ppuctrl_shadow = updated_ctrl
+	_source_ppumask_shadow = updated_mask
+	_source_ppu_register_history.append_array(accepted)
+	return true
+
+
+func apply_rom_dispatch_attribute_tail_seed(ppu_address: int, value: int, byte_count: int) -> bool:
+	if _ppu_memory.is_empty() or ppu_address < 0x2000 or ppu_address + byte_count > 0x2800 \
+			or byte_count <= 0 or value < 0 or value > 0xFF:
+		return false
+	for address in range(ppu_address, ppu_address + byte_count):
+		_ppu_memory[address] = value
+	_render_state["startup_dispatch_attribute_tail_seed"] = {
+		"ppu_address": ppu_address,
+		"value": value,
+		"byte_count": byte_count,
+	}
+	_rebuild_frame()
+	return true
+
+
 ## Start an observable title handoff with cleared nametable and black palette.
 ## The queue runner applies the ROM-derived packets progressively afterward.
 func begin_source_handoff() -> void:
@@ -105,8 +190,10 @@ func begin_source_handoff() -> void:
 	for index in range(_ppu_palette_memory.size()):
 		_ppu_palette_memory[index] = 0x0F
 	_background_palette = PackedByteArray()
+	_current_sprite_palette = PackedByteArray()
 	for _index in range(16):
 		_background_palette.append(0x0F)
+		_current_sprite_palette.append(0x0F)
 	_render_state["cursor_selection"] = 0
 	_render_state["cursor_ppu_address"] = -1
 	_render_state["packet_order_status"] = "progressive ROM queue handoff in progress"
@@ -130,6 +217,10 @@ func commit_source_queue_packet(packet: Dictionary) -> void:
 		address += 1
 	if int(packet.get("ppu_address", -1)) == 0x3F00 and payload.size() == 32:
 		_background_palette = _ppu_palette_memory.slice(0, 16)
+		_current_sprite_palette = _ppu_palette_memory.slice(16, 32)
+		if is_instance_valid(_hidden_cup_layer):
+			_hidden_cup_layer.call("set_fade_palette_bytes", _current_sprite_palette)
+			_cup_texture = _hidden_cup_layer.texture
 	elif int(packet.get("ppu_address", -1)) == TITLE_INITIAL_CURSOR_ADDRESS \
 			and payload.size() == 1 and int(payload[0]) == TITLE_CURSOR_TILE:
 		_render_state["cursor_selection"] = 0
@@ -179,6 +270,7 @@ func _load_title_sources() -> bool:
 	_background_palette = _loader.palette_bytes.duplicate()
 	_source_background_palette = _background_palette.duplicate()
 	_source_sprite_palette = FileAccess.get_file_as_bytes(TITLE_SPRITE_PALETTE_PATH)
+	_current_sprite_palette = _source_sprite_palette.duplicate()
 	_chr = FileAccess.get_file_as_bytes(CHR_PATH)
 	_rgb_palette = FileAccess.get_file_as_bytes(RGB_PALETTE_PATH)
 	if _chr.size() != 128 * 1024 or _sha256_hex(_chr) != CHR_SHA256:
@@ -238,6 +330,9 @@ func _initialize_ppu_memory() -> void:
 	for index in range(16):
 		_ppu_palette_memory[index] = _source_background_palette[index]
 		_ppu_palette_memory[index + 16] = _source_sprite_palette[index]
+	_background_palette = _source_background_palette.duplicate()
+	_current_sprite_palette = _source_sprite_palette.duplicate()
+	_cup_oam_visible = true
 
 
 func _apply_title_loader_packets() -> void:
@@ -327,7 +422,7 @@ func _rebuild_frame() -> void:
 				image.set_pixel(screen_x, screen_y,
 					_nes_color(int(_background_palette[palette_slot])))
 
-	if include_verified_cup_oam and _cup_texture != null:
+	if include_verified_cup_oam and _cup_oam_visible and _cup_texture != null:
 		_composite_behind_background_cup(image, background_color_indices)
 
 	_frame_texture = ImageTexture.create_from_image(image)

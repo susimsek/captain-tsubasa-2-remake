@@ -1,0 +1,44 @@
+{
+  "rom_filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+  "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "bank": "PRG bank 0, CPU $8000-$9FFF",
+  "file_offset_formula": "0x10 + CPU address - 0x8000",
+  "spans": [
+    {
+      "file": "bank00_85c3_85d2_eb_handler.bin",
+      "cpu_start": "$85C3",
+      "cpu_end_exclusive": "$85D2",
+      "file_offset": "0x0005D3",
+      "length": 15,
+      "sha256": "1c1de2940440ee709001b996a3b5c762f1fc7d0ff72e98e8a6e10c0cb4e7637b",
+      "bytes": "88 20 9a 89 20 a3 89 20 b1 88 a9 01 4c 87 88"
+    },
+    {
+      "file": "bank00_88b1_88ca_clear_geometry.bin",
+      "cpu_start": "$88B1",
+      "cpu_end_exclusive": "$88CA",
+      "file_offset": "0x0008C1",
+      "length": 25,
+      "sha256": "79559e3af839e1d424f47ab56a63658ae7d2ea22fce9a621aa6f95b1c25f134d",
+      "bytes": "a5 54 49 ff 18 69 1f aa a0 08 a5 4f 29 e0 05 54 85 e6 a5 50 85 e7 4c e8 98"
+    },
+    {
+      "file": "bank00_98e8_992c_clear_queue_branch.bin",
+      "cpu_start": "$98E8",
+      "cpu_end_exclusive": "$992C",
+      "file_offset": "0x0018F8",
+      "length": 68,
+      "sha256": "93a95cd78aef488fdbd2db75613e8a43ee127f7391cfa6c9580fe1dff8a41724",
+      "bytes": "a9 00 85 eb a5 4a 05 4b f0 3a 84 e8 86 e9 a5 e9 a4 e6 a6 e7 20 28 9b a4 e9 a5 eb 9d e8 05 e8 88 d0 f9 20 5e 9b a5 e8 10 05 a9 01 20 a8 9f a5 e6 18 69 20 85 e6 a5 e7 69 00 85 e7 c6 e8 a5 e8 29 7f d0 cb 60"
+    },
+    {
+      "file": "bank00_9b28_9b6f_queue_writer.bin",
+      "cpu_start": "$9B28",
+      "cpu_end_exclusive": "$9B6F",
+      "file_offset": "0x001B38",
+      "length": 71,
+      "sha256": "2ae1d070eb6fdb97902158ef4bf707c85606dc79d488134e922a65dacf837320",
+      "bytes": "48 2c 29 06 50 09 a9 01 20 a8 9f 68 4c 28 9b 29 3f 18 6d 28 06 c9 3d b0 ed 68 09 40 8d 29 06 8a ae 28 06 9d ea 05 98 9d e9 05 ad 29 06 29 bf 9d e8 05 e8 e8 e8 60 a9 00 9d e8 05 8e 28 06 ad 29 06 29 bf 8d 29 06 60"
+    }
+  ]
+}

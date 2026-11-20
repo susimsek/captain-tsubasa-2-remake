@@ -1,0 +1,146 @@
+{
+  "schema": "ct2-rom-wavehi-pass-route-context-v1",
+  "asset": {
+    "path": "assets/gameplay/audio/match_track_3C_first_pass_route_context_8607_9600_rom_generated.wav",
+    "sha256": "c97d8fc041a7c8561447c6b41c0a930845fc13b7fae8e3f1f27c8abff1b762b0",
+    "sample_rate_hz": 44100,
+    "channels": 1,
+    "bits_per_sample": 16,
+    "sample_count": 728838,
+    "sample_window_in_full_source_render": [
+      6315535,
+      7044373
+    ],
+    "sample_index_formula": "round(source_cycle * 44100 / 1789773) - 25",
+    "renderer_phase_samples": 25,
+    "runtime_candidate": true,
+    "rom_or_emulator_required_at_runtime": false
+  },
+  "source": {
+    "rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "input_timeline_sha256": "92bd6e971ea5c59672fd2a7a4eece18d797c0fb006ea7f427f9b521dcbec42e0",
+    "input_timeline_role": "source CPU input only; not synthesis timing or PCM",
+    "frame_range_inclusive": [
+      8607,
+      9600
+    ],
+    "start_event": {
+      "frame": 8607,
+      "cycle": 256313339,
+      "queue_id": "$3C"
+    },
+    "end_event": {
+      "frame": 9600,
+      "cycle_end_exclusive": 285892803,
+      "kind": "first `$D5EA` input-wait boundary after PASS"
+    },
+    "embedded_queue_events": [
+      {
+        "frame": 8624,
+        "cycle": 256809146,
+        "queue_id": "$66",
+        "pc": "$CC01"
+      },
+      {
+        "frame": 8664,
+        "cycle": 257998379,
+        "queue_id": "$2B",
+        "pc": "$CC01"
+      },
+      {
+        "frame": 8786,
+        "cycle": 261637820,
+        "queue_id": "$2C",
+        "pc": "$CC01"
+      },
+      {
+        "frame": 9125,
+        "cycle": 271726517,
+        "queue_id": "$2B",
+        "pc": "$CC01"
+      },
+      {
+        "frame": 9247,
+        "cycle": 275363748,
+        "queue_id": "$2C",
+        "pc": "$CC01"
+      }
+    ],
+    "stepper": {
+      "engine": "Py65 1.2.0, upstream tag v1.2.0; temporary diagnostic environment only",
+      "pinned_fceux_semantics": "2.7.0 a6d03e7968bd77a8156a7c9b628a673753f2f4c6 CPU fixed-point 16/48 scheduler, sound hook ordering, MMC3 and DMC logic",
+      "stepper_script": "tools/diagnostics/step_rom_source_cpu_ppu_dmc.py",
+      "stepper_script_sha256": "233a721c91b17b56e3527bfc336ab47d020186b44a7da15f322224aa674e493a",
+      "source_frames_advanced": 9600,
+      "source_cpu_cycles": 285892803,
+      "apu_writes": 94165,
+      "dmc_dma_reads": 650712,
+      "dmc_output_bytes": 162678,
+      "dmc_state_event_rows": 16536892,
+      "dmc_state_events_sha256": "f50fd7a6a25ad96a9d8dbc26d039063d33508daf6a72f742ebf375239a3fd602",
+      "source_frame_update_events_sha256": "718eab55d9802cc915530d9be7f73c95065ee49d120dbd597ec4f658b598f4eb",
+      "output_sha256": {
+        "source_frame_cycles.csv": "d4c450619554a3d8fd1f29a1d29a99c392f8500056adb4a97506e13c7309dc1c",
+        "source_apu_writes.csv": "ad0a3c16a78dd4e2471914990d2567bf0c7821c72a711d1eee26bb1621326fcc",
+        "source_dmc_dma_reads.csv": "7759f6fa76a3573e7d9ed04fea15553d6cad6cc4cfb80528d2a4881b230f1074",
+        "source_title_stop_markers.csv": "09341a696eb5f478e85c991edd2016f21d4111478d2a74024498d19afe7ae79d",
+        "source_sound_queue_nonzero_writes.csv": "dfb072ab89ce27b7445e165796be8ae97cf6465986f87aeefdb11e7672be2bb8"
+      },
+      "source_stepper_report_sha256": "7d7832956eba62b88d73fdc4fb9664461e16850fe27a9559274c1a8b6b000030"
+    },
+    "wavehi_renderer": {
+      "implementation": "tools/audio/fceux_apu_wavehi_prototype/apu_wavehi_renderer.cpp",
+      "implementation_sha256": "d47844debc1392ae1be38105cdf6aa9cf2e9524ea116087d137b6ef8d4b925ba",
+      "filter_coefficients_sha256": {
+        "filter.cpp": "ddde69adb6cdd940a54535f3a39f39ae3233b5d110624cae14a553be1a4ad4d4",
+        "sound.cpp": "10e4223d666f87b27f319fcb7759b644c686d8728e0799a49935b845bbc80de5",
+        "wave.cpp": "f5e02189dd9c3501017aa7bce833cf6cb97e3ffdbdf410bd5d2962653a04f379",
+        "fcoeffs.h": "aac6289c43da2540bad1b2a321dc5afb00225a1504611d07a5ee147d09cefdcc",
+        "fir/c44100ntsc.h": "47bbd5ec088344f3d83978796e617ec211dbdeee3b29a5584162428918160691",
+        "x6502.h": "39fccaf76ee38c349f5e06c7b302712ecf24268076ca09aebb9ba887aa00e704"
+      },
+      "candidate_sha256": "39db62d63dd795f3343065ab59cd6761313db5d0b2d1bd6beb9af9653e4bf747",
+      "captured_pcm_or_wav_used_as_synthesis_input": false,
+      "fceux_trace_used_for_scheduling": false
+    }
+  },
+  "validation": {
+    "reference": "retained muted FCEUX CPU-write trace; validation only",
+    "fceux_trace_sha256": "d0e201c90ce1ac212063d095244f31720d3824d89814d6e208d02670ba75fdec",
+    "apu_comparison_report_sha256": "9a8935801e920878e5e3b76a4ab6d0820a0a91defdd7825c81f58b0ec62ac646",
+    "frame_range_inclusive": [
+      9043,
+      9600
+    ],
+    "apu_writes_compared": 6485,
+    "apu_frame_address_value_sequence_exact": true,
+    "apu_pc_equal": 6485,
+    "apu_cycle_exact_writes": 5418,
+    "apu_cycle_mismatch_count": 1067,
+    "apu_max_abs_cycle_delta": 7,
+    "queue_events": [
+      {
+        "queue_id": "$2B",
+        "frame": 9125,
+        "source_cycle": 271726517,
+        "fceux_cycle": 271726523,
+        "cycle_delta": -6
+      },
+      {
+        "queue_id": "$2C",
+        "frame": 9247,
+        "source_cycle": 275363748,
+        "fceux_cycle": 275363748,
+        "cycle_delta": 0
+      }
+    ],
+    "fceux_wav_or_pcm_compared": false,
+    "fceux_wav_or_pcm_used_as_synthesis_input": false
+  },
+  "limits": [
+    "APU register writes match the retained trace by ordered frame/address/value/PC, but 1,067 of 6,485 writes differ by up to 7 CPU cycles.",
+    "The retained trace has no PCM samples through frame 9600; waveform parity is not established.",
+    "The WaveHi DMC DMA arbitration remains diagnostic, not cycle-accurate hardware evidence.",
+    "The asset includes its embedded `$66/$2B/$2C` queue events; do not layer the separate cue WAVs over this route-context clip."
+  ]
+}

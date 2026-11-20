@@ -896,6 +896,7 @@
       ],
       "caution": "Positions are relative to the live animation Y/X. Runtime mirror, clipping, CHR mapping, palette, sprite priority, and OAM update scheduling still apply.",
       "referenced_by_animation_ids": [
+        "0x0C",
         "0x17"
       ],
       "referenced_by_invocations": [
@@ -904,6 +905,12 @@
           "event_index": 21,
           "cpu_address": "0xA2FC",
           "file_offset": "0x00630C"
+        },
+        {
+          "cutscene_id": 86,
+          "event_index": 2,
+          "cpu_address": "0xBFBE",
+          "file_offset": "0x00BFCE"
         }
       ],
       "referenced_by_dialog_branches": []
@@ -7335,6 +7342,12 @@
           "event_index": 130,
           "cpu_address": "0xA501",
           "file_offset": "0x006511"
+        },
+        {
+          "cutscene_id": 68,
+          "event_index": 1,
+          "cpu_address": "0xBE86",
+          "file_offset": "0x00BE96"
         }
       ],
       "referenced_by_dialog_branches": [
@@ -11081,6 +11094,12 @@
           "event_index": 130,
           "cpu_address": "0xA501",
           "file_offset": "0x006511"
+        },
+        {
+          "cutscene_id": 68,
+          "event_index": 1,
+          "cpu_address": "0xBE86",
+          "file_offset": "0x00BE96"
         }
       ],
       "referenced_by_dialog_branches": [

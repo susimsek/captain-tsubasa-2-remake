@@ -3,6 +3,7 @@ extends Node2D
 ## title endpoint. The title choices are displayed but never confirmed here.
 
 const NES_CPU_CLOCK_HZ := 1789773.0
+const NES_FPS := 60.0988
 # The live FCEUX NTSC window displays 224 lines from the 240-line PPU output,
 # cropping eight overscan rows from both ends. Keep source renderers in their
 # native 256x240 coordinate space. Windows/Linux reserve a seven-pixel-high
@@ -27,6 +28,8 @@ const SOURCE_ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c58
 var _transition_active := false
 var _transition_cpu_cycles_elapsed := 0.0
 var _transition_blackout_presented := false
+var _title_menu_source_frame := -1
+var _title_menu_frame_cycle_accumulator := 0.0
 var _start_input_held := false
 var _start_input_transitions: Array[Dictionary] = []
 var _audio_loop_start_frame := -1
@@ -72,6 +75,8 @@ func _apply_fceux_visible_crop() -> void:
 func _process(delta: float) -> void:
 	if _transition_active:
 		_advance_title_transition(delta)
+	elif title_menu.visible and not is_instance_valid(_kickoff_route):
+		_advance_title_menu_source_clock(delta)
 	elif not title_menu.visible and not opening_audio.playback_expected_active() \
 			and _audio_loop_start_frame >= 0:
 		# The ROM repeats its opening music from the first emitted $58 command.
@@ -106,6 +111,27 @@ func _on_opening_audio_finished() -> void:
 func _on_kickoff_requested() -> void:
 	if is_instance_valid(_kickoff_route):
 		return
+	var title_source_frame := _title_menu_source_frame
+	if title_source_frame < 0:
+		push_error("KICK OFF handoff has no title-menu source-frame boundary.")
+		return
+	var kickoff_route_scene := load(KICKOFF_ROUTE_SCENE_PATH) as PackedScene
+	if kickoff_route_scene == null:
+		push_error("KICK OFF route scene could not be loaded: " + KICKOFF_ROUTE_SCENE_PATH)
+		return
+	var kickoff_route := kickoff_route_scene.instantiate()
+	var source_fade := {
+		"fade_counters": source_presenter.state.get("fade_counters", Vector2i(-1, -1)),
+		"base_palette_bytes": title_menu.title_background.get_source_title_palette_bytes(),
+		"ram_0090_0091": source_presenter.state.get("ram_0090_0091", null),
+	}
+	if not kickoff_route.has_method("initialize_from_title_handoff") \
+			or not bool(kickoff_route.initialize_from_title_handoff(
+				title_source_frame, SOURCE_ROM_SHA256,
+				source_fade, title_menu.title_background)):
+		push_error("KICK OFF route rejected the live ROM title handoff.")
+		return
+	kickoff_route.title_handoff_fade_completed.connect(_on_kickoff_title_fade_completed)
 	# The ROM's title branch returns into the KICK OFF route after the menu
 	# selection. Stop the cold-start timeline and let the route's ROM-derived
 	# sound commands own audio from this point onward.
@@ -114,16 +140,18 @@ func _on_kickoff_requested() -> void:
 	opening_audio.set_playback_expected_active(false)
 	_audio_loop_start_frame = -1
 	_transition_active = false
-	title_menu.visible = false
+	title_menu.set_input_enabled(false)
+	title_menu.z_index = 100
 	source_presenter.freeze_source_for_title_handoff()
 	source_presenter.visible = false
-	var kickoff_route_scene := load(KICKOFF_ROUTE_SCENE_PATH) as PackedScene
-	if kickoff_route_scene == null:
-		push_error("KICK OFF route scene could not be loaded: " + KICKOFF_ROUTE_SCENE_PATH)
-		return
-	_kickoff_route = kickoff_route_scene.instantiate()
+	_kickoff_route = kickoff_route
 	_kickoff_route.name = "KickoffRouteRuntime"
 	add_child(_kickoff_route)
+
+
+func _on_kickoff_title_fade_completed() -> void:
+	title_menu.visible = false
+	title_menu.z_index = 0
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -201,7 +229,20 @@ func _advance_title_transition(delta: float) -> void:
 		# dot 118), not at the earlier final packet commit.
 		transition_black.visible = false
 		title_menu.visible = true
+		_title_menu_source_frame = source_presenter.title_first_pixel_source_frame()
+		_title_menu_frame_cycle_accumulator = 0.0
+		if _title_menu_source_frame < 0:
+			push_error("ROM title reveal has no source-frame anchor.")
+			return
 		_transition_active = false
+
+
+func _advance_title_menu_source_clock(delta: float) -> void:
+	_title_menu_frame_cycle_accumulator += delta * NES_CPU_CLOCK_HZ
+	var cycles_per_frame := NES_CPU_CLOCK_HZ / NES_FPS
+	while _title_menu_frame_cycle_accumulator >= cycles_per_frame:
+		_title_menu_frame_cycle_accumulator -= cycles_per_frame
+		_title_menu_source_frame += 1
 
 
 func _load_audio_metadata() -> bool:

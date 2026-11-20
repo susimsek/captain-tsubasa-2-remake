@@ -1,0 +1,352 @@
+{
+  "schema": "ct2-slot15-callback36-map2f-resume-sources-v1",
+  "scope": "ROM-byte extraction only. Includes the complete 8x4 map block and the metatile source records needed by its first three cells. It does not execute the resumed worker, generate PPU queue writes, or claim rendered-pixel parity.",
+  "source_rom": {
+    "filename": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+    "size_bytes": 393232,
+    "ines_header_hex": "4E 45 53 1A 10 10 41 00 00 00 00 00 00 00 00 00",
+    "format": "iNES 1.0",
+    "mapper": 4,
+    "prg_rom_bytes": 262144,
+    "chr_rom_bytes": 131072,
+    "prg_bank_size_bytes": 8192,
+    "trainer_bytes": 0
+  },
+  "runtime_rom_dependency": false,
+  "capture_or_screenshot_bytes_included": false,
+  "route_context": {
+    "scenario_id": "0x2E",
+    "callback_id": "0x36",
+    "map_id": "0x2F",
+    "map_worker_entry": "0x8525",
+    "resume_continuation_after_first_yield": "0x8572",
+    "first_yield_callsite": "0x856F",
+    "observed_route_boundary": "Primary-agent same-input FCEUX trace reports scenario-$2E/callback-$36/map-$2F through $856F->$C515 at source frame 9468; the extraction package itself does not contain that trace."
+  },
+  "mapping": {
+    "bank_0B_file_base": "0x016010",
+    "bank_0B_cpu_base": "0x8000",
+    "bank_12_file_base": "0x024010",
+    "bank_12_cpu_base": "0xA000",
+    "selector_table_cpu_address": "0x8B42",
+    "selector_table_index": "0x0B",
+    "selector_byte_cpu_address": "0x8B4D",
+    "selector_byte_file_offset": "0x016B5D",
+    "selector_byte_hex": "6A",
+    "selector_formula": "(table[map_id >> 2] >> (2 * (map_id & 3))) & 3",
+    "resolved_selector": "0x01",
+    "block_map_formula": "0x8B64 + ((map_id >> 3) << 8) + ((map_id & 7) << 5)",
+    "block_map_cpu_address": "0x9144",
+    "block_map_prg_bank": "0x0B",
+    "block_map_file_offset": "0x017154",
+    "block_map_dimensions": "8x4 metatiles (32 bytes, consumed in linear map-cell order)",
+    "tile_record_formula": "window=(selector << 12)+(metatile_id << 4); bank=0x12+(window >> 13); cpu=0xA000+(window & 0x1FFF); file=0x024010+window",
+    "attribute_formula": "file=0x017BF4+(selector << 8)+metatile_id; CPU address is bank-$0B $8000+(file-0x016010)"
+  },
+  "block_map": {
+    "path": "map_2f_block_map.bin",
+    "size_bytes": 32,
+    "sha256": "e95e3366fb5c90d12a136b2f7bd77a3ab36be9bc6f05f8c7ea9c06812da4157e",
+    "bytes_hex": "15 16 15 16 15 16 15 16 17 18 17 18 17 18 17 18 26 26 26 26 26 26 26 26 25 25 25 25 25 25 25 25",
+    "unique_metatile_ids_in_first_occurrence_order": [
+      "0x15",
+      "0x16",
+      "0x17",
+      "0x18",
+      "0x26",
+      "0x25"
+    ]
+  },
+  "first_batch": {
+    "resume_source_pc": "0x8572",
+    "map_cell_indices": [
+      0,
+      1,
+      2
+    ],
+    "metatile_ids_path": "first_batch_metatile_ids.bin",
+    "metatile_ids_hex": "15 16 15",
+    "unique_metatile_ids_in_first_occurrence_order": [
+      "0x15",
+      "0x16"
+    ],
+    "expanded_source_records_path": "first_batch_metatile_source_records.bin",
+    "expanded_source_records_format": "Three 18-byte records in map-cell order: metatile ID (1 byte), its selector-derived 4x4 tile-ID record (16 bytes), then its selector-derived attribute byte (1 byte). This repeats metatile $15 for cells 0 and 2.",
+    "expanded_source_records_size_bytes": 54,
+    "expanded_source_records_sha256": "78fad2eb9e6a59b793250275f378cd60de12f72d7fcd09d9f75f5e859450b6a8",
+    "expanded_source_records_hex": "15 01 01 01 01 0D 0D 0D 0D 10 11 10 3C 0A 13 0A 12 FA 16 01 01 01 01 0D 0D 0D 0D 18 19 3C 3C 0B 0E 12 0A FA 15 01 01 01 01 0D 0D 0D 0D 10 11 10 3C 0A 13 0A 12 FA",
+    "ppu_queue_bytes_or_bus_events_extracted": false
+  },
+  "worker_code_references": [
+    {
+      "name": "resumed_map_worker_prefix_8572_85c2",
+      "path": "reference/rom_extract/gameplay/first_command_field/map_worker_8525/bank_0b_8572_85c2.bin",
+      "cpu_start": "0x8572",
+      "cpu_end_exclusive": "0x85C2",
+      "file_offset": "0x016582",
+      "prg_bank": "0x0B",
+      "size_bytes": 80,
+      "sha256": "098a354cae578918bf54407b972e69b520327d030eb391ed3c2d476c4d337502"
+    },
+    {
+      "name": "metatile_expander_85c2_86d3",
+      "path": "reference/rom_extract/gameplay/first_command_field/map_worker_8525/bank_0b_85c2_86d3.bin",
+      "cpu_start": "0x85C2",
+      "cpu_end_exclusive": "0x86D3",
+      "file_offset": "0x0165D2",
+      "prg_bank": "0x0B",
+      "size_bytes": 273,
+      "sha256": "1aab318fd595b2cf9f82ed8176340dfe43d4fbdc792e9204ede31c2d21c79e15"
+    }
+  ],
+  "metatile_sources_for_all_map_cells": [
+    {
+      "metatile_id": "0x15",
+      "used_by_map_cell_indices": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "tile_record": {
+        "path": "metatile_15_tile_record.bin",
+        "prg_bank": "0x12",
+        "cpu_address": "0xB150",
+        "file_offset": "0x025160",
+        "size_bytes": 16,
+        "sha256": "18b013f1362799dbb2a4ee3c0ba84ce6d236b7c82a89793899db4919d3dfab9f",
+        "bytes_hex": "01 01 01 01 0D 0D 0D 0D 10 11 10 3C 0A 13 0A 12"
+      },
+      "attribute": {
+        "path": "metatile_15_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9CF9",
+        "file_offset": "0x017D09",
+        "size_bytes": 1,
+        "sha256": "aa7225e7d5b0a2552bbb58880b3ec00c286995b801a7aeb69281e76a8b4908de",
+        "bytes_hex": "FA"
+      }
+    },
+    {
+      "metatile_id": "0x16",
+      "used_by_map_cell_indices": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "tile_record": {
+        "path": "metatile_16_tile_record.bin",
+        "prg_bank": "0x12",
+        "cpu_address": "0xB160",
+        "file_offset": "0x025170",
+        "size_bytes": 16,
+        "sha256": "f396045da5b50769278c8d36c46ec034d65d6776cec27d49d6b15581ea6a4050",
+        "bytes_hex": "01 01 01 01 0D 0D 0D 0D 18 19 3C 3C 0B 0E 12 0A"
+      },
+      "attribute": {
+        "path": "metatile_16_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9CFA",
+        "file_offset": "0x017D0A",
+        "size_bytes": 1,
+        "sha256": "aa7225e7d5b0a2552bbb58880b3ec00c286995b801a7aeb69281e76a8b4908de",
+        "bytes_hex": "FA"
+      }
+    },
+    {
+      "metatile_id": "0x17",
+      "used_by_map_cell_indices": [
+        8,
+        10,
+        12,
+        14
+      ],
+      "tile_record": {
+        "path": "metatile_17_tile_record.bin",
+        "prg_bank": "0x12",
+        "cpu_address": "0xB170",
+        "file_offset": "0x025180",
+        "size_bytes": 16,
+        "sha256": "a253ff73b89f00911a6c35e2f44da5c090057cfde1ac837e3dcbbdb9cc6fa367",
+        "bytes_hex": "10 3C 18 19 0A 12 0B 0E 01 01 01 01 01 01 01 01"
+      },
+      "attribute": {
+        "path": "metatile_17_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9CFB",
+        "file_offset": "0x017D0B",
+        "size_bytes": 1,
+        "sha256": "dc0e9c3658a1a3ed1ec94274d8b19925c93e1abb7ddba294923ad9bde30f8cb8",
+        "bytes_hex": "0F"
+      }
+    },
+    {
+      "metatile_id": "0x18",
+      "used_by_map_cell_indices": [
+        9,
+        11,
+        13,
+        15
+      ],
+      "tile_record": {
+        "path": "metatile_18_tile_record.bin",
+        "prg_bank": "0x12",
+        "cpu_address": "0xB180",
+        "file_offset": "0x025190",
+        "size_bytes": 16,
+        "sha256": "5c481faa8a19848275c26ce2ce2e6581dfcb3bff7bb3d453285fe67fc886b300",
+        "bytes_hex": "3C 3C 10 11 12 0A 0A 13 01 01 01 01 01 01 01 01"
+      },
+      "attribute": {
+        "path": "metatile_18_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9CFC",
+        "file_offset": "0x017D0C",
+        "size_bytes": 1,
+        "sha256": "dc0e9c3658a1a3ed1ec94274d8b19925c93e1abb7ddba294923ad9bde30f8cb8",
+        "bytes_hex": "0F"
+      }
+    },
+    {
+      "metatile_id": "0x26",
+      "used_by_map_cell_indices": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "tile_record": {
+        "path": "metatile_26_tile_record.bin",
+        "prg_bank": "0x12",
+        "cpu_address": "0xB260",
+        "file_offset": "0x025270",
+        "size_bytes": 16,
+        "sha256": "cc8cd41cef907c4d216069122c4b89936211361f9050a717a1e37ad1862e952f",
+        "bytes_hex": "01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01"
+      },
+      "attribute": {
+        "path": "metatile_26_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9D0A",
+        "file_offset": "0x017D1A",
+        "size_bytes": 1,
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+        "bytes_hex": "00"
+      }
+    },
+    {
+      "metatile_id": "0x25",
+      "used_by_map_cell_indices": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "tile_record": {
+        "path": "metatile_25_tile_record.bin",
+        "prg_bank": "0x12",
+        "cpu_address": "0xB250",
+        "file_offset": "0x025260",
+        "size_bytes": 16,
+        "sha256": "3cda893eb18b58e6bf19bae09cd9cdd08450668b0d367b909b527ddadab7232c",
+        "bytes_hex": "01 01 01 01 01 01 01 01 00 00 00 00 00 00 00 00"
+      },
+      "attribute": {
+        "path": "metatile_25_attribute.bin",
+        "prg_bank": "0x0B",
+        "cpu_address": "0x9D09",
+        "file_offset": "0x017D19",
+        "size_bytes": 1,
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+        "bytes_hex": "00"
+      }
+    }
+  ],
+  "extracted_files": [
+    {
+      "path": "first_batch_metatile_ids.bin",
+      "size_bytes": 3,
+      "sha256": "89da97f620858fd7271e54cb6c00e4386d7ed3bb7401687b4ee7a4efda2f0d92"
+    },
+    {
+      "path": "first_batch_metatile_source_records.bin",
+      "size_bytes": 54,
+      "sha256": "78fad2eb9e6a59b793250275f378cd60de12f72d7fcd09d9f75f5e859450b6a8"
+    },
+    {
+      "path": "map_2f_block_map.bin",
+      "size_bytes": 32,
+      "sha256": "e95e3366fb5c90d12a136b2f7bd77a3ab36be9bc6f05f8c7ea9c06812da4157e"
+    },
+    {
+      "path": "metatile_15_attribute.bin",
+      "size_bytes": 1,
+      "sha256": "aa7225e7d5b0a2552bbb58880b3ec00c286995b801a7aeb69281e76a8b4908de"
+    },
+    {
+      "path": "metatile_15_tile_record.bin",
+      "size_bytes": 16,
+      "sha256": "18b013f1362799dbb2a4ee3c0ba84ce6d236b7c82a89793899db4919d3dfab9f"
+    },
+    {
+      "path": "metatile_16_attribute.bin",
+      "size_bytes": 1,
+      "sha256": "aa7225e7d5b0a2552bbb58880b3ec00c286995b801a7aeb69281e76a8b4908de"
+    },
+    {
+      "path": "metatile_16_tile_record.bin",
+      "size_bytes": 16,
+      "sha256": "f396045da5b50769278c8d36c46ec034d65d6776cec27d49d6b15581ea6a4050"
+    },
+    {
+      "path": "metatile_17_attribute.bin",
+      "size_bytes": 1,
+      "sha256": "dc0e9c3658a1a3ed1ec94274d8b19925c93e1abb7ddba294923ad9bde30f8cb8"
+    },
+    {
+      "path": "metatile_17_tile_record.bin",
+      "size_bytes": 16,
+      "sha256": "a253ff73b89f00911a6c35e2f44da5c090057cfde1ac837e3dcbbdb9cc6fa367"
+    },
+    {
+      "path": "metatile_18_attribute.bin",
+      "size_bytes": 1,
+      "sha256": "dc0e9c3658a1a3ed1ec94274d8b19925c93e1abb7ddba294923ad9bde30f8cb8"
+    },
+    {
+      "path": "metatile_18_tile_record.bin",
+      "size_bytes": 16,
+      "sha256": "5c481faa8a19848275c26ce2ce2e6581dfcb3bff7bb3d453285fe67fc886b300"
+    },
+    {
+      "path": "metatile_25_attribute.bin",
+      "size_bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "metatile_25_tile_record.bin",
+      "size_bytes": 16,
+      "sha256": "3cda893eb18b58e6bf19bae09cd9cdd08450668b0d367b909b527ddadab7232c"
+    },
+    {
+      "path": "metatile_26_attribute.bin",
+      "size_bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "metatile_26_tile_record.bin",
+      "size_bytes": 16,
+      "sha256": "cc8cd41cef907c4d216069122c4b89936211361f9050a717a1e37ad1862e952f"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "schema": "ct2-f1-02-ppu-window-v1",
+  "rom": {
+    "file": "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes",
+    "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
+  },
+  "source": {
+    "prg_bank": 6,
+    "bank_cpu_window": "$A000-$BFFF",
+    "pointer_table_cpu": "0xBB40",
+    "window_id": 2,
+    "pointer_entry_cpu": "$BB44",
+    "pointer_entry_file_offset": "0x00DB54",
+    "pointer_entry_bytes": "E8 BB",
+    "stream_cpu_start": "0xBBE8",
+    "stream_file_start": "0x00DBF8",
+    "stream_file_end_exclusive": "0x00DC52"
+  },
+  "resource": {
+    "path": "assets/gameplay/rom_logic/f1_02_window.bin",
+    "reference_path": "reference/rom_extract/gameplay/meeting_menu/f1_02_window.bin",
+    "byte_length": 90,
+    "sha256": "03848717537daf13beb38610b062634b5e5096d11587e9aefaeed5ca19c9e422",
+    "byte_identity": "copied unchanged from the supplied ROM"
+  },
+  "format": {
+    "header": "count=header&0x3F; bit 7 means PPU increment 32; bit 6 marks final record",
+    "records": [
+      {
+        "index": 0,
+        "cpu_address": 48104,
+        "file_offset": 56312,
+        "header": 30,
+        "payload_size": 30,
+        "ppu_address": 8737,
+        "increment": 1,
+        "final": false,
+        "sha256": "e2881e77c9baeb92a659f2bb6e09f2e769aaee047d737bbee4cbd70af55d0483"
+      },
+      {
+        "index": 1,
+        "cpu_address": 48137,
+        "file_offset": 56345,
+        "header": 30,
+        "payload_size": 30,
+        "ppu_address": 9057,
+        "increment": 1,
+        "final": false,
+        "sha256": "cba209d0f7b69f6cdfed6d5bcdfe339edfca10891c153590dafe884da37df558"
+      },
+      {
+        "index": 2,
+        "cpu_address": 48170,
+        "file_offset": 56378,
+        "header": 137,
+        "payload_size": 9,
+        "ppu_address": 8769,
+        "increment": 32,
+        "final": false,
+        "sha256": "2a234b3e0847637b259a75080931f3f44a2f51a7decb528b4870e706d848990b"
+      },
+      {
+        "index": 3,
+        "cpu_address": 48182,
+        "file_offset": 56390,
+        "header": 201,
+        "payload_size": 9,
+        "ppu_address": 8798,
+        "increment": 32,
+        "final": true,
+        "sha256": "d6361296cad1881e9f6dff9a1f715d895fa1896023b49b754a7e43b24674ee18"
+      }
+    ]
+  },
+  "runtime_policy": {
+    "source_queue": "The buffered F1 path reserves 11 ROM-defined 30-byte zero rows, then these table records.",
+    "capacity_test": "queue cursor + requested payload >= 0x3D yields through $9FA8(A=1) and retries after the source NMI queue drain.",
+    "runtime_uses_original_rom": false,
+    "runtime_uses_capture": false
+  }
+}

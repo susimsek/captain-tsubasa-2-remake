@@ -64,14 +64,11 @@ frame-end scroll value cannot describe the full raster.
 
 ## What this does not establish
 
-The retained gameplay trace has frame-end PPU/RAM snapshots and selected PC
-hooks, but it does not record the IRQ entry cycle, `$2006/$2005/$2000` writes,
-PPU scanline/dot, or each CHR register write. The input-schedule replay also
-does not include a gameplay PPU-bus event log. As a result, this audit cannot
-prove the IRQ fired in the compared frame, identify its first affected pixel,
-convert latch `$7B` into an exact FCEUX or physical NES scanline, or show that
-it explains the lower-screen map residual. The `$7B` value is a source-derived
-MMC3 latch, not a measured scanline number.
+The original retained gameplay trace has frame-end PPU/RAM snapshots and
+selected PC hooks, but it does not record raster coordinates. The instrumented
+same-input follow-up below supplies FCEUX NewPPU positions for the bus events.
+It still does not identify the first affected output pixel or prove physical
+NES timing.
 
 The candidate-render comparison's screenshot-guided `$2006=$2240` at scanline
 134 is not supported by this source trace: the ROM path writes `$2200`. The
@@ -104,19 +101,29 @@ At frame 8953 the source-frame-relative CPU cycle measurements are:
 | IRQ disable/ack `$E000` | 16,560 | `$C8CF` write callback |
 
 The same run records the subsequent MMC3 CHR selector/data writes for R0–R3,
-completing by cycle 16,554. The endpoint sequence is therefore confirmed to
-write `$2200` and reset scroll to zero. These are FCEUX CPU-cycle labels for the
-same input replay; they are not a physical NES timing claim.
+completing by cycle 16,554. A temporary build of pinned FCEUX commit
+`a6d03e7968bd77a8156a7c9b628a673753f2f4c6` exposed the already-existing
+`newppu_get_scanline()` and `newppu_get_dot()` functions to Lua. The resulting
+same-input trace is stored at
+[`first_command_irq_viewport_20261109_072543_utc`](../../diagnostics/first_command_irq_viewport_20261109_072543_utc/)
+and records these positions at frame 8953:
 
-The script attempted `ppu.getscanline()` and `ppu.getdot()`, but both were
-unavailable in the installed FCEUX 2.7.0 Lua interface and returned `-1`. The
-official FCEUX Lua function list documents PPU memory reads and CPU cycle
-counting, but no Lua scanline/dot getter ([function list](https://fceux.com/web/help/LuaFunctionsList.html)).
-In pinned FCEUX source commit
-[`a6d03e7968bd77a8156a7c9b628a673753f2f4c6`](https://github.com/TASEmulators/fceux/tree/a6d03e7968bd77a8156a7c9b628a673753f2f4c6),
-`src/ppu.cpp` has internal NewPPU line/dot getters while
-`src/lua-engine.cpp` does not bind them to Lua.
-Consequently, this follow-up closes the missing CPU-side IRQ/register trace but
-does not identify the corresponding PPU scanline/dot or first changed output
-pixel. The screenshot-guided `$2240` / scanline-134 candidate remains
-unsupported and stays out of runtime.
+| Event | NewPPU line | Dot | Evidence |
+| --- | ---: | ---: | --- |
+| IRQ entry `$C821` | 123 | 312 | `irq_viewport_events.csv` |
+| `$2006=$22` | 124 | 274 | `irq_viewport_events.csv` |
+| `$2006=$00` | 124 | 292 | `irq_viewport_events.csv` |
+| `$2000=$8A` | 124 | 320 | `irq_viewport_events.csv` |
+| `$2005=$00,$00` | 125 | 8, 20 | `irq_viewport_events.csv` |
+| MMC3 R0=`$00` | 125 | 62 | `irq_viewport_events.csv` |
+| MMC3 R1=`$02` | 125 | 113 | `irq_viewport_events.csv` |
+| MMC3 R2=`$1F`, R3=`$2E` | 125 | 161, 209 | `irq_viewport_events.csv` |
+
+These are FCEUX NewPPU coordinates from the instrumented same-input replay,
+not physical 2C02 timing or the first output pixel affected by a register
+write. The renderer uses the observed positions with its documented NewPPU
+fetch-record model. The isolated panel's validation-only `+6` row registration
+remains unexplained and is not applied as a runtime offset. The trace reaches
+frame 8953 and writes all event rows, although the temporary FCEUX process exits
+with status `-11` during shutdown; its capture metadata records that abnormal
+exit.

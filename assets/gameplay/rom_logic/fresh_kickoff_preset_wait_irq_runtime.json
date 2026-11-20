@@ -1,0 +1,70 @@
+{
+  "schema": "ct2-fresh-kickoff-preset-wait-irq-runtime-v1",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "input_route_sha256": "6cae92ff2b6a77fcc05c34c57c734bbff47930ada172633cb4a4b830cc3e77dc",
+  "source_manifest_sha256": "5d7567d0b278f957fe2489517a45da4bedcc74dcf0553889cb82f411efda6e69",
+  "candidate_schedule_sha256": "92c52ccef07422c02eb95d40b3f0c5ce41fece6cc11784167572ea22be964d85",
+  "source_event_id": "fresh-kickoff-893b-irq-edge:7266:216372246",
+  "irq_edge": {
+    "source_frame": 7266,
+    "source_cycle": 216372246,
+    "ppu_line": 128,
+    "ppu_dot": 274,
+    "counter_before": 1,
+    "counter_after": 0,
+    "latch": 128,
+    "irq_enabled": 1
+  },
+  "source_spans": {
+    "vector_trampolines": {
+      "cpu_start": "$C500",
+      "cpu_end_exclusive": "$C509",
+      "length": 9,
+      "sha256": "4cacda47b1a9af1bdc11c78e5dc06357d5e8dfa4819ecf8f9c98bfe15b79151f",
+      "bytes_hex": "4c6ec74c4ec64c21c8"
+    },
+    "irq_dispatch": {
+      "cpu_start": "$C821",
+      "cpu_end_exclusive": "$C828",
+      "length": 7,
+      "sha256": "5e94774bfa2074975596f0f7b9468f6c2c13d47f943936edb5f2a0ac8fb3b883",
+      "bytes_hex": "241b50034c78c4"
+    },
+    "irq_service": {
+      "cpu_start": "$C478",
+      "cpu_end_exclusive": "$C4AE",
+      "length": 54,
+      "sha256": "3bd224939351f06a7ff6e8138b52b8d8744c40b92bc955fe4b28e68b82c6917d",
+      "bytes_hex": "243b303238663b853c863d843ea52209078d0080a9028d01802060a1a52209078d0080a5258d0180a5238d0080a43ea63da53c463b40"
+    },
+    "interrupt_vectors": {
+      "cpu_start": "$FFFA",
+      "cpu_end_exclusive": "$10000",
+      "length": 6,
+      "sha256": "72925dda7194399d7eb27eb4a7d41a2b4d4b8be47b049bc1fd06f95f6627edec",
+      "bytes_hex": "00c5f0ff06c5"
+    },
+    "bank2_irq_consumer": {
+      "cpu_start": "$A160",
+      "cpu_end_exclusive": "$A1E2",
+      "length": 130,
+      "sha256": "50a0bf6f80ee2c2ca1e1f2034e6328b6f447a73838bb833fb0041fc9455b191a",
+      "bytes_hex": "8d00e08d01e0a678b5781021a00688d0fdb579b47a8c06208d0620a52029fc8d0020a9008d05208d05204ca8a1a00288d0fd4620b57a4a2620a5208d0020b5798d0520a9008d0520b578297ff012e013f00ee678e678e6780a8d00c08d01c0608d00e08578a01820cba160b678a90005228d00808e0180b679a90105228d00808e01"
+    },
+    "bank2_irq_consumer_tail": {
+      "cpu_start": "$A1E2",
+      "cpu_end_exclusive": "$A1E4",
+      "length": 2,
+      "sha256": "322d846034eb1504f862d69cc84c8c42cf29fe205cae5962a7bf54618672d0ba",
+      "bytes_hex": "8060"
+    }
+  },
+  "limits": {
+    "candidate_irq_edge_only": true,
+    "runtime_executes_rom_handler": true,
+    "fceux_trace_used_as_runtime_input": false,
+    "candidate_endpoint_state_used": false,
+    "physical_nes_timing_proven": false,
+    "complete_ppu_fetch_parity": false
+  }
+}

@@ -1,6 +1,6 @@
 extends RefCounted
 class_name RomSlot15MapWorker8525PrefixExecutor
-## Runs fresh callback `$42` in `$8525` through the first `$856F JSR $C515`
+## Runs checked callback maps in `$8525` through the first `$856F JSR $C515`
 ## callsite. It stops before yielding; map-row queue construction is later work.
 
 const ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
@@ -11,6 +11,29 @@ const SELECTOR_ROUTINE_PATH := ROOT + "bank_0b_86d3_86ee_map_selector_lookup.bin
 const SELECTOR_ROUTINE_SHA256 := "08c5584a0bae0feb953cd6f98c7a8dc792d1304c047872dd8f6b145ac7a555b7"
 const CHR_PAIR_PATH := ROOT + "bank_0b_86ee_map_42_chr_pair.bin"
 const CHR_PAIR_SHA256 := "50ccd3ef9e7c33fc6961800add05d3ed815ad357d03d7fbfcb74354a40986c46"
+const CHR_PAIR_36_PATH := ROOT + "bank_0b_875a_875c.bin"
+const CHR_PAIR_36_SHA256 := "505114fe537172ea35e17ca1a7516edac516a89b31f983f7c6387d5d2bb462aa"
+const CHR_PAIR_43_PATH := ROOT + "bank_0b_86ee_map_43_chr_pair.bin"
+const CHR_PAIR_43_SHA256 := "50ccd3ef9e7c33fc6961800add05d3ed815ad357d03d7fbfcb74354a40986c46"
+const CHR_PAIR_52_PATH := ROOT + "bank_0b_86ee_map_52_chr_pair.bin"
+const CHR_PAIR_52_SHA256 := "cab590fcde8cf68ac09914f68ae356b7ca9587e2366db966ad506569d6603a19"
+const MAP_51_ROOT := "res://reference/rom_extract/gameplay/first_command_field/map_51/"
+const CHR_PAIR_51_PATH := MAP_51_ROOT + "chr_pair_51.bin"
+const CHR_PAIR_51_SHA256 := "cab590fcde8cf68ac09914f68ae356b7ca9587e2366db966ad506569d6603a19"
+const CHR_PAIR_56_PATH := ROOT + "bank_0b_879a_879c.bin"
+const CHR_PAIR_56_SHA256 := "12ff27f82eb1fec60296d1e0176f4e158fbae7748cc092e5e145404c6e8473c5"
+const CHR_PAIR_00_PATH := "res://reference/rom_extract/gameplay/first_command_field/callback_f2_control/bank_0b_map_00_chr_pair_86ee_86f0.bin"
+const CHR_PAIR_00_SHA256 := "cab590fcde8cf68ac09914f68ae356b7ca9587e2366db966ad506569d6603a19"
+const CHR_PAIR_0E_PATH := "res://reference/rom_extract/gameplay/first_command_field/callback_f2_control/bank_0b_map_0e_chr_pair_870a_870c.bin"
+const CHR_PAIR_0E_SHA256 := "cab590fcde8cf68ac09914f68ae356b7ca9587e2366db966ad506569d6603a19"
+const CHR_PAIR_11_PATH := "res://reference/rom_extract/gameplay/first_command_field/map_11/chr_pair_11.bin"
+const CHR_PAIR_11_SHA256 := "cab590fcde8cf68ac09914f68ae356b7ca9587e2366db966ad506569d6603a19"
+const CHR_PAIR_12_PATH := "res://reference/rom_extract/gameplay/first_command_field/map_12/chr_pair_12.bin"
+const CHR_PAIR_12_SHA256 := "cab590fcde8cf68ac09914f68ae356b7ca9587e2366db966ad506569d6603a19"
+const CHR_PAIR_2D_PATH := "res://reference/rom_extract/gameplay/slot15_callback_34/map_2d_chr_pair.bin"
+const CHR_PAIR_2D_SHA256 := "fcf0a6c700dd13e274b6fba8deea8dd9b26e4eedde3495717cac8408c9c5177f"
+const CHR_PAIR_2F_PATH := ROOT + "bank_0b_874c_874e.bin"
+const CHR_PAIR_2F_SHA256 := "cab590fcde8cf68ac09914f68ae356b7ca9587e2366db966ad506569d6603a19"
 const YIELD_CALLSITE_PATH := ROOT + "bank_0b_856f_8572_c515_callsite.bin"
 const YIELD_CALLSITE_SHA256 := "59653ff81dfe5c01f141d4ee69bb4832290c727091c41b92a71a6b0e2400a837"
 const SELECTOR_TABLE_PATH := "res://reference/rom_extract/gameplay/first_command_field/page_correct_map_sources/packed_map_selectors_8B42.bin"
@@ -24,9 +47,12 @@ const P_NZ := P_N | P_Z
 var error_message := ""
 
 
-func execute_map_42_to_first_yield_callsite(worker_entry: Dictionary) -> Dictionary:
+func execute_map_to_first_yield_callsite(worker_entry: Dictionary) -> Dictionary:
 	error_message = ""
-	var loaded := _load_sources()
+	var map_id := int(worker_entry.get("map_selector", -1))
+	if map_id not in [0x00, 0x0E, 0x11, 0x12, 0x2D, 0x2F, 0x36, 0x42, 0x43, 0x51, 0x52, 0x56]:
+		return _failure("This bounded source path does not support the requested callback map ID `$%02X`." % map_id)
+	var loaded := _load_sources(map_id)
 	if not bool(loaded.get("ok", false)):
 		return _failure(String(loaded.get("error", "Map-worker source load failed.")))
 	var source: Dictionary = loaded["source"]
@@ -43,16 +69,45 @@ func execute_map_42_to_first_yield_callsite(worker_entry: Dictionary) -> Diction
 	var mapper: Dictionary = mapper_variant
 	if ram.size() != 0x800 or stack.size() != 0x100:
 		return _failure("Map-worker entry has the wrong RAM or stack-page size.")
-	if String(worker_entry.get("rom_sha256", "")) != ROM_SHA256 \
+	var callback_id := int(worker_entry.get("callback_id", -1))
+	var scenario1c_callback63 := map_id == 0x51 \
+			and callback_id == 0x63 and int(ram[0x0518]) == 0x1C
+	var expected_callback := 0x0C
+	match map_id:
+		0x00: expected_callback = 0x72
+		0x0E: expected_callback = 0x01
+		0x11: expected_callback = 0x72
+		0x12: expected_callback = 0x01
+		0x2D: expected_callback = 0x34
+		0x2F: expected_callback = 0x36
+		0x51: expected_callback = 0x63
+		0x36: expected_callback = 0x45
+		0x42: expected_callback = 0x3A
+		0x52: expected_callback = 0x1F
+		0x56: expected_callback = 0x70
+	var expected_stream_low := -1
+	match map_id:
+		0x36: expected_stream_low = 0x2A
+		0x2D: expected_stream_low = 0xE1
+		0x2F: expected_stream_low = 0xE7
+		0x42: expected_stream_low = 0xF3
+		0x43: expected_stream_low = 0x11
+		0x52: expected_stream_low = 0x00
+		0x51: expected_stream_low = 0xD8
+		0x56: expected_stream_low = 0x38
+	var callback_x_matches := int(cpu.get("x", -1)) == int(worker_entry.get("map_position_index", -2)) if map_id in [0x00, 0x0E, 0x11, 0x12] else int(cpu.get("x", -1)) == expected_stream_low
+	if callback_id != expected_callback \
+			or (map_id == 0x51 and not scenario1c_callback63) \
+			or String(worker_entry.get("rom_sha256", "")) != ROM_SHA256 \
 			or String(worker_entry.get("status", "")) != "entered_map_worker_8525" \
 			or int(worker_entry.get("exit_pc", -1)) != 0x8525 \
-			or int(cpu.get("pc", -1)) != 0x8525 or int(cpu.get("a", -1)) != 0x42 \
-			or int(cpu.get("x", -1)) != 0xF3 or int(cpu.get("y", -1)) != int(ram[0x05CD]) \
+			or int(cpu.get("pc", -1)) != 0x8525 or int(cpu.get("a", -1)) != map_id \
+			or not callback_x_matches or int(cpu.get("y", -1)) != int(ram[0x05CD]) \
 			or int(cpu.get("sp", -1)) != 0xEE or int(ram[0x0000]) != 0x15 \
-			or int(ram[0x05CC]) != 0x42 or int(mapper.get("bank_low", -1)) != 0x0B \
+			or int(ram[0x05CC]) != map_id or int(mapper.get("bank_low", -1)) != 0x0B \
 			or int(mapper.get("bank_high", -1)) != 0x0C or ram.size() != 0x800 \
 			or stack.size() != 0x100 or bool(worker_entry.get("trace_state_used", true)):
-		return _failure("Input is not the active slot-$15 fresh map-$42 worker at `$8525`.")
+		return _failure("Input is not the active slot-$15 ROM-backed map worker at `$8525`.")
 	var entry_cpu := cpu.duplicate(true)
 	var entry_ram := ram.duplicate()
 	var entry_stack := stack.duplicate()
@@ -61,9 +116,8 @@ func execute_map_42_to_first_yield_callsite(worker_entry: Dictionary) -> Diction
 	var stack_reads: Array[Dictionary] = []
 	var source_reads: Array[Dictionary] = []
 	var instruction_pcs: Array[int] = []
-	var map_id := int(ram[0x05CC])
-	if map_id != 0x42:
-		return _failure("This bounded source path is limited to fresh callback map `$42`.")
+	if int(ram[0x05CC]) != map_id:
+		return _failure("The callback map selector differs from live `$05CC`.")
 
 	# `$8525`: retain placement in `$05C8`, save map ID, and load CHR selector pair.
 	instruction_pcs.append(0x8525) # STY $05C8
@@ -84,13 +138,13 @@ func execute_map_42_to_first_yield_callsite(worker_entry: Dictionary) -> Diction
 	_set_a(cpu, int(cpu["x"]))
 	instruction_pcs.append(0x8533) # ASL A
 	_asl_a(cpu)
-	instruction_pcs.append(0x8534) # BCC $8538; map $42 takes this path
+	instruction_pcs.append(0x8534) # BCC $8538; both supported IDs take this path
 	if (int(cpu["p"]) & P_C) != 0:
-		return _failure("Map `$42` unexpectedly carries out of the CHR-pair index shift.")
+		return _failure("Map `$%02X` unexpectedly carries out of the CHR-pair index shift." % map_id)
 	instruction_pcs.append(0x8538) # TAY
 	_set_y(cpu, int(cpu["a"]))
 	var pair_address := 0x86EE + int(cpu["y"])
-	source_reads.append(_read(pair_address, int(source["chr_pair"][0]), "map_42_chr_pair_first"))
+	source_reads.append(_read(pair_address, int(source["chr_pair"][0]), "map_%02X_chr_pair_first" % map_id))
 	instruction_pcs.append(0x8539) # LDA ($54),Y
 	_set_a(cpu, int(source["chr_pair"][0]))
 	instruction_pcs.append(0x853B) # ORA #$80
@@ -99,7 +153,7 @@ func execute_map_42_to_first_yield_callsite(worker_entry: Dictionary) -> Diction
 	_write_ram(ram, ram_writes, 0x0526, int(cpu["a"]), 0x853D, "staged_chr_selector_a")
 	instruction_pcs.append(0x8540) # INY
 	_set_y(cpu, (int(cpu["y"]) + 1) & 0xFF)
-	source_reads.append(_read(pair_address + 1, int(source["chr_pair"][1]), "map_42_chr_pair_second"))
+	source_reads.append(_read(pair_address + 1, int(source["chr_pair"][1]), "map_%02X_chr_pair_second" % map_id))
 	instruction_pcs.append(0x8541) # LDA ($54),Y
 	_set_a(cpu, int(source["chr_pair"][1]))
 	instruction_pcs.append(0x8543) # STA $0527
@@ -107,7 +161,7 @@ func execute_map_42_to_first_yield_callsite(worker_entry: Dictionary) -> Diction
 	instruction_pcs.append(0x8546) # PLA
 	_set_a(cpu, _pop(cpu, stack, stack_reads, 0x8546, "map_id"))
 
-	# `$86D3`: resolve map $42's packed selector using the actual ROM table.
+	# `$86D3`: resolve the callback's packed selector using the actual ROM table.
 	instruction_pcs.append(0x8547) # JSR $86D3
 	var selector_return := 0x8549
 	_push(cpu, stack, stack_writes, (selector_return >> 8) & 0xFF, 0x8547, "selector_jsr_return_high")
@@ -191,23 +245,55 @@ func execute_map_42_to_first_yield_callsite(worker_entry: Dictionary) -> Diction
 	instruction_pcs.append(0x856D) # LDA #$01
 	_set_a(cpu, 0x01)
 	cpu["pc"] = 0x856F
-	if int(cpu["a"]) != 1 or int(cpu["x"]) != 8 or int(cpu["y"]) != 0x10 \
+	var expected_map_data_pointer := 0x8B64 + ((map_id >> 3) << 8) + ((map_id & 0x07) << 5)
+	var selector_entry := int(source["selector_table"][map_id >> 2])
+	var expected_map_selector := (selector_entry >> (2 * (map_id & 0x03))) & 0x03
+	var expected_pair: PackedByteArray = source["chr_pair"]
+	var expected_staged_pair := PackedByteArray([expected_pair[0] | 0x80, expected_pair[1]])
+	var expected_x := map_id >> 3
+	var expected_y := map_id >> 2
+	if int(cpu["a"]) != 1 or int(cpu["x"]) != expected_x or int(cpu["y"]) != expected_y \
 			or int(cpu["sp"]) != 0xED or int(cpu["p"]) != 0x20 \
-			or int(ram[0x05CA]) != 1 or int(ram[0x0526]) != 0xBC \
-			or int(ram[0x0527]) != 0x2C or int(ram[0x0054]) != 0xA4 \
-			or int(ram[0x0055]) != 0x93 or int(ram[0x05C9]) != 0x20:
-		return _failure("Map `$42` worker setup disagrees at `$856F`: CPU=%s RAM={0526:%02X,0527:%02X,05CA:%02X,0054:%02X,0055:%02X,05C9:%02X}." % [str(cpu), int(ram[0x0526]), int(ram[0x0527]), int(ram[0x05CA]), int(ram[0x0054]), int(ram[0x0055]), int(ram[0x05C9])])
+			or int(ram[0x05CA]) != expected_map_selector or int(ram[0x0526]) != expected_staged_pair[0] \
+			or int(ram[0x0527]) != expected_staged_pair[1] \
+			or (int(ram[0x0054]) | (int(ram[0x0055]) << 8)) != expected_map_data_pointer \
+			or int(ram[0x05C9]) != 0x20:
+		return _failure("Map `$%02X` worker setup disagrees at `$856F`: CPU=%s RAM={0526:%02X,0527:%02X,05CA:%02X,0054:%02X,0055:%02X,05C9:%02X}." % [map_id, str(cpu), int(ram[0x0526]), int(ram[0x0527]), int(ram[0x05CA]), int(ram[0x0054]), int(ram[0x0055]), int(ram[0x05C9])])
 	for stack_offset in stack.size():
 		ram[0x0100 + stack_offset] = stack[stack_offset]
+	var source_hashes := {
+		"worker_8525": WORKER_SHA256,
+		"selector_routine_86d3": SELECTOR_ROUTINE_SHA256,
+		"packed_selector_table": SELECTOR_TABLE_SHA256,
+		"yield_callsite": YIELD_CALLSITE_SHA256,
+	}
+	if map_id == 0x00:
+		source_hashes["chr_pair_00"] = CHR_PAIR_00_SHA256
+	elif map_id == 0x0E:
+		source_hashes["chr_pair_0E"] = CHR_PAIR_0E_SHA256
+	elif map_id == 0x11:
+		source_hashes["chr_pair_11"] = CHR_PAIR_11_SHA256
+	elif map_id == 0x12:
+		source_hashes["chr_pair_12"] = CHR_PAIR_12_SHA256
+	elif map_id == 0x36:
+		source_hashes["chr_pair_36"] = CHR_PAIR_36_SHA256
+	elif map_id == 0x51:
+		source_hashes["chr_pair_51"] = CHR_PAIR_51_SHA256
+	elif map_id == 0x52:
+		source_hashes["chr_pair_52"] = CHR_PAIR_52_SHA256
+	elif map_id == 0x56:
+		source_hashes["chr_pair_56"] = CHR_PAIR_56_SHA256
+	elif map_id == 0x2D:
+		source_hashes["chr_pair_2D"] = CHR_PAIR_2D_SHA256
+	elif map_id == 0x2F:
+		source_hashes["chr_pair_2F"] = CHR_PAIR_2F_SHA256
+	else:
+		source_hashes["chr_pair_%02X" % map_id] = CHR_PAIR_SHA256 if map_id == 0x42 else CHR_PAIR_43_SHA256
 	return {
 		"ok": true,
 		"status": "reached_first_map_worker_yield_callsite",
 		"rom_sha256": ROM_SHA256,
-		"source_hashes": {"worker_8525": WORKER_SHA256,
-			"selector_routine_86d3": SELECTOR_ROUTINE_SHA256,
-			"chr_pair_42": CHR_PAIR_SHA256,
-			"packed_selector_table": SELECTOR_TABLE_SHA256,
-			"yield_callsite": YIELD_CALLSITE_SHA256},
+		"source_hashes": source_hashes,
 		"entry_pc": 0x8525,
 		"exit_pc": 0x856F,
 		"entry_registers": entry_cpu,
@@ -228,6 +314,7 @@ func execute_map_42_to_first_yield_callsite(worker_entry: Dictionary) -> Diction
 		"chr_pair": PackedByteArray([int(source["chr_pair"][0]), int(source["chr_pair"][1])]),
 		"staged_chr_pair": PackedByteArray([int(ram[0x0526]), int(ram[0x0527])]),
 		"map_data_pointer": int(ram[0x0054]) | (int(ram[0x0055]) << 8),
+		"callback_id": callback_id,
 		"placement": int(ram[0x05C8]),
 		"row_count": int(ram[0x05C9]),
 		"yield_callsite": 0x856F,
@@ -237,11 +324,59 @@ func execute_map_42_to_first_yield_callsite(worker_entry: Dictionary) -> Diction
 	}
 
 
-func _load_sources() -> Dictionary:
+func _load_sources(map_id: int) -> Dictionary:
+	var pair_path := CHR_PAIR_43_PATH
+	var pair_hash := CHR_PAIR_43_SHA256
+	var pair_address := 0x8774
+	match map_id:
+		0x00:
+			pair_path = CHR_PAIR_00_PATH
+			pair_hash = CHR_PAIR_00_SHA256
+			pair_address = 0x86EE
+		0x0E:
+			pair_path = CHR_PAIR_0E_PATH
+			pair_hash = CHR_PAIR_0E_SHA256
+			pair_address = 0x870A
+		0x11:
+			pair_path = CHR_PAIR_11_PATH
+			pair_hash = CHR_PAIR_11_SHA256
+			pair_address = 0x8710
+		0x12:
+			pair_path = CHR_PAIR_12_PATH
+			pair_hash = CHR_PAIR_12_SHA256
+			pair_address = 0x8712
+		0x2D:
+			pair_path = CHR_PAIR_2D_PATH
+			pair_hash = CHR_PAIR_2D_SHA256
+			pair_address = 0x8748
+		0x2F:
+			pair_path = CHR_PAIR_2F_PATH
+			pair_hash = CHR_PAIR_2F_SHA256
+			pair_address = 0x874C
+		0x36:
+			pair_path = CHR_PAIR_36_PATH
+			pair_hash = CHR_PAIR_36_SHA256
+			pair_address = 0x875A
+		0x42:
+			pair_path = CHR_PAIR_PATH
+			pair_hash = CHR_PAIR_SHA256
+			pair_address = 0x8772
+		0x52:
+			pair_path = CHR_PAIR_52_PATH
+			pair_hash = CHR_PAIR_52_SHA256
+			pair_address = 0x8792
+		0x51:
+			pair_path = CHR_PAIR_51_PATH
+			pair_hash = CHR_PAIR_51_SHA256
+			pair_address = 0x8790
+		0x56:
+			pair_path = CHR_PAIR_56_PATH
+			pair_hash = CHR_PAIR_56_SHA256
+			pair_address = 0x879A
 	var paths := {
 		"worker": [WORKER_PATH, WORKER_SHA256, 0x4A],
 		"selector_routine": [SELECTOR_ROUTINE_PATH, SELECTOR_ROUTINE_SHA256, 0x1B],
-		"chr_pair": [CHR_PAIR_PATH, CHR_PAIR_SHA256, 0x02],
+		"chr_pair": [pair_path, pair_hash, 0x02],
 		"selector_table": [SELECTOR_TABLE_PATH, SELECTOR_TABLE_SHA256, 0x22],
 		"yield_callsite": [YIELD_CALLSITE_PATH, YIELD_CALLSITE_SHA256, 0x03],
 	}
@@ -253,11 +388,17 @@ func _load_sources() -> Dictionary:
 		if bytes.size() != int(item[2]) or FileAccess.get_sha256(path) != String(item[1]):
 			return {"ok": false, "error": "Map-worker ROM bytes failed size/hash validation: %s" % path}
 		source[key] = bytes
+	var expected_chr_source := PackedByteArray([0x3C, 0x4A])
+	match map_id:
+		0x2D: expected_chr_source = PackedByteArray([0x00, 0x02])
+		0x36: expected_chr_source = PackedByteArray([0x00, 0x3C])
+		0x42, 0x43: expected_chr_source = PackedByteArray([0x3C, 0x2C])
+		0x56: expected_chr_source = PackedByteArray([0x3C, 0x2E])
 	if source["worker"].slice(0x22, 0x25) != PackedByteArray([0x20, 0xD3, 0x86]) \
 			or source["selector_routine"].slice(0, 5) != PackedByteArray([0x48, 0x29, 0x03, 0xAA, 0x68]) \
-			or source["chr_pair"] != PackedByteArray([0x3C, 0x2C]) \
+			or source["chr_pair"] != expected_chr_source \
 			or source["yield_callsite"] != PackedByteArray([0x20, 0x15, 0xC5]):
-		return {"ok": false, "error": "Map `$42` worker code or source table entry differs from the decoded ROM path."}
+		return {"ok": false, "error": "Map `$%02X` worker code or source table entry differs from the decoded ROM path at `$%04X`." % [map_id, pair_address]}
 	return {"ok": true, "source": source}
 
 

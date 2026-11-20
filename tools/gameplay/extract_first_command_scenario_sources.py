@@ -62,6 +62,12 @@ ENTRY_ROOTS = {
         "scenario_id": 0x36,
         "description": "Fresh-match caller loads scenario ID $36 and calls fixed-bank $CBB0.",
     },
+    "scenario_36_post_queue_handoff": {
+        "cpu_address": 0xDB13,
+        "file_offset": 0x03DB23,
+        "expected_bytes": bytes.fromhex("AD FC 05 8D 41 04 A9 01 8D FD 05 A2 50 9A 4C DF E0"),
+        "description": "After the scenario-$36 queue helper returns at $CBC1, copies $05FC to the ball-holder slot, sets $05FD, resets SP, and jumps to $E0DF.",
+    },
 }
 
 
@@ -179,18 +185,20 @@ def extract_scenarios(rom: bytes) -> tuple[list[dict], list[dict], list[dict]]:
             raise SystemExit(f"Entry-root bytes changed at file offset 0x{start:06X}")
         filename = f"entry_root_{name}.bin"
         (OUTPUT_DIR / filename).write_bytes(raw)
-        entry_roots.append({
+        entry = {
             "name": name,
             "path": f"reference/rom_extract/gameplay/first_command_scenarios/{filename}",
             "prg_bank_listing": "$FF",
             "cpu_address": f"0x{root['cpu_address']:04X}",
             "file_offset": f"0x{start:06X}",
-            "scenario_id": f"${root['scenario_id']:02X}",
             "length_bytes": len(raw),
             "bytes_hex": raw.hex(" ").upper(),
             "sha256": sha256(raw),
             "description": root["description"],
-        })
+        }
+        if "scenario_id" in root:
+            entry["scenario_id"] = f"${root['scenario_id']:02X}"
+        entry_roots.append(entry)
 
     return scenario_entries, pointer_entries, entry_roots
 

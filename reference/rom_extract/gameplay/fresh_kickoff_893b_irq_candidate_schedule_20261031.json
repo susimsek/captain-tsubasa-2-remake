@@ -331,6 +331,13 @@
           "121": 64,
           "59": 85
         },
+        "irq_source_ram": {
+          "124": 128,
+          "125": 0,
+          "126": 34,
+          "144": 0,
+          "145": 2
+        },
         "ppu": {
           "line": 128,
           "dot": 0,
@@ -706,6 +713,441 @@
                 "source_cycle": 216357599
               }
             ]
+          },
+          "$007C": {
+            "expected_wait_value": null,
+            "write_count_before_first_wait": 114,
+            "first_write": {
+              "source_pc": 50800,
+              "prg_bank": 30,
+              "address": 124,
+              "before": 255,
+              "value": 0,
+              "source_frame": 4,
+              "source_cycle": 90739
+            },
+            "recent_writes": [
+              {
+                "source_pc": 42246,
+                "prg_bank": 2,
+                "address": 124,
+                "before": 4,
+                "value": 3,
+                "source_frame": 3652,
+                "source_cycle": 108732415
+              },
+              {
+                "source_pc": 42248,
+                "prg_bank": 2,
+                "address": 124,
+                "before": 3,
+                "value": 2,
+                "source_frame": 3652,
+                "source_cycle": 108732420
+              },
+              {
+                "source_pc": 35152,
+                "prg_bank": 0,
+                "address": 124,
+                "before": 2,
+                "value": 0,
+                "source_frame": 3652,
+                "source_cycle": 108744222
+              },
+              {
+                "source_pc": 35152,
+                "prg_bank": 0,
+                "address": 124,
+                "before": 0,
+                "value": 128,
+                "source_frame": 3967,
+                "source_cycle": 118139087
+              },
+              {
+                "source_pc": 35152,
+                "prg_bank": 0,
+                "address": 124,
+                "before": 128,
+                "value": 128,
+                "source_frame": 4207,
+                "source_cycle": 125273993
+              },
+              {
+                "source_pc": 35152,
+                "prg_bank": 0,
+                "address": 124,
+                "before": 128,
+                "value": 8,
+                "source_frame": 4577,
+                "source_cycle": 136292785
+              },
+              {
+                "source_pc": 35152,
+                "prg_bank": 0,
+                "address": 124,
+                "before": 8,
+                "value": 0,
+                "source_frame": 4691,
+                "source_cycle": 139688207
+              },
+              {
+                "source_pc": 35152,
+                "prg_bank": 0,
+                "address": 124,
+                "before": 0,
+                "value": 128,
+                "source_frame": 4708,
+                "source_cycle": 140204776
+              }
+            ]
+          },
+          "$007D": {
+            "expected_wait_value": null,
+            "write_count_before_first_wait": 526,
+            "first_write": {
+              "source_pc": 50800,
+              "prg_bank": 30,
+              "address": 125,
+              "before": 255,
+              "value": 0,
+              "source_frame": 4,
+              "source_cycle": 90750
+            },
+            "recent_writes": [
+              {
+                "source_pc": 41751,
+                "prg_bank": 2,
+                "address": 125,
+                "before": 4,
+                "value": 4,
+                "source_frame": 4655,
+                "source_cycle": 138603631
+              },
+              {
+                "source_pc": 41751,
+                "prg_bank": 2,
+                "address": 125,
+                "before": 4,
+                "value": 4,
+                "source_frame": 4656,
+                "source_cycle": 138633463
+              },
+              {
+                "source_pc": 41751,
+                "prg_bank": 2,
+                "address": 125,
+                "before": 4,
+                "value": 5,
+                "source_frame": 4657,
+                "source_cycle": 138663701
+              },
+              {
+                "source_pc": 41751,
+                "prg_bank": 2,
+                "address": 125,
+                "before": 5,
+                "value": 5,
+                "source_frame": 4658,
+                "source_cycle": 138692478
+              },
+              {
+                "source_pc": 41751,
+                "prg_bank": 2,
+                "address": 125,
+                "before": 5,
+                "value": 5,
+                "source_frame": 4659,
+                "source_cycle": 138722018
+              },
+              {
+                "source_pc": 41751,
+                "prg_bank": 2,
+                "address": 125,
+                "before": 5,
+                "value": 5,
+                "source_frame": 4660,
+                "source_cycle": 138753240
+              },
+              {
+                "source_pc": 35152,
+                "prg_bank": 0,
+                "address": 125,
+                "before": 5,
+                "value": 0,
+                "source_frame": 4691,
+                "source_cycle": 139688224
+              },
+              {
+                "source_pc": 35152,
+                "prg_bank": 0,
+                "address": 125,
+                "before": 0,
+                "value": 0,
+                "source_frame": 4708,
+                "source_cycle": 140204793
+              }
+            ]
+          },
+          "$007E": {
+            "expected_wait_value": null,
+            "write_count_before_first_wait": 526,
+            "first_write": {
+              "source_pc": 50800,
+              "prg_bank": 30,
+              "address": 126,
+              "before": 255,
+              "value": 0,
+              "source_frame": 4,
+              "source_cycle": 90761
+            },
+            "recent_writes": [
+              {
+                "source_pc": 41766,
+                "prg_bank": 2,
+                "address": 126,
+                "before": 0,
+                "value": 0,
+                "source_frame": 4655,
+                "source_cycle": 138603648
+              },
+              {
+                "source_pc": 41766,
+                "prg_bank": 2,
+                "address": 126,
+                "before": 0,
+                "value": 0,
+                "source_frame": 4656,
+                "source_cycle": 138633480
+              },
+              {
+                "source_pc": 41766,
+                "prg_bank": 2,
+                "address": 126,
+                "before": 0,
+                "value": 0,
+                "source_frame": 4657,
+                "source_cycle": 138663718
+              },
+              {
+                "source_pc": 41766,
+                "prg_bank": 2,
+                "address": 126,
+                "before": 0,
+                "value": 0,
+                "source_frame": 4658,
+                "source_cycle": 138692495
+              },
+              {
+                "source_pc": 41766,
+                "prg_bank": 2,
+                "address": 126,
+                "before": 0,
+                "value": 0,
+                "source_frame": 4659,
+                "source_cycle": 138722035
+              },
+              {
+                "source_pc": 41766,
+                "prg_bank": 2,
+                "address": 126,
+                "before": 0,
+                "value": 0,
+                "source_frame": 4660,
+                "source_cycle": 138753257
+              },
+              {
+                "source_pc": 35152,
+                "prg_bank": 0,
+                "address": 126,
+                "before": 0,
+                "value": 0,
+                "source_frame": 4691,
+                "source_cycle": 139688241
+              },
+              {
+                "source_pc": 35152,
+                "prg_bank": 0,
+                "address": 126,
+                "before": 0,
+                "value": 34,
+                "source_frame": 4708,
+                "source_cycle": 140204810
+              }
+            ]
+          },
+          "$0090": {
+            "expected_wait_value": null,
+            "write_count_before_first_wait": 10,
+            "first_write": {
+              "source_pc": 50800,
+              "prg_bank": 30,
+              "address": 144,
+              "before": 0,
+              "value": 0,
+              "source_frame": 4,
+              "source_cycle": 90959
+            },
+            "recent_writes": [
+              {
+                "source_pc": 35315,
+                "prg_bank": 0,
+                "address": 144,
+                "before": 0,
+                "value": 0,
+                "source_frame": 342,
+                "source_cycle": 10164806
+              },
+              {
+                "source_pc": 35315,
+                "prg_bank": 0,
+                "address": 144,
+                "before": 0,
+                "value": 0,
+                "source_frame": 1119,
+                "source_cycle": 33302916
+              },
+              {
+                "source_pc": 35315,
+                "prg_bank": 0,
+                "address": 144,
+                "before": 0,
+                "value": 0,
+                "source_frame": 1760,
+                "source_cycle": 52393956
+              },
+              {
+                "source_pc": 35315,
+                "prg_bank": 0,
+                "address": 144,
+                "before": 0,
+                "value": 0,
+                "source_frame": 2340,
+                "source_cycle": 69665842
+              },
+              {
+                "source_pc": 42222,
+                "prg_bank": 2,
+                "address": 144,
+                "before": 0,
+                "value": 124,
+                "source_frame": 3597,
+                "source_cycle": 107108227
+              },
+              {
+                "source_pc": 42290,
+                "prg_bank": 2,
+                "address": 144,
+                "before": 124,
+                "value": 0,
+                "source_frame": 3952,
+                "source_cycle": 117667276
+              },
+              {
+                "source_pc": 35315,
+                "prg_bank": 0,
+                "address": 144,
+                "before": 0,
+                "value": 0,
+                "source_frame": 4541,
+                "source_cycle": 135213126
+              },
+              {
+                "source_pc": 32897,
+                "prg_bank": 0,
+                "address": 144,
+                "before": 0,
+                "value": 0,
+                "source_frame": 4691,
+                "source_cycle": 139688547
+              }
+            ]
+          },
+          "$0091": {
+            "expected_wait_value": null,
+            "write_count_before_first_wait": 11,
+            "first_write": {
+              "source_pc": 50800,
+              "prg_bank": 30,
+              "address": 145,
+              "before": 0,
+              "value": 0,
+              "source_frame": 4,
+              "source_cycle": 90970
+            },
+            "recent_writes": [
+              {
+                "source_pc": 35319,
+                "prg_bank": 0,
+                "address": 145,
+                "before": 2,
+                "value": 2,
+                "source_frame": 342,
+                "source_cycle": 10164811
+              },
+              {
+                "source_pc": 35319,
+                "prg_bank": 0,
+                "address": 145,
+                "before": 2,
+                "value": 2,
+                "source_frame": 1119,
+                "source_cycle": 33302921
+              },
+              {
+                "source_pc": 35319,
+                "prg_bank": 0,
+                "address": 145,
+                "before": 2,
+                "value": 2,
+                "source_frame": 1760,
+                "source_cycle": 52393961
+              },
+              {
+                "source_pc": 35319,
+                "prg_bank": 0,
+                "address": 145,
+                "before": 2,
+                "value": 2,
+                "source_frame": 2340,
+                "source_cycle": 69665847
+              },
+              {
+                "source_pc": 42226,
+                "prg_bank": 2,
+                "address": 145,
+                "before": 2,
+                "value": 126,
+                "source_frame": 3597,
+                "source_cycle": 107108233
+              },
+              {
+                "source_pc": 42294,
+                "prg_bank": 2,
+                "address": 145,
+                "before": 126,
+                "value": 2,
+                "source_frame": 3952,
+                "source_cycle": 117667285
+              },
+              {
+                "source_pc": 35319,
+                "prg_bank": 0,
+                "address": 145,
+                "before": 2,
+                "value": 2,
+                "source_frame": 4541,
+                "source_cycle": 135213131
+              },
+              {
+                "source_pc": 32901,
+                "prg_bank": 0,
+                "address": 145,
+                "before": 2,
+                "value": 2,
+                "source_frame": 4691,
+                "source_cycle": 139688552
+              }
+            ]
           }
         },
         "caller_return_word": 33046
@@ -823,6 +1265,13 @@
           "120": 0,
           "121": 64,
           "59": 85
+        },
+        "irq_source_ram": {
+          "124": 128,
+          "125": 0,
+          "126": 34,
+          "144": 0,
+          "145": 2
         },
         "ppu": {
           "line": 131,

@@ -34,6 +34,11 @@ const SOURCE_EXPECTATIONS := {
 		"cpu_start": "$9DEE", "cpu_end_exclusive": "$9E0C", "file_offset": "0x001DFE",
 		"length": 30, "sha256": "274c1ff01f655cdaf900689a6b938df2f67d5d0c16713760e4d6074c5f684f79",
 	},
+	"irq_chr_selector_init": {
+		"path": "reference/rom_extract/gameplay/fresh_kickoff_match_setup/irq_chr_selector_init_807F_8086.bin",
+		"cpu_start": "$807F", "cpu_end_exclusive": "$8087", "file_offset": "0x00008F",
+		"length": 8, "sha256": "eeeeab779ffa74e4e26013d7511cf0bb7e4996392cb249c3e7a7b05b5c3da492",
+	},
 }
 const EXPECTED_SETUP_PREFIX := [
 	0xA2, 0x13, 0x20, 0xEE, 0x9D, # LDX #$13 / JSR $9DEE
@@ -49,6 +54,7 @@ const EXPECTED_MULTIPLY_CODE := [
 	0x65, 0xEC, 0x85, 0xEC, 0xA5, 0xED, 0x69, 0x00,
 	0x85, 0xED, 0x88, 0xD0, 0xEB, 0x60,
 ]
+const EXPECTED_IRQ_SELECTOR_INIT := [0xA9, 0x00, 0x85, 0x90, 0xA9, 0x02, 0x85, 0x91]
 const EXPECTED_CALLER_START := [0xA9, 0x00, 0x20, 0x20, 0x89] # $8112 LDA #$00 / JSR $8920
 const WAIT_SOURCE_MANIFEST_PATH := "res://reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/manifest.json"
 const WAIT_TAIL_SOURCE_PATH := "res://reference/rom_extract/gameplay/fresh_kickoff_0078_wait_20261029/bank00_preset_copy_tail_893F_895C.bin"
@@ -107,8 +113,9 @@ func configure_from_project_sources() -> bool:
 			return _fail("Manifest byte listing differs from `%s`." % span_id)
 		_sources[span_id] = bytes
 	if _sources["preset_loader_prefix"] != PackedByteArray(EXPECTED_SETUP_PREFIX) \
-			or _sources["multiply_by_x_helper"] != PackedByteArray(EXPECTED_MULTIPLY_CODE):
-		return _fail("Packaged `$8920/$9DEE` instruction bytes differ from the audited ROM spans.")
+			or _sources["multiply_by_x_helper"] != PackedByteArray(EXPECTED_MULTIPLY_CODE) \
+			or _sources["irq_chr_selector_init"] != PackedByteArray(EXPECTED_IRQ_SELECTOR_INIT):
+		return _fail("Packaged `$807F/$8920/$9DEE` instruction bytes differ from the audited ROM spans.")
 	if not FileAccess.file_exists(CALLER_MANIFEST_PATH):
 		return _fail("The source caller manifest is missing.")
 	var caller_manifest_variant: Variant = JSON.parse_string(FileAccess.get_file_as_string(CALLER_MANIFEST_PATH))
@@ -182,20 +189,70 @@ func configure_from_project_sources() -> bool:
 	return true
 
 
-## Consumes the prior `$810F->$A20C->$8112` source execution result. `$78` is
-## intentionally not read from that result: no provenance-bearing event for
-## the preset-loader wait latch is currently part of the caller contract.
-func execute_from_normalizer_return(normalizer_result: Dictionary) -> Dictionary:
+## Executes the two source instructions that initialize the selector table used
+## by the later `$A160` IRQ helper. A live opening presenter pair, when supplied,
+## is only a cross-check; it never supplies the write values.
+func execute_irq_chr_selector_initializer(live_title_pair: Variant = null) -> Dictionary:
+	if not _configured and not configure_from_project_sources():
+		return _failure(error_message)
+	var code: PackedByteArray = _sources.get("irq_chr_selector_init", PackedByteArray())
+	if code != PackedByteArray(EXPECTED_IRQ_SELECTOR_INIT):
+		return _failure("The `$807F-$8086` IRQ selector initializer is not the checked ROM instruction sequence.")
+	var accumulator := int(code[1])
+	var writes: Array[Dictionary] = [{
+		"address": 0x0090,
+		"value": accumulator,
+		"source_pc": 0x8081,
+	}]
+	accumulator = int(code[5])
+	writes.append({
+		"address": 0x0091,
+		"value": accumulator,
+		"source_pc": 0x8085,
+	})
+	var live_pair_checked := false
+	if live_title_pair != null:
+		if typeof(live_title_pair) != TYPE_VECTOR2I or live_title_pair != Vector2i(0x00, 0x02):
+			return _failure("The live title state disagrees with ROM-initialized IRQ selectors `$0090/$0091 = $00/$02`.")
+		live_pair_checked = true
+	return {
+		"ok": true,
+		"kind": "rom_cold_start_irq_chr_selector_initializer",
+		"source_rom_sha256": ROM_SHA256,
+		"source_event_id": "cold-start-irq-chr-selector-init-807f-8086",
+		"source_frame": 4691,
+		"source_pc_path": [0x807F, 0x8081, 0x8083, 0x8085],
+		"rom_source_spans": ["$807F-$8086"],
+		"cpu_cycles": 10,
+		"ram_writes": writes,
+		"live_title_state_crosschecked": live_pair_checked,
+		"trace_state_used": false,
+		"emulator_data_used": false,
+		"physical_nes_timing_proven": false,
+	}
+
+
+## Consumes the prior `$810F->$A20C->$8112` source execution result. The live
+## route may also supply its sparse, ROM-write-only RAM image so the earlier
+## E8 `$01` write to `$79` is carried into the `$893B` wait boundary.
+func execute_from_normalizer_return(normalizer_result: Dictionary,
+		prior_source_ram_image: Variant = null) -> Dictionary:
 	if not _configured and not configure_from_project_sources():
 		return _failure(error_message)
 	if String(normalizer_result.get("stack_model", "")) == "logical_source_jsr_frames":
-		return _execute_from_logical_normalizer_return(normalizer_result)
+		return _execute_from_logical_normalizer_return(normalizer_result, prior_source_ram_image)
 	var checked := _validate_normalizer_result(normalizer_result)
 	if not bool(checked.get("ok", false)):
 		return _failure(String(checked.get("error", "Normalization return contract is invalid.")))
 	var source_event_id := String(checked["source_event_id"])
 	var registers: Dictionary = checked["registers"].duplicate(true)
 	var ram_after: Dictionary = checked["ram_after"].duplicate(true)
+	var prior_e8_preset := _apply_prior_e8_preset(ram_after, prior_source_ram_image)
+	if not bool(prior_e8_preset.get("ok", false)):
+		return _failure(String(prior_e8_preset.get("error", "Prior E8 preset RAM state is invalid.")))
+	var prior_wait_latch := _apply_prior_nmi_wait_latch(ram_after, prior_source_ram_image)
+	if not bool(prior_wait_latch.get("ok", false)):
+		return _failure(String(prior_wait_latch.get("error", "Prior NMI wait latch is invalid.")))
 	var stack: PackedByteArray = checked["stack_after"].duplicate()
 	var outer_pre_call_sp := int(registers["sp"])
 	var writes: Array[Dictionary] = []
@@ -251,9 +308,10 @@ func execute_from_normalizer_return(normalizer_result: Dictionary) -> Dictionary
 
 	# Continue source bytes $8925-$8937 to the mapper call. This fresh caller
 	# supplies A=0, so $9DEE computes EC/ED=0/0 and $8920 forms pointer BF00.
+	var expected_multiply_p := (int(checked["registers"].get("p", -1)) & 0x7C) | 0x02
 	if int(registers["pc"]) != MULTIPLY_RETURN_PC or int(registers["a"]) != 0 \
 			or int(registers["x"]) != 0x13 or int(registers["y"]) != 0 \
-			or int(registers["p"]) != 0x26:
+			or int(registers["p"]) != expected_multiply_p:
 		return _failure("The `$9DEE` source return differs from its fresh zero-index execution.")
 	var arithmetic := _execute_preset_pointer_arithmetic(registers, ram_after)
 	registers = arithmetic["registers"]
@@ -282,7 +340,9 @@ func execute_from_normalizer_return(normalizer_result: Dictionary) -> Dictionary
 	var mapper_registers: Dictionary = mapper_result["return_registers"].duplicate(true)
 	var mapper_ram: Dictionary = mapper_result["ram_after"].duplicate(true)
 	var mapper_writes: Array = mapper_result.get("mapper_bus_writes", [])
-	if not _mapper_selected_bank(mapper_writes, PRESET_BANK) \
+	var expected_mapper_select := BANK_SELECT_REGISTER_ID | int(mapper_ram.get(0x0022, -1))
+	if expected_mapper_select < 0 or expected_mapper_select > 0xFF \
+			or not _mapper_selected_bank(mapper_writes, PRESET_BANK, expected_mapper_select) \
 			or int(mapper_ram.get(0x0025, -1)) != PRESET_BANK \
 			or int(mapper_registers.get("pc", -1)) != MAPPER_RETURN_PC \
 			or int(mapper_registers.get("sp", -1)) != mapper_pre_call_sp:
@@ -291,6 +351,8 @@ func execute_from_normalizer_return(normalizer_result: Dictionary) -> Dictionary
 	source_path.append_array([MAPPER_CALLER_PC, 0xC4B9, 0xC4BC, 0xC4BE,
 		0xC4C0, 0xC4C2, 0xC4C5, 0xC4C8, PRESET_WAIT_PC])
 	writes.append_array(mapper_result.get("ram_writes", []))
+	mapper_registers["p_known_mask"] = 0xFF
+	mapper_registers["p_known_value"] = int(mapper_registers.get("p", 0)) & 0xFF
 
 	# At $893B the next instruction reads $78 and branches back while it is
 	# nonzero. No source event in the incoming result owns this byte, so stop
@@ -320,6 +382,8 @@ func execute_from_normalizer_return(normalizer_result: Dictionary) -> Dictionary
 		"entry_registers": checked["registers"],
 		"boundary_registers": mapper_registers,
 		"caller_ram_after": mapper_ram,
+		"prior_e8_preset_ram": prior_e8_preset,
+		"prior_nmi_wait_latch": prior_wait_latch,
 		"caller_ram_writes": writes,
 		"mapper_bus_writes": mapper_writes,
 		"stack_after": mapper_stack,
@@ -331,11 +395,12 @@ func execute_from_normalizer_return(normalizer_result: Dictionary) -> Dictionary
 			"physical_stack_page_known": true,
 			"pending_jsr_count": 1,
 			"pending_frame": {
+				"kind": "rom_jsr",
 				"caller_pc": SETUP_CALLER_PC,
 				"target_pc": SETUP_ENTRY_PC,
 				"return_pc": SETUP_RETURN_PC,
 				"return_word": SETUP_RETURN_PC - 1,
-				"source_event_id": source_event_id,
+				"source_event_id": source_event_id + ":8114-8920",
 			},
 		},
 		"cpu_cycles_without_interrupts_from_8112": cycles,
@@ -359,11 +424,13 @@ func execute_after_wait_release(prefix_result: Dictionary, wait_receipt: Diction
 		return _failure("The continuation instructions differ from the checked `$893F-$895C` bytes.")
 	var source_event_id := String(prefix_result["source_event_id"])
 	var release_event_id := String(wait_receipt["source_event_id"])
-	var registers: Dictionary = prefix_result["boundary_registers"].duplicate(true)
+	var registers: Dictionary = wait_receipt["return_registers"].duplicate(true)
 	var ram_after: Dictionary = prefix_result["caller_ram_after"].duplicate(true)
 	var pending_frames: Array[Dictionary] = []
 	for frame_variant in prefix_result.get("logical_stack_frames", []):
 		pending_frames.append(frame_variant.duplicate(true))
+	if pending_frames.is_empty() and checked.get("outer_frame", {}) is Dictionary:
+		pending_frames.append(checked["outer_frame"].duplicate(true))
 	var source_path: Array[int] = []
 	var writes: Array[Dictionary] = []
 	var cycles := int(prefix_result.get("cpu_cycles_without_interrupts_from_8112", -1))
@@ -474,6 +541,8 @@ func execute_after_wait_release(prefix_result: Dictionary, wait_receipt: Diction
 		"source_event_id": source_event_id, "wait_release_event_id": release_event_id,
 		"source_rom_sha256": ROM_SHA256, "source_path": source_path,
 		"entry_wait_boundary": PRESET_WAIT_PC, "final_source_pc": SETUP_RETURN_PC,
+		"entry_stack_model": String(checked.get("stack_model", "unknown")),
+		"physical_wait_stack_boundary": checked.get("physical_stack_boundary", {}).duplicate(true),
 		"cpu_cycles_excluding_wait_and_interrupts_from_8112": cycles,
 		"source_return_receipt": {"caller_pc": SETUP_CALLER_PC,
 			"target_pc": SETUP_ENTRY_PC, "return_pc": SETUP_RETURN_PC,
@@ -493,8 +562,10 @@ func _validate_wait_release(prefix_result: Dictionary, receipt: Dictionary) -> D
 		return {"ok": false, "error": "A successful `$893B` prefix for the supplied ROM is required."}
 	if bool(prefix_result.get("trace_state_used", true)) or bool(prefix_result.get("emulator_data_used", true)):
 		return {"ok": false, "error": "The source prefix must be independent of trace/emulator state."}
-	if String(prefix_result.get("stack_model", "")) != "logical_source_jsr_frames":
-		return {"ok": false, "error": "The pending source caller must use explicit logical JSR frames."}
+	var stack_contract: Dictionary = prefix_result.get("stack_contract", {})
+	var stack_model := String(stack_contract.get("model", prefix_result.get("stack_model", "")))
+	if stack_model != "logical_source_jsr_frames" and stack_model != "physical_stack_page":
+		return {"ok": false, "error": "The pending source caller must use a logical JSR frame or a checked physical stack page."}
 	var source_event_id := String(prefix_result.get("source_event_id", "")).strip_edges()
 	if source_event_id.is_empty():
 		return {"ok": false, "error": "The prefix's source event identity is missing."}
@@ -506,16 +577,36 @@ func _validate_wait_release(prefix_result: Dictionary, receipt: Dictionary) -> D
 		return {"ok": false, "error": "The prefix is not stopped at the audited `$893B` wait predicate."}
 	var expected_outer_id := source_event_id + ":8114-8920"
 	var frames: Array = prefix_result.get("logical_stack_frames", [])
-	if frames.size() != 1:
-		return {"ok": false, "error": "Exactly one pending `$8114->$8920` source frame is required."}
-	var outer_frame: Dictionary = frames[0]
+	var outer_frame: Dictionary = {}
+	var physical_stack_boundary: Dictionary = {}
+	if stack_model == "logical_source_jsr_frames":
+		if frames.size() != 1:
+			return {"ok": false, "error": "Exactly one pending `$8114->$8920` source frame is required."}
+		outer_frame = frames[0]
+	else:
+		var stack_page: Variant = prefix_result.get("stack_after", PackedByteArray())
+		var stack_sp := int(stack_contract.get("sp_at_893b", -1))
+		if not stack_page is PackedByteArray or stack_page.size() != 0x100 \
+				or stack_sp < 0 or stack_sp > 0xFF \
+				or int(stack_contract.get("pending_jsr_count", -1)) != 1 \
+				or not bool(stack_contract.get("absolute_sp_known", false)) \
+				or not bool(stack_contract.get("physical_stack_page_known", false)) \
+				or int(stack_page[(stack_sp + 1) & 0xFF]) != ((SETUP_RETURN_PC - 1) & 0xFF) \
+				or int(stack_page[(stack_sp + 2) & 0xFF]) != ((SETUP_RETURN_PC - 1) >> 8):
+			return {"ok": false, "error": "The physical `$893B` stack page does not hold the checked outer `$8114` return word."}
+		outer_frame = stack_contract.get("pending_frame", {}).duplicate(true)
+		physical_stack_boundary = {"sp": stack_sp, "stack_page": stack_page.duplicate(),
+			"outer_return_word": SETUP_RETURN_PC - 1,
+			"outer_return_low_offset": (stack_sp + 1) & 0xFF,
+			"outer_return_high_offset": (stack_sp + 2) & 0xFF,
+			"interrupt_balanced_before_wait_release": true}
 	if String(outer_frame.get("kind", "")) != "rom_jsr" \
 			or int(outer_frame.get("caller_pc", -1)) != SETUP_CALLER_PC \
 			or int(outer_frame.get("target_pc", -1)) != SETUP_ENTRY_PC \
 			or int(outer_frame.get("return_pc", -1)) != SETUP_RETURN_PC \
 			or int(outer_frame.get("return_word", -1)) != SETUP_CALLER_PC + 2 \
 			or String(outer_frame.get("source_event_id", "")) != expected_outer_id:
-		return {"ok": false, "error": "The outstanding `$8114` logical return frame differs from the ROM caller."}
+		return {"ok": false, "error": "The outstanding `$8114` return frame differs from the ROM caller (frame=%s expected=%s)." % [outer_frame, expected_outer_id]}
 	var prefix_mask := int(registers.get("p_known_mask", 0))
 	var prefix_flags := int(registers.get("p_known_value", 0))
 	if (prefix_mask & 0x04) == 0 or (prefix_flags & 0x04) != 0:
@@ -566,17 +657,33 @@ func _validate_wait_release(prefix_result: Dictionary, receipt: Dictionary) -> D
 	var irq_return: Dictionary = receipt.get("return_registers", {})
 	if int(irq_return.get("pc", -1)) != PRESET_WAIT_PC:
 		return {"ok": false, "error": "The IRQ return register receipt does not resume at `$893B`."}
-	for register_name: String in ["a", "x", "y"]:
+	var expected_wait_a := int(wait_ram.get(0x0078, -1))
+	# IRQ/RTI stores the 6502 status image with the synthetic B bit cleared.
+	# N/Z are then supplied by the interrupted `LDA $78` loop read; bit 4 is
+	# excluded from the internal P contract after the hardware stack round-trip.
+	var wait_p_mask := (prefix_mask | 0x82) & 0xEF
+	var wait_p_flags := (prefix_flags & (prefix_mask & ~0x82)) & 0xEF
+	if (expected_wait_a & 0x80) != 0:
+		wait_p_flags |= 0x80
+	if expected_wait_a == 0:
+		wait_p_flags |= 0x02
+	if int(irq_return.get("a", -1)) != expected_wait_a:
+		return {"ok": false, "error": "IRQ RTI did not restore A after the ROM `$893B LDA $78` wait read."}
+	for register_name: String in ["x", "y"]:
 		if int(irq_return.get(register_name, -1)) != int(registers.get(register_name, -2)):
 			return {"ok": false, "error": "IRQ return register `%s` does not restore the interrupted caller." % register_name}
 	var irq_mask := int(irq_return.get("p_known_mask", 0))
 	var irq_flags := int(irq_return.get("p_known_value", 0))
-	if (irq_mask & prefix_mask) != prefix_mask \
-			or ((irq_flags ^ prefix_flags) & prefix_mask) != 0 \
+	if (irq_mask & wait_p_mask) != wait_p_mask \
+			or ((irq_flags ^ wait_p_flags) & wait_p_mask) != 0 \
 			or (irq_mask & 0x04) == 0 or (irq_flags & 0x04) != 0:
-		return {"ok": false, "error": "IRQ RTI did not restore the source-known processor status contract."}
+		return {"ok": false, "error": "IRQ RTI did not restore the source-known `$893B` loop status after `LDA $78`."}
 	return {"ok": true, "release_write": release_write,
-		"release_event_id": release_event_id}
+		"release_event_id": release_event_id, "outer_frame": outer_frame,
+		"stack_model": stack_model,
+		"physical_stack_boundary": physical_stack_boundary,
+		"wait_loop_return_registers": {"a": expected_wait_a,
+			"p_known_mask": wait_p_mask, "p_known_value": wait_p_flags}}
 
 
 func _contains_path_in_order(actual_variant: Variant, required: Array[int]) -> bool:
@@ -604,13 +711,20 @@ func _pop_logical_rts(frames: Array[Dictionary]) -> Dictionary:
 ## Executes the same ROM-owned prefix with symbolic JSR frames. The `$8114`
 ## outer frame remains pending at `$893B`; no absolute SP or stack-page byte
 ## is inferred. The unknown `$78` predicate is not read.
-func _execute_from_logical_normalizer_return(normalizer_result: Dictionary) -> Dictionary:
+func _execute_from_logical_normalizer_return(normalizer_result: Dictionary,
+		prior_source_ram_image: Variant = null) -> Dictionary:
 	var checked := _validate_logical_normalizer_result(normalizer_result)
 	if not bool(checked.get("ok", false)):
 		return _failure(String(checked.get("error", "Logical normalizer result is invalid.")))
 	var source_event_id := String(checked["source_event_id"])
 	var registers: Dictionary = checked["registers"].duplicate(true)
 	var ram_after: Dictionary = checked["ram_after"].duplicate(true)
+	var prior_e8_preset := _apply_prior_e8_preset(ram_after, prior_source_ram_image)
+	if not bool(prior_e8_preset.get("ok", false)):
+		return _failure(String(prior_e8_preset.get("error", "Prior E8 preset RAM state is invalid.")))
+	var prior_wait_latch := _apply_prior_nmi_wait_latch(ram_after, prior_source_ram_image)
+	if not bool(prior_wait_latch.get("ok", false)):
+		return _failure(String(prior_wait_latch.get("error", "Prior NMI wait latch is invalid.")))
 	var writes: Array[Dictionary] = []
 	var source_path: Array[int] = []
 	var cycles := 0
@@ -745,6 +859,8 @@ func _execute_from_logical_normalizer_return(normalizer_result: Dictionary) -> D
 		"entry_registers": checked["registers"],
 		"boundary_registers": mapper_registers,
 		"caller_ram_after": mapper_ram,
+		"prior_e8_preset_ram": prior_e8_preset,
+		"prior_nmi_wait_latch": prior_wait_latch,
 		"caller_ram_writes": writes,
 		"mapper_bus_writes": mapper_writes,
 		"stack_after": pending_frames,
@@ -764,6 +880,63 @@ func _execute_from_logical_normalizer_return(normalizer_result: Dictionary) -> D
 		"trace_state_used": false,
 		"emulator_data_used": false,
 	}
+
+
+func _apply_prior_e8_preset(ram_after: Dictionary, prior_source_ram_image: Variant) -> Dictionary:
+	if prior_source_ram_image == null:
+		return {"ok": true, "used": false, "reason": "no_prior_source_ram_image_supplied"}
+	if not prior_source_ram_image is Object \
+			or not prior_source_ram_image.has_method("get_byte") \
+			or not prior_source_ram_image.has_method("get_status"):
+		return {"ok": false, "error": "Prior RAM input is not a provenance-carrying ROM source image."}
+	var image_status: Dictionary = prior_source_ram_image.call("get_status")
+	if String(image_status.get("source_rom_sha256", "")) != ROM_SHA256 \
+			or String(image_status.get("status", "")) != "sparse_source_writes_only":
+		return {"ok": false, "error": "Prior RAM image targets a different ROM or is not source-write-only."}
+	var byte_result: Dictionary = prior_source_ram_image.call("get_byte", 0x0079)
+	if not bool(byte_result.get("known", false)) or int(byte_result.get("value", -1)) != 0x40:
+		return {"ok": false, "error": "The earlier ROM E8 `$01` event has not produced `$79=$40`."}
+	var last_write: Dictionary = byte_result.get("last_write", {})
+	var event_id := String(last_write.get("event_id", ""))
+	if int(last_write.get("source_pc", -1)) != 0x8943 \
+			or int(last_write.get("value", -1)) != 0x40 \
+			or not event_id.begins_with("kickoff_cutscene_"):
+		return {"ok": false, "error": "`$79=$40` lacks the expected ROM E8 `$01` write provenance."}
+	if ram_after.has(0x0079) and int(ram_after[0x0079]) not in [0, 0x40]:
+		return {"ok": false, "error": "Fresh-match caller RAM conflicts with the prior ROM `$79` write."}
+	ram_after[0x0079] = 0x40
+	return {"ok": true, "used": true, "address": 0x0079, "value": 0x40,
+		"source_pc": 0x8943, "source_event_id": event_id}
+
+
+## Carries the wait latch only when the executed frame-8 ROM NMI wrote it.
+## The preset prefix itself does not own `$78`; the sparse source ledger does.
+func _apply_prior_nmi_wait_latch(ram_after: Dictionary,
+		prior_source_ram_image: Variant) -> Dictionary:
+	if prior_source_ram_image == null:
+		return {"ok": true, "used": false, "reason": "no_prior_source_ram_image_supplied"}
+	if not prior_source_ram_image is Object \
+			or not prior_source_ram_image.has_method("get_byte") \
+			or not prior_source_ram_image.has_method("get_status"):
+		return {"ok": false, "error": "Prior wait RAM is not a provenance-carrying ROM source image."}
+	var image_status: Dictionary = prior_source_ram_image.call("get_status")
+	if String(image_status.get("source_rom_sha256", "")) != ROM_SHA256 \
+			or String(image_status.get("status", "")) != "sparse_source_writes_only":
+		return {"ok": false, "error": "Prior wait RAM targets a different ROM or is not source-write-only."}
+	var byte_result: Dictionary = prior_source_ram_image.call("get_byte", 0x0078)
+	if not bool(byte_result.get("known", false)):
+		return {"ok": true, "used": false, "reason": "no_source_owned_wait_latch_yet"}
+	var last_write: Dictionary = byte_result.get("last_write", {})
+	var event_id := String(last_write.get("event_id", ""))
+	if int(byte_result.get("value", -1)) != 0x04 \
+			or int(last_write.get("source_pc", -1)) != 0xA0A6 \
+			or event_id != "fresh_match_selector_frame8_nmi":
+		return {"ok": false, "error": "`$78` is known but lacks the executed frame-8 ROM NMI `$A0A6` write."}
+	if ram_after.has(0x0078) and int(ram_after[0x0078]) != 0x04:
+		return {"ok": false, "error": "The `$A0A6` NMI wait latch conflicts with the preset caller RAM."}
+	ram_after[0x0078] = 0x04
+	return {"ok": true, "used": true, "address": 0x0078, "value": 0x04,
+		"source_pc": 0xA0A6, "source_event_id": event_id}
 
 
 func _validate_logical_normalizer_result(result: Dictionary) -> Dictionary:
@@ -1053,13 +1226,23 @@ func _validate_normalizer_result(result: Dictionary) -> Dictionary:
 	if int(registers.get("pc", -1)) != CALLER_ENTRY_PC \
 			or int(registers.get("sp", -1)) < 2 or int(registers.get("sp", -1)) > 0xFF \
 			or int(registers.get("a", -1)) != 3 or int(registers.get("x", -1)) != 0 \
-			or int(registers.get("y", -1)) != 0x84 or int(registers.get("p", -1)) != 0x24:
+			or int(registers.get("y", -1)) != 0x84:
 		return {"ok": false, "error": "The A20C return CPU state differs from the verified caller boundary."}
+	var p_value := int(registers.get("p", -1))
+	var p_known_mask := int(registers.get("p_known_mask", 0xFF))
+	var p_known_value := int(registers.get("p_known_value", p_value))
+	if p_value < 0 or p_value > 0xFF or p_known_mask < 0 or p_known_mask > 0xFF \
+			or p_known_value < 0 or p_known_value > 0xFF \
+			or (p_known_mask & 0xC3) != 0xC3 \
+			or (p_known_value & 0xC3) != 0 \
+			or ((p_known_mask & 0x04) != 0 and (p_known_value & 0x04) != 0):
+		return {"ok": false, "error": "The `$8112` return must retain its source-derived ADC flags and, when known, I=clear."}
 	var ram: Dictionary = result.get("caller_ram_after", {})
 	for address: int in [0x0022, 0x0023, 0x0025, 0x0026, 0x002A, 0x002B]:
 		if not ram.has(address):
 			return {"ok": false, "error": "Predecessor RAM is missing `$%04X`." % address}
-	if int(ram[0x0022]) != 0x80 or int(ram[0x0023]) != 0x87 \
+	var expected_mapper_select := BANK_SELECT_REGISTER_ID | int(ram[0x0022])
+	if int(ram[0x0023]) != expected_mapper_select \
 			or int(ram[0x0025]) != 2 or int(ram[0x0026]) != 0 \
 			or int(ram[0x002A]) != 0 or int(ram[0x002B]) != 3:
 		return {"ok": false, "error": "Predecessor RAM/map state does not satisfy the fresh match-zero setup contract."}
@@ -1072,14 +1255,15 @@ func _validate_normalizer_result(result: Dictionary) -> Dictionary:
 		"registers": registers, "ram_after": ram, "stack_after": stack}
 
 
-func _mapper_selected_bank(bus_writes: Array, expected_bank: int) -> bool:
+func _mapper_selected_bank(bus_writes: Array, expected_bank: int,
+		expected_select: int = 0x87) -> bool:
 	var select_seen := false
 	var data_seen := false
 	for write_variant in bus_writes:
 		if not write_variant is Dictionary:
 			continue
 		var write: Dictionary = write_variant
-		if int(write.get("address", -1)) == 0x8000 and int(write.get("value", -1)) == 0x87:
+		if int(write.get("address", -1)) == 0x8000 and int(write.get("value", -1)) == expected_select:
 			select_seen = true
 		if select_seen and int(write.get("address", -1)) == 0x8001 \
 				and int(write.get("value", -1)) == expected_bank:

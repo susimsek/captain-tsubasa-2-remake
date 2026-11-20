@@ -6,11 +6,17 @@ class_name RomFieldEntryWindow01PacketSource
 const ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
 const ROOT := "res://reference/rom_extract/gameplay/field_entry_window_01/"
 const MANIFEST_PATH := ROOT + "manifest.json"
-const MANIFEST_SHA256 := "9e675240b8994f5956ca0939202b7841e2b833568103dbfc6567d5a21980beb1"
+const MANIFEST_SHA256 := "fcdb5f9a12513d2b0166b127238bf4c193adf08c414298466885f4d1eac69382"
 const FRESH_SETUP_ROOT := "res://reference/rom_extract/gameplay/fresh_match_handoff/"
 const FRESH_SETUP_MANIFEST := FRESH_SETUP_ROOT + "manifest.json"
 const FRESH_SETUP_SHA256 := "cf3001b1d6b6413c2b69aa9c00b8383ccaa8a034cfd61ca1e6ebbfd97da03f45"
 const ZERO_FILL_SHA256 := "b4087f492a7a3ffb3737c7a42fd1b7fe5cf82147eab7c80eddc331740b6c38fd"
+const WORKER_PREFIX_ROOT := "res://reference/rom_extract/gameplay/fresh_bank18_worker_prefix/"
+const WORKER_SETUP_PATH := WORKER_PREFIX_ROOT + "bank18_worker_entry_to_yield_call_800C_8889.bin"
+const WORKER_SETUP_SHA256 := "3b6cea5d679e0a5aab87d7bd5a721658448463cec6062ad006c3d5d869aeb49e"
+const WORKER_RESUME_PATH := WORKER_PREFIX_ROOT + "bank18_worker_resume_8889_89D7.bin"
+const WORKER_RESUME_SHA256 := "3d46d08d2aaa4720cecbeac5fe33f30aa5f7b97182c41f4e5a2c71b494797e8e"
+const WORKER_ROW_LOOP_SHA256 := "19b689ad3d838b32bb4745ba3a0ef1085bacd94528ba37b522d76eb897efc230"
 const SELECTOR_CODE_SHA256 := "f9b27195e6d6c9163d55ee6161fbf8d4d795537df2f2347d3e4c406765033123"
 const HOME_TEAM_TABLE_SHA256 := "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
 const PERIOD_CODE_SHA256 := "28895a5c3512a45e1b1a59c4324654ec03bb5f2ea413445e32333aa3bd6b87cc"
@@ -80,6 +86,9 @@ func build_descriptor_01(selector_result: Dictionary = {},
 		return _fail_result("Shared ROM window-frame resource failed its size/hash check.")
 	if not _verify_token_sources(resources):
 		return _fail_result(last_error)
+	var descriptor_progress := _derive_descriptor_row_003c(descriptor)
+	if not bool(descriptor_progress.get("ok", false)):
+		return _fail_result(str(descriptor_progress.get("error", "ROM descriptor progress loop is unsupported.")))
 
 	var selector_inputs := _read_selector_inputs(selector_result)
 	var period_inputs := _read_fresh_period_inputs(fresh_period_result)
@@ -92,7 +101,8 @@ func build_descriptor_01(selector_result: Dictionary = {},
 		return _fail_result("ROM layout builder did not emit all eight descriptor-$01 progress packets.")
 
 	var known_source_inputs_ready := bool(selector_inputs.get("ok", false)) \
-		and bool(period_inputs.get("ok", false)) and bool(setup_inputs.get("ok", false))
+		and bool(period_inputs.get("ok", false)) and bool(setup_inputs.get("ok", false)) \
+		and bool(descriptor_progress.get("ok", false))
 	var unresolved: Array[Dictionary] = []
 	var row_outputs: Array[Dictionary] = []
 	for row_index in 4:
@@ -122,9 +132,15 @@ func build_descriptor_01(selector_result: Dictionary = {},
 			else:
 				var value := int(setup_inputs["ram_values"][0x0628]) if operand == 0 \
 					else int(period_inputs["ram_values"][0x0629])
-				output = _resolve_ee_value(value)
+				var source_003c := int(descriptor_progress["commit_values"][row_index])
+				output = _resolve_ee_value(value, source_003c)
 				if not bool(output.get("ok", false)):
 					missing = String(output.get("error", "supported zero-valued $EE input"))
+				else:
+					var start_column := int(descriptor[4]) + int(descriptor[10 + row_index * 4])
+					if not _write_forward_tiles(packet_records[packet_index], start_column,
+							output.get("emitted_tiles", PackedByteArray())):
+						missing = "ROM $EE tile output within descriptor-$01 row width"
 		else:
 			return _fail_result("Descriptor-$01 contains unsupported token $%02X." % token)
 
@@ -171,24 +187,28 @@ func build_descriptor_01(selector_result: Dictionary = {},
 			"$002B": away_team_id,
 			"$0628": setup_inputs.get("ram_values", {}).get(0x0628, -1),
 			"$0629": period_inputs.get("ram_values", {}).get(0x0629, -1),
-			"$003C": -1,
+			"$05C5_first_pass": descriptor_progress.get("initial_05c5", -1),
+			"$003C_first_pass_by_descriptor_row": descriptor_progress.get("first_pass_values", []),
+			"$05C5_at_descriptor_row_commit": descriptor_progress.get("commit_counters", []),
+			"$003C_at_descriptor_row_commit": descriptor_progress.get("commit_values", []),
 		},
 		"source_input_missing": {
 			"selector": selector_inputs.get("missing", ""),
 			"fresh_period": period_inputs.get("missing", ""),
 			"fresh_setup_zero_fill": setup_inputs.get("missing", ""),
-			"$003C": "ROM $8C55 formatter caller state is not produced by these source results",
+			"$003C": "",
 		},
 		"source_input_provenance": {
 			"selector": selector_inputs.get("provenance", {}),
 			"fresh_period": period_inputs.get("provenance", {}),
 			"fresh_setup_zero_fill": setup_inputs.get("provenance", {}),
+			"descriptor_progress_loop": descriptor_progress.get("provenance", {}),
 		},
 		"source_token_outputs": row_outputs,
 		"packet_records": packet_records.duplicate(true),
 		"complete_packet_records": _complete_records(),
 		"unresolved_source_tokens": unresolved,
-		"stop_boundary": "descriptor-$01 ED/EE row substitutions only; no field map, palette, OAM, scroll, or raster output",
+		"stop_boundary": "descriptor-$01 ED/EE final row packet substitutions; per-row $003C values are derived from the ROM progress loop at each row's commit counter; task/NMI timing and field map/palette/OAM/scroll/raster output are not modeled",
 		"runtime_rom_dependency": false,
 	}
 	return status
@@ -215,51 +235,108 @@ func _resolve_team_name(team_id: int, resources: Dictionary) -> Dictionary:
 	var converter := _load_resource(resources, "fixed_text_converter_CBC2_CBF1.bin", 47)
 	if helper_vector != PackedByteArray([0x4C, 0xC2, 0xCB]) \
 			or converter.slice(0, 6) != PackedByteArray([0xA0, 0x00, 0xC9, 0xA0, 0x90, 0x28]) \
-			or converter.slice(14, 24) != PackedByteArray([0xE9, 0xAE, 0xC9, 0x1F, 0x90, 0x1A, 0xE9, 0x05, 0xB0, 0x13]) \
-			or converter.slice(43, 47) != PackedByteArray([0x18, 0x69, 0x40, 0x60]):
-		return {"ok": false, "error": "ROM character converter does not prove the supported ASCII tile path"}
+			or (0xCBC8 + int(converter[5])) != 0xCBF0 \
+			or int(converter[0xCBF0 - 0xCBC2]) != 0x60:
+		return {"ok": false, "error": "ROM character converter no longer returns team-name ASCII through the checked `$CBF0` RTS path"}
 	var emitted := PackedByteArray()
 	for index in count:
 		var source_byte := int(name_bytes[index])
-		var converted := _convert_uppercase_ascii_tile(source_byte)
-		if converted < 0:
-			return {"ok": false, "error": "The ROM character converter output is not established for this name byte"}
-		emitted.append(converted)
+		var emitted_byte := _emit_rom_team_name_byte(source_byte)
+		if emitted_byte < 0:
+			return {"ok": false, "error": "The ROM character converter identity path is not established for this name byte"}
+		emitted.append(emitted_byte)
 	return {
 		"ok": true, "team_id": team_id, "encoded_selector": encoded_selector,
 		"name_pointer": string_pointer, "length": count,
 		"source_name_bytes": name_bytes.duplicate(), "emitted_tiles": emitted,
 		"text_loop_cpu": "$8A6F", "text_converter_cpu": "$CBC2",
 		"output_order": "ROM string order; $8A6F increments the character index after each emit",
-		"converter_rule": "For these A-Z source bytes, $CBC2 follows SBC #$AE, SBC #$05, CLC/ADC #$40; output is source byte + $8C.",
+		"converter_rule": "For these A-Z bytes (<$A0), $CBC6 BCC +$28 reaches $CBF0 RTS; output equals the source byte.",
 	}
 
 
-func _convert_uppercase_ascii_tile(source_byte: int) -> int:
-	if source_byte < 0x41 or source_byte > 0x5A or source_byte >= 0xA0:
+func _emit_rom_team_name_byte(source_byte: int) -> int:
+	if source_byte < 0x41 or source_byte > 0x5A:
 		return -1
-	# The verified $CBC2 branches for A-Z clear carry at CMP #$A0, then
-	# subtract $AE with borrow, subtract $05, and add $40 after CLC.
-	var accumulator := (source_byte - 0xAE - 1) & 0xFF
-	if accumulator < 0x1F:
-		return -1
-	accumulator = (accumulator - 0x05) & 0xFF
-	if accumulator < 0x05:
-		return -1
-	accumulator = (accumulator + 0x40) & 0xFF
-	return accumulator
+	# `$CBC4` compares against `$A0`; uppercase ASCII takes the `$CBC6`
+	# branch directly to `$CBF0 RTS`, leaving A unchanged.
+	return source_byte
 
 
-func _resolve_ee_value(value: int) -> Dictionary:
+func _resolve_ee_value(value: int, source_003c: int) -> Dictionary:
 	if value != 0:
 		return {"ok": false, "error": "The $EE formatter is implemented only for source value zero in descriptor $01"}
+	if source_003c != 0 and source_003c != 1 and source_003c != 3:
+		return {"ok": false, "error": "The ROM $003C formatter is supported only for source values 0, 1, and 3"}
 	var current_manifest := _load_manifest()
 	var current_resources := _resources_by_path(current_manifest)
 	var formatter := _load_resource(current_resources, "decimal_formatter_8C55_8C85.bin", 48)
 	if formatter.size() != 48 or formatter.slice(0, 5) != PackedByteArray([0xA4, 0x3C, 0x88, 0xF0, 0x2A]) \
 			or formatter.slice(29, 33) != PackedByteArray([0xA5, 0x6F, 0xF0, 0x0E]):
 		return {"ok": false, "error": "ROM decimal formatter does not establish the value-zero no-digit path"}
-	return {"ok": false, "error": "ROM $8C55 also reads caller-owned $003C: value 1 returns before formatting; other values may emit the zero tile $33"}
+	var emitted_tiles := PackedByteArray() if source_003c == 1 else PackedByteArray([0x33])
+	return {
+		"ok": true,
+		"source_003c": source_003c,
+		"output_kind": "no_digits" if source_003c == 1 else "single_zero_tile",
+		"emitted_tiles": emitted_tiles,
+		"formatter_pc": "$8C55",
+		"tile_writer_pc": "$8C85" if not emitted_tiles.is_empty() else "not_entered",
+		"source": "ROM $8C55 DEY/BEQ return for $003C=1; the source row-commit $003C=0 and analyzed $003C=3 zero-value paths emit tile $33",
+	}
+
+
+func _derive_descriptor_row_003c(descriptor: PackedByteArray) -> Dictionary:
+	if descriptor.size() != 25:
+		return {"ok": false, "error": "The ROM $003C progress loop requires the checked four-row descriptor-$01 size."}
+	if not FileAccess.file_exists(WORKER_SETUP_PATH) or not FileAccess.file_exists(WORKER_RESUME_PATH):
+		return {"ok": false, "error": "ROM bank-$18 descriptor worker sources for $05C5/$003C are missing."}
+	var setup_code := FileAccess.get_file_as_bytes(WORKER_SETUP_PATH)
+	var resume_code := FileAccess.get_file_as_bytes(WORKER_RESUME_PATH)
+	if setup_code.size() != 2173 or FileAccess.get_sha256(WORKER_SETUP_PATH) != WORKER_SETUP_SHA256 \
+			or resume_code.size() != 334 or FileAccess.get_sha256(WORKER_RESUME_PATH) != WORKER_RESUME_SHA256:
+		return {"ok": false, "error": "ROM bank-$18 descriptor worker source failed its size/hash check."}
+	var reset_offset := 0x887F - 0x800C
+	if setup_code.slice(reset_offset, reset_offset + 5) != PackedByteArray([0xA9, 0x00, 0x8D, 0xC5, 0x05]):
+		return {"ok": false, "error": "ROM worker setup no longer resets $05C5 to zero before its first descriptor pass."}
+	var loop_offset := 0x8949 - 0x8889
+	var loop_bytes := resume_code.slice(loop_offset, loop_offset + 0x3D)
+	if loop_bytes.size() != 0x3D or _sha256_bytes(loop_bytes) != WORKER_ROW_LOOP_SHA256:
+		return {"ok": false, "error": "ROM descriptor-row loop $8949-$8985 failed its fixed source hash."}
+	var first_pass_values: Array[int] = []
+	var commit_counters: Array[int] = []
+	var commit_values: Array[int] = []
+	for row_index in 4:
+		var progress := int(descriptor[9 + row_index * 4])
+		var remaining := progress
+		var source_003c := 0
+		while remaining != 0 and source_003c < 0x80:
+			remaining = (remaining - 1) & 0xFF
+			source_003c += 1
+		if remaining != 0:
+			return {"ok": false, "error": "Descriptor-$01 progress cannot be represented by the source's bounded first-pass $003C loop."}
+		first_pass_values.append(source_003c)
+		# The visible row packet is committed when worker-owned $05C5 reaches
+		# that descriptor row's progress byte; the same ROM loop then derives 0.
+		commit_counters.append(progress)
+		commit_values.append((progress - progress) & 0xFF)
+	if first_pass_values != [1, 1, 3, 3] or commit_values != [0, 0, 0, 0]:
+		return {"ok": false, "error": "Descriptor-$01 source progress/commit values differ from the checked ROM rows."}
+	return {
+		"ok": true,
+		"initial_05c5": 0,
+		"first_pass_values": first_pass_values,
+		"commit_counters": commit_counters,
+		"commit_values": commit_values,
+		"provenance": {
+			"rom_sha256": ROM_SHA256,
+			"worker_setup_source_sha256": WORKER_SETUP_SHA256,
+			"worker_setup_reset_pc": "$8881",
+			"row_loop_source_sha256": WORKER_ROW_LOOP_SHA256,
+			"row_loop_pc": "$8949-$8985",
+			"rule": "ROM clears $003C and counts down descriptor progress until it equals worker-owned $05C5; first pass begins at 0 and each rendered row commits when $05C5 reaches that row's progress",
+		},
+	}
 
 
 func _read_selector_inputs(result: Dictionary) -> Dictionary:
@@ -479,6 +556,13 @@ func _bytes_equal(bytes: PackedByteArray, expected: Array[int]) -> bool:
 		if int(bytes[index]) != expected[index]:
 			return false
 	return true
+
+
+func _sha256_bytes(bytes: PackedByteArray) -> String:
+	var context := HashingContext.new()
+	if context.start(HashingContext.HASH_SHA256) != OK or context.update(bytes) != OK:
+		return ""
+	return context.finish().hex_encode()
 
 
 func _fail_result(message: String) -> Dictionary:

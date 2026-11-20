@@ -5,7 +5,7 @@
     "sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
   },
   "mapping": "The iNES header is 16 bytes. PRG bank $01 is the second 8 KiB bank and maps to CPU $A000-$BFFF when selected in MMC3 register 7.",
-  "scope": "Preserves the `$A006` bank-$01 vector and its complete `$A4EB-$A610` target body. The runtime entry executor only performs the verified JMP; the body has additional helpers and wait/scheduler behavior and is not yet implemented by that executor.",
+  "scope": "Preserves the `$A006` bank-$01 vector and its complete `$A4EB-$A610` target body, plus the `$A009->$A64C` fresh prematch-dispatch JMP. The runtime entry executor only performs verified control transfers; target bodies remain separately bounded.",
   "spans": [
     {
       "id": "a006_vector",
@@ -18,6 +18,18 @@
       "bank_mapping": "PRG bank $01 at CPU $A000-$BFFF",
       "sha256": "d823d82f6c345fe92558a284727617cdea76ce9d9c6b32bdd01e44a18bfd8af3",
       "bytes": "4ceba4"
+    },
+    {
+      "id": "a009_prematch_dispatch_entry",
+      "file": "bank01_prematch_dispatch_entry_A009_A00C.bin",
+      "cpu_start": "$A009",
+      "cpu_end_exclusive": "$A00C",
+      "file_offset": "0x002019",
+      "length": 3,
+      "rom_offset": 8217,
+      "bank_mapping": "PRG bank $01 at CPU $A000-$BFFF",
+      "sha256": "d06ea7b10903702d0e149ef83ded6b610ed0fb9be8867ab24539bbaae8011524",
+      "bytes": "4c4ca6"
     },
     {
       "id": "a4eb_body",

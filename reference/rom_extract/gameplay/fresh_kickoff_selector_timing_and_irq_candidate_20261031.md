@@ -50,6 +50,16 @@ write prefixes over relative frame offsets 0–8 and reaches `$893B` at frame
 7266. The integration verifier checks the per-frame cycle cursor, all final
 selector RAM, and 15 scheduled interrupt events.
 
+The production route also requests the ROM executor's `$A15B` CPU checkpoint at
+the candidate frame-8 NMI mainline cycle (193,821) and exposes its event, CPU,
+and `$D0-$D3` pointers in route status. The recorded-input verifier checks
+`A=$1F`, pointers `$1F/$BF/$6F/$72`, SP=`$24`, and the four active stack bytes
+`$0125-$0128 = 80 A8 FC 80`. These return words now come from the checked title
+task seed and balanced ROM JSR/RTS path; only those four offsets are asserted.
+The route still does not execute the NMI, and the checkpoint time is located by
+the candidate clock rather than a live interrupt receipt. See the [physical
+stack derivation](legacy_title_task_seed/title_selector_physical_stack_context_20261101.md).
+
 This is not a resumable CPU. The ROM executor computes the full return result
 at call entry; the route delays exposing RAM writes until each cycle budget.
 The runtime clock records interrupt accept/return positions but does not apply
@@ -73,13 +83,13 @@ The candidate wait state has `P=$30`, whose I bit (`$04`) is clear. The FCEUX
 emulator value. Cold-reset source bytes execute `$C6B8 CLI` before the title
 route, as recorded in
 [`fresh_kickoff_1b6_boot_producer_20261029.md`](fresh_kickoff_1b6_boot_producer_20261029.md).
-The runtime clock asset now carries only `I=clear` from the hash-bound
-ROM-only source CPU candidate. `KickoffRouteRuntime` adds that single known bit
-to the selector input and preserves it through normalization and the `$893B`
-prefix; the route verifier checks the mask and value. This is not a full P byte,
-not a live Godot CPU execution from `$C6B8`, and not physical timing proof. The
-candidate uses a simplified PPU/MMC3 schedule, while the actual IRQ/NMI handlers
-and their RTI effects are still not executed by the route.
+The production selector now consumes the route-bound clock receipt for this
+single flag and carries I=clear into the partial `$A15B` CPU status contract.
+The verifier reports mask `$87` and value `$00`; the displayed P `$00` is only
+the known-bit value, not a claim that the full status byte is zero. This is not
+a full P byte or a live Godot CPU execution from `$C6B8`. The candidate uses a
+simplified PPU/MMC3 schedule, and the actual IRQ/NMI handlers and their RTI
+effects are still not executed by the route.
 
 The FCEUX trace records the `$A1C3` store at cycle 216,372,411, three cycles
 after the candidate under their respective hook conventions. This is useful

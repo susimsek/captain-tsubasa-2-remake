@@ -1,0 +1,187 @@
+{
+  "schema": "ct2-pass-receiver-descriptor-1d-source-v1",
+  "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
+  "source_rom_size_bytes": 393232,
+  "bank_mapping": {
+    "bank18_cpu_window": "0x8000-0xBFFF",
+    "file_offset_formula": "0x030010 + (CPU - 0x8000)"
+  },
+  "descriptor": {
+    "id": "0x1D",
+    "pointer_table_cpu": "0xB3CF",
+    "pointer_entry_cpu": "0xB409",
+    "descriptor_cpu": "0xB6C7",
+    "descriptor_length_bytes": 29,
+    "next_descriptor_cpu": "0xB6E4",
+    "base_ppu_address": "0x2232",
+    "packet_width_tiles": 12,
+    "inclusive_final_progress": 10,
+    "top_border_progress": 1,
+    "bottom_border_offset": 9,
+    "row_count": 5,
+    "rows": [
+      {
+        "index": 0,
+        "coordinate": 1,
+        "column": 2,
+        "text_cpu_address": "0xBCF9",
+        "bytes_hex": "e2 fc"
+      },
+      {
+        "index": 1,
+        "coordinate": 3,
+        "column": 1,
+        "text_cpu_address": "0xBCFB",
+        "bytes_hex": "45 6e 72 6a 00 00 00 00 e3 00 fc"
+      },
+      {
+        "index": 2,
+        "coordinate": 5,
+        "column": 1,
+        "text_cpu_address": "0xBD06",
+        "bytes_hex": "53 75 74 20 00 00 00 00 e3 01 fc"
+      },
+      {
+        "index": 3,
+        "coordinate": 7,
+        "column": 1,
+        "text_cpu_address": "0xBD11",
+        "bytes_hex": "43 61 6c 69 6d 20 20 00 e3 03 fc"
+      },
+      {
+        "index": 4,
+        "coordinate": 9,
+        "column": 1,
+        "text_cpu_address": "0xBD1C",
+        "bytes_hex": "50 61 73 20 00 00 00 00 e3 02 fc"
+      }
+    ]
+  },
+  "dynamic_tokens": {
+    "parser": "$8986 sends token values >= $E0 through the vector dispatch at $89BA",
+    "E2": {
+      "handler_cpu": "0x8A06",
+      "operation": "LDA $05FC; JMP $8CDC",
+      "semantic_alias": "$E0 player position/name resolver"
+    },
+    "E3": {
+      "handler_cpu": "0x8A0C",
+      "operation": "LDA $05FC; JMP $8CA5",
+      "semantic_alias": "$E1 selector/value resolver"
+    },
+    "selected_slot_ram": "0x05FC"
+  },
+  "style": {
+    "selector_code_cpu": "0x885E",
+    "style_table_cpu": "0xB3BD",
+    "table_entry_cpu": "0xB3C4",
+    "descriptor_index": 7,
+    "packed_selector": 1,
+    "raw_style_byte": "0x02",
+    "selected_frame_family": 0,
+    "shared_frame_resource": "../first_action_menu/window_3x3_tile_ids.bin"
+  },
+  "spans": [
+    {
+      "name": "descriptor_pointer_entry_1D",
+      "resource": "descriptor_pointer_entry_1D.bin",
+      "cpu_address": "0xB409",
+      "file_offset": "0x033419",
+      "length_bytes": 2,
+      "sha256": "db6d9052b576d973196363e11163d492f50926c2f1d1efd67b3d999817b0d04d"
+    },
+    {
+      "name": "descriptor_1D",
+      "resource": "descriptor_1D.bin",
+      "cpu_address": "0xB6C7",
+      "file_offset": "0x0336D7",
+      "length_bytes": 29,
+      "sha256": "d9f63c7bd60735f2aadd35e03766525073acbc0aa12922692655fb70eb7a26a7"
+    },
+    {
+      "name": "row_00",
+      "resource": "row_00.bin",
+      "cpu_address": "0xBCF9",
+      "file_offset": "0x033D09",
+      "length_bytes": 2,
+      "sha256": "b2200f9f0de90684fe6b2c52aae2fc73fe369ae9a820da1c1da11fab3833732e"
+    },
+    {
+      "name": "row_01",
+      "resource": "row_01.bin",
+      "cpu_address": "0xBCFB",
+      "file_offset": "0x033D0B",
+      "length_bytes": 11,
+      "sha256": "e873faaa4b707a650bf30811c5da2aa528c9fe56c8e4679e80852f8bed27beb5"
+    },
+    {
+      "name": "row_02",
+      "resource": "row_02.bin",
+      "cpu_address": "0xBD06",
+      "file_offset": "0x033D16",
+      "length_bytes": 11,
+      "sha256": "3a8fcf9d45c2df247d357bb5ba3ea246918b37e34f510b5fbf41b97d7d926ac8"
+    },
+    {
+      "name": "row_03",
+      "resource": "row_03.bin",
+      "cpu_address": "0xBD11",
+      "file_offset": "0x033D21",
+      "length_bytes": 11,
+      "sha256": "ca6c46cf2300173c749e8b60dabf5558e777141a8540f5abd965b5af6a92c742"
+    },
+    {
+      "name": "row_04",
+      "resource": "row_04.bin",
+      "cpu_address": "0xBD1C",
+      "file_offset": "0x033D2C",
+      "length_bytes": 11,
+      "sha256": "70bddc4d619fa603c4c6f142aceb09e608b04a58b2f02c1565c6354d862182a8"
+    },
+    {
+      "name": "token_dispatch_prefix",
+      "resource": "token_dispatch_prefix_89B4.bin",
+      "cpu_address": "0x89B4",
+      "file_offset": "0x0309C4",
+      "length_bytes": 6,
+      "sha256": "df45ddc5464f183d4880fb0920b33cca71a0e7f8da49bcf97b01d8d1e7c6d31d"
+    },
+    {
+      "name": "token_vector_E0_E3",
+      "resource": "token_vector_E0_E3_89BA.bin",
+      "cpu_address": "0x89BA",
+      "file_offset": "0x0309CA",
+      "length_bytes": 8,
+      "sha256": "e8a4ad0f23e54785daa0b400614beffca298b3e21f3955f430222388919fec8d"
+    },
+    {
+      "name": "token_handlers_E0_E3",
+      "resource": "token_handlers_E0_E3_89FA.bin",
+      "cpu_address": "0x89FA",
+      "file_offset": "0x030A0A",
+      "length_bytes": 24,
+      "sha256": "b997ce46f03651620cf492d3c895d20a5ff9a10cafbbe0a2909629fee30950c4"
+    },
+    {
+      "name": "descriptor_style_selector",
+      "resource": "descriptor_style_selector_885E.bin",
+      "cpu_address": "0x885E",
+      "file_offset": "0x03086E",
+      "length_bytes": 24,
+      "sha256": "3b2200890925cab9750c1d1277a7a5dfe334218144c024511a404270fae0c21d"
+    },
+    {
+      "name": "descriptor_style_table_entry",
+      "resource": "descriptor_style_table_entry_B3C4.bin",
+      "cpu_address": "0xB3C4",
+      "file_offset": "0x0333D4",
+      "length_bytes": 1,
+      "sha256": "dbc1b4c900ffe48d575b5da5c638040125f65db0fe3e24494b76ea986457d986"
+    }
+  ],
+  "evidence_limits": [
+    "This export preserves ROM bytes and the token/style dispatch inputs; it does not execute the 6502 $EF7F/$800C renderer wrapper.",
+    "The presenter builds the first two ROM-defined queue packet candidates only; it does not run the asynchronous $C515 worker, scheduler, NMI, or PPU transfer.",
+    "FCEUX captures are validation evidence only and are not read by this extractor or the runtime presenter."
+  ]
+}

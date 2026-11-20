@@ -27,14 +27,54 @@
       "purpose": "40-byte Y offset table followed by 64-byte X offset table"
     },
     {
-      "name": "sprite_descriptor_pointers_8280_82af",
-      "path": "reference/rom_extract/gameplay/actor_oam/bank16_sprite_descriptor_pointers_8280_82af.bin",
+      "name": "sprite_descriptor_pointers_8280_842b",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_sprite_descriptor_pointers_8280_842b.bin",
       "bank": "0x16",
       "cpu_start": "0x8280",
       "file_offset": "0x02C290",
-      "length_bytes": 48,
-      "sha256": "307422f39c84f3bb3f12cd84879091d437582c0ed0d6d41adb2555c808ee6564",
-      "purpose": "24 descriptor stream pointers; first 12 are direct, following values follow source table layout"
+      "length_bytes": 428,
+      "sha256": "1940d28401f83302f9dd3fbeb8660e2bbf9f522aae8fbc97b70215975e1f704c",
+      "purpose": "ROM OAM descriptor pointer table for descriptor IDs $00-$D5, including live E6 actors using descriptor $CA"
+    },
+    {
+      "name": "live_e6_descriptor_ca_terminator_bd45",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_live_e6_descriptor_CA_terminator_BD45.bin",
+      "bank": "0x16",
+      "cpu_start": "0xBD45",
+      "file_offset": "0x02FD55",
+      "length_bytes": 1,
+      "sha256": "68aa2e2ee5dff96e3355e6c7ee373e3d6a4e17f75f9518d843709c0c9bc3e3d4",
+      "purpose": "Descriptor $CA stream's ROM end marker; the OAM interpreter terminates on this byte"
+    },
+    {
+      "name": "live_e6_descriptor_ca_stream_bdd5_bde1",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_live_e6_descriptor_CA_stream_BDD5_BDE1.bin",
+      "bank": "0x16",
+      "cpu_start": "0xBDD5",
+      "file_offset": "0x02FDE5",
+      "length_bytes": 13,
+      "sha256": "98dcd0980d3a3bd0a4552309d3ea10cda3d9ec9d9c2662e445ad065a1c0721ef",
+      "purpose": "Descriptor $CA compact OAM runs for the two live E6 actors and their terminal opcode"
+    },
+    {
+      "name": "animation66_descriptor_pointer_9e_83bc_83bd",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_pointer_9E_83BC_83BD.bin",
+      "bank": "0x16",
+      "cpu_start": "0x83BC",
+      "file_offset": "0x02C3CC",
+      "length_bytes": 2,
+      "sha256": "5f0d984a52ca41b0b88a47636c86c81e2d5bf002916ceb931161478d1c1580d7",
+      "purpose": "ROM descriptor-$9E pointer entry resolving animation-$66 actors to the $B21E sprite stream"
+    },
+    {
+      "name": "animation66_descriptor_pointer_9f_83be_83bf",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_pointer_9F_83BE_83BF.bin",
+      "bank": "0x16",
+      "cpu_start": "0x83BE",
+      "file_offset": "0x02C3CE",
+      "length_bytes": 2,
+      "sha256": "db0a25a871aa2a0a6dd4b7edaa5c37cbb7be827d7e4adefe5b320facdc3250a0",
+      "purpose": "ROM descriptor-$9F pointer entry resolving animation-$66 actors to the $B2CC sprite stream"
     },
     {
       "name": "first_command_sprite_streams_842c_8979",
@@ -47,6 +87,136 @@
       "purpose": "descriptor $00/$04/$0A stream roots, selector tables, jump targets, and compact OAM runs"
     },
     {
+      "name": "descriptor_0b_0e_streams_897a_89bb",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_0B_0E_streams_897A_89BB.bin",
+      "bank": "0x16",
+      "cpu_start": "0x897A",
+      "file_offset": "0x02C98A",
+      "length_bytes": 66,
+      "sha256": "df7ca04d4e372766834155b3b777178e48b33f985dc02c8bde7342572e87e05e",
+      "purpose": "descriptor $0B-$0E source streams and their jumps to shared selector streams"
+    },
+    {
+      "name": "slot11_actor_descriptors_0f_12_streams_89bc_8b73",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_slot11_actor_descriptors_0F_12_streams_89BC_8B73.bin",
+      "bank": "0x16",
+      "cpu_start": "0x89BC",
+      "file_offset": "0x02C9CC",
+      "length_bytes": 440,
+      "sha256": "c36945bc33a00c0d97521178b289d1df3d1ffec935c17332d9692aa753243aba",
+      "purpose": "ROM selector tables and compact-OAM streams for slot-$11 descriptors $0F-$12, with all twelve selector branches checked for each descriptor"
+    },
+    {
+      "name": "route_actor_descriptor_14_stream_8b81_8d0b",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_route_actor_descriptor_14_stream_8B81_8D0B.bin",
+      "bank": "0x16",
+      "cpu_start": "0x8B81",
+      "file_offset": "0x02CB91",
+      "length_bytes": 395,
+      "sha256": "fd84af09b6b5affba9b03a60fb3d7174190b094769028b0cadc380e8c8b6329d",
+      "purpose": "ROM descriptor-$14 selector table, twelve branch roots, shared compact OAM paths, and terminal opcode before descriptor $15"
+    },
+    {
+      "name": "route_actor_descriptor_18_stream_8d45_8d51",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_route_actor_descriptor_18_stream_8D45_8D51.bin",
+      "bank": "0x16",
+      "cpu_start": "0x8D45",
+      "file_offset": "0x02CD55",
+      "length_bytes": 13,
+      "sha256": "5188d6fcec3a2f29067dd566617a9d0b40a75734d8db3bba06008690ec05970b",
+      "purpose": "ROM descriptor-$18 compact OAM runs and terminal opcode before descriptor $19"
+    },
+    {
+      "name": "route_actor_descriptor_15_stream_8d0c_8d1a",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_route_actor_descriptor_15_stream_8D0C_8D1A.bin",
+      "bank": "0x16",
+      "cpu_start": "0x8D0C",
+      "file_offset": "0x02CD1C",
+      "length_bytes": 15,
+      "sha256": "a1d2ad69c82b5ffda5057d4cef159c0cf66ef96b821f7df3eab73ff6586c161e",
+      "purpose": "ROM descriptor-$15 compact OAM runs and bounded jump to shared descriptor-$14 selector paths"
+    },
+    {
+      "name": "route_actor_descriptor_16_stream_8d1b_8d2f",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_route_actor_descriptor_16_stream_8D1B_8D2F.bin",
+      "bank": "0x16",
+      "cpu_start": "0x8D1B",
+      "file_offset": "0x02CD2B",
+      "length_bytes": 21,
+      "sha256": "1aa769bf4812c0873416852f7338830e7064dd31bc118c0dc0992e3d9b85cbac",
+      "purpose": "ROM descriptor-$16 compact OAM runs, selector branch, and jump to shared descriptor-$14 paths"
+    },
+    {
+      "name": "route_actor_descriptor_1d_stream_8f56_8f62",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_route_actor_descriptor_1D_stream_8F56_8F62.bin",
+      "bank": "0x16",
+      "cpu_start": "0x8F56",
+      "file_offset": "0x02CF66",
+      "length_bytes": 13,
+      "sha256": "5188d6fcec3a2f29067dd566617a9d0b40a75734d8db3bba06008690ec05970b",
+      "purpose": "ROM descriptor-$1D compact OAM runs and terminal opcode at its own pointer-bounded source address"
+    },
+    {
+      "name": "animation66_descriptor9e_prefix_b21e_b231",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_animation66_descriptor9E_prefix_B21E_B231.bin",
+      "bank": "0x16",
+      "cpu_start": "0xB21E",
+      "file_offset": "0x02F22E",
+      "length_bytes": 19,
+      "sha256": "20658f483aa243208c4293c944ca62b7df37c8a4c9f08ad59e7c638d214fe529",
+      "purpose": "Animation-$66 descriptor-$9E leading OAM runs and selector table shared by descriptors $9E/$9F"
+    },
+    {
+      "name": "animation66_descriptor9e_selector08_pointer_b23b_b23c",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_animation66_descriptor9E_selector08_pointer_B23B_B23C.bin",
+      "bank": "0x16",
+      "cpu_start": "0xB23B",
+      "file_offset": "0x02F24B",
+      "length_bytes": 2,
+      "sha256": "f2a7a8a2081d23a7d258d84005783f728480e15cda342d84b09ddbdcab0e2d06",
+      "purpose": "Live actor selector-$08 pointer resolves the animation-$66 descriptor-$9E stream to $B287"
+    },
+    {
+      "name": "animation66_descriptor9e_selector02_b287_b292",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_animation66_descriptor9E_selector02_B287_B292.bin",
+      "bank": "0x16",
+      "cpu_start": "0xB287",
+      "file_offset": "0x02F297",
+      "length_bytes": 11,
+      "sha256": "8b85041ed826e82d268002846c8daf0cbc8adcb3883d84c9fe743a3ba7faa949",
+      "purpose": "Animation-$66 descriptor-$9E selector-$02 runs and jump from $B287 to $B24B"
+    },
+    {
+      "name": "animation66_descriptor9e_jump_b24b_b276",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_animation66_descriptor9E_jump_B24B_B276.bin",
+      "bank": "0x16",
+      "cpu_start": "0xB24B",
+      "file_offset": "0x02F25B",
+      "length_bytes": 43,
+      "sha256": "3d112fc60542fc3e0ca0133daeb36aed191260e2789e2cdbbb089a11608cb153",
+      "purpose": "Animation-$66 descriptor-$9E jump target at $B24B through its source $01 terminator at $B275"
+    },
+    {
+      "name": "animation66_descriptor9f_prefix_b2cc_b2d8",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_animation66_descriptor9F_prefix_B2CC_B2D8.bin",
+      "bank": "0x16",
+      "cpu_start": "0xB2CC",
+      "file_offset": "0x02F2DC",
+      "length_bytes": 13,
+      "sha256": "daa91c5bca7b2a85323cbd62f9e794551fbafc643a06b6e45dad32104e0b1cb5",
+      "purpose": "Animation-$66 descriptor-$9F initial compact OAM runs and jump to the shared selector table at $B22A"
+    },
+    {
+      "name": "early_actor_descriptor_pointer_b7_83ee_83ef",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_early_actor_descriptor_pointer_B7_83EE_83EF.bin",
+      "bank": "0x16",
+      "cpu_start": "0x83EE",
+      "file_offset": "0x02C3FE",
+      "length_bytes": 2,
+      "sha256": "afabfea077b7afe3d9a8e653724631361d30835b71a1afc37b5a3fe80b2b248b",
+      "purpose": "descriptor $B7 source pointer resolving to the bank-$16 OAM run stream at $BAE0"
+    },
+    {
       "name": "early_actor_descriptor_pointers_83f0_83f5",
       "path": "reference/rom_extract/gameplay/actor_oam/bank16_early_actor_descriptor_pointers_83f0_83f5.bin",
       "bank": "0x16",
@@ -54,7 +224,17 @@
       "file_offset": "0x02C400",
       "length_bytes": 6,
       "sha256": "c657102f38fc6bb3b6fdf8231ab95316f8eee01c64c9af2bda3a344876340b4f",
-      "purpose": "descriptor $B8/$B9/$BA pointers, resolving to $BB21/$BB62/$BB6D"
+      "purpose": "descriptor $B8/$B9/$BA source pointers resolving to $BB21/$BB62/$BB6D"
+    },
+    {
+      "name": "early_actor_descriptor_b7_bae0_bb20",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_early_actor_descriptor_B7_BAE0_BB20.bin",
+      "bank": "0x16",
+      "cpu_start": "0xBAE0",
+      "file_offset": "0x02FAF0",
+      "length_bytes": 65,
+      "sha256": "61836c0206e6179b672698701893e3d36b3bf53e76e95305cf014d5cb4487bfb",
+      "purpose": "descriptor $B7 compact OAM runs and terminal opcode for the initial scenario-$36 animation-$4E actor"
     },
     {
       "name": "early_actor_descriptor_b8_bb21_bb61",
@@ -64,7 +244,7 @@
       "file_offset": "0x02FB31",
       "length_bytes": 65,
       "sha256": "7e9cdcd5dbe2e732c0bdb4ba4a05328a26b36ce447d336702eaffdf46888b7dc",
-      "purpose": "descriptor $B8 compact OAM runs and end opcode"
+      "purpose": "descriptor $B8 compact OAM runs and terminal opcode"
     },
     {
       "name": "early_actor_descriptor_b9_bb62_bb6c",
@@ -74,7 +254,7 @@
       "file_offset": "0x02FB72",
       "length_bytes": 11,
       "sha256": "f8c2fe9650548e50d75b37eaca01d2a5e924e5f858718e6f0933cb816ebc615a",
-      "purpose": "descriptor $B9 compact OAM run and end opcode"
+      "purpose": "descriptor $B9 compact OAM run and terminal opcode"
     },
     {
       "name": "early_actor_descriptor_ba_bb6d_bb7b",
@@ -84,7 +264,137 @@
       "file_offset": "0x02FB7D",
       "length_bytes": 15,
       "sha256": "40b0a4a2fd857fff6c29536666d2d2104acb9bf7ad2ce092eacd95aa62785803",
-      "purpose": "descriptor $BA compact OAM runs and end opcode"
+      "purpose": "descriptor $BA compact OAM runs and terminal opcode"
+    },
+    {
+      "name": "descriptor_pointer_7d_837a_837b",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_pointer_7D_837A_837B.bin",
+      "bank": "0x16",
+      "cpu_start": "0x837A",
+      "file_offset": "0x02C38A",
+      "length_bytes": 2,
+      "sha256": "b7b1ecb9d926330e513a811f607f99a1e816ef15e53f5858d5a3f9b19bcedf6b",
+      "purpose": "descriptor $7D pointer resolves to the bank-$16 compact sprite stream at $AA83"
+    },
+    {
+      "name": "descriptor_pointer_table_73_7b_8366_8377",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_pointer_table_73_7B_8366_8377.bin",
+      "bank": "0x16",
+      "cpu_start": "0x8366",
+      "file_offset": "0x02C376",
+      "length_bytes": 18,
+      "sha256": "db62c9e9f16ca1a78a20aa499718d2aee9a3f7cae58539984a61c7fedd8e3128",
+      "purpose": "ROM pointers for field actor descriptors $73-$7B"
+    },
+    {
+      "name": "descriptor_pointer_72_8364_8365",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_pointer_72_8364_8365.bin",
+      "bank": "0x16",
+      "cpu_start": "0x8364",
+      "file_offset": "0x02C374",
+      "length_bytes": 2,
+      "sha256": "de297b9c72e5464d967c50ce76caf063f8e5c0d721ecf6ccaaa38ad0b1de51a0",
+      "purpose": "ROM descriptor-$72 pointer entry resolving the first scenario-$36 actor pose to $A9B2"
+    },
+    {
+      "name": "descriptor_pointer_71_8362_8363",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_pointer_71_8362_8363.bin",
+      "bank": "0x16",
+      "cpu_start": "0x8362",
+      "file_offset": "0x02C372",
+      "length_bytes": 2,
+      "sha256": "9dbaf7f61f7ec28d54ff6d009469b02d2daa29f5eac7b252e091c1eecdebdc65",
+      "purpose": "ROM descriptor-$71 pointer entry resolving the next scenario-$36 actor pose to $A96F"
+    },
+    {
+      "name": "descriptor_71_stream_a96f_a9b1",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_71_stream_A96F_A9B1.bin",
+      "bank": "0x16",
+      "cpu_start": "0xA96F",
+      "file_offset": "0x02E97F",
+      "length_bytes": 67,
+      "sha256": "7a547dc3bd179b7e2e7be99eb738d3cb846101155fc8ff8ffea5f5073d6c42dd",
+      "purpose": "ROM descriptor-$71 compact OAM runs and terminator for the next scenario-$36 field actor pose"
+    },
+    {
+      "name": "descriptor_72_stream_a9b2_a9e0",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_72_stream_A9B2_A9E0.bin",
+      "bank": "0x16",
+      "cpu_start": "0xA9B2",
+      "file_offset": "0x02E9C2",
+      "length_bytes": 47,
+      "sha256": "928bfc93ce91f484187af5c155aceb0672981e511302e59b467182b565a4bfad",
+      "purpose": "ROM descriptor-$72 compact OAM runs and terminator for the first scenario-$36 field actor"
+    },
+    {
+      "name": "descriptor_streams_73_79_a9e1_aa6b",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_streams_73_79_A9E1_AA6B.bin",
+      "bank": "0x16",
+      "cpu_start": "0xA9E1",
+      "file_offset": "0x02E9F1",
+      "length_bytes": 139,
+      "sha256": "8869d3b755c62985c1bfd13d7ba96eaa9e2a284a86f36f9db239d69e3d54646d",
+      "purpose": "ROM compact OAM streams for the first field actor's descriptor sequence $73-$79"
+    },
+    {
+      "name": "descriptor_7a_stream_aa6c_aa78",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_7A_stream_AA6C_AA78.bin",
+      "bank": "0x16",
+      "cpu_start": "0xAA6C",
+      "file_offset": "0x02EA7C",
+      "length_bytes": 13,
+      "sha256": "4d0eb09bed201ddb2071b13984c0b7a282e6b46c6bc2fb481195756f66873252",
+      "purpose": "descriptor $7A compact OAM runs and terminal opcode used by the first field actor"
+    },
+    {
+      "name": "descriptor_7b_stream_aa79_aa7d",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_7B_stream_AA79_AA7D.bin",
+      "bank": "0x16",
+      "cpu_start": "0xAA79",
+      "file_offset": "0x02EA89",
+      "length_bytes": 5,
+      "sha256": "7587a8c312ad6e9c359f9e8ed346ac5a2f5a28acd0e95bc3219a7744f750f94b",
+      "purpose": "descriptor $7B compact OAM run and terminal opcode for the first field actor"
+    },
+    {
+      "name": "descriptor_pointer_7c_8378_8379",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_pointer_7C_8378_8379.bin",
+      "bank": "0x16",
+      "cpu_start": "0x8378",
+      "file_offset": "0x02C388",
+      "length_bytes": 2,
+      "sha256": "2a45b832143bb6fb3c1e4dc972162aa805360c5939638d2d6944059039e1216d",
+      "purpose": "descriptor $7C source pointer resolves to the bank-$16 compact sprite stream at $AA7E"
+    },
+    {
+      "name": "descriptor_7c_stream_aa7e_aa82",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_7C_stream_AA7E_AA82.bin",
+      "bank": "0x16",
+      "cpu_start": "0xAA7E",
+      "file_offset": "0x02EA8E",
+      "length_bytes": 5,
+      "sha256": "35888b80712ca2fc4f6a5f3c4fb2aee974d470088e79baed5c620d0fecac0bf8",
+      "purpose": "descriptor $7C compact OAM run and terminal opcode for the first callback-$1F map actor pose"
+    },
+    {
+      "name": "descriptor_7d_stream_aa83_aa87",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_7D_stream_AA83_AA87.bin",
+      "bank": "0x16",
+      "cpu_start": "0xAA83",
+      "file_offset": "0x02EA93",
+      "length_bytes": 5,
+      "sha256": "5698d4f4aecc18c443fe9be8e9c27953e8ac5251ec44616c2a8971b701b8c2cd",
+      "purpose": "descriptor $7D single compact OAM run and terminal opcode for the frame-8663 actor"
+    },
+    {
+      "name": "descriptor_cf_streams_be2d_bed5",
+      "path": "reference/rom_extract/gameplay/actor_oam/bank16_descriptor_CF_streams_BE2D_BED5.bin",
+      "bank": "0x16",
+      "cpu_start": "0xBE2D",
+      "file_offset": "0x02FE3D",
+      "length_bytes": 169,
+      "sha256": "d205d9daf9c83a96186113abbb1ee4c6e6dab1e7f300cfc151224308fe656138",
+      "purpose": "descriptor $CF compact OAM selector table, all twelve branches, and shared jump paths through the terminator at $BE80; descriptor $D0 begins at $BED6"
     }
   ]
 }

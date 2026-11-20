@@ -29,9 +29,35 @@
       "prg_bank": "0x1C",
       "meaning": "96 little-endian 16-bit maximum-stamina values",
       "sha256": "9278cbdf95434a0dc120d6938b6095fc24261d735e8ce4f91c5c95400e291085"
+    },
+    "stamina_player_curves_9FCE_A596.bin": {
+      "file_offset": 237534,
+      "size_bytes": 1480,
+      "cpu_start": "0x9FCE",
+      "cpu_end_exclusive": "0xA596",
+      "prg_bank": "0x1C at $8000, then 0x1D at $A000",
+      "meaning": "37 per-profile 40-byte stat/energy selector rows used by the alternate evaluator path",
+      "sha256": "26397ef62ee1cff2a36d072746005beb5c7a71c1419c193eb2c299c632d50e2b"
+    },
+    "level_thresholds_BA90_BB10.bin": {
+      "file_offset": 15008,
+      "size_bytes": 128,
+      "cpu_start": "0xBA90",
+      "cpu_end_exclusive": "0xBB10",
+      "prg_bank": "0x01",
+      "meaning": "64 little-endian experience thresholds used by the level resolver",
+      "sha256": "26a7e191432e7174737ec3ac353710e2aad6d9c60241745b06cde7754540c67c"
     }
   },
   "verified_code_windows": [
+    {
+      "prg_bank": "fixed",
+      "cpu_start": "0xC572",
+      "cpu_end_exclusive": "0xC575",
+      "file_offset": "0x03C582",
+      "size_bytes": 3,
+      "sha256": "0cbb606a0a220384a7b6f7e18c761576cad7371a02db168f0c63ef73ce8a860e"
+    },
     {
       "prg_bank": "fixed",
       "cpu_start": "0xDB62",
@@ -57,24 +83,122 @@
       "sha256": "a3fdef03b9da4f2e5f11a7ab79e70079600cf331bbd842c4ff695871df4395bb"
     },
     {
+      "prg_bank": "fixed",
+      "cpu_start": "0xCE2D",
+      "cpu_end_exclusive": "0xCE4A",
+      "file_offset": "0x03CE3D",
+      "size_bytes": 29,
+      "sha256": "6a815aa4ebad9e014531c5590616d6ec5596be7aa1a31c1542057062f25eb64c"
+    },
+    {
       "prg_bank": "bank_1C",
       "cpu_start": "0x802D",
-      "cpu_end_exclusive": "0x813D",
+      "cpu_end_exclusive": "0x818E",
       "file_offset": "0x03803D",
-      "size_bytes": 272,
-      "sha256": "9dfbec2e777774033ced8f43f7bac0d6eacb13522ff1a99ca4b280298784dbf7"
+      "size_bytes": 353,
+      "sha256": "bfc9ff395d159963ea1e0a1d67028400eb727093d052865ad557cc3b8f65d3d2"
     },
     {
       "prg_bank": "bank_01",
       "cpu_start": "0xA611",
-      "cpu_end_exclusive": "0xA636",
+      "cpu_end_exclusive": "0xA63C",
       "file_offset": "0x002621",
-      "size_bytes": 37,
-      "sha256": "66ba462837c47a0d94637637c461de438618f15451f9a10cee0c4cad2edbf985"
+      "size_bytes": 43,
+      "sha256": "46e66749b1b1335162245f59c65ccf68189d8e4fcfa55e67c0b2d9493181ed14"
+    },
+    {
+      "prg_bank": "bank_01",
+      "cpu_start": "0xB013",
+      "cpu_end_exclusive": "0xB03A",
+      "file_offset": "0x003023",
+      "size_bytes": 39,
+      "sha256": "9305de9d5c70c8fc48fea82f89c68cbf2a55edddc47cdf402f0d4d1604c57317"
+    },
+    {
+      "prg_bank": "fixed",
+      "cpu_start": "0xC50C",
+      "cpu_end_exclusive": "0xC50F",
+      "file_offset": "0x03C51C",
+      "size_bytes": 3,
+      "sha256": "71f4bb6ccdc5573bcfceef2422fe8636bc1dd1068675da3d860282d577e78b44"
+    },
+    {
+      "prg_bank": "fixed",
+      "cpu_start": "0xCD7C",
+      "cpu_end_exclusive": "0xCD89",
+      "file_offset": "0x03CD8C",
+      "size_bytes": 13,
+      "sha256": "8d7d8153252420175055aa5ef041e0e9dd85f99bb9dae8e24200e9549487ed24"
     }
   ],
+  "source_code_resources": {
+    "fixed_match_stamina_vector_C572_C575.bin": {
+      "cpu_start": "0xC572",
+      "cpu_end_exclusive": "0xC575",
+      "file_offset": "0x03C582",
+      "size_bytes": 3,
+      "sha256": "0cbb606a0a220384a7b6f7e18c761576cad7371a02db168f0c63ef73ce8a860e"
+    },
+    "fixed_energy_initializer_DB62_DB9E.bin": {
+      "cpu_start": "0xDB62",
+      "cpu_end_exclusive": "0xDB9E",
+      "file_offset": "0x03DB72",
+      "size_bytes": 60,
+      "sha256": "430dd56ae794b1424df1b19834d68b81f7e498b7758337574bc59f2a724143c8"
+    },
+    "fixed_stamina_evaluator_helper_CE08_CE2A.bin": {
+      "cpu_start": "0xCE08",
+      "cpu_end_exclusive": "0xCE2A",
+      "file_offset": "0x03CE18",
+      "size_bytes": 34,
+      "sha256": "a3fdef03b9da4f2e5f11a7ab79e70079600cf331bbd842c4ff695871df4395bb"
+    },
+    "fixed_stamina_bank_switch_CE2D_CE4A.bin": {
+      "cpu_start": "0xCE2D",
+      "cpu_end_exclusive": "0xCE4A",
+      "file_offset": "0x03CE3D",
+      "size_bytes": 29,
+      "sha256": "6a815aa4ebad9e014531c5590616d6ec5596be7aa1a31c1542057062f25eb64c"
+    },
+    "bank1c_stamina_evaluator_802D_818E.bin": {
+      "cpu_start": "0x802D",
+      "cpu_end_exclusive": "0x818E",
+      "file_offset": "0x03803D",
+      "size_bytes": 353,
+      "sha256": "bfc9ff395d159963ea1e0a1d67028400eb727093d052865ad557cc3b8f65d3d2"
+    },
+    "bank01_level_update_A611_A63C.bin": {
+      "cpu_start": "0xA611",
+      "cpu_end_exclusive": "0xA63C",
+      "file_offset": "0x002621",
+      "size_bytes": 43,
+      "sha256": "46e66749b1b1335162245f59c65ccf68189d8e4fcfa55e67c0b2d9493181ed14"
+    },
+    "bank01_level_helpers_B013_B03A.bin": {
+      "cpu_start": "0xB013",
+      "cpu_end_exclusive": "0xB03A",
+      "file_offset": "0x003023",
+      "size_bytes": 39,
+      "sha256": "9305de9d5c70c8fc48fea82f89c68cbf2a55edddc47cdf402f0d4d1604c57317"
+    },
+    "fixed_record_pointer_vector_C50C_C50F.bin": {
+      "cpu_start": "0xC50C",
+      "cpu_end_exclusive": "0xC50F",
+      "file_offset": "0x03C51C",
+      "size_bytes": 3,
+      "sha256": "71f4bb6ccdc5573bcfceef2422fe8636bc1dd1068675da3d860282d577e78b44"
+    },
+    "fixed_record_pointer_resolver_CD7C_CD89.bin": {
+      "cpu_start": "0xCD7C",
+      "cpu_end_exclusive": "0xCD89",
+      "file_offset": "0x03CD8C",
+      "size_bytes": 13,
+      "sha256": "8d7d8153252420175055aa5ef041e0e9dd85f99bb9dae8e24200e9549487ed24"
+    }
+  },
   "assumptions": [
-    "The player profile selector at $95D6 is preserved in the existing first-action-menu table resource; the stamina evaluator uses its first byte to index the $AE86 table for skill selector X=0.",
+    "The player profile selector at $95D6 is preserved in the existing first-action-menu resource. For $DB62's X=0 call, evaluator selectors 0/$0B/$1E/$1F take the common $AE86 path; ordinary selectors read the player's 40-byte row at $9FCE and then index $9F0E.",
+    "The $9FCE-$A595 37-row curve span is contiguous across the MMC3 banks mapped at $8000 and $A000 by the $CE08 helper.",
     "The fresh-start level byte is zero because the cold reset clears volatile RAM; the pre-match $A611 path leaves it unchanged when experience resolves to level zero.",
     "The provider models the ROM run timer only when a caller reports reaching the $E14D check after the $E349 input handler; B can leave the loop before that check.",
     "The $E2BC stamina updater increments reset-zero byte $0618; only its wrap to zero skips teammate regeneration, and holder charging still runs."

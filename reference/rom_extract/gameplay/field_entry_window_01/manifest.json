@@ -185,7 +185,7 @@
       "file_offset": "0x03F795",
       "size_bytes": 4,
       "sha256": "745a7e5ca32bdfed0aedce940c1856891d98b5862887050acb83db3adc13ae77",
-      "meaning": "ROM team-name string for team ID 9; $ED emits its first three bytes"
+      "meaning": "ROM team-name string for team ID 3; $ED emits its first three bytes"
     }
   ],
   "shared_frame_family": {
@@ -215,16 +215,17 @@
         "selector": "0x76",
         "string_resource": "team_00_name_stream.bin",
         "source_prefix_hex": "53 41 4F",
-        "converted_tile_ids_hex": "DF CD DB"
+        "emitted_character_bytes_hex": "53 41 4F"
       },
       {
         "team_id": 3,
         "selector": "0x79",
         "string_resource": "team_03_name_stream.bin",
         "source_prefix_hex": "46 4C 55",
-        "converted_tile_ids_hex": "D2 D8 E1"
+        "emitted_character_bytes_hex": "46 4C 55"
       }
     ],
+    "team_name_conversion_rule": "For these uppercase ASCII bytes below 0xA0, ROM $CBC4 compares against $A0 and $CBC6 BCC +$28 reaches $CBF0 RTS; the emitted bytes equal the ROM string bytes.",
     "source_input_producers": {
       "$002A/$002B": "hash-checked RomFreshMatchSelectorExecutor through $A20F->$A86E->$A8B6 RTS",
       "$0628": "fresh setup caller $A2AF invokes the hash-checked $AA06 zero-fill over $0468-$06FF",

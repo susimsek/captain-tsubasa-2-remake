@@ -19,8 +19,10 @@ func execute_from_initial_slot15_dispatch(dispatch: Dictionary,
 	var scenario_id := int(ram_variant[0x0518]) if ram_variant is PackedByteArray \
 			and ram_variant.size() == 0x800 else -1
 	var expected_bank_high := 0x0C
-	var expected_boundary_bank_high := 0x12 if scenario_id == 0x36 else -1
-	var expected_task_high := 0x12 if scenario_id == 0x36 else 0x00
+	var is_scenario_1c_1e_2e_36_or_44 := scenario_id in [0x1C, 0x1E, 0x2E, 0x36, 0x44]
+	var is_pass_scenario_18_or_38 := scenario_id in [0x18, 0x38]
+	var expected_boundary_bank_high := 0x13 if is_pass_scenario_18_or_38 else (0x12 if is_scenario_1c_1e_2e_36_or_44 else -1)
+	var expected_task_high := 0x13 if is_pass_scenario_18_or_38 else (0x12 if is_scenario_1c_1e_2e_36_or_44 else 0x00)
 	if not bool(dispatch.get("ok", false)) or int(dispatch.get("slot_base", -1)) != 0x15 \
 			or String(dispatch.get("resume_path", "")) != "initial_rts" \
 			or int(dispatch.get("pc", -1)) != ENTRY_PC \
@@ -28,12 +30,12 @@ func execute_from_initial_slot15_dispatch(dispatch: Dictionary,
 			or int(dispatch.get("a", -1)) != 0xF0 \
 			or int(dispatch.get("x", -1)) != 0xF0 \
 			or int(dispatch.get("bank_low", -1)) != 0x0B \
-			or scenario_id not in [0x35, 0x36] \
+			or scenario_id not in [0x18, 0x1C, 0x1E, 0x2E, 0x35, 0x36, 0x38, 0x44] \
 			or int(dispatch.get("bank_high", -1)) != expected_bank_high \
 			or int(boundary.get("slot_base", -1)) != 0x15 \
 			or int(boundary.get("phase", -1)) != 1 \
 			or int(boundary.get("pending_resume", -1)) != 1 \
-			or (scenario_id == 0x36 and int(boundary.get("bank_high", -1)) != expected_boundary_bank_high) \
+			or (scenario_id in [0x18, 0x1C, 0x2E, 0x36, 0x38, 0x44] and int(boundary.get("bank_high", -1)) != expected_boundary_bank_high) \
 			or boundary.get("record", PackedByteArray()) != PackedByteArray([0xFF, 0xF0, 0x0B, expected_task_high]):
 		return _failure("Unsupported initial slot-$15 boundary: scenario=$%02X dispatch=$%04X/$%02X/$%02X record=%s boundary phase/delay/resume=$%d/$%02X/$%d banks=$%02X/$%02X record=%s." % [
 			scenario_id, int(dispatch.get("pc", -1)), int(dispatch.get("bank_low", -1)),

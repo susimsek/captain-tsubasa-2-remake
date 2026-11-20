@@ -111,16 +111,38 @@ raw output and metadata are under
 | 8481 | `$804A->$8087` F4/F5 dispatch | The worker reads F4 from `$9F42`, resolves the next stream pointer to `$9F52`, then reads F5 with selector `$02`. |
 | 8494-8495 | `$E8` countdown setup | `$05E4/$05E5` becomes `$01/$03`; `$05E9` is loaded with `$E8` and starts decrementing on resumed worker ticks. |
 | 8622 | Delayed worker | `$05E9` is still `$69` at `$804A` and `$68` after the `$804D` countdown step. |
-| 8624 | New `$804A->$8087` F4 dispatch | A worker entry with pointer `$A3BD` reads selector `$03`, then the active pointer changes to `$A3C9`. The cause of this context handoff is not yet traced. |
+| 8624 | New `$804A->$8087` F4 dispatch | A worker entry with pointer `$A3BD` reads selector `$03`; `$811E` reads live row `$0629=0`, and the pointer calculation resolves the active stream to `$A3C9`. |
 | 8626 | `$8218->$821F->$8234` | Pointer `$A3C9`, index `$01`, event byte `$20`; type 2 selects `$0E` at `$86BA`. |
 | 8626 | `$8234-$8261` payload setup | Type 2 selects pointer `$8E94`; payload is `$2C,$22,$14`. `$05E7` becomes `$14`, `$05E8` is loaded with `$06`. |
 | 8627-8632 | `$8266/$826C` wait | Six queue/wait iterations, counter values `$06` down to `$01`. |
 | 8761 | `$8218->$821F->$8234` | Pointer `$A439`, index `$01`, event byte `$10`; type 1 selects `$0E` at `$86B9` and pointer `$8E37`. |
 | 8762-8767 | `$8266/$826C` wait | The same six-count wait pattern is observed. |
 
+The same trace records the later inactive selector-$03 animation countdown:
+frame 8664 executes `$A21A` with animation pointer `$A2B6`, then yields with
+pointer `$A2B8` and `$05F5=$05`. At `$804A` on frames 8665-8670, the worker
+retains `$A2B8` while `$05F5` decreases from `$05` to `$00`; frame 8671 runs
+`$A21A` and advances the pointer to `$A2BA`. This trace confirms the `$A2B8`
+wait state and its per-frame cadence; it does not establish the later `$A2BA`
+animation branch.
+
 Neither `$81D1` nor `$F610` executes in this trace. The next unresolved source
 transition is the `$8DC2` payload's live queue/PPU consumer and how the actor
 worker resumes after the `$8266/$826C` wait.
+
+## Godot route boundary update — 3 November 2026
+
+The production route now reaches the slot-$11 worker at frame 8624. ROM bytes
+at bank-$18 `$811E` (`AE 29 06 60`) implement `LDX $0629; RTS`; bank-$19 bytes
+at `$A3BD` (`F4 03 C9 A3 E3 A3 F7 A3 0C A4 29 A4`) contain the selector and
+pointer rows. The executor hash-checks both spans and resolves selector `$03`
+through `$0629` to `$A3C9`; the focused fixture verifier passes this mapping.
+The live route still stops at `$8080` on the first `$01` delay byte, before its
+`$804D` wrapper return and `$CB0F` yield are modeled. The full same-input route
+verifier stops at frame 8624 and reports four assertions, including earlier
+stack/NMI/PPU boundary mismatches. The FCEUX trace proceeds to event `$20` at
+`$A3C9` on frame 8626, but that does not establish Godot route or visible-output
+parity. See the production executor and verifier for the bounded implementation.
 
 ## FCEUX observations
 
@@ -192,3 +214,37 @@ that same-input output matches FCEUX. The real route must still provide its
 source-owned boundary and consume the returned save result. The later
 `$CC53`/`$0515` wait decision, PPU queue effects, visible field output, and
 matching audio remain outside this bounded transition.
+
+## Production-route extension — 5 November 2026
+
+The recorded-input production route now passes selector `$03` through
+`$A3BD->$811E->$A3C9`, processes the slot-$11 event waiter, and returns through
+`$804D` to the `$A217` animation gate. It stops at route frame 8637 because the
+live type-$02 gate state has `$F5=$6A`; the same-input FCEUX state has `$F5=$6C`
+with the other gate inputs matched. The route verifier still reports four
+assertions, including earlier stack, NMI, and PPU-boundary mismatches. This is
+not evidence that the counter should be adjusted: the scheduler/source-frame
+ordering leading into the gate remains different.
+
+The retained FCEUX `events.csv` shows the slot-$11 `$C4` waiter count falling
+from `$06` to `$00` over source frames 8482–8487, followed by the `$C0` task
+transition at frame 8489. The production route reaches `$C0` at frame 8487,
+about two source frames earlier. The trace does not hook `$CC53` or sample
+`$0515` at the branch, so it cannot identify which wait-loop condition accounts
+for the phase difference. A direct CLI/Lua attempt did not produce a usable
+branch trace; no new branch-read capture is claimed. Resolve this ordering at
+the live `$CC53`/scheduler boundary before changing `$05F5` or asserting the
+`$A217` yield. Field output and audio parity remain unverified.
+
+## Production-route boundary update — 7 November 2026
+
+The recorded-input verifier now passes the slot-$09 `$CAA5->$86F8` continuation,
+the live E6 actor OAM path, and the no-direction `$CA55->$E3CA` return. It stops
+at the next selected slot-$11 resume with stream `$A439`. The route snapshot has
+`$05E4/$05E5=$00/$00`, `$C7=$EB`, and A/X/Y=`$39/$39/$EB`. The FCEUX
+`actor_resume_804A` row at source frame 8761 instead has index `$01`, `$C7=$00`,
+and A/X/Y=`$39/$39/$00`; the event byte at `$A439+$01` is `$10`. The pointer
+match alone does not establish the same continuation. Resolve the earlier
+source writes and route/emulator phase difference before extending this worker
+branch. The verifier still reports four earlier stack/NMI/PPU assertions; no
+field/menu or audio parity is established.

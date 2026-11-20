@@ -182,7 +182,8 @@ func _ensure_renderer() -> bool:
 	if _oam_layer == null:
 		return _fail("Could not instantiate the ROM OAM sprite renderer.")
 	_oam_layer.name = "FirstCommandRomActorOam"
-	_oam_layer.position = Vector2(0.0, -8.0)
+	# OAM coordinates stay in the raw 256x240 PPU space. The parent route
+	# presentation applies the raw-to-visible scanline crop once for all layers.
 	add_child(_oam_layer)
 	return true
 

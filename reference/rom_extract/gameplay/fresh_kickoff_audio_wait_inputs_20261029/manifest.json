@@ -84,6 +84,18 @@
       "sha256": "d4c754730d702ed153465dae81f7ecab3fd883eb8aca5554a60bf50359f0546b",
       "bytes": "a9 00 8d 00 a0 a5 1b 29 bf 85 1b a9 02 60 a9 01 8d 00 a0 a5 1b 09 40 85 1b a9 02 60",
       "description": "Mode handler 8 clears $001B.6; mode handler 9 sets it."
+    },
+    {
+      "file": "fixed_ready_latch_clear_9F04_9F0C.bin",
+      "cpu_start": "0x9F04",
+      "cpu_end_exclusive": "0x9F0C",
+      "bank": "0x00",
+      "window": "8000",
+      "file_offset": "0x001F14",
+      "length": 8,
+      "sha256": "6d9092a528c7998a0aa7a304ee551b15472319037b947d3f77de333592635cb3",
+      "bytes": "a5 1b 10 fc 29 7f 85 1b",
+      "description": "Waits until ready bit 7 clears, then ANDs with $7F and stores $001B, preserving mode bit 6."
     }
   ]
 }

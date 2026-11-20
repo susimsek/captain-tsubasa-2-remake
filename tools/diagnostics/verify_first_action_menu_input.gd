@@ -76,7 +76,63 @@ func _run() -> void:
 		_fail("Simultaneous directions did not use ROM Right/Left/Down/Up priority.")
 		return
 
-	print("First action menu input passed: unselected start, keyboard/gamepad direction mapping, A gating, and direction priority.")
+	var source_poll_input = INPUT_SCRIPT.new()
+	root.add_child(source_poll_input)
+	source_poll_input.set_process(false)
+	await process_frame
+	var left_press := InputEventKey.new()
+	left_press.keycode = KEY_LEFT
+	left_press.pressed = true
+	var left_release := InputEventKey.new()
+	left_release.keycode = KEY_LEFT
+	left_release.pressed = false
+	if not source_poll_input.handle_input_event(left_press) \
+			or not source_poll_input.handle_input_event(left_release):
+		_fail("A short keyboard direction tap was not captured.")
+		return
+	source_poll_input.flush_pending_input()
+	if source_poll_input.selected_action_id != INPUT_SCRIPT.ActionId.PASS \
+			or source_poll_input.get_nes_pad_state() != 0 \
+			or source_poll_input.consume_nes_pad_state_for_source_poll() != 0x02 \
+			or source_poll_input.consume_nes_pad_state_for_source_poll() != 0:
+		_fail("A Left tap between source ticks did not yield one `$02` poll edge while held-state remained released.")
+		return
+	var down_press := InputEventKey.new()
+	down_press.keycode = KEY_DOWN
+	down_press.pressed = true
+	var down_release := InputEventKey.new()
+	down_release.keycode = KEY_DOWN
+	down_release.pressed = false
+	source_poll_input.handle_input_event(down_press)
+	if source_poll_input.consume_nes_pad_state_for_source_poll() != 0x04 \
+			or source_poll_input.consume_nes_pad_state_for_source_poll() != 0x04:
+		_fail("A held Down button did not persist across source polls.")
+		return
+	source_poll_input.handle_input_event(down_release)
+	if source_poll_input.get_nes_pad_state() != 0 \
+			or source_poll_input.consume_nes_pad_state_for_source_poll() != 0:
+		_fail("Down release did not clear its held source-poll bit.")
+		return
+	source_poll_input.reset_selection()
+	var joy_up_press := InputEventJoypadButton.new()
+	joy_up_press.button_index = JOY_BUTTON_DPAD_UP
+	joy_up_press.pressed = true
+	var joy_up_release := InputEventJoypadButton.new()
+	joy_up_release.button_index = JOY_BUTTON_DPAD_UP
+	joy_up_release.pressed = false
+	if not source_poll_input.handle_input_event(joy_up_press) \
+			or not source_poll_input.handle_input_event(joy_up_release):
+		_fail("A short gamepad direction tap was not captured.")
+		return
+	source_poll_input.flush_pending_input()
+	if source_poll_input.selected_action_id != INPUT_SCRIPT.ActionId.DRIBBLE \
+			or source_poll_input.get_nes_pad_state() != 0 \
+			or source_poll_input.consume_nes_pad_state_for_source_poll() != 0x08 \
+			or source_poll_input.consume_nes_pad_state_for_source_poll() != 0:
+		_fail("A gamepad Up tap between source ticks did not yield one `$08` poll edge.")
+		return
+
+	print("First action menu input passed: mapping, confirmation gating, direction priority, and latched source-poll edges.")
 	quit(0)
 
 

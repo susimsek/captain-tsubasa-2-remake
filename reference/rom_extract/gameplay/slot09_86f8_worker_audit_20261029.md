@@ -85,7 +85,7 @@ path, the inline payload is `00 6C 04`; the subsequent `$8764 RTS` returns to
 the root caller. This establishes the byte-copy and stack effects, not the
 consumer meaning of the `$0499` records.
 
-## Safe stop boundary and limits
+## Safe stop boundary and limits at the original audit date
 
 For the observed first route, the smallest executor is the `$0532==0` fast
 path: execute `$86F8`'s `LDA $0532; BEQ`, then the source `RTS` at `$8722` and
@@ -98,7 +98,7 @@ at `$8779` and `$87E6`, and the meaning/consumer of `$0499` records remain
 outside this audit. The report does not claim a rendered field or command
 menu. No new emulator run, screenshot, or WAV capture was used.
 
-## Production integration update — 2026-10-29
+## Initial production integration update — 2026-10-29
 
 `RomSlot09Worker86F8ZeroBranchExecutor` now consumes the live
 `slot09_resume_result` produced by `RomFreshKickoffSourceRouteRunner`. It
@@ -107,3 +107,72 @@ requires `$00`, executes `$86F8 LDA $0532; BEQ $8722; RTS`, verifies the live
 `$EBB2` return word, and returns at `$EBB3`. The runner exposes this output and
 stops before reading the next `$8006->$8779` worker. Nonzero `$0532` remains an
 explicit unsupported branch.
+
+## Recorded `$82` script branch — 2026-11-06
+
+The later two-pass first-command-menu/stamina trace records a second live
+`$86F8` state at source frame 8707. Its worker write rows agree between both
+passes (10 selected transitions). At `$ED35`, scenario `$36` writes `$82` to
+`$0532`; `$8704` masks that marker to `$02`; `$871A` clears `$0533`; the stream
+reader then writes countdown `6` to `$0533` at `$873F`, and selector `3` to
+`$003A` at `$8745`, decrementing `$003A` to zero at `$8752`.
+
+The new extracted source rows are in
+[`slot09_86f8_worker/manifest.json`](slot09_86f8_worker/manifest.json):
+
+| Source | Bank / CPU range | File offset | Bytes | Meaning |
+| --- | --- | ---: | --- | --- |
+| Pointer selected by normalized `$0532=2` | `$19:$AD70-$AD71` | `0x032D80` | `FC AD` | Points to `$ADFC` |
+| Stream consumed from that pointer | `$19:$ADFC-$AE03` | `0x032E0C` | `33 0D 1A 0E 1A 0F 3A 32` | Control `$33`, then pairs `$0D/$1A`, `$0E/$1A`, `$0F/$3A` |
+
+The worker writes those three values to `$046F+$0D..$0F` (`$047C-$047E`),
+advances its stream pointer to `$AE03`, and calls `$C533`. The checked inline
+payload at `$8761-$8763` is `00 6C 04`; the existing hash-checked `$CCD2`
+helper appends it at `$0499+3*$0498` and advances `$0498`. Godot now executes
+this bounded branch from its live RAM/stack/mapper state and these ROM-derived
+bytes, including both the helper's stack return to `$8764` and the worker RTS
+to `$EBB3`. It does not apply a PPU/APU transfer here; the appended packet's
+later consumer remains a separate transition.
+
+The repeated FCEUX trace directly confirms the `$0532`, `$0533`, and `$003A`
+changes and subsequent `$8779/$87E6` worker clears. The `$047C-$047E` data
+values and `$0499` append are decoded from the ROM stream/helper; this trace's
+selected write hooks do not independently record those bytes. The earlier
+frame-8399-derived trace still documents a distinct zero-state invocation;
+the source worker therefore retains both the `$00` and `$82` routes. The
+remaining nonzero marker values, other stream selectors, and the field/menu
+rendering are not covered by this bounded implementation.
+
+## Countdown continuation replay confirmation — 2026-11-06
+
+The retained muted FCEUX menu/stamina trace independently confirms the later
+`$AE08` countdown tail used by the live route. Both normalized passes have the
+same writes: at frame 8719, `$8722` leaves `$0533` at `$02` and decrements it
+to `$01`; at frame 8720, `$8722` leaves `$01` and decrements it to `$00`; at
+frame 8721, the `$8723` stream reader resumes from `$AE08`, writes `$06` to
+`$0533`, sets the pair count at `$003A` to `$02`, then consumes both pairs.
+Pass hashes and row counts are recorded in the diagnostic's
+[`validation.json`](../../../../diagnostics/first_command_menu_stamina_20261028_064701_utc/validation.json).
+
+The production executor now accepts the observed scenario-$36 `$02` marker
+with `$AE08` and cursor `$06` at countdown `$01`. On the zero-count follow-up,
+the cursor may still be `$06` or `$07`; the ROM stream instruction overwrites
+it with the stream's pair count before consuming records. This bounded
+continuation is based on the repeated trace and checked worker bytes, not a
+synthetic timer or injected state.
+
+The same two passes show `$0533=$06` at worker entry on frame 8722, then
+`$8722` decrements it once per frame through `$00` at frame 8727. The next
+worker event at frame 8728 reads the `$AE0D` selector tail from the extracted
+stream (`01 FC AD`) and reaches the `$ADFC` batch, whose `$0533=$06` write is
+observed at `$873F`. This supports the bounded `$AE0D` countdown and redirect
+edge; the trace records the resulting write/event sequence, while the exact
+pointer bytes are established by the ROM-derived stream manifest.
+
+At frame 8729, the same trace shows the `$ADFC` batch's six-tick countdown
+beginning at `$AE03`; `$8722` reduces it to zero by frame 8734. The next
+`$8723` batch starts at `$AE03`'s `$32` control byte, and the extracted stream
+then advances to `$AE08`. Both trace passes have matching writes for these
+countdown transitions. The executor therefore recognizes the three stream
+positions already present in the checked `$AE03-$AE0F` manifest and continues
+through their source-defined count/redirect operations.

@@ -25,13 +25,20 @@ ROUTE_ANIMATION_IDS = {
     0x4C: "scenario $36 record at file offset 0x02380E (32 1F 4C F0)",
     0x78: "observed route actor-packet selector at source frame 8759; upstream selector condition unresolved",
     0x79: "observed route actor-packet selector at source frames 8779 and 8781; upstream selector condition unresolved",
+    0x7A: "scenario-$1C callback-$63 source actor sequence at frame 9232; animation selector is observed in the live `$CA52->$EE9F` route",
+    0x5C: "scenario $44 first-match actor packet stream at CPU $9357; three ROM-derived F1 actor constructors",
+    0x8B: "scenario-$2E actor-$6D route: live `$053A=$80/$053C=$8B` call at `$CA52->$EE9F`; frame-9477 FCEUX state confirms the pointer-bounded stream return",
     0x90: "observed route actor-packet selector at source frame 8822; upstream selector condition unresolved",
     0xE6: "scenario $36 record at file offset 0x023815 (3E 01 E6 75); F8 jumps to CPU $961A within animation $78",
 }
 
+# Keep the established project-owned filename for the already-consumed $5C
+# packet stream while recording its pointer-table provenance in the manifest.
+ROUTE_ANIMATION_FILENAMES = {
+    0x5C: "animation_5C_actor_packets_9357.bin",
+}
+
 SPANS = [
-    ("animation_5C_actor_packets_9357.bin", 0x029367, 26,
-     "bank-14 animation $5C packet stream at CPU $9357; F4 selectors and three F1 constructors"),
     ("actor_record_pointer_table_88E4_00_03.bin", 0x0288F4, 8,
      "bank-14 actor-record pointer table indexes $00-$03"),
     ("motion_pointer_table_A1B4_00.bin", 0x02A1C4, 2,
@@ -79,7 +86,9 @@ def extract_route_animation_spans(rom: bytes) -> list[dict]:
             raise SystemExit(
                 f"Animation ${animation_id:02X} pointer-defined span does not end in $F0"
             )
-        filename = f"route_animation_{animation_id:02X}.bin"
+        filename = ROUTE_ANIMATION_FILENAMES.get(
+            animation_id, f"route_animation_{animation_id:02X}.bin"
+        )
         (OUTPUT_DIR / filename).write_bytes(raw)
         entries.append({
             "path": f"reference/rom_extract/gameplay/first_command_actors/{filename}",

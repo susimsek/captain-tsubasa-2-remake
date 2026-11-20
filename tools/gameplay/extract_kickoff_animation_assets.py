@@ -22,6 +22,8 @@ ROM_PATH = ROOT / "Captain Tsubasa 2-Super Striker(By TsubasaTR.Net).nes"
 MANIFESTS = [
     ROOT / "assets/gameplay/rom_logic/kickoff_cutscene_01_events.json",
     ROOT / "assets/gameplay/rom_logic/kickoff_cutscene_02_events.json",
+    ROOT / "assets/gameplay/rom_logic/kickoff_meeting_scene_44_events.json",
+    ROOT / "assets/gameplay/rom_logic/kickoff_meeting_scene_56_events.json",
 ]
 OUT = ROOT / "reference/rom_extract/gameplay/animations/kickoff"
 EXPECTED_ROM_SHA256 = "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097"
@@ -44,6 +46,11 @@ frame_decoder = load_module("kickoff_sprite_frame_decoder", ROOT / "tools/decode
 
 def hex_value(value: int, width: int = 2) -> str:
     return f"0x{value:0{width}X}"
+
+
+def manifest_id(path: Path) -> int:
+    token = path.stem.rsplit("_", 2)[-2]
+    return int(token, 16)
 
 
 def read_u16(data: bytes, offset: int) -> int:
@@ -87,14 +94,15 @@ def collect_manifests() -> tuple[list[dict], dict[str, dict]]:
             raise ValueError(f"ROM revision mismatch in {path}")
         if not manifest.get("event_boundaries_byte_verified"):
             raise ValueError(f"Event boundaries are not byte-verified in {path}")
-        cutscene_id = path.stem.split("cutscene_", 1)[1].split("_", 1)[0]
-        manifests[cutscene_id] = manifest
+        cutscene_id = manifest_id(path)
+        manifest_key = f"{cutscene_id:02X}"
+        manifests[manifest_key] = manifest
         for event in manifest["events"]:
             if event.get("kind") != "animations":
                 continue
             ids = event["animation_ids"]
             invocations.append({
-                "cutscene_id": int(cutscene_id),
+                "cutscene_id": cutscene_id,
                 "event_index": event["event_index"],
                 "script_offset": event["script_offset"],
                 "cpu_address": hex_value(event["cpu_address"], 4),
@@ -379,8 +387,8 @@ def main() -> None:
         "rom_sha256": rom_sha256,
         "source_manifests": [
             {"path": str(path.relative_to(ROOT)), "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
-             "cutscene_id": int(path.stem.split("cutscene_", 1)[1].split("_", 1)[0]),
-             "event_count": manifests[path.stem.split("cutscene_", 1)[1].split("_", 1)[0]]["event_count"]}
+             "cutscene_id": manifest_id(path),
+             "event_count": manifests[f"{manifest_id(path):02X}"]["event_count"]}
             for path in MANIFESTS
         ],
         "animation_id_lookup": {

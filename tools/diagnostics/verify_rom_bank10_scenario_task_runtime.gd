@@ -95,11 +95,94 @@ func _run() -> void:
 	_check(not bool(after_terminal.get("ok", true)),
 		"runtime refuses to advance past the root terminator")
 
+	var scenario_1e := RUNTIME_SCRIPT.new()
+	var missing_context: Dictionary = scenario_1e.begin_from_live_scenario_pointer(0x1E, 0xB7DA)
+	_check(not bool(missing_context.get("ok", true))
+		and str(missing_context.get("status", "")) == "source_state_required",
+		"scenario-$1E refuses to guess the `$FD $02` result without live RAM `$05FB`")
+	var scenario_1e_ready: Dictionary = scenario_1e.begin_from_live_scenario_pointer(0x1E, 0xB7DA,
+		{"ram_05FB": 0x00})
+	_check(bool(scenario_1e_ready.get("ok", false))
+		and int(scenario_1e_ready.get("source_pointer_cpu", -1)) == 0xB7DA
+		and not bool(scenario_1e_ready.get("source_context_required_after_prefix", true)),
+		"scenario-$1E pointer and `$FD $02` decode from its manifest entry plus live `$05FB=$00`")
+	var scenario_1e_fd: Dictionary = scenario_1e.advance_one()
+	var scenario_1e_fd_writes: Dictionary = scenario_1e_fd.get("ram_writes", {})
+	_check(bool(scenario_1e_fd.get("ok", false))
+		and int(scenario_1e_fd.get("opcode", -1)) == 0xFD
+		and int(scenario_1e_fd_writes.get("$052A", -1)) == 0,
+		"scenario-$1E `$FD $02` applies the source handler's zero result")
+	var scenario_1e_f6: Dictionary = scenario_1e.advance_one()
+	var scenario_1e_f6_writes: Dictionary = scenario_1e_f6.get("ram_writes", {})
+	_check(bool(scenario_1e_f6.get("ok", false))
+		and int(scenario_1e_f6.get("opcode", -1)) == 0xF6
+		and int(scenario_1e_f6_writes.get("$052A", -1)) == 0x40,
+		"scenario-$1E `$F6` applies the decoded XOR-$40 to the live `$052A` value")
+	var scenario_1e_f7: Dictionary = scenario_1e.advance_one()
+	var scenario_1e_f7_writes: Dictionary = scenario_1e_f7.get("ram_writes", {})
+	_check(bool(scenario_1e_f7.get("ok", false))
+		and int(scenario_1e_f7.get("opcode", -1)) == 0xF7
+		and int(scenario_1e_f7_writes.get("$052B", -1)) == 0x01,
+		"scenario-$1E `$F7 01` applies its ROM stream operand to `$052B`")
+	var scenario_1e_record: Dictionary = scenario_1e.advance_one()
+	var scenario_1e_contract: Dictionary = scenario_1e_record.get("seed_contract_fields", {})
+	_check(bool(scenario_1e_record.get("ok", false))
+		and int(scenario_1e_record.get("source_byte_offset", -1)) == 5
+		and scenario_1e_contract.get("source_record_bytes", PackedByteArray()) == PackedByteArray([0x07, 0x45, 0x90, 0xF0])
+		and int(scenario_1e_contract.get("source_record_cpu_address", -1)) == 0xB7DF
+		and int(scenario_1e_contract.get("source_record_file_offset", -1)) == 0x0237EF
+		and int(scenario_1e_contract.get("wait_value_ram_0523", -1)) == 0x07
+		and int(scenario_1e_contract.get("event_selector_ram_0524", -1)) == 0x45
+		and int(scenario_1e_contract.get("actor_selector_ram_0528", -1)) == 0x90
+		and int(scenario_1e_contract.get("actor_parameter_ram_0529", -1)) == 0xFF,
+		"scenario-$1E record `$07 45 90 F0` yields the source-derived wait and callback seed fields")
+	var scenario_1e_terminal: Dictionary = scenario_1e.advance_one()
+	_check(bool(scenario_1e_terminal.get("ok", false))
+		and str(scenario_1e_terminal.get("status", "")) == "root_scenario_terminated"
+		and int(scenario_1e_terminal.get("source_byte_index_after", -1)) == 10,
+		"scenario-$1E root stops at the manifest-checked trailing `$FB`: %s" % str(scenario_1e_terminal))
+
+	var scenario_1c_b49e := RUNTIME_SCRIPT.new()
+	var b49e_started: Dictionary = scenario_1c_b49e.begin_from_live_scenario_pointer(
+		0x1C, 0xB49E, {"continuation_depth": 0})
+	_check(bool(b49e_started.get("ok", false))
+		and str(b49e_started.get("status", "")) == "scenario1c_b49e_f2_branch_admitted"
+		and int(b49e_started.get("source_file_offset", -1)) == 0x0234AE,
+		"scenario-$1C admits only the manifest-pinned `$B49E` F2 target after zero-depth return")
+	var b49e_f9: Dictionary = scenario_1c_b49e.advance_one()
+	_check(bool(b49e_f9.get("ok", false))
+		and int(b49e_f9.get("opcode", -1)) == 0xF9
+		and int(b49e_f9.get("source_byte_index_after", -1)) == 3
+		and b49e_f9.get("ram_writes", {}) == {"$0530": 0x1D, "$0531": 0x2C},
+		"scenario-$1C `$B49E` `$F9` decodes its ROM operands `$1D/$2C`")
+	var b49e_record: Dictionary = scenario_1c_b49e.advance_one()
+	var b49e_contract: Dictionary = b49e_record.get("seed_contract_fields", {})
+	_check(bool(b49e_record.get("ok", false))
+		and str(b49e_record.get("status", "")) == "callback_task_seed_requested"
+		and int(b49e_record.get("source_byte_offset", -1)) == 3
+		and int(b49e_record.get("source_byte_index_after", -1)) == 7
+		and b49e_contract.get("source_record_bytes", PackedByteArray()) == PackedByteArray([0x3C, 0x01, 0x78, 0x58])
+		and int(b49e_contract.get("source_record_cpu_address", -1)) == 0xB4A1
+		and int(b49e_contract.get("source_record_file_offset", -1)) == 0x0234B1
+		and int(b49e_contract.get("wait_value_ram_0523", -1)) == 0x3C
+		and int(b49e_contract.get("event_selector_ram_0524", -1)) == 0x01
+		and int(b49e_contract.get("actor_selector_ram_0528", -1)) == 0x78
+		and int(b49e_contract.get("actor_parameter_ram_0529", -1)) == 0x58
+		and int(b49e_contract.get("task_slot_base", -1)) == 0x15
+		and not bool(b49e_contract.get("scheduler_dispatched", true))
+		and not bool(b49e_contract.get("callback_executed", true)),
+		"scenario-$1C `$B49E` record produces the exact `$3C/$01/$78/$58` slot-$15 seed without dispatching it")
+	var b49e_terminal: Dictionary = scenario_1c_b49e.advance_one()
+	_check(bool(b49e_terminal.get("ok", false))
+		and str(b49e_terminal.get("status", "")) == "root_scenario_terminated"
+		and int(b49e_terminal.get("source_byte_index_after", -1)) == 8,
+		"scenario-$1C `$B49E` root terminates at its exact trailing `$FB`")
+
 	_check(_source_order_matches_manifest(),
 		"source manifest order matches caller, scenario start, F9, event seed, and FB sequence")
 	if _failures.is_empty():
-		print("PASS: ROM-derived scenario-$35 source order reaches the exact callback-task seed contract and root $FB")
-		print("LIMIT: cooperative scheduler, callback $814C/$8327, field-loop wait cadence, actor worker, and outer task return remain unexecuted")
+		print("PASS: ROM-derived scenario-$35/$1E seeds and scenario-$1C `$B49E` seed/terminal are source-bounded")
+		print("LIMIT: cooperative scheduler, callback dispatch, field-loop wait cadence, actor worker, and outer task return remain unexecuted")
 		quit(0)
 	else:
 		for failure: String in _failures:

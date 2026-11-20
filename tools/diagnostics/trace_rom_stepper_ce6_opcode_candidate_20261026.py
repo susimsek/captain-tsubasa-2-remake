@@ -96,9 +96,14 @@ def main() -> None:
     report_path = out_dir / "source_stepper_report.json"
     report = __import__("json").loads(report_path.read_text(encoding="utf-8"))
     report["diagnostic_opcode_timing_override"] = machine.opcode_timing_override if machine else None
+    resolved_path = path.resolve()
+    try:
+        report_path_value = str(resolved_path.relative_to(ROOT))
+    except ValueError:
+        report_path_value = str(resolved_path)
     report["source380_boundary_rows"] = {
         "count": len(rows),
-        "path": str(path.resolve().relative_to(ROOT)),
+        "path": report_path_value,
         "uses_fceux_timestamps_as_execution_input": False,
     }
     report_path.write_text(__import__("json").dumps(report, indent=2) + "\n", encoding="utf-8")

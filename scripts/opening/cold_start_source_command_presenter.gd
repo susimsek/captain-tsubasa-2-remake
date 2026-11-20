@@ -445,6 +445,13 @@ func title_first_pixel_cycle_offset_from_start_stop() -> int:
 		"cycle_offset_from_start_stop", -1))
 
 
+## Absolute source-frame label for the first visible title pixel. The cold-start
+## command presenter is frozen at the Start poll while the title handoff runs.
+func title_first_pixel_source_frame() -> int:
+	return int(_source_clock_schedule.get("title_first_pixel_virtual_event", {}).get(
+		"source_frame", -1))
+
+
 func _load_rom_source_clock_schedule() -> bool:
 	if not FileAccess.file_exists(ROM_SOURCE_CLOCK_SCHEDULE_PATH):
 		push_error("ROM-derived source clock schedule is missing.")

@@ -7,6 +7,7 @@ const SOURCE_ROM_SHA256 := "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c58
 const BACKGROUND_PACKET_LOADER := preload("res://scripts/opening/rom_background_packet_loader.gd")
 const FIELD_PACKET_PRODUCER := preload("res://scripts/gameplay/first_command_field_packet_producer.gd")
 const FIELD_DESCRIPTOR_RESOLVER := preload("res://scripts/gameplay/rom_first_command_field_descriptor_resolver.gd")
+const FIELD_ENTRY_WINDOW_01_SOURCE := preload("res://scripts/gameplay/rom_field_entry_window_01_packet_source.gd")
 const CALLBACK_DISPATCH_API := preload("res://scripts/gameplay/rom_first_command_callback_dispatch_api.gd")
 const BG01_LAYOUT_PATH := "res://reference/rom_extract/intro/background_01_layout.json"
 const CANDIDATE_PATH := "res://reference/rom_extract/gameplay/first_command_bg70_block56_rom_candidate.json"
@@ -50,7 +51,8 @@ var ppu_memory: Dictionary = {}
 ## presenter derives $063D/$05CE from preserved ROM code; resolved constants
 ## and emulator snapshots are not accepted as substitutes.
 func build_and_apply(screen: RomPpuNametableScreenRenderer,
-		source_packet_context: Dictionary = {}) -> bool:
+		source_packet_context: Dictionary = {},
+		descriptor_01_source_context: Dictionary = {}) -> bool:
 	last_error = ""
 	status.clear()
 	ppu_memory.clear()
@@ -66,18 +68,34 @@ func build_and_apply(screen: RomPpuNametableScreenRenderer,
 	if not bool(field_map_result.get("ok", false)):
 		return false
 	var packet_status := _append_source_packet_layer(source_packet_context)
+	var descriptor_01_status := build_descriptor_01_packets(
+		descriptor_01_source_context.get("selector_result", {}),
+		descriptor_01_source_context.get("fresh_period_result", {}))
 
 	# The ROM's background-animation pair table resolves $56 to MMC3 R0/R1
-	# selectors $3C/$2E. R0 and R1 each cover an aligned pair of 1 KiB CHR banks.
-	# The selector is source-derived; its per-fetch timing is still unresolved.
+	# selectors $3C/$2E. The same-input FCEUX NewPPU bus trace records the IRQ's
+	# R0/R1 replacement values and scanline/dot positions below. Renderer fetch
+	# placement follows its documented NewPPU record model, not a hardware claim.
 	screen.begin_state_update()
 	if not screen.set_background_profile(0x01, PackedByteArray(), BG01_DATA_ROOT):
 		screen.end_state_update()
 		return _fail("PPU renderer rejected the ROM background-$01 candidate.")
 	var initial_chr_selectors: Array[int] = [0x3C, 0x2E]
-	var no_chr_raster_writes: Array[Dictionary] = []
+	var chr_raster_writes: Array[Dictionary] = [{
+		"scanline": 125,
+		"dot": 62,
+		"register": 0,
+		"value": 0x00,
+		"source_pc": "FCEUX NewPPU frame 8953: $C8A5 writes MMC3 R0=$00 at line 125 dot 62",
+	}, {
+		"scanline": 125,
+		"dot": 113,
+		"register": 1,
+		"value": 0x02,
+		"source_pc": "FCEUX NewPPU frame 8953: $C8B2 writes MMC3 R1=$02 at line 125 dot 113",
+	}]
 	var pair_ok := screen.set_source_mmc3_chr_writes(initial_chr_selectors,
-		no_chr_raster_writes)
+		chr_raster_writes)
 	if not pair_ok:
 		screen.end_state_update()
 		return _fail("PPU renderer rejected the ROM $70/$56 CHR selector pair.")
@@ -119,10 +137,12 @@ func build_and_apply(screen: RomPpuNametableScreenRenderer,
 		"background_packets": 320,
 		"field_maps": field_map_result.get("maps", []),
 		"residual_packet_producer": packet_status,
+		"descriptor_01_team_packets": descriptor_01_status,
 		"ppu_tile_origin": "0x2800 / 0x2A00",
 		"ppu_attribute_origins": "0x2BC0 / 0x2BE0",
 		"chr_pair_selectors": [0x3C, 0x2E],
-		"chr_pair_applied_as_static_profile": true,
+		"chr_pair_applied_as_static_profile": false,
+		"chr_raster_writes": chr_raster_writes.duplicate(true),
 		"viewport_source": {
 			"nametable_select_bits": 0x02,
 			"scroll_x": 0x00,
@@ -138,7 +158,7 @@ func build_and_apply(screen: RomPpuNametableScreenRenderer,
 		},
 		"gaps": [
 			"Background $01 is a ROM-backed field candidate; its complete active loader, map transform, and attribute history are not established.",
-			"The frame-8953 IRQ reload and scroll reset are now represented at FCEUX NewPPU line granularity; first affected pixel and physical 2C02 timing remain unresolved. The $70/$56 CHR pair is still applied statically.",
+			"The frame-8953 IRQ reload, scroll reset, and $00/$02 CHR bank replacements are represented with the FCEUX NewPPU line/fetch-record model; first affected pixel and physical 2C02 timing remain unresolved.",
 			"The bank-$1F $F015/$F114 decoder derives $063D from source $0621/$0600 and $05CE from source $05CD, but the production route does not yet deliver a decoded $8327 callback state.",
 			"The separate $F0B5 holder tile requires source-derived active-holder coordinates ($0635/$0637) plus $05CE; it is not inferred from endpoint RAM/PPU data.",
 			"The endpoint viewport is sourced from the $70/$A0 ROM path; later gameplay scroll/raster changes and per-fetch timing remain untraced.",
@@ -146,6 +166,29 @@ func build_and_apply(screen: RomPpuNametableScreenRenderer,
 		],
 	}
 	return true
+
+
+## Derive the fresh-match descriptor-$01 packets from the live ROM selector and
+## period-task receipts. The output is deliberately not applied to PPU memory:
+## the production route must supply and execute its source worker/NMI queue
+## receipt before these transfers can affect the visible field.
+func build_descriptor_01_packets(selector_result: Dictionary = {},
+		fresh_period_result: Dictionary = {}) -> Dictionary:
+	var source: RefCounted = FIELD_ENTRY_WINDOW_01_SOURCE.new()
+	var result: Dictionary = source.call("build_descriptor_01",
+		selector_result, fresh_period_result)
+	if not bool(result.get("ok", false)):
+		return {
+			"ok": false,
+			"status": "awaiting_live_selector_and_period_results" if selector_result.is_empty() \
+				or fresh_period_result.is_empty() else "source_packet_derivation_failed",
+			"applied_to_ppu": false,
+			"error": str(result.get("error", source.get("last_error"))),
+		}
+	result["applied_to_ppu"] = false
+	result["application_status"] = "awaiting_source_worker_and_nmi_queue_receipt"
+	result["queue_cadence_verified_by_presenter"] = false
+	return result
 
 
 func _append_background_01_candidate(ppu_memory: Dictionary) -> bool:

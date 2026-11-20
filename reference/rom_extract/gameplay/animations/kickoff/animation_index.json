@@ -14,6 +14,18 @@
       "sha256": "fc943538831c90103b6fe91b2244de6a003489e254b95c5e8980234e895a5ebc",
       "cutscene_id": 2,
       "event_count": 45
+    },
+    {
+      "path": "assets/gameplay/rom_logic/kickoff_meeting_scene_44_events.json",
+      "sha256": "95442a61b4c8c7a97781efe59ad9eb0ada544895076c46efeac405d0d282f6a7",
+      "cutscene_id": 68,
+      "event_count": 12
+    },
+    {
+      "path": "assets/gameplay/rom_logic/kickoff_meeting_scene_56_events.json",
+      "sha256": "05422d6c42961d411deb1e164fb880bd08873e3a03e32fdaf539eed304b53161",
+      "cutscene_id": 86,
+      "event_count": 17
     }
   ],
   "animation_id_lookup": {
@@ -21,7 +33,7 @@
     "bank_10_ids": "0x6D+; pointer-table index equals ID minus 0x6D",
     "pointer_table_cpu_address": "0xA000 in the selected PRG bank"
   },
-  "animation_count": 16,
+  "animation_count": 17,
   "invocations": [
     {
       "cutscene_id": 1,
@@ -227,6 +239,30 @@
         "0x14"
       ],
       "raw_hex": "01 14"
+    },
+    {
+      "cutscene_id": 68,
+      "event_index": 1,
+      "script_offset": 2,
+      "cpu_address": "0xBE86",
+      "file_offset": "0x00BE96",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x3B"
+      ],
+      "raw_hex": "01 3b"
+    },
+    {
+      "cutscene_id": 86,
+      "event_index": 2,
+      "script_offset": 4,
+      "cpu_address": "0xBFBE",
+      "file_offset": "0x00BFCE",
+      "requested_instance_count": 1,
+      "animation_ids": [
+        "0x0C"
+      ],
+      "raw_hex": "01 0c"
     }
   ],
   "animations": [
@@ -295,6 +331,46 @@
           }
         ],
         "unparsed_tail_hex": "10 b3 8a ad ff",
+        "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
+      }
+    },
+    {
+      "id": "0x0C",
+      "prg_bank": 9,
+      "animation_pointer_table_file_offset": "0x012028",
+      "animation_pointer_table_index": 12,
+      "start_cpu_address": "0xA287",
+      "start_file_offset": "0x012297",
+      "following_table_word": "0xA28E",
+      "end_cpu_address_exclusive": "0xA28E",
+      "end_file_offset_exclusive": "0x01229E",
+      "source_span_method": "animation pointer table: current pointer to following pointer",
+      "length_bytes": 7,
+      "sha256": "3c1ce73cdf7f606f5c6ae85bc9f1e92e37f91ecbc5c0402de4e941ebb56ec23d",
+      "source_bin": "animation_0C.bin",
+      "entry_decode": {
+        "sprite_palette_index": "0x23",
+        "entry_commands": [
+          {
+            "kind": "set_position_y_x",
+            "file_offset": "0x012298",
+            "raw_hex": "f1 30 46",
+            "y": 48,
+            "x": 70
+          },
+          {
+            "kind": "sprite_frame",
+            "file_offset": "0x01229B",
+            "raw_hex": "88 52",
+            "cpu_address": "0xA852"
+          },
+          {
+            "kind": "exit",
+            "file_offset": "0x01229D",
+            "raw_hex": "ff"
+          }
+        ],
+        "unparsed_tail_hex": "",
         "caution": "Only the linear entry path is decoded. Jump targets and branch tails may share data and need the animation interpreter for full playback."
       }
     },

@@ -53,6 +53,72 @@
       "sha256": "7c23b91502ce9ebf01c18cbf401030f35181dbdc359d245cc7d7d57dd2cbc37b",
       "bytes": "ba bd 01 01 85 75 48 bd 02 01 85 76 68 18 69 03 9d 01 01 90 03 fe 02 01 98 48 ad 98 04 0a 6d 98 04 aa a0 01 b1 75 9d 99 04 c8 b1 75 9d 9a 04 c8 b1 75 9d 9b 04 ee 98 04 68 a8 60",
       "description": "Handler reached through $C533; copies three inline bytes into $0499-$049B indexed by $0498 and advances the stacked return address."
+    },
+    {
+      "file": "bank19_slot09_worker_pointer_entry_AD70.bin",
+      "cpu_start": "0xAD70",
+      "cpu_end_exclusive": "0xAD72",
+      "bank": "0x19",
+      "file_offset": "0x032D80",
+      "length": 2,
+      "sha256": "5f24206f29d50d608ef61ffb2f9769bc6b45c1a19b18c83fad005d1776fe5246",
+      "bytes": "fc ad",
+      "description": "Bank-$19 pointer selected by live worker state $0532=$82; resolves to $ADFC."
+    },
+    {
+      "file": "bank19_slot09_worker_script82_ADFC_AE03.bin",
+      "cpu_start": "0xADFC",
+      "cpu_end_exclusive": "0xAE04",
+      "bank": "0x19",
+      "file_offset": "0x032E0C",
+      "length": 8,
+      "sha256": "971e8ea5097a3c29ce567e8576135650c776555a9f6702c9211c5e90f95929c5",
+      "bytes": "33 0d 1a 0e 1a 0f 3a 32",
+      "description": "Eight-byte stream consumed by the live $82 worker branch: three $046F index/value writes followed by the source append call."
+    },
+    {
+      "file": "bank19_scenario36_worker_stream_AE03_AE0F.bin",
+      "cpu_start": "0xAE03",
+      "cpu_end_exclusive": "0xAE10",
+      "bank": "0x19",
+      "file_offset": "0x032E13",
+      "length": 13,
+      "sha256": "702dadc3d845b2a68e10bbfcaa48c7f17483e3edb62cdb075850d2b7c4bccce6",
+      "bytes": "32 0e 3a 0f 1a 32 0d 3a 0e 1a 01 fc ad",
+      "description": "Scenario-$36 stream continuation: two timed two-pair batches at $AE03/$AE08, then selector $01 at $AE0D redirects to $ADFC."
+    },
+    {
+      "file": "bank19_slot09_worker_stream_ADF6_AE0F.bin",
+      "cpu_start": "0xADF6",
+      "cpu_end_exclusive": "0xAE10",
+      "bank": "0x19",
+      "file_offset": "0x032E06",
+      "length": 26,
+      "sha256": "4c75eb86df7ce70a5474869459e14f5b9ff6b85b93dfdf3520f72106bf3e7ecb",
+      "bytes": "21 10 0f 09 1f 11 33 0d 1a 0e 1a 0f 3a 32 0e 3a 0f 1a 32 0d 3a 0e 1a 01 fc ad",
+      "description": "ROM stream selected by scenario-$1E callback-$45's worker marker $81; the record sequence begins at $ADF6 and shares the checked $ADFC/$AE03 bytes."
+    },
+    {
+      "file": "bank19_slot09_worker_pointer_entries_AD9A_AD9E.bin",
+      "cpu_start": "0xAD9A",
+      "cpu_end_exclusive": "0xAD9E",
+      "bank": "0x19",
+      "file_offset": "0x032DAA",
+      "length": 4,
+      "sha256": "349113b6943fd413d3fbf284b054e979a177c0ad91d360b25d68871a238a7dea",
+      "bytes": "e6 af f7 af",
+      "description": "Scenario-$38 reset marker $97 indexes pointer entry $AD9A to $AFE6; the adjacent $AD9C entry points to $AFF7 and bounds this stream."
+    },
+    {
+      "file": "bank19_slot09_worker_stream_AFE6_AFF7.bin",
+      "cpu_start": "0xAFE6",
+      "cpu_end_exclusive": "0xAFF7",
+      "bank": "0x19",
+      "file_offset": "0x032FF6",
+      "length": 17,
+      "sha256": "948e5cc52fb136c62825d789cbda13529b5c7a29a93d7c7723d55990fbfe71b4",
+      "bytes": "21 10 0f 0a 1f 11 16 30 39 16 30 19 16 0f 01 ee af",
+      "description": "The source stream selected by scenario-$38 worker marker $97. Its first batch begins with control $21, one index/value pair, and countdown $04."
     }
   ]
 }

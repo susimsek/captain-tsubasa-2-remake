@@ -27,6 +27,21 @@ func _verify_runtime_scheduler() -> bool:
 			or int(bootstrap.get("ppu_ctrl_shadow", -1)) != 0x88 \
 			or int(bootstrap.get("scheduler_ready_latch_001b", -1)) != 0:
 		return _fail("Root task records/continuations or source bootstrap latch differ from the verified ROM recipes.")
+	var shadow_writes: Array = bootstrap.get("ppu_shadow_ram_writes", [])
+	if shadow_writes.size() != 4 \
+			or int(shadow_writes[0].get("source_pc", -1)) != 0xC6F1 \
+			or int(shadow_writes[0].get("address", -1)) != 0x0020 \
+			or int(shadow_writes[0].get("value", -1)) != 0x08 \
+			or int(shadow_writes[1].get("source_pc", -1)) != 0xC6F5 \
+			or int(shadow_writes[1].get("address", -1)) != 0x0021 \
+			or int(shadow_writes[1].get("value", -1)) != 0x1E \
+			or int(shadow_writes[2].get("source_pc", -1)) != 0xC75C \
+			or int(shadow_writes[2].get("address", -1)) != 0x0020 \
+			or int(shadow_writes[2].get("value", -1)) != 0x88 \
+			or int(shadow_writes[3].get("source_pc", -1)) != 0xC75E \
+			or int(shadow_writes[3].get("address", -1)) != 0x0019 \
+			or int(shadow_writes[3].get("value", -1)) != 0x88:
+		return _fail("Bootstrap PPU shadows no longer match the checked $C6E8-$C765 source stores.")
 
 	var status: Dictionary = scheduler.get_status()
 	if bool(status.get("does_execute_6502", true)) \
@@ -90,6 +105,10 @@ func _verify_runtime_scheduler() -> bool:
 	var slot5_context = scheduler.get_task_context(0x05)
 	slot5_context.program_counter = 0x856F
 	slot5_context.stack_pointer = 0x4A
+	# `$CB0F` serializes the live `$24/$25` mapper shadows for slot `$05`.
+	# Keep this fixture's RAM consistent with its trace-derived `$18/$19` call inputs.
+	scheduler._ram[0x0024] = 0x18
+	scheduler._ram[0x0025] = 0x19
 	if not scheduler.yield_at_verified_callsite(0x05, 0x856F, 1, 0x4A,
 			0xFF, 0x00, 0x18, 0x19):
 		return _fail("Slot `$05` callback-yield frame failed: " + scheduler.error_message)

@@ -122,7 +122,7 @@ func configure_from_project_sources() -> bool:
 ## The only supported path is fresh `$26=0`, with `$Y=0` required by the
 ## `$A138` indirect-indexed ROM-to-PRG-RAM copy.
 func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
-		ram_before: Dictionary) -> Dictionary:
+		ram_before: Dictionary, checkpoint_a15b_cycle_offsets: Array[int] = []) -> Dictionary:
 	if not _configured and not configure_from_project_sources():
 		return _failure(error_message)
 	if int(source_call.get("caller_pc", -1)) != CALLER_PC \
@@ -133,10 +133,12 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 	if source_event_id.is_empty():
 		return _failure("A source-owned caller event identity is required; this executor does not create call events.")
 	var logical_stack_mode := source_call.has("logical_stack_frame")
+	var partial_status_mode := logical_stack_mode or bool(source_call.get("partial_status", false))
 	var pre_call_sp := -1
 	var entry_sp := -1
 	var stack := PackedByteArray()
 	var logical_stack: Array[Dictionary] = []
+	var stack_known_page_offsets: Array[int] = []
 	if logical_stack_mode:
 		var frame_variant: Variant = source_call.get("logical_stack_frame", {})
 		if not frame_variant is Dictionary:
@@ -163,6 +165,14 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 		if not stack_variant is PackedByteArray or stack_variant.size() != 0x100:
 			return _failure("The decoded 256-byte stack page is required for the nested and outer RTS instructions.")
 		stack = stack_variant.duplicate()
+		var known_offsets_variant: Variant = source_call.get("stack_known_page_offsets", [])
+		if not known_offsets_variant is Array:
+			return _failure("Physical stack context must identify its ROM-derived byte offsets.")
+		for offset_variant in known_offsets_variant:
+			var page_offset := int(offset_variant)
+			if page_offset < 0 or page_offset > 0xFF:
+				return _failure("Physical stack context has an invalid known page offset.")
+			stack_known_page_offsets.append(page_offset)
 		var stacked_return := _peek_return_word(stack, entry_sp)
 		if stacked_return != CALLER_PC + 2:
 			return _failure("The caller's stacked JSR return word does not match `$80FA->$A20F`.")
@@ -171,14 +181,14 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 		if value < 0 or value > 0xFF:
 			return _failure("CPU register `%s` must be supplied as an explicit source byte." % register_name)
 	var p_known_mask := 0xFF
-	if logical_stack_mode:
+	if partial_status_mode:
 		p_known_mask = int(cpu_state.get("p_known_mask", -1))
 		if p_known_mask < 0 or p_known_mask > 0xFF \
 				or int(cpu_state.get("p_known_value", -1)) < 0 \
 				or int(cpu_state.get("p_known_value", -1)) > 0xFF:
-			return _failure("Logical CPU entry requires a partial P known-mask/value contract.")
+			return _failure("Partial-status CPU entry requires an explicit P known-mask/value contract.")
 		if (p_known_mask & 0x82) != 0x82:
-			return _failure("Logical CPU entry must know N/Z after the ROM mapper helper.")
+			return _failure("CPU entry must know N/Z after the ROM mapper helper.")
 	else:
 		var p_value := int(cpu_state.get("p", -1))
 		if p_value < 0 or p_value > 0xFF:
@@ -198,9 +208,9 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 			or int(cpu_state["x"]) != 0x02 \
 			or int(cpu_state["a"]) != expected_mapper_value:
 		return _failure("Caller state does not match `$80F7->$C4B9` bank-$02 select output.")
-	if logical_stack_mode and (int(cpu_state["p_known_value"]) & 0x82) != _nz_bits(expected_mapper_value):
+	if partial_status_mode and (int(cpu_state["p_known_value"]) & 0x82) != _nz_bits(expected_mapper_value):
 		return _failure("Caller N/Z flags do not match the preceding ROM mapper-select helper.")
-	if not logical_stack_mode and (int(cpu_state["p"]) & 0x82) != _nz_bits(expected_mapper_value):
+	if not partial_status_mode and (int(cpu_state["p"]) & 0x82) != _nz_bits(expected_mapper_value):
 		return _failure("Caller N/Z flags do not match the preceding ROM mapper-select helper.")
 	if int(cpu_state["y"]) != 0:
 		return _failure("ROM `$A138` uses `(pointer),Y` while copying `$ACB0-$BFFF`; this bounded route requires explicit Y=0.")
@@ -219,8 +229,20 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 	var writes: Array[Dictionary] = []
 	var ram_write_timeline: Array[Dictionary] = []
 	var logical_stack_timeline: Array[Dictionary] = []
+	var source_cpu_checkpoints: Array[Dictionary] = []
+	var requested_a15b_cycles: Dictionary = {}
+	for cycle_offset in checkpoint_a15b_cycle_offsets:
+		if cycle_offset < 0 or requested_a15b_cycles.has(cycle_offset):
+			return _failure("Requested `$A15B` checkpoint cycles must be unique and nonnegative.")
+		requested_a15b_cycles[cycle_offset] = true
 	var cpu_cycles := 0
 	var instruction_count := 0
+	var stack_known_page_offsets_at_return: Array[int] = stack_known_page_offsets.duplicate()
+	if not logical_stack_mode:
+		for nested_offset in [0x25, 0x26]:
+			if not stack_known_page_offsets_at_return.has(nested_offset):
+				stack_known_page_offsets_at_return.append(nested_offset)
+		stack_known_page_offsets_at_return.sort()
 	var source_path: Array[int] = [SELECTOR_ENTRY_PC, SELECTOR_BODY_PC, 0xA870, 0xA872, 0xA87C, 0xA87E, ROSTER_COPY_TRAMPOLINE_PC, 0xA138]
 	# Execute the match-zero branch and nested call. `$A8B7` is a tail jump,
 	# therefore the JSR return word stays on the stack during `$A138`'s copy.
@@ -257,10 +279,16 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 	else:
 		if not _push_jsr(stack, int(registers["sp"]), 0xA880):
 			return _failure("Nested `$A87E JSR $A8B7` could not push its ROM return word.")
+		var nested_high_address := 0x0100 | int(registers["sp"])
+		var nested_low_address := 0x0100 | ((int(registers["sp"]) - 1) & 0xFF)
+		ram_after[nested_high_address] = 0xA8
+		ram_after[nested_low_address] = 0x80
+		writes.append({"source_pc": 0xA87E, "address": nested_high_address, "value": 0xA8})
+		writes.append({"source_pc": 0xA87E, "address": nested_low_address, "value": 0x80})
 		_append_ram_write_timeline(ram_write_timeline, cpu_cycles + 5,
-			0xA87E, 0x0100 | int(registers["sp"]), 0xA8)
+			0xA87E, nested_high_address, 0xA8)
 		_append_ram_write_timeline(ram_write_timeline, cpu_cycles + 6,
-			0xA87E, 0x0100 | ((int(registers["sp"]) - 1) & 0xFF), 0x80)
+			0xA87E, nested_low_address, 0x80)
 		registers["sp"] = (int(registers["sp"]) - 2) & 0xFF
 	registers["pc"] = ROSTER_COPY_TRAMPOLINE_PC
 	cpu_cycles += 6 + 3 # JSR `$A8B7`; its ROM instruction is JMP `$A138`.
@@ -326,8 +354,15 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 		instruction_count += 2
 		var terminates := false
 		if source_low != 0xFF:
-			copy_loop_cycles += 3 + 3 # taken BNE, then JMP `$A1EB`
-			instruction_count += 2
+			copy_loop_cycles += 3 # taken `$A150 BNE $A15B`
+			instruction_count += 1
+			var a15b_cycle := cpu_cycles + copy_loop_cycles
+			if requested_a15b_cycles.has(a15b_cycle):
+				source_cpu_checkpoints.append(_build_a15b_checkpoint(
+					a15b_cycle, source_low, registers, ram_after, p_known_mask,
+					logical_stack_mode, logical_stack, stack, stack_known_page_offsets))
+			copy_loop_cycles += 3 # `$A15B JMP $A1EB`
+			instruction_count += 1
 		else:
 			copy_loop_cycles += 2
 			instruction_count += 1
@@ -337,8 +372,15 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 			copy_loop_cycles += 3 + 2
 			instruction_count += 2
 			if source_high != 0xBF:
-				copy_loop_cycles += 3 + 3 # taken BNE, then JMP `$A1EB`
-				instruction_count += 2
+				copy_loop_cycles += 3 # taken `$A156 BNE $A15B`
+				instruction_count += 1
+				var high_a15b_cycle := cpu_cycles + copy_loop_cycles
+				if requested_a15b_cycles.has(high_a15b_cycle):
+					source_cpu_checkpoints.append(_build_a15b_checkpoint(
+						high_a15b_cycle, source_high, registers, ram_after, p_known_mask,
+						logical_stack_mode, logical_stack, stack, stack_known_page_offsets))
+				copy_loop_cycles += 3 # `$A15B JMP $A1EB`
+				instruction_count += 1
 			else:
 				copy_loop_cycles += 2 + 3 # not-taken BNE, then JMP `$A1E4`
 				instruction_count += 2
@@ -512,12 +554,12 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 	registers["pc"] = RETURN_PC
 	cpu_cycles += 6
 	instruction_count += 1
-	if logical_stack_mode:
-		# The selector's final ADC defines N/Z/C/V; other status bits pass
-		# through from the caller with their incoming knowledge unchanged.
-		var known_mask := p_known_mask | 0xC3
-		registers["p_known_mask"] = known_mask
-		registers["p_known_value"] = int(registers["p"]) & known_mask
+	# The selector's final ADC defines N/Z/C/V; other status bits pass through
+	# from the caller with their incoming knowledge unchanged. Keep the value
+	# receipt synchronized for both full-byte and partial-status executions.
+	var known_mask := p_known_mask | 0xC3
+	registers["p_known_mask"] = known_mask
+	registers["p_known_value"] = int(registers["p"]) & known_mask
 
 	return {
 		"ok": true,
@@ -542,11 +584,18 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 		"roster_loop_iterations": 11,
 		"instruction_count": instruction_count,
 		"cpu_cycles_without_interrupts": cpu_cycles,
+		"source_cpu_checkpoints": source_cpu_checkpoints,
+		"unmatched_a15b_checkpoint_cycle_offsets": _unmatched_cycle_offsets(
+			requested_a15b_cycles, source_cpu_checkpoints),
+		"source_cpu_checkpoint_scope": "ROM-executed `$A15B` selector loop boundaries only; no interrupt or emulator state is supplied",
 		"ram_write_timeline": ram_write_timeline,
 		"ram_write_timeline_scope": "ROM-derived callee RAM writes from `$A20F` through `$A8B6`; the nested JSR stack push is included only with a physical stack, and asynchronous NMI/IRQ writes are not included",
 		"ram_write_timeline_cycle_unit": "6502 CPU cycles after `$A20F` entry; write offset is the final STA/INC cycle",
 		"logical_stack_timeline": logical_stack_timeline if logical_stack_mode else [],
 		"physical_nested_jsr_stack_writes_included": not logical_stack_mode,
+		"stack_known_page_offsets_at_entry": stack_known_page_offsets.duplicate(),
+		"stack_known_page_offsets_at_return": stack_known_page_offsets_at_return,
+		"stack_page_complete": false,
 		"entry_registers": cpu_state.duplicate(true),
 		"return_registers": registers,
 		"ram_writes": writes,
@@ -557,6 +606,64 @@ func execute_source_call(source_call: Dictionary, cpu_state: Dictionary,
 		"emulator_data_used": false,
 		"trace_state_used": false,
 	}
+
+
+func _build_a15b_checkpoint(source_cycle_offset: int, accumulator: int,
+		registers: Dictionary, ram: Dictionary, p_known_mask: int,
+		logical_stack_mode: bool, logical_stack: Array[Dictionary],
+		stack_page: PackedByteArray, stack_known_page_offsets: Array[int]) -> Dictionary:
+	var known_status_mask := p_known_mask | 0x83 # CMP at `$A14E` defines N/Z/C.
+	var checkpoint := {
+		"source_pc": 0xA15B,
+		"source_cycle_offset": source_cycle_offset,
+		"ram_known_values": ram.duplicate(true),
+		"ram_known_byte_count": ram.size(),
+		"ram_image_complete": false,
+		"ram_provenance": "ROM selector execution writes plus prior source-executor receipts; absent addresses remain unknown",
+		"registers": {
+			"pc": 0xA15B, "a": accumulator,
+			"x": int(registers["x"]), "y": int(registers["y"]),
+			"p": int(registers["p"]),
+			"p_known_mask": known_status_mask,
+			"p_known_value": int(registers["p"]) & known_status_mask,
+		},
+		"ram_pointers": {
+			0x00D0: int(ram[0x00D0]), 0x00D1: int(ram[0x00D1]),
+			0x00D2: int(ram[0x00D2]), 0x00D3: int(ram[0x00D3]),
+		},
+		"stack_model": "logical_source_jsr_frames" if logical_stack_mode else "physical_stack_page",
+		"stack_page_available": not logical_stack_mode,
+		"stack_page_complete": false,
+		"trace_state_used": false,
+		"emulator_data_used": false,
+	}
+	if logical_stack_mode:
+		checkpoint["logical_stack_frames"] = logical_stack.duplicate(true)
+	else:
+		checkpoint["sp"] = int(registers["sp"])
+		checkpoint["stack_page"] = stack_page.duplicate()
+		var known_at_checkpoint := stack_known_page_offsets.duplicate()
+		for nested_offset in [0x25, 0x26]:
+			if not known_at_checkpoint.has(nested_offset):
+				known_at_checkpoint.append(nested_offset)
+		known_at_checkpoint.sort()
+		checkpoint["stack_page_known_offsets"] = known_at_checkpoint
+		checkpoint["stack_page_complete"] = false
+	return checkpoint
+
+
+func _unmatched_cycle_offsets(requested_cycles: Dictionary,
+		checkpoints: Array[Dictionary]) -> Array[int]:
+	var matched: Dictionary = {}
+	for checkpoint in checkpoints:
+		matched[int(checkpoint.get("source_cycle_offset", -1))] = true
+	var unmatched: Array[int] = []
+	for cycle_variant in requested_cycles:
+		var cycle_offset := int(cycle_variant)
+		if not matched.has(cycle_offset):
+			unmatched.append(cycle_offset)
+	unmatched.sort()
+	return unmatched
 
 
 func _verify_instruction_spans() -> bool:

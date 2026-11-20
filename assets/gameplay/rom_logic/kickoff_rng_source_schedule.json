@@ -1,8 +1,9 @@
 {
-  "schema": "ct2-kickoff-rom-rng-replay-v2",
+  "schema": "ct2-kickoff-rom-rng-replay-v6",
+  "source_schedule_builder_sha256": "2b9e1acbb15d19dc51ddf85820c32929e4e52d0078211f9e07eb459d143140f5",
   "route_identity": "turkish-fresh-kickoff-capture-20261027",
   "source_rom_sha256": "4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097",
-  "source_stepper_sha256": "f20ca13ee59e1080ad0bef03b70001f53b2cd94c0af6e1d21a241e18288ecfe8",
+  "source_stepper_sha256": "233a721c91b17b56e3527bfc336ab47d020186b44a7da15f322224aa674e493a",
   "cold_reset_state": {
     "e1": 0,
     "e2": 0,
@@ -17,7 +18,7 @@
       "reference/diagnostics/kickoff_select_test_20261027/opening_replay.csv",
       "reference/diagnostics/kickoff_select_test_20261027/post_title_inputs.csv"
     ],
-    "meaning": "Recorded P1 input sequence used as the ROM-stepper route; runtime must bind this exact identity."
+    "meaning": "Recorded P1 input sequence through the first-match command menu; runtime must bind this exact identity."
   },
   "source_model": {
     "name": "ROM-only 6502/PPU/DMC source stepper",
@@ -52,6 +53,1176 @@
       ],
       "operation": "E1+=83; E2+=0D+carry(E1); E3+=11+carry(E2), modulo 256",
       "source": "bank $02 $A117-$A128, reached via $C76E->$C421->$A000 when $001B bit 6 is set"
+    },
+    "pre_candidate_counter_003a": {
+      "candidate_source_frame": 7266,
+      "initialization_writes": [
+        {
+          "source_frame": 4,
+          "source_cycle": 90013,
+          "source_pc": 50800,
+          "prg_bank": 30,
+          "address": 58,
+          "value": 0
+        },
+        {
+          "source_frame": 6,
+          "source_cycle": 151985,
+          "source_pc": 41528,
+          "prg_bank": 2,
+          "address": 58,
+          "value": 0
+        }
+      ],
+      "increment_source_pc": 41269,
+      "increment_prg_bank": 2,
+      "increment_count": 7255,
+      "increment_frame_runs_inclusive": [
+        [
+          9,
+          4708
+        ],
+        [
+          4710,
+          5762
+        ],
+        [
+          5764,
+          7265
+        ]
+      ],
+      "unexpected_writer_count": 0,
+      "derived_value": 87,
+      "source": "ROM-stepper RAM writes: reset STA ($00),Y at $C670; bank-$02 zero-fill STA $FFE0,Y first writes $003A at $A238; each listed bank-$02 A117 path falls through to INC $003A at $A135"
+    },
+    "pre_candidate_sound_queue": {
+      "candidate_source_frame": 7266,
+      "candidate_source_cycle": 216355361,
+      "candidate_source_pc": 50209,
+      "source_event_id": "rom-source-nmi-7266-216355361",
+      "source_ram_sha256": "aa95f576dfb1f741e55eb013acbbcb85f71c080550c3c90455cf098a6c59dde0",
+      "mode_001b_value": 192,
+      "mode_001b_write_count": 14508,
+      "mode_001b_writer_summary": [
+        {
+          "address": 27,
+          "source_pc": 32907,
+          "prg_bank": 0,
+          "value": 64,
+          "count": 1,
+          "first_source_frame": 4691,
+          "first_source_cycle": 139688566,
+          "last_source_frame": 4691,
+          "last_source_cycle": 139688566
+        },
+        {
+          "address": 27,
+          "source_pc": 40714,
+          "prg_bank": 0,
+          "value": 64,
+          "count": 6948,
+          "first_source_frame": 9,
+          "first_source_cycle": 241102,
+          "last_source_frame": 7258,
+          "last_source_cycle": 216119944
+        },
+        {
+          "address": 27,
+          "source_pc": 40714,
+          "prg_bank": 0,
+          "value": 65,
+          "count": 300,
+          "first_source_frame": 3653,
+          "first_source_cycle": 108761725,
+          "last_source_frame": 3952,
+          "last_source_cycle": 117666817
+        },
+        {
+          "address": 27,
+          "source_pc": 41267,
+          "prg_bank": 2,
+          "value": 192,
+          "count": 6955,
+          "first_source_frame": 9,
+          "first_source_cycle": 240148,
+          "last_source_frame": 7265,
+          "last_source_cycle": 216326882
+        },
+        {
+          "address": 27,
+          "source_pc": 41267,
+          "prg_bank": 2,
+          "value": 193,
+          "count": 300,
+          "first_source_frame": 3653,
+          "first_source_cycle": 108759701,
+          "last_source_frame": 3952,
+          "last_source_cycle": 117664084
+        },
+        {
+          "address": 27,
+          "source_pc": 41512,
+          "prg_bank": 2,
+          "value": 64,
+          "count": 1,
+          "first_source_frame": 6,
+          "first_source_cycle": 151733,
+          "last_source_frame": 6,
+          "last_source_cycle": 151733
+        },
+        {
+          "address": 27,
+          "source_pc": 42270,
+          "prg_bank": 2,
+          "value": 65,
+          "count": 1,
+          "first_source_frame": 3652,
+          "first_source_cycle": 108744571,
+          "last_source_frame": 3652,
+          "last_source_cycle": 108744571
+        },
+        {
+          "address": 27,
+          "source_pc": 42286,
+          "prg_bank": 2,
+          "value": 64,
+          "count": 1,
+          "first_source_frame": 3952,
+          "first_source_cycle": 117667271,
+          "last_source_frame": 3952,
+          "last_source_cycle": 117667271
+        },
+        {
+          "address": 27,
+          "source_pc": 50800,
+          "prg_bank": 30,
+          "value": 0,
+          "count": 1,
+          "first_source_frame": 4,
+          "first_source_cycle": 89672,
+          "last_source_frame": 4,
+          "last_source_cycle": 89672
+        }
+      ],
+      "saved_bank_07fc_value": 15,
+      "saved_bank_07fc_write_count": 4,
+      "saved_bank_07fc_writer_summary": [
+        {
+          "address": 2044,
+          "source_pc": 32845,
+          "prg_bank": 12,
+          "value": 15,
+          "count": 3,
+          "first_source_frame": 283,
+          "first_source_cycle": 8399653,
+          "last_source_frame": 4817,
+          "last_source_cycle": 143424443
+        },
+        {
+          "address": 2044,
+          "source_pc": 50800,
+          "prg_bank": 30,
+          "value": 0,
+          "count": 1,
+          "first_source_frame": 4,
+          "first_source_cycle": 111922,
+          "last_source_frame": 4,
+          "last_source_cycle": 111922
+        }
+      ],
+      "values": {
+        "0700": 0,
+        "0701": 0,
+        "0702": 0,
+        "0703": 0,
+        "0704": 0,
+        "0705": 0,
+        "0706": 0,
+        "07E9": 0
+      },
+      "write_count": 58199,
+      "writer_summary": [
+        {
+          "address": 1792,
+          "source_pc": 32842,
+          "prg_bank": 0,
+          "value": 1,
+          "count": 1,
+          "first_source_frame": 4661,
+          "first_source_cycle": 138781463,
+          "last_source_frame": 4661,
+          "last_source_cycle": 138781463
+        },
+        {
+          "address": 1792,
+          "source_pc": 32948,
+          "prg_bank": 12,
+          "value": 0,
+          "count": 15,
+          "first_source_frame": 283,
+          "first_source_cycle": 8400598,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215704113
+        },
+        {
+          "address": 1792,
+          "source_pc": 33500,
+          "prg_bank": 0,
+          "value": 1,
+          "count": 1,
+          "first_source_frame": 7243,
+          "first_source_cycle": 215674689,
+          "last_source_frame": 7243,
+          "last_source_cycle": 215674689
+        },
+        {
+          "address": 1792,
+          "source_pc": 33613,
+          "prg_bank": 12,
+          "value": 0,
+          "count": 15,
+          "first_source_frame": 283,
+          "first_source_cycle": 8399753,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215702592
+        },
+        {
+          "address": 1792,
+          "source_pc": 34300,
+          "prg_bank": 0,
+          "value": 2,
+          "count": 1,
+          "first_source_frame": 1510,
+          "first_source_cycle": 44942666,
+          "last_source_frame": 1510,
+          "last_source_cycle": 44942666
+        },
+        {
+          "address": 1792,
+          "source_pc": 34300,
+          "prg_bank": 0,
+          "value": 7,
+          "count": 1,
+          "first_source_frame": 2368,
+          "first_source_cycle": 70498754,
+          "last_source_frame": 2368,
+          "last_source_cycle": 70498754
+        },
+        {
+          "address": 1792,
+          "source_pc": 34300,
+          "prg_bank": 0,
+          "value": 9,
+          "count": 1,
+          "first_source_frame": 1839,
+          "first_source_cycle": 54740672,
+          "last_source_frame": 1839,
+          "last_source_cycle": 54740672
+        },
+        {
+          "address": 1792,
+          "source_pc": 34300,
+          "prg_bank": 0,
+          "value": 14,
+          "count": 2,
+          "first_source_frame": 1108,
+          "first_source_cycle": 32971287,
+          "last_source_frame": 1779,
+          "last_source_cycle": 52956737
+        },
+        {
+          "address": 1792,
+          "source_pc": 34300,
+          "prg_bank": 0,
+          "value": 40,
+          "count": 3,
+          "first_source_frame": 1048,
+          "first_source_cycle": 31188532,
+          "last_source_frame": 1088,
+          "last_source_cycle": 32375805
+        },
+        {
+          "address": 1792,
+          "source_pc": 34300,
+          "prg_bank": 0,
+          "value": 85,
+          "count": 1,
+          "first_source_frame": 4816,
+          "first_source_cycle": 143396526,
+          "last_source_frame": 4816,
+          "last_source_cycle": 143396526
+        },
+        {
+          "address": 1792,
+          "source_pc": 34300,
+          "prg_bank": 0,
+          "value": 88,
+          "count": 2,
+          "first_source_frame": 282,
+          "first_source_cycle": 8393078,
+          "last_source_frame": 4481,
+          "last_source_cycle": 133441398
+        },
+        {
+          "address": 1792,
+          "source_pc": 34300,
+          "prg_bank": 0,
+          "value": 104,
+          "count": 2,
+          "first_source_frame": 379,
+          "first_source_cycle": 11268415,
+          "last_source_frame": 4578,
+          "last_source_cycle": 136316733
+        },
+        {
+          "address": 1792,
+          "source_pc": 50800,
+          "prg_bank": 30,
+          "value": 0,
+          "count": 1,
+          "first_source_frame": 4,
+          "first_source_cycle": 109150,
+          "last_source_frame": 4,
+          "last_source_cycle": 109150
+        },
+        {
+          "address": 1793,
+          "source_pc": 50800,
+          "prg_bank": 30,
+          "value": 0,
+          "count": 1,
+          "first_source_frame": 4,
+          "first_source_cycle": 109161,
+          "last_source_frame": 4,
+          "last_source_cycle": 109161
+        },
+        {
+          "address": 1794,
+          "source_pc": 50800,
+          "prg_bank": 30,
+          "value": 0,
+          "count": 1,
+          "first_source_frame": 4,
+          "first_source_cycle": 109172,
+          "last_source_frame": 4,
+          "last_source_cycle": 109172
+        },
+        {
+          "address": 1795,
+          "source_pc": 50800,
+          "prg_bank": 30,
+          "value": 0,
+          "count": 1,
+          "first_source_frame": 4,
+          "first_source_cycle": 109183,
+          "last_source_frame": 4,
+          "last_source_cycle": 109183
+        },
+        {
+          "address": 1796,
+          "source_pc": 50800,
+          "prg_bank": 30,
+          "value": 0,
+          "count": 1,
+          "first_source_frame": 4,
+          "first_source_cycle": 109194,
+          "last_source_frame": 4,
+          "last_source_cycle": 109194
+        },
+        {
+          "address": 1797,
+          "source_pc": 50800,
+          "prg_bank": 30,
+          "value": 0,
+          "count": 1,
+          "first_source_frame": 4,
+          "first_source_cycle": 109205,
+          "last_source_frame": 4,
+          "last_source_cycle": 109205
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 0,
+          "count": 7544,
+          "first_source_frame": 9,
+          "first_source_cycle": 240467,
+          "last_source_frame": 7265,
+          "last_source_cycle": 216327509
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 1,
+          "count": 7,
+          "first_source_frame": 3980,
+          "first_source_cycle": 118498932,
+          "last_source_frame": 3986,
+          "last_source_cycle": 118677223
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 2,
+          "count": 7,
+          "first_source_frame": 3980,
+          "first_source_cycle": 118498888,
+          "last_source_frame": 3986,
+          "last_source_cycle": 118677179
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 4,
+          "count": 6,
+          "first_source_frame": 3981,
+          "first_source_cycle": 118528226,
+          "last_source_frame": 3986,
+          "last_source_cycle": 118677135
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 8,
+          "count": 6,
+          "first_source_frame": 3981,
+          "first_source_cycle": 118528182,
+          "last_source_frame": 3986,
+          "last_source_cycle": 118677091
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 9,
+          "count": 1,
+          "first_source_frame": 3980,
+          "first_source_cycle": 118498403,
+          "last_source_frame": 3980,
+          "last_source_cycle": 118498403
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 15,
+          "count": 5829,
+          "first_source_frame": 283,
+          "first_source_cycle": 8400767,
+          "last_source_frame": 7243,
+          "last_source_cycle": 215672385
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 16,
+          "count": 6,
+          "first_source_frame": 3981,
+          "first_source_cycle": 118528138,
+          "last_source_frame": 3986,
+          "last_source_cycle": 118677047
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 18,
+          "count": 1,
+          "first_source_frame": 3980,
+          "first_source_cycle": 118498359,
+          "last_source_frame": 3980,
+          "last_source_cycle": 118498359
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 30,
+          "count": 5829,
+          "first_source_frame": 283,
+          "first_source_cycle": 8400723,
+          "last_source_frame": 7243,
+          "last_source_cycle": 215672341
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 31,
+          "count": 202,
+          "first_source_frame": 380,
+          "first_source_cycle": 11290340,
+          "last_source_frame": 4610,
+          "last_source_cycle": 137260435
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 32,
+          "count": 6,
+          "first_source_frame": 3981,
+          "first_source_cycle": 118528094,
+          "last_source_frame": 3986,
+          "last_source_cycle": 118677003
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 36,
+          "count": 1,
+          "first_source_frame": 3980,
+          "first_source_cycle": 118498315,
+          "last_source_frame": 3980,
+          "last_source_cycle": 118498315
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 60,
+          "count": 5829,
+          "first_source_frame": 283,
+          "first_source_cycle": 8400679,
+          "last_source_frame": 7243,
+          "last_source_cycle": 215672297
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 62,
+          "count": 193,
+          "first_source_frame": 381,
+          "first_source_cycle": 11319195,
+          "last_source_frame": 4610,
+          "last_source_cycle": 137260391
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 64,
+          "count": 6,
+          "first_source_frame": 3981,
+          "first_source_cycle": 118528050,
+          "last_source_frame": 3986,
+          "last_source_cycle": 118676959
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 72,
+          "count": 1,
+          "first_source_frame": 3980,
+          "first_source_cycle": 118498271,
+          "last_source_frame": 3980,
+          "last_source_cycle": 118498271
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 95,
+          "count": 271,
+          "first_source_frame": 1109,
+          "first_source_cycle": 33000693,
+          "last_source_frame": 2400,
+          "last_source_cycle": 71445634
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 120,
+          "count": 5829,
+          "first_source_frame": 283,
+          "first_source_cycle": 8400635,
+          "last_source_frame": 7243,
+          "last_source_cycle": 215672253
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 124,
+          "count": 193,
+          "first_source_frame": 381,
+          "first_source_cycle": 11319151,
+          "last_source_frame": 4610,
+          "last_source_cycle": 137260347
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 125,
+          "count": 271,
+          "first_source_frame": 1110,
+          "first_source_cycle": 33028786,
+          "last_source_frame": 2401,
+          "last_source_cycle": 71474864
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 128,
+          "count": 9,
+          "first_source_frame": 3980,
+          "first_source_cycle": 118498977,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215706258
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 129,
+          "count": 2,
+          "first_source_frame": 4662,
+          "first_source_cycle": 138812748,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215705957
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 131,
+          "count": 2,
+          "first_source_frame": 4662,
+          "first_source_cycle": 138812381,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215705656
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 132,
+          "count": 1,
+          "first_source_frame": 3980,
+          "first_source_cycle": 118498452,
+          "last_source_frame": 3980,
+          "last_source_cycle": 118498452
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 135,
+          "count": 5837,
+          "first_source_frame": 283,
+          "first_source_cycle": 8400812,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215705355
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 143,
+          "count": 205,
+          "first_source_frame": 380,
+          "first_source_cycle": 11290385,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215705054
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 144,
+          "count": 1,
+          "first_source_frame": 3979,
+          "first_source_cycle": 118469731,
+          "last_source_frame": 3979,
+          "last_source_cycle": 118469731
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 159,
+          "count": 3,
+          "first_source_frame": 1511,
+          "first_source_cycle": 44972229,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215704753
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 161,
+          "count": 1,
+          "first_source_frame": 3979,
+          "first_source_cycle": 118469426,
+          "last_source_frame": 3979,
+          "last_source_cycle": 118469426
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 175,
+          "count": 271,
+          "first_source_frame": 1109,
+          "first_source_cycle": 33000738,
+          "last_source_frame": 2400,
+          "last_source_cycle": 71445679
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 190,
+          "count": 280,
+          "first_source_frame": 380,
+          "first_source_cycle": 11290040,
+          "last_source_frame": 4579,
+          "last_source_cycle": 136338357
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 191,
+          "count": 3,
+          "first_source_frame": 1511,
+          "first_source_cycle": 44971862,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215704452
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 195,
+          "count": 5835,
+          "first_source_frame": 283,
+          "first_source_cycle": 8401684,
+          "last_source_frame": 7243,
+          "last_source_cycle": 215673039
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 199,
+          "count": 197,
+          "first_source_frame": 380,
+          "first_source_cycle": 11291224,
+          "last_source_frame": 4609,
+          "last_source_cycle": 137230771
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 215,
+          "count": 271,
+          "first_source_frame": 1109,
+          "first_source_cycle": 33001429,
+          "last_source_frame": 2400,
+          "last_source_cycle": 71446281
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 225,
+          "count": 5834,
+          "first_source_frame": 283,
+          "first_source_cycle": 8402557,
+          "last_source_frame": 7243,
+          "last_source_cycle": 215673269
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 227,
+          "count": 197,
+          "first_source_frame": 380,
+          "first_source_cycle": 11291466,
+          "last_source_frame": 4609,
+          "last_source_cycle": 137231083
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 235,
+          "count": 271,
+          "first_source_frame": 1109,
+          "first_source_cycle": 33001668,
+          "last_source_frame": 2400,
+          "last_source_cycle": 71446450
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 240,
+          "count": 5834,
+          "first_source_frame": 283,
+          "first_source_cycle": 8403219,
+          "last_source_frame": 7243,
+          "last_source_cycle": 215673434
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 241,
+          "count": 197,
+          "first_source_frame": 380,
+          "first_source_cycle": 11291631,
+          "last_source_frame": 4609,
+          "last_source_cycle": 137231318
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 245,
+          "count": 271,
+          "first_source_frame": 1109,
+          "first_source_cycle": 33001833,
+          "last_source_frame": 2400,
+          "last_source_cycle": 71446770
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 248,
+          "count": 197,
+          "first_source_frame": 380,
+          "first_source_cycle": 11292035,
+          "last_source_frame": 4609,
+          "last_source_cycle": 137231471
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 250,
+          "count": 271,
+          "first_source_frame": 1109,
+          "first_source_cycle": 33002349,
+          "last_source_frame": 2400,
+          "last_source_cycle": 71446935
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 253,
+          "count": 9,
+          "first_source_frame": 380,
+          "first_source_cycle": 11289739,
+          "last_source_frame": 4579,
+          "last_source_cycle": 136338056
+        },
+        {
+          "address": 1798,
+          "source_pc": 32978,
+          "prg_bank": 12,
+          "value": 255,
+          "count": 3,
+          "first_source_frame": 1511,
+          "first_source_cycle": 44971561,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215704151
+        },
+        {
+          "address": 1798,
+          "source_pc": 33733,
+          "prg_bank": 12,
+          "value": 16,
+          "count": 3,
+          "first_source_frame": 283,
+          "first_source_cycle": 8399961,
+          "last_source_frame": 4817,
+          "last_source_cycle": 143424751
+        },
+        {
+          "address": 1798,
+          "source_pc": 33733,
+          "prg_bank": 12,
+          "value": 48,
+          "count": 3,
+          "first_source_frame": 283,
+          "first_source_cycle": 8400155,
+          "last_source_frame": 4817,
+          "last_source_cycle": 143424945
+        },
+        {
+          "address": 1798,
+          "source_pc": 33733,
+          "prg_bank": 12,
+          "value": 112,
+          "count": 3,
+          "first_source_frame": 283,
+          "first_source_cycle": 8400356,
+          "last_source_frame": 4817,
+          "last_source_cycle": 143425146
+        },
+        {
+          "address": 1798,
+          "source_pc": 33733,
+          "prg_bank": 12,
+          "value": 240,
+          "count": 3,
+          "first_source_frame": 283,
+          "first_source_cycle": 8400564,
+          "last_source_frame": 4817,
+          "last_source_cycle": 143425354
+        },
+        {
+          "address": 1798,
+          "source_pc": 33733,
+          "prg_bank": 12,
+          "value": 241,
+          "count": 8,
+          "first_source_frame": 380,
+          "first_source_cycle": 11289317,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215702770
+        },
+        {
+          "address": 1798,
+          "source_pc": 33733,
+          "prg_bank": 12,
+          "value": 243,
+          "count": 8,
+          "first_source_frame": 380,
+          "first_source_cycle": 11289487,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215702936
+        },
+        {
+          "address": 1798,
+          "source_pc": 33733,
+          "prg_bank": 12,
+          "value": 247,
+          "count": 3,
+          "first_source_frame": 1511,
+          "first_source_cycle": 44971309,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215703109
+        },
+        {
+          "address": 1798,
+          "source_pc": 33733,
+          "prg_bank": 12,
+          "value": 249,
+          "count": 4,
+          "first_source_frame": 1069,
+          "first_source_cycle": 31807405,
+          "last_source_frame": 1840,
+          "last_source_cycle": 54768287
+        },
+        {
+          "address": 1798,
+          "source_pc": 33733,
+          "prg_bank": 12,
+          "value": 251,
+          "count": 13,
+          "first_source_frame": 380,
+          "first_source_cycle": 11289667,
+          "last_source_frame": 4579,
+          "last_source_cycle": 136337984
+        },
+        {
+          "address": 1798,
+          "source_pc": 33733,
+          "prg_bank": 12,
+          "value": 255,
+          "count": 11,
+          "first_source_frame": 1511,
+          "first_source_cycle": 44971489,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215704079
+        },
+        {
+          "address": 1798,
+          "source_pc": 34394,
+          "prg_bank": 12,
+          "value": 0,
+          "count": 3,
+          "first_source_frame": 3986,
+          "first_source_cycle": 118677487,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215706371
+        },
+        {
+          "address": 1798,
+          "source_pc": 34394,
+          "prg_bank": 12,
+          "value": 1,
+          "count": 2,
+          "first_source_frame": 4662,
+          "first_source_cycle": 138812861,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215706070
+        },
+        {
+          "address": 1798,
+          "source_pc": 34394,
+          "prg_bank": 12,
+          "value": 3,
+          "count": 2,
+          "first_source_frame": 4662,
+          "first_source_cycle": 138812494,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215705769
+        },
+        {
+          "address": 1798,
+          "source_pc": 34394,
+          "prg_bank": 12,
+          "value": 4,
+          "count": 1,
+          "first_source_frame": 3980,
+          "first_source_cycle": 118498697,
+          "last_source_frame": 3980,
+          "last_source_cycle": 118498697
+        },
+        {
+          "address": 1798,
+          "source_pc": 34394,
+          "prg_bank": 12,
+          "value": 7,
+          "count": 2,
+          "first_source_frame": 4662,
+          "first_source_cycle": 138812127,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215705468
+        },
+        {
+          "address": 1798,
+          "source_pc": 34394,
+          "prg_bank": 12,
+          "value": 15,
+          "count": 8,
+          "first_source_frame": 411,
+          "first_source_cycle": 12212279,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215705167
+        },
+        {
+          "address": 1798,
+          "source_pc": 34394,
+          "prg_bank": 12,
+          "value": 31,
+          "count": 3,
+          "first_source_frame": 1511,
+          "first_source_cycle": 44972342,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215704866
+        },
+        {
+          "address": 1798,
+          "source_pc": 34394,
+          "prg_bank": 12,
+          "value": 33,
+          "count": 1,
+          "first_source_frame": 3979,
+          "first_source_cycle": 118469543,
+          "last_source_frame": 3979,
+          "last_source_cycle": 118469543
+        },
+        {
+          "address": 1798,
+          "source_pc": 34394,
+          "prg_bank": 12,
+          "value": 62,
+          "count": 9,
+          "first_source_frame": 380,
+          "first_source_cycle": 11290153,
+          "last_source_frame": 4579,
+          "last_source_cycle": 136338470
+        },
+        {
+          "address": 1798,
+          "source_pc": 34394,
+          "prg_bank": 12,
+          "value": 63,
+          "count": 3,
+          "first_source_frame": 1511,
+          "first_source_cycle": 44971975,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215704565
+        },
+        {
+          "address": 1798,
+          "source_pc": 34394,
+          "prg_bank": 12,
+          "value": 67,
+          "count": 1,
+          "first_source_frame": 3979,
+          "first_source_cycle": 118469238,
+          "last_source_frame": 3979,
+          "last_source_cycle": 118469238
+        },
+        {
+          "address": 1798,
+          "source_pc": 34394,
+          "prg_bank": 12,
+          "value": 125,
+          "count": 9,
+          "first_source_frame": 380,
+          "first_source_cycle": 11289852,
+          "last_source_frame": 4579,
+          "last_source_cycle": 136338169
+        },
+        {
+          "address": 1798,
+          "source_pc": 34394,
+          "prg_bank": 12,
+          "value": 127,
+          "count": 3,
+          "first_source_frame": 1511,
+          "first_source_cycle": 44971674,
+          "last_source_frame": 7244,
+          "last_source_cycle": 215704264
+        },
+        {
+          "address": 1798,
+          "source_pc": 50800,
+          "prg_bank": 30,
+          "value": 0,
+          "count": 1,
+          "first_source_frame": 4,
+          "first_source_cycle": 109216,
+          "last_source_frame": 4,
+          "last_source_cycle": 109216
+        },
+        {
+          "address": 2025,
+          "source_pc": 50800,
+          "prg_bank": 30,
+          "value": 0,
+          "count": 1,
+          "first_source_frame": 4,
+          "first_source_cycle": 111713,
+          "last_source_frame": 4,
+          "last_source_cycle": 111713
+        }
+      ],
+      "source": "Observed at the ROM-stepper opcode fetch for selector NMI entry $C421 after reset, route input, queued cutscene tasks, and the preceding sound-driver pass; write history is ROM execution output, not an emulator RAM seed"
     },
     "c9c5": {
       "count": 133,
@@ -3653,8 +4824,8 @@
         ]
       ],
       "source_operands_layout": "[frame, commit_cycle, E1_before, E2_before, E3_before, incoming_carry, X0300, address0300, value0300, X0700, address0700, value0700, X0780, address0780, value0780, E1_after, E2_after, E3_after]",
-      "limitation": "Operands and results are ROM-stepper-derived for this fingerprinted input route. The rows are not a generic substitute for live operand writers under arbitrary input histories.",
-      "source_operands_cycle_basis": "commit_cycle is the source-stepper CPU cycle at the $C9E5 E1 store; the diagnostic read trace separately records each operand-read cycle."
+      "source_operands_cycle_basis": "commit_cycle is the source-stepper CPU cycle at the $C9E5 E1 store; the diagnostic read trace separately records each operand-read cycle.",
+      "limitation": "Operands and results are ROM-stepper-derived for this fingerprinted input route. The rows are not a generic substitute for live operand writers under arbitrary input histories."
     }
   },
   "receiver_selection": {

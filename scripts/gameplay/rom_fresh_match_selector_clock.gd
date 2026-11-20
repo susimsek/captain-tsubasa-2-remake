@@ -76,6 +76,31 @@ func get_candidate_entry_status_evidence() -> Dictionary:
 	return _entry_status_contract.duplicate(true)
 
 
+## Returns the complete selector-call entry P byte from the hash-bound
+## ROM-only CPU source model. This is a call-entry input, not the later NMI
+## candidate status or proof of physical CPU timing.
+func get_selector_call_entry_p_evidence() -> Dictionary:
+	if not _configured and not configure_from_project_sources():
+		return {"ok": false, "error": error_message}
+	var evidence := _entry_status_contract.duplicate(true)
+	if not bool(evidence.get("ok", false)) \
+			or int(evidence.get("candidate_p_byte", -1)) != 0x30 \
+			or String(evidence.get("source_model_sha256", "")) != MODEL_SHA256 \
+			or String(evidence.get("input_route_sha256", "")) != INPUT_SHA256:
+		return {"ok": false, "error": "The selector-call P byte lacks its reviewed ROM-model/input provenance."}
+	evidence["kind"] = "rom_source_selector_call_entry_p_byte"
+	evidence["source_pc"] = 0xA20F
+	evidence["source_frame"] = FIRST_SOURCE_FRAME_PROVENANCE
+	evidence["source_cycle"] = 216143875
+	evidence["known_mask"] = 0xFF
+	evidence["known_value"] = 0x30
+	evidence["fceux_trace_used_as_input"] = false
+	evidence["emulator_state_used"] = false
+	evidence["runtime_rom_dependency"] = false
+	evidence["runtime_emulator_dependency"] = false
+	return evidence
+
+
 func get_status() -> Dictionary:
 	if not _configured and not configure_from_project_sources():
 		return {"ok": false, "error": error_message}
@@ -133,6 +158,7 @@ func _configure_document(document: Variant) -> bool:
 		"schema": SCHEMA,
 		"source_rom_sha256": ROM_SHA256,
 		"input_route_sha256": INPUT_SHA256,
+		"source_model_sha256": MODEL_SHA256,
 		"entry_pc": EXPECTED_ENTRY_PC,
 		"entry_prg_bank_8k": 2,
 		"entry_source_frame_provenance": FIRST_SOURCE_FRAME_PROVENANCE,

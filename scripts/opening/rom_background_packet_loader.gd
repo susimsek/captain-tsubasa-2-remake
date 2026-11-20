@@ -173,6 +173,8 @@ func build_packets(background_id: int, data_root: String = INTRO_DATA_ROOT) -> b
 		"rom_sha256": SOURCE_ROM_SHA256,
 		"record_cpu_address": str(layout.get("record_cpu_address", "")),
 		"record_file_offset": str(layout.get("record_file_offset", "")),
+		"record_raw_hex": record.hex_encode(),
+		"record_length": record.size(),
 		# These are taken from the validated project-owned record bytes, not from
 		# the layout manifest or an emulator RAM snapshot.
 		"record_chr_selector_bytes": [int(record[0]), int(record[1])],

@@ -1,6 +1,8 @@
 extends SceneTree
 
 const VmScript = preload("res://scripts/gameplay/kickoff_cutscene_command_vm.gd")
+const EbPostWaitTaskScript = preload("res://scripts/gameplay/rom_cutscene_eb_post_wait_source_task.gd")
+const BackgroundTaskScript = preload("res://scripts/gameplay/rom_cutscene_background_source_task.gd")
 const MANIFEST_PATHS := {
 	1: "res://assets/gameplay/rom_logic/kickoff_cutscene_01_events.json",
 	2: "res://assets/gameplay/rom_logic/kickoff_cutscene_02_events.json",
@@ -12,6 +14,9 @@ var _failure_count := 0
 func _initialize() -> void:
 	_verify_cutscene(1)
 	_verify_cutscene(2)
+	_verify_external_source_task_resume()
+	_verify_eb_post_wait_source_task()
+	_verify_background_source_task_return_boundary()
 	if _failure_count == 0:
 		print("PASS: KICK OFF command VM source boundaries, waits, text cadence and FF stop")
 		print("LIMIT: source scheduler ticks are modeled; CPU-cycle, PPU-pixel and raster phase are unresolved")
@@ -19,6 +24,127 @@ func _initialize() -> void:
 	else:
 		printerr("FAIL: %d KICK OFF command VM assertion(s)" % _failure_count)
 		quit(1)
+
+
+func _verify_external_source_task_resume() -> void:
+	var vm = VmScript.new()
+	root.add_child(vm)
+	var background_events: Dictionary = {}
+	var emitted_indices: Array[int] = []
+	vm.presenter_event.connect(func(event: Dictionary) -> void:
+		emitted_indices.append(int(event.get("event_index", -1)))
+		if str(event.get("kind", "")) not in ["background_1", "background_2"]:
+			return
+		var event_index := int(event.get("event_index", -1))
+		var source_pc := int(event.get("cpu_address", -1))
+		background_events[event_index] = source_pc
+		_check(vm.begin_external_source_task(event_index, source_pc, "test_background_task"),
+			"external source task suspends at background event %d" % event_index)
+	)
+	_check(vm.start_cutscene(1), "external source task VM starts cutscene 1")
+	var source_tick_budget := 100000
+	var checked_post_clear_background := false
+	while vm.is_running() and source_tick_budget > 0:
+		source_tick_budget -= 1
+		if vm.state == VmScript.RunState.WAITING_SOURCE_TASK:
+			var event_index: int = vm.current_event_index
+			var source_pc: int = vm.current_source_address
+			_check(background_events.has(event_index)
+				and int(background_events[event_index]) == source_pc,
+				"external task keeps the active F9/FA source PC at event %d" % event_index)
+			if event_index == 20:
+				_check(source_pc == 0xA2FA,
+					"screen-off completion preserves event 20 F9 source PC `$A2FA`")
+				checked_post_clear_background = true
+			_check(vm.complete_external_source_task(event_index, source_pc),
+				"external source task resumes at event %d" % event_index)
+		elif vm.state == VmScript.RunState.WAITING_INPUT:
+			vm.advance_scheduler_tick(0x80)
+		else:
+			vm.advance_scheduler_tick(0)
+	_check(source_tick_budget > 0 and vm.state == VmScript.RunState.FINISHED,
+		"external source task replay reaches cutscene FF")
+	_check(checked_post_clear_background,
+		"external source task replay covers the F9 following screen-off clear")
+	for event_index_variant in background_events:
+		var event_index := int(event_index_variant)
+		_check(emitted_indices.count(event_index) == 1,
+			"external source task dispatches background event %d once" % event_index)
+	vm.queue_free()
+
+
+func _verify_eb_post_wait_source_task() -> void:
+	var task = EbPostWaitTaskScript.new()
+	var event := {
+		"kind": "wait_for_input",
+		"opcode": 0xEB,
+		"raw_bytes": [0xEB],
+		"event_index": 14,
+		"cpu_address": 0xA2E1,
+	}
+	_check(task.begin(event, 5443, Vector2i(15, 15), 0x2249, 0),
+		"EB `$88B1` source task starts from the cutscene-1 `$A2E1` wait")
+	if task.state == EbPostWaitTaskScript.State.FAILED:
+		return
+	_check(task.fill_width == 21 and task.row_count == 8,
+		"EB clear geometry derives 21 columns across eight rows")
+	_check(task.packet_batches.size() == 4 and task.capacity_release_count_required == 3,
+		"`$9B28` threshold derives four batches and three NMI capacity releases")
+	var expected_addresses := [0x2249, 0x2269, 0x2289, 0x22A9, 0x22C9, 0x22E9, 0x2309, 0x2329]
+	var observed_addresses: Array[int] = []
+	for batch_index in task.packet_batches.size():
+		var batch: Dictionary = task.packet_batches[batch_index]
+		var rows: Array = batch.get("rows", [])
+		_check(rows.size() == 2 and int(batch.get("queue_cursor_bytes", -1)) == 48,
+			"EB source batch %d queues two 21-byte rows plus headers" % batch_index)
+		_check(bool(batch.get("drained_before_next_batch", false)) == (batch_index < 3),
+			"EB source batch %d marks the derived queue drain boundary" % batch_index)
+		for row_variant in rows:
+			observed_addresses.append(int((row_variant as Dictionary).get("ppu_address", -1)))
+	_check(observed_addresses == expected_addresses,
+		"EB clear rows derive the eight ROM nametable destinations")
+	var initial_batch: Dictionary = task.get_initial_packet_batch()
+	_check(int(initial_batch.get("batch_index", -1)) == 0,
+		"EB A-edge tick exposes the initial source queue batch")
+	for expected_tick in range(1, 4):
+		var step: Dictionary = task.advance_source_tick(5443 + expected_tick)
+		var final_tick := expected_tick == 3
+		_check(bool(step.get("ok", false)), "EB capacity release tick %d advances" % expected_tick)
+		_check(String(step.get("status", "")) == ("task_returned" if final_tick else "packet_batch_released"),
+			"EB capacity release tick %d returns at its ROM-derived boundary" % expected_tick)
+		_check(int(step.get("batch_index", -1)) == expected_tick,
+			"EB capacity release tick %d exposes the next packet group" % expected_tick)
+		if final_tick:
+			_check(task.state == EbPostWaitTaskScript.State.COMPLETED,
+				"EB source task completes after exactly three capacity releases")
+			break
+
+
+func _verify_background_source_task_return_boundary() -> void:
+	var task = BackgroundTaskScript.new()
+	var event := {
+		"kind": "background_1", "opcode": 0xF9, "id": 0x5E,
+		"arguments": [0x5E], "event_index": 50, "cpu_address": 0xA386,
+	}
+	var load_receipt := {
+		"ok": true,
+		"source_rom_sha256": BackgroundTaskScript.SOURCE_ROM_SHA256,
+		"event_index": 50, "background_id": 0x5E,
+		"capacity_batch_count": 7,
+	}
+	_check(task.begin(event, 7112, load_receipt),
+		"F9 `$A386` source task starts with its seven ROM packet groups")
+	for release_index in range(1, 8):
+		var step: Dictionary = task.advance_source_tick(7112 + release_index)
+		var final_batch := release_index == 7
+		_check(bool(step.get("ok", false)), "F9 packet group %d advances" % release_index)
+		_check(String(step.get("status", "")) == ("task_returned" if final_batch else "packet_batch_released"),
+			"F9 packet group %d uses the source return boundary" % release_index)
+		_check(int(step.get("batch_index", -1)) == release_index - 1,
+			"F9 packet group %d matches source batch order" % release_index)
+	_check(task.state == BackgroundTaskScript.State.COMPLETED
+		and int(task.return_scan_source_frame) == 7119,
+		"F9 returns to the command stream with its final packet group on frame 7119")
 
 
 func _verify_cutscene(cutscene_id: int) -> void:
@@ -179,7 +305,7 @@ func _verify_cutscene(cutscene_id: int) -> void:
 			fade_down_wait_count += 1
 	_check(pre_wait_count == expected_screen_on_events.size(), "cutscene %d E9 handler runs one source $02 pre-wait per event" % cutscene_id)
 	_check(fade_wait_count == expected_fade_wait_count(expected_fade_levels, expected_screen_on_events), "cutscene %d E9 handler yields once per modeled fade-up pass" % cutscene_id)
-	_check(off_pre_wait_count == expected_screen_off_events.size(), "cutscene %d EA handler runs one source pre-wait per event" % cutscene_id)
+	_check(off_pre_wait_count == 0, "cutscene %d EA handler adds no unsupported pre-wait before `$99F0`" % cutscene_id)
 	_check(fade_down_wait_count == expected_fade_wait_count(expected_fade_levels, expected_screen_off_events), "cutscene %d EA handler yields once per modeled fade-down pass" % cutscene_id)
 	_check(completed_screen_off_events == expected_screen_off_events, "cutscene %d EA clear follows its complete source fade-down" % cutscene_id)
 	for event_index in expected_fade_levels:
@@ -192,7 +318,6 @@ func _verify_cutscene(cutscene_id: int) -> void:
 	_check(_has_wait(wait_records, "screen_on_pre_wait", 2), "cutscene %d executes E9's two-tick source pre-wait" % cutscene_id)
 	_check(_has_wait(wait_records, "screen_on_fade_up", 1), "cutscene %d executes E9's one-tick palette-fade yields" % cutscene_id)
 	if not expected_screen_off_events.is_empty():
-		_check(_has_wait(wait_records, "screen_off_pre_wait", 1), "cutscene %d executes EA's one-tick source pre-wait" % cutscene_id)
 		_check(_has_wait(wait_records, "screen_off_fade_down", 1), "cutscene %d executes EA's one-tick palette-fade yields" % cutscene_id)
 	_check(_has_wait(wait_records, "wait_for_input", -1), "cutscene %d executes EB as indefinite fresh-A wait" % cutscene_id)
 	if cutscene_id == 1:

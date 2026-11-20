@@ -65,6 +65,22 @@ def main() -> None:
             "prg_bank": "0x1C",
             "meaning": "96 little-endian 16-bit maximum-stamina values",
         },
+        "stamina_player_curves_9FCE_A596.bin": {
+            "file_offset": bank1c(0x9FCE),
+            "size_bytes": 0x25 * 0x28,
+            "cpu_start": "0x9FCE",
+            "cpu_end_exclusive": "0xA596",
+            "prg_bank": "0x1C at $8000, then 0x1D at $A000",
+            "meaning": "37 per-profile 40-byte stat/energy selector rows used by the alternate evaluator path",
+        },
+        "level_thresholds_BA90_BB10.bin": {
+            "file_offset": bank1(0xBA90),
+            "size_bytes": 0x80,
+            "cpu_start": "0xBA90",
+            "cpu_end_exclusive": "0xBB10",
+            "prg_bank": "0x01",
+            "meaning": "64 little-endian experience thresholds used by the level resolver",
+        },
     }
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -78,11 +94,16 @@ def main() -> None:
         }
 
     code_windows = [
+        ("fixed", 0xC572, 0xC575, fixed),
         ("fixed", 0xDB62, 0xDB9E, fixed),
         ("fixed", 0xE0DF, 0xE349, fixed),
         ("fixed", 0xCE08, 0xCE2A, fixed),
-        ("bank_1C", 0x802D, 0x813D, bank1c),
-        ("bank_01", 0xA611, 0xA636, bank1),
+        ("fixed", 0xCE2D, 0xCE4A, fixed),
+        ("bank_1C", 0x802D, 0x818E, bank1c),
+        ("bank_01", 0xA611, 0xA63C, bank1),
+        ("bank_01", 0xB013, 0xB03A, bank1),
+        ("fixed", 0xC50C, 0xC50F, fixed),
+        ("fixed", 0xCD7C, 0xCD89, fixed),
     ]
     code_rows = []
     for bank_name, start, end, offset_fn in code_windows:
@@ -98,6 +119,30 @@ def main() -> None:
             }
         )
 
+    code_assets = {
+        "fixed_match_stamina_vector_C572_C575.bin": (0xC572, 0xC575, fixed),
+        "fixed_energy_initializer_DB62_DB9E.bin": (0xDB62, 0xDB9E, fixed),
+        "fixed_stamina_evaluator_helper_CE08_CE2A.bin": (0xCE08, 0xCE2A, fixed),
+        "fixed_stamina_bank_switch_CE2D_CE4A.bin": (0xCE2D, 0xCE4A, fixed),
+        "bank1c_stamina_evaluator_802D_818E.bin": (0x802D, 0x818E, bank1c),
+        "bank01_level_update_A611_A63C.bin": (0xA611, 0xA63C, bank1),
+        "bank01_level_helpers_B013_B03A.bin": (0xB013, 0xB03A, bank1),
+        "fixed_record_pointer_vector_C50C_C50F.bin": (0xC50C, 0xC50F, fixed),
+        "fixed_record_pointer_resolver_CD7C_CD89.bin": (0xCD7C, 0xCD89, fixed),
+    }
+    code_asset_rows: dict[str, dict[str, object]] = {}
+    for name, (start, end, offset_fn) in code_assets.items():
+        offset = offset_fn(start)
+        content = read(rom, offset, end - start)
+        (OUT_DIR / name).write_bytes(content)
+        code_asset_rows[name] = {
+            "cpu_start": f"0x{start:04X}",
+            "cpu_end_exclusive": f"0x{end:04X}",
+            "file_offset": f"0x{offset:06X}",
+            "size_bytes": len(content),
+            "sha256": sha256(content),
+        }
+
     manifest = {
         "schema": "ct2-first-match-player-state-rom-resources-v1",
         "source_rom": {
@@ -107,8 +152,10 @@ def main() -> None:
         "extractor": "tools/gameplay/extract_first_match_player_state_resources.py",
         "resources": resource_rows,
         "verified_code_windows": code_rows,
+        "source_code_resources": code_asset_rows,
         "assumptions": [
-            "The player profile selector at $95D6 is preserved in the existing first-action-menu table resource; the stamina evaluator uses its first byte to index the $AE86 table for skill selector X=0.",
+            "The player profile selector at $95D6 is preserved in the existing first-action-menu resource. For $DB62's X=0 call, evaluator selectors 0/$0B/$1E/$1F take the common $AE86 path; ordinary selectors read the player's 40-byte row at $9FCE and then index $9F0E.",
+            "The $9FCE-$A595 37-row curve span is contiguous across the MMC3 banks mapped at $8000 and $A000 by the $CE08 helper.",
             "The fresh-start level byte is zero because the cold reset clears volatile RAM; the pre-match $A611 path leaves it unchanged when experience resolves to level zero.",
             "The provider models the ROM run timer only when a caller reports reaching the $E14D check after the $E349 input handler; B can leave the loop before that check.",
             "The $E2BC stamina updater increments reset-zero byte $0618; only its wrap to zero skips teammate regeneration, and holder charging still runs.",
