@@ -7,6 +7,12 @@ Size/header: 393,232 bytes; iNES header begins `4E 45 53 1A 10 10 41 00`.
 
 This is a supplement to `online_reverse_engineering_resources.md`. It records additional Japanese and Chinese leads and what they do—and do not—establish for the Turkish ROM's cold opening.
 
+For game-wide external references—including team/player catalogs, match rules,
+move tables, scene/portrait indexes, and music research—see the focused
+[`full_game_external_research.md`](../gameplay/full_game_external_research.md)
+register and the mapped issues RE-026, RE-036, RE-045, RE-076–RE-077, and
+RE-090–RE-097 in `GAME_REVERSE_ENGINEERING_PRD.md`.
+
 ## Findings useful for the opening
 
 ### Japanese opening-music catalog
