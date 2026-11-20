@@ -7,6 +7,10 @@ SHA-256 `4f1f74d495e86025a5ad17fec2c171f37a94541a7d8ff7034c580d7d5111a097`.
 Community labels and descriptions below are navigation/control leads, not proof
 that another revision has the same bytes or opening route.
 
+For Japanese, Chinese, Turkish, and English sources relevant to the wider game,
+see [`full_game_external_research.md`](full_game_external_research.md) and its
+mapped audit issues in `GAME_REVERSE_ENGINEERING_PRD.md`.
+
 ## Sources and what they establish
 
 | Source | Type | Useful lead | Limits |
